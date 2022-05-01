@@ -62,7 +62,10 @@ Navigator.propTypes = {
     url: propTypes.string,
     name: propTypes.string,
     navItems: propTypes.arrayOf(
-      propTypes.oneOfType([NavItem.propTypes, NavCollapsed.propTypes]),
+      propTypes.oneOfType([
+        propTypes.shape(NavItem.propTypes),
+        propTypes.shape(NavCollapsed.propTypes),
+      ]),
     ),
   }),
 };

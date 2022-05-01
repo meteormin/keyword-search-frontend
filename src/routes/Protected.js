@@ -1,6 +1,6 @@
 import React from 'react';
-import { Navigate } from 'react-router';
 import PropTypes from 'prop-types';
+import Restricted from './Restricted';
 
 /**
  * 로그인한 유저에게만 경로 허용 결정
@@ -11,7 +11,11 @@ import PropTypes from 'prop-types';
  * @constructor
  */
 const Protected = ({ auth, children, redirectPath }) => {
-  return auth ? children : <Navigate to={redirectPath} />;
+  return (
+    <Restricted condition={!auth} redirectPath={redirectPath}>
+      {children}
+    </Restricted>
+  );
 };
 
 Protected.propTypes = {

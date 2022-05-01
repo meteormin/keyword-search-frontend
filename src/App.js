@@ -8,6 +8,7 @@ import Navigator from './components/layouts/Navigator';
 import config from './config';
 import Container from './components/layouts/Container';
 import Header from './components/layouts/Header';
+import { isLogin } from './utils/auth';
 
 function App() {
   const conf = config();
@@ -16,12 +17,16 @@ function App() {
     <div className="sb-nav-fixed">
       <Header
         appName={conf.app.name}
-        isLogin={true}
-        dropDownMenu={conf.header.dropDownMenu}
+        isLogin={isLogin()}
+        dropDownMenu={conf.layouts.header.dropDownMenu}
       />
       <div id="layoutSidenav">
-        <Navigator menu={config().menu} />
-        <Container subject={'Subject'} header={'Header'}>
+        <Navigator menu={conf.layouts.menu} />
+        <Container
+          subject={'Subject'}
+          header={'Header'}
+          footer={conf.layouts.footer}
+        >
           <Router />
         </Container>
       </div>

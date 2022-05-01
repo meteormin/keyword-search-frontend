@@ -1,4 +1,4 @@
-import menu from './menu';
+import layouts from './layouts';
 
 export default () => ({
   app: {
@@ -9,17 +9,5 @@ export default () => ({
     tokenKey: '_token',
     userKey: 'user',
   },
-  menu: menu,
-  header: {
-    dropDownMenu: [
-      {
-        name: 'Settings',
-        url: '#',
-      },
-      {
-        name: 'myInfo',
-        url: '#',
-      },
-    ],
-  },
+  layouts: layouts,
 });

@@ -1,5 +1,6 @@
 module.exports = {
   parserOptions: {
+    jsx: true,
     sourceType: 'module',
     ecmaVersion: 2022,
   },
@@ -9,6 +10,7 @@ module.exports = {
     browser: true,
     node: true,
     jest: true,
+    es6: true,
   },
   extends: [
     'eslint:recommended',

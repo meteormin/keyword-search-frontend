@@ -1,7 +1,7 @@
 export default {
-  header: 'Header',
+  header: 'Menu',
   url: '/',
-  name: 'Menu',
+  name: 'Main',
   navItems: [
     {
       url: '/test',

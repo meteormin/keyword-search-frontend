@@ -2,7 +2,7 @@ import React from 'react';
 import propTypes from 'prop-types';
 import Footer from './Footer';
 
-const Container = ({ header, subject, children }) => {
+const Container = ({ header, subject, children, footer }) => {
   const year = new Date().getFullYear().toString();
   return (
     <div id="layoutSidenav_content">
@@ -17,7 +17,7 @@ const Container = ({ header, subject, children }) => {
           </div>
         </div>
       </main>
-      <Footer company="TestWorks" year={year} privacyUrl="#" termsUrl="#" />
+      <Footer year={year} {...footer} />
     </div>
   );
 };

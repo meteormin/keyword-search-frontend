@@ -1,20 +1,17 @@
 import React from 'react';
 import propTypes, { bool } from 'prop-types';
+import DropDownMenu from './DropDownMenu';
 
 const Header = ({ appName, dropDownMenu, isLogin }) => {
-  const authCheck = (isLogin) => {
-    return isLogin ? (
-      <DropDownMenu items={dropDownMenu} />
-    ) : (
-      <a
-        className="nav-link"
-        id="navbarDropdown"
-        href="/login"
-        role="button"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
+  const userMenu = (isLogin) => {
+    if (isLogin) {
+      return <DropDownMenu items={dropDownMenu} />;
+    }
+
+    return (
+      <a className="nav-link" href="/login" role="button">
         <i className="fas fa-user fa-fw"></i>
+        Login
       </a>
     );
   };
@@ -38,55 +35,9 @@ const Header = ({ appName, dropDownMenu, isLogin }) => {
         <div className="input-group"></div>
       </form>
       {/*Navbar*/}
-      {authCheck(isLogin)}
+      {userMenu(isLogin)}
     </nav>
   );
-};
-
-const DropDownMenu = ({ items }) => {
-  const dropDownItem = (name, url) => (
-    <li>
-      <a className="dropdown-item" href={url}>
-        {name}
-      </a>
-    </li>
-  );
-  return (
-    <ul className="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-      <li className="nav-item dropdown">
-        <a
-          className="nav-link dropdown-toggle"
-          id="navbarDropdown"
-          href="#"
-          role="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <i className="fas fa-user fa-fw"></i>
-        </a>
-        <ul
-          className="dropdown-menu dropdown-menu-end"
-          aria-labelledby="navbarDropdown"
-        >
-          {items.map((item) => dropDownItem(item.name, item.url))}
-          <li>
-            <a className="dropdown-item" href="/logout">
-              Logout
-            </a>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  );
-};
-
-DropDownMenu.propTypes = {
-  items: propTypes.arrayOf(
-    propTypes.shape({
-      name: propTypes.string,
-      url: propTypes.string,
-    }),
-  ),
 };
 
 Header.propTypes = {
