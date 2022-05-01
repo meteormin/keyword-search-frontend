@@ -48,8 +48,8 @@ const Navigator = ({ menu }) => {
           </div>
         </div>
         {/*<div className="sb-sidenav-footer">*/}
-        {/*  <div className="small">Finance Data</div>*/}
-        {/*  Auto Posting*/}
+        {/*  <div className="small">Footer</div>*/}
+        {/*  Footer*/}
         {/*</div>*/}
       </nav>
     </div>

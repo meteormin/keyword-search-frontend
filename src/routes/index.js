@@ -4,6 +4,7 @@ import Protected from './Protected';
 import React from 'react';
 import Restricted from './Restricted';
 import Counter from '../pages/counter';
+import Container from '../components/layouts/Container';
 
 const Router = () => {
   return (
@@ -14,7 +15,9 @@ const Router = () => {
             index
             element={
               <Protected auth={false} redirectPath="/">
-                <div>hi</div>
+                <Container header={'Header'} subject={'Subject'}>
+                  hi
+                </Container>
               </Protected>
             }
           />

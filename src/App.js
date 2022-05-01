@@ -22,13 +22,7 @@ function App() {
       />
       <div id="layoutSidenav">
         <Navigator menu={conf.layouts.menu} />
-        <Container
-          subject={'Subject'}
-          header={'Header'}
-          footer={conf.layouts.footer}
-        >
-          <Router />
-        </Container>
+        <Router />
       </div>
     </div>
   );

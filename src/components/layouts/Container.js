@@ -26,6 +26,7 @@ Container.propTypes = {
   header: propTypes.string,
   subject: propTypes.string,
   children: propTypes.element,
+  footer: Footer.propTypes,
 };
 
 export default Container;
