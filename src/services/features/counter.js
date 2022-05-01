@@ -23,6 +23,7 @@ const counterSlice = createSlice({
     incrementByAmount: _incrementByAmount,
   },
 });
+
 export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 export const incrementAsync = (amount) => async (dispatch) => {

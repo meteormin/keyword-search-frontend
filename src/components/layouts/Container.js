@@ -1,6 +1,8 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import Footer from './Footer';
+import Loading from '../Loading';
+import AlertModal from '../AlertModal';
 
 const Container = ({ header, subject, children, footer }) => {
   const year = new Date().getFullYear().toString();
@@ -16,6 +18,8 @@ const Container = ({ header, subject, children, footer }) => {
             <div className="col-xl-12">{children}</div>
           </div>
         </div>
+        <Loading />
+        <AlertModal />
       </main>
       <Footer year={year} {...footer} />
     </div>
@@ -26,7 +30,11 @@ Container.propTypes = {
   header: propTypes.string,
   subject: propTypes.string,
   children: propTypes.element,
-  footer: Footer.propTypes,
+  footer: propTypes.shape({
+    company: propTypes.string,
+    privacyUrl: propTypes.string,
+    termsUrl: propTypes.string,
+  }),
 };
 
 export default Container;

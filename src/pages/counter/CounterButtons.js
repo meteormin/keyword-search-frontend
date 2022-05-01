@@ -6,7 +6,7 @@ import {
 import React, { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-const CountButtons = () => {
+const CounterButtons = () => {
   const count = useSelector((state) => {
     return state.counter.value;
   });
@@ -22,4 +22,4 @@ const CountButtons = () => {
   );
 };
 
-export default CountButtons;
+export default CounterButtons;

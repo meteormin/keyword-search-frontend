@@ -83,12 +83,12 @@ export class ApiClient {
   /**
    *
    * @param {AxiosResponse<*, *>} res
-   * @returns {AxiosResponse<*, *>|null|*}
+   * @returns {*|T}
    */
   setResponse(res) {
     try {
       this._response = res;
-      return this.response;
+      return this.response.data;
     } catch (error) {
       this._error = error;
       return this.error;

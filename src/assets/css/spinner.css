@@ -1,0 +1,8 @@
+.spinner {
+    position: relative;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 100%;
+    bottom: 0;
+}
