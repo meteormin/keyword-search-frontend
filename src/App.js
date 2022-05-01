@@ -6,7 +6,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './assets/css/styles.css';
 import Navigator from './components/layouts/Navigator';
 import config from './config';
-import Container from './components/layouts/Container';
 import Header from './components/layouts/Header';
 import { isLogin } from './utils/auth';
 
