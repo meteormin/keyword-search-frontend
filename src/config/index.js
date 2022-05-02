@@ -9,7 +9,8 @@ export default () => ({
   },
   auth: {
     tokenKey: '_token',
-    userKey: 'user',
+    userKey: '_user',
+    role: {},
   },
   layouts: layouts,
 });

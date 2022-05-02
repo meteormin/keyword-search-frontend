@@ -2,11 +2,14 @@ import React from 'react';
 import propTypes from 'prop-types';
 import NavItem from './NavItem';
 import NavCollapsed from './NavCollapsed';
+import { guard } from '../../helpers';
 
 const Navigator = ({ menu }) => {
   const isCollapsed = (item) => {
     return Object.prototype.hasOwnProperty.call(item, 'items');
   };
+
+  const handleGuard = () => true;
 
   return (
     <div id="layoutSidenav_nav">
@@ -27,22 +30,32 @@ const Navigator = ({ menu }) => {
             {menu.navItems.map((item, key) => {
               if (isCollapsed(item)) {
                 return (
-                  <NavCollapsed
-                    key={'nav_item' + key.toString()}
-                    name={item.name}
-                    icon={item.icon}
-                    items={item.items}
-                  />
+                  <guard.HiddenByRole
+                    key={'guard_' + key.toString()}
+                    handleCondition={handleGuard}
+                  >
+                    <NavCollapsed
+                      key={'nav_item' + key.toString()}
+                      name={item.name}
+                      icon={item.icon}
+                      items={item.items}
+                    />
+                  </guard.HiddenByRole>
                 );
               }
 
               return (
-                <NavItem
-                  key={'nav_item' + key.toString()}
-                  name={item.name}
-                  icon={item.icon}
-                  url={item.url}
-                />
+                <guard.HiddenByRole
+                  key={'guard_' + key.toString()}
+                  handleCondition={handleGuard}
+                >
+                  <NavItem
+                    key={'nav_item' + key.toString()}
+                    name={item.name}
+                    icon={item.icon}
+                    url={item.url}
+                  />
+                </guard.HiddenByRole>
               );
             })}
           </div>

@@ -4,7 +4,7 @@ import Footer from './Footer';
 import Loading from '../Loading';
 import AlertModal from '../AlertModal';
 
-const Container = ({ header, subject, children, footer }) => {
+const Content = ({ header, subject, children, footer }) => {
   const year = new Date().getFullYear().toString();
   return (
     <div id="layoutSidenav_content">
@@ -26,7 +26,7 @@ const Container = ({ header, subject, children, footer }) => {
   );
 };
 
-Container.propTypes = {
+Content.propTypes = {
   header: propTypes.string,
   subject: propTypes.string,
   children: propTypes.element,
@@ -37,4 +37,4 @@ Container.propTypes = {
   }),
 };
 
-export default Container;
+export default Content;

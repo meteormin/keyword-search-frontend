@@ -9,4 +9,4 @@
 
 - pages/{기능 or 화면}
     - router와 매칭 가능하게 폴더를 구분하여 page component와 css파일 구현
-    - 메인 컴포넌트의 파일명과 컴포넌트이름은 PageNameContainer로 한다.
+    - 메인 컴포넌트의 파일명과 컴포넌트이름은 PageNamePage로 한다.

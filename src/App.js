@@ -4,12 +4,10 @@ import Router from './routes/Router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './assets/css/styles.css';
-import Navigator from './components/layouts/Navigator';
 import { config } from './helpers';
 import Header from './components/layouts/Header';
 import { auth } from './helpers';
-
-// import Loading from './pages/Loading';
+import Container from './components/layouts/Container';
 
 function App() {
   return (
@@ -19,10 +17,14 @@ function App() {
         isLogin={auth.isLogin()}
         dropDownMenu={config.layouts.header.dropDownMenu}
       />
-      <div id="layoutSidenav">
-        <Navigator menu={config.layouts.menu} />
+      <Container
+        header={'Header'}
+        subject={'Subject'}
+        menu={config.layouts.menu}
+        footer={config.layouts.footer}
+      >
         <Router />
-      </div>
+      </Container>
     </div>
   );
 }

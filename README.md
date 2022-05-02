@@ -43,9 +43,9 @@
 
 > 라우팅 관련
 
-- Router.js: 기본 라우트
-- Protected.js: 인증 가드 역할
-- Restricted.js: 접근 제한 역할, 조건에 따라 컴포넌트의 렌더잉르 할지 말지 결정하고 redirect로 다른 경로로 강제 이동시킬 수 있다.
+- Router.jsx: 기본 라우트
+- Protected.jsx: 인증 가드 역할
+- Restricted.jsx: 접근 제한 역할, 조건에 따라 컴포넌트의 렌더잉르 할지 말지 결정하고 redirect로 다른 경로로 강제 이동시킬 수 있다.
 
 ### services
 

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import CounterButtons from './CounterButtons';
 import { ApiClient } from '../../utils/ApiClient';
 import { incrementAsync, selectCount } from '../../services/features/counter';
-import Container from '../../components/layouts/Container';
+import Content from '../../components/layouts/Content';
 
-const CounterContainer = () => {
+const CounterPage = () => {
   const count = useSelector(selectCount);
   const dispatch = useDispatch();
 
@@ -18,11 +18,11 @@ const CounterContainer = () => {
   console.log(client.host);
 
   return (
-    <Container header={'Counter'} subject={'Counter'}>
+    <Content header={'Counter'} subject={'Counter'}>
       <div>count: {count}</div>
       <CounterButtons />
-    </Container>
+    </Content>
   );
 };
 
-export default CounterContainer;
+export default CounterPage;

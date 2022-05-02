@@ -1,17 +1,16 @@
 import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import Protected from './Protected';
 import React from 'react';
-import Restricted from './Restricted';
-import Container from '../components/layouts/Container';
-import CounterContainer from '../pages/counter/CounterContainter';
-import { auth, config } from '../helpers';
-import { useDispatch } from 'react-redux';
+// import TestRoute from './TestRoute';
+import NotFoundPage from '../pages/Error/NotFoundPage';
+import { auth, config, guard } from '../helpers';
+import Content from '../components/layouts/Content';
 import { showAlert } from '../services/features/alertModal';
+import CounterPage from '../pages/counter/CounterPage';
+import { useDispatch } from 'react-redux';
 
 const Router = () => {
   const dispatch = useDispatch();
-
   return (
     <BrowserRouter>
       <Routes>
@@ -19,8 +18,11 @@ const Router = () => {
           <Route
             index
             element={
-              <Restricted condition={auth.isLogin() && true} redirectPath="/">
-                <Container
+              <guard.Restricted
+                condition={auth.isLogin() && true}
+                redirectPath="/"
+              >
+                <Content
                   header={'Header'}
                   subject={'Subject'}
                   footer={config.layouts.footer}
@@ -32,19 +34,20 @@ const Router = () => {
                   >
                     hello, please login
                   </div>
-                </Container>
-              </Restricted>
+                </Content>
+              </guard.Restricted>
             }
           />
           <Route
             path="counter"
             element={
-              <Protected auth={true} redirectPath={'/'}>
-                <CounterContainer />
-              </Protected>
+              <guard.Protected auth={true} redirectPath={'/'}>
+                <CounterPage />
+              </guard.Protected>
             }
           />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,6 +1,9 @@
 import * as Auth from './utils/auth';
 import * as Api from './utils/ApiClient';
 import Config from './config';
+import HiddenByRole from './utils/HiddenByRole';
+import Restricted from './utils/Restricted';
+import Protected from './utils/Protected';
 
 export const config = Config();
 export const auth = Auth;
@@ -11,4 +14,10 @@ export const auth = Auth;
  */
 export const api = (host = null) => {
   return host ? new Api.ApiClient(host) : new Api.ApiClient(config.api.host);
+};
+
+export const guard = {
+  HiddenByRole,
+  Restricted,
+  Protected,
 };
