@@ -14,6 +14,9 @@ export class ApiClient {
   _response;
   _error;
 
+  /**
+   * @param {string} host
+   */
   constructor(host) {
     this._host = host;
     this._headers = null;
@@ -22,6 +25,9 @@ export class ApiClient {
     this._error = null;
   }
 
+  /**
+   * @returns {*}
+   */
   get host() {
     return this._host;
   }
@@ -106,7 +112,7 @@ export class ApiClient {
   /**
    *
    * @param {string} token
-   * @param {string} tokenType
+   * @param {string|null} tokenType
    * @returns {ApiClient}
    */
   withToken(token, tokenType = null) {

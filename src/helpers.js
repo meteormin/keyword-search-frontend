@@ -4,4 +4,11 @@ import Config from './config/index';
 
 export const config = Config();
 export const auth = Auth;
-export const api = new Api.ApiClient(config.api.host);
+
+/**
+ * @param {string|null} host
+ * @returns {ApiClient}
+ */
+export const api = (host = null) => {
+  return host ? new Api.ApiClient(host) : new Api.ApiClient(config.api.host);
+};
