@@ -1,6 +1,13 @@
 import React, { Fragment, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import propTypes from 'prop-types';
+
+export interface ConfirmModalProps {
+  buttonText: string;
+  title: string;
+  message: string;
+  confirmText: string;
+  onConfirm: () => any;
+}
 
 const ConfirmModal = ({
   buttonText,
@@ -8,7 +15,7 @@ const ConfirmModal = ({
   message,
   confirmText,
   onConfirm,
-}) => {
+}: ConfirmModalProps) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -36,14 +43,6 @@ const ConfirmModal = ({
       </Modal>
     </Fragment>
   );
-};
-
-ConfirmModal.propTypes = {
-  buttonText: propTypes.string,
-  title: propTypes.string,
-  message: propTypes.string,
-  confirmText: propTypes.string,
-  onConfirm: propTypes.func,
 };
 
 export default ConfirmModal;

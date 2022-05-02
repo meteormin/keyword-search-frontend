@@ -1,11 +1,17 @@
 import React from 'react';
-import propTypes from 'prop-types';
-import NavItem from './NavItem';
-import NavCollapsed from './NavCollapsed';
+import NavItem, { NavItemProps } from './NavItem';
+import NavCollapsed, { NavCollapsedProps } from './NavCollapsed';
 import { guard, auth } from '../../helpers';
 
-const Navigator = ({ menu }) => {
-  const isCollapsed = (item) => {
+export interface Menu {
+  header: string;
+  url: string;
+  name: string;
+  navItems: NavItemProps[] | NavCollapsedProps[];
+}
+
+const Navigator = ({ menu }: { menu: Menu }) => {
+  const isCollapsed = (item: NavCollapsedProps | NavItemProps) => {
     return Object.prototype.hasOwnProperty.call(item, 'items');
   };
 
@@ -44,7 +50,7 @@ const Navigator = ({ menu }) => {
                       key={'nav_item' + key.toString()}
                       name={item.name}
                       icon={item.icon}
-                      items={item.items}
+                      items={'items' in item ? item.items : []}
                     />
                   </guard.HiddenByRole>
                 );
@@ -59,7 +65,7 @@ const Navigator = ({ menu }) => {
                     key={'nav_item' + key.toString()}
                     name={item.name}
                     icon={item.icon}
-                    url={item.url}
+                    url={'url' in item ? item.url : ''}
                   />
                 </guard.HiddenByRole>
               );
@@ -73,20 +79,6 @@ const Navigator = ({ menu }) => {
       </nav>
     </div>
   );
-};
-
-Navigator.propTypes = {
-  menu: propTypes.shape({
-    header: propTypes.string,
-    url: propTypes.string,
-    name: propTypes.string,
-    navItems: propTypes.arrayOf(
-      propTypes.oneOfType([
-        propTypes.shape(NavItem.propTypes),
-        propTypes.shape(NavCollapsed.propTypes),
-      ]),
-    ),
-  }),
 };
 
 export default Navigator;

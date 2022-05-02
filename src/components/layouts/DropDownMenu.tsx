@@ -1,9 +1,13 @@
-import propTypes from 'prop-types';
 import React from 'react';
 
-const DropDownMenu = ({ items }) => {
-  const dropDownItem = (key, name, url) => (
-    <li key={'dropdown_key' + key}>
+export interface DropDownMenuProps {
+  name: string;
+  url: string;
+}
+
+const DropDownMenu = ({ items }: { items: DropDownMenuProps[] }) => {
+  const dropDownItem = (key: number, name: string, url: string) => (
+    <li key={'dropdown_key' + key.toString()}>
       <a className="dropdown-item" href={url}>
         {name}
       </a>
@@ -37,15 +41,6 @@ const DropDownMenu = ({ items }) => {
       </li>
     </ul>
   );
-};
-
-DropDownMenu.propTypes = {
-  items: propTypes.arrayOf(
-    propTypes.shape({
-      name: propTypes.string,
-      url: propTypes.string,
-    }),
-  ),
 };
 
 export default DropDownMenu;

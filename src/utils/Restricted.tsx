@@ -1,6 +1,12 @@
 import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import { ReactElementLike } from 'prop-types';
 import { Navigate } from 'react-router';
+
+export interface RestrictedProps {
+  condition: boolean;
+  children: ReactElementLike;
+  redirectPath?: string;
+}
 
 /**
  * 조건에 따라 컴포넌트 렌더링을 하거나 하지 않는다.
@@ -10,7 +16,7 @@ import { Navigate } from 'react-router';
  * @returns {*|JSX.Element}
  * @constructor
  */
-const Restricted = ({ condition, children, redirectPath = null }) => {
+const Restricted = ({ condition, children, redirectPath }: RestrictedProps) => {
   if (!condition) {
     return children;
   }
@@ -20,12 +26,6 @@ const Restricted = ({ condition, children, redirectPath = null }) => {
   }
 
   return <Fragment></Fragment>;
-};
-
-Restricted.propTypes = {
-  condition: PropTypes.bool,
-  children: PropTypes.element,
-  redirectPath: PropTypes.string,
 };
 
 export default Restricted;

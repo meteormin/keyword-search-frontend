@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store';
 
-document.documentElement.lang = process.env.REACT_APP_LOCALE;
+document.documentElement.lang = process.env.REACT_APP_LOCALE || 'ko';
 
 ReactDOM.render(
   <React.StrictMode>

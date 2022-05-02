@@ -1,7 +1,12 @@
 import React from 'react';
-import propTypes from 'prop-types';
 
-const NavItem = ({ name, icon, url }) => {
+export interface NavItemProps {
+  name: string;
+  icon: string;
+  url: string;
+}
+
+const NavItem = ({ name, icon, url }: NavItemProps) => {
   return (
     <a className="nav-link" href={url}>
       <div className="sb-nav-link-icon">
@@ -10,12 +15,6 @@ const NavItem = ({ name, icon, url }) => {
       {name}
     </a>
   );
-};
-
-NavItem.propTypes = {
-  url: propTypes.string,
-  name: propTypes.string,
-  icon: propTypes.string,
 };
 
 export default NavItem;

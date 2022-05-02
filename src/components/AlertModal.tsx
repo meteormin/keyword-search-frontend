@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import propTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeAlert } from '../services/features/alertModal';
+import { closeAlert, selectAlertState } from '../services/features/alertModal';
 
 const AlertModal = () => {
-  const { title, message, show } = useSelector((state) => state.alertModal);
+  const { title, message, show } = useSelector(selectAlertState);
   const dispatch = useDispatch();
   const handleClose = () => dispatch(closeAlert());
 
@@ -27,11 +26,6 @@ const AlertModal = () => {
       </Modal>
     </Fragment>
   );
-};
-
-AlertModal.propTypes = {
-  title: propTypes.string,
-  message: propTypes.string,
 };
 
 export default AlertModal;

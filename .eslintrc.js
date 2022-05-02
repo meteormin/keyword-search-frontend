@@ -1,10 +1,11 @@
 module.exports = {
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    jsx: true,
     sourceType: 'module',
-    ecmaVersion: 2022,
+    project: 'tsconfig.json',
+    tsconfigRootDir: __dirname,
   },
-  plugins: ['react'],
+  plugins: ['react', '@typescript-eslint/eslint-plugin'],
   root: true,
   env: {
     browser: true,
@@ -13,11 +14,16 @@ module.exports = {
     es6: true,
   },
   extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
+    'plugin:react/recommended',
   ],
+  ignorePatterns: ['.eslintrc.js'],
   rules: {
     'react/jsx-no-bind': 'off',
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };

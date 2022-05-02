@@ -29,7 +29,7 @@
 
 **설정할 값들이 많아질 수 있어 설정들을 목적에 맞게 분리하여 사용한다.**
 
-- index.js: config 루트파일, 분리된 설정 파일들을 모아서 해당 파일을 통해 접근
+- index.tsx: config 루트파일, 분리된 설정 파일들을 모아서 해당 파일을 통해 접근
 
 ### pages
 
@@ -44,9 +44,9 @@
 
 > 라우팅 관련
 
-- Router.jsx: 기본 라우트
-- Protected.jsx: 인증 가드 역할
-- Restricted.jsx: 접근 제한 역할, 조건에 따라 컴포넌트의 렌더잉르 할지 말지 결정하고 redirect로 다른 경로로 강제 이동시킬 수 있다.
+- Router.tsx: 기본 라우트
+- Protected.tsx: 인증 가드 역할
+- Restricted.tsx: 접근 제한 역할, 조건에 따라 컴포넌트의 렌더잉르 할지 말지 결정하고 redirect로 다른 경로로 강제 이동시킬 수 있다.
 
 ### services
 
@@ -59,7 +59,7 @@
 
 > 기타 유틸리티
 
-### helpers.js
+### helpers.ts
 
 - utils하위의 JS 함수들을 하나의 모듈로 생성하여 사용할 수 있게
 

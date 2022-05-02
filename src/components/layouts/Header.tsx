@@ -1,9 +1,14 @@
 import React from 'react';
-import propTypes, { bool } from 'prop-types';
-import DropDownMenu from './DropDownMenu';
+import DropDownMenu, { DropDownMenuProps } from './DropDownMenu';
 
-const Header = ({ appName, dropDownMenu, isLogin }) => {
-  const userMenu = (isLogin) => {
+export interface HeaderProps {
+  appName: string;
+  dropDownMenu: DropDownMenuProps[];
+  isLogin: boolean;
+}
+
+const Header = ({ appName, dropDownMenu, isLogin }: HeaderProps) => {
+  const userMenu = (isLogin: boolean) => {
     if (isLogin) {
       return <DropDownMenu items={dropDownMenu} />;
     }
@@ -38,12 +43,6 @@ const Header = ({ appName, dropDownMenu, isLogin }) => {
       {userMenu(isLogin)}
     </nav>
   );
-};
-
-Header.propTypes = {
-  appName: propTypes.string,
-  dropDownMenu: propTypes.arrayOf(propTypes.shape(DropDownMenu.propTypes)),
-  isLogin: bool,
 };
 
 export default Header;

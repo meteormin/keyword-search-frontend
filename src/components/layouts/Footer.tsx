@@ -1,7 +1,13 @@
 import React from 'react';
-import propTypes from 'prop-types';
 
-const Footer = ({ company, year, privacyUrl, termsUrl }) => {
+export interface FooterProps {
+  company: string;
+  year: string;
+  privacyUrl: string;
+  termsUrl: string;
+}
+
+const Footer = ({ company, year, privacyUrl, termsUrl }: FooterProps) => {
   return (
     <footer className="py-4 bg-light mt-auto">
       <div className="container-fluid px-4">
@@ -18,13 +24,6 @@ const Footer = ({ company, year, privacyUrl, termsUrl }) => {
       </div>
     </footer>
   );
-};
-
-Footer.propTypes = {
-  company: propTypes.string,
-  year: propTypes.string,
-  privacyUrl: propTypes.string,
-  termsUrl: propTypes.string,
 };
 
 export default Footer;

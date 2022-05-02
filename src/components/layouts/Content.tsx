@@ -1,10 +1,20 @@
 import React from 'react';
-import propTypes from 'prop-types';
 import Footer from './Footer';
 import Loading from '../Loading';
 import AlertModal from '../AlertModal';
 
-const Content = ({ header, subject, children, footer }) => {
+export interface ContentProps {
+  header: string;
+  subject: string;
+  children?: React.ReactNode | React.ReactNode[];
+  footer?: {
+    company: string;
+    privacyUrl: string;
+    termsUrl: string;
+  };
+}
+
+const Content = ({ header, subject, children, footer }: ContentProps) => {
   const year = new Date().getFullYear().toString();
   return (
     <div id="layoutSidenav_content">
@@ -24,17 +34,6 @@ const Content = ({ header, subject, children, footer }) => {
       <Footer year={year} {...footer} />
     </div>
   );
-};
-
-Content.propTypes = {
-  header: propTypes.string,
-  subject: propTypes.string,
-  children: propTypes.element,
-  footer: propTypes.shape({
-    company: propTypes.string,
-    privacyUrl: propTypes.string,
-    termsUrl: propTypes.string,
-  }),
 };
 
 export default Content;

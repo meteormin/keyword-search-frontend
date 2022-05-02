@@ -2,7 +2,10 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CounterButtons from './CounterButtons';
 import { ApiClient } from '../../utils/ApiClient';
-import { incrementAsync, selectCount } from '../../services/features/counter';
+import {
+  incrementByAmount,
+  selectCount,
+} from '../../services/features/counter';
 import Content from '../../components/layouts/Content';
 
 const CounterPage = () => {
@@ -10,7 +13,7 @@ const CounterPage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(incrementAsync(30));
+    dispatch(incrementByAmount(30));
   }, []);
 
   const client = new ApiClient('http://localhost');

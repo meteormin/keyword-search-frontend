@@ -4,6 +4,17 @@ import { showAlert } from './alertModal';
 import { endLoading, startLoading } from './loader';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
+export interface LoginUser {
+  id: number | string;
+}
+
+export interface LoginState {
+  id: string | null;
+  password: string | null;
+  user: LoginUser | null;
+  token: string | null;
+}
+
 const loginSlice = createSlice({
   name: 'login',
   initialState: {
@@ -13,19 +24,25 @@ const loginSlice = createSlice({
     token: null,
   },
   reducers: {
-    setLoginId: (state, action) => {
+    setLoginId: (state: LoginState, action) => {
       state.id = action.payload;
     },
-    setLoginPass: (state, action) => {
+    setLoginPass: (state: LoginState, action) => {
       state.password = action.payload;
     },
-    login: (state, action) => {
+    login: (state: LoginState, action) => {
       state.token = action.payload.token;
       state.user = action.payload.user;
-      auth.setToken(state.token);
-      auth.setUser(state.user);
+
+      if (state.token != null) {
+        auth.setToken(state.token);
+      }
+
+      if (state.user != null) {
+        auth.setUser(state.user);
+      }
     },
-    loginSubmit: (state, action) => {
+    loginSubmit: (state: LoginState, action) => {
       state.id = action.payload.id;
       state.password = action.payload.password;
     },
@@ -35,12 +52,12 @@ const loginSlice = createSlice({
 export const { setLoginId, setLoginPass, login, loginSubmit } =
   loginSlice.actions;
 
-export const selectLoginState = (state) => state.login;
+export const selectLoginState = (state: any) => state.login;
 
 export default loginSlice.reducer;
 
 // logic
-const loginApi = async (id, password) => {
+const loginApi = async (id: string, password: string): Promise<any> => {
   // const client = api();
 
   // await client.post('login', {
@@ -66,14 +83,15 @@ const loginApi = async (id, password) => {
 };
 
 // sage
-function* loginApiSaga(action) {
+function* loginApiSaga(action: {
+  payload: { id: string; password: string };
+}): Generator<any> {
   yield put(startLoading());
 
   try {
     const { id, password } = action.payload;
 
-    /** @var {ApiClient} client **/
-    const client = yield call(loginApi, id, password);
+    const client: any = yield call(loginApi, id, password);
 
     // if (client.isSuccess() && !client.error) {
     //   const token = client.response.data.token;

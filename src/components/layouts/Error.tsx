@@ -1,8 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
-import propTypes from 'prop-types';
 
-const Error = ({ code, name, message }) => {
+export interface ErrorProps {
+  code: string | number;
+  name: string;
+  message: string;
+}
+
+const Error = ({ code, name, message }: ErrorProps) => {
   const navigate = useNavigate();
   return (
     <div id="layoutSidenav_content">
@@ -25,12 +30,6 @@ const Error = ({ code, name, message }) => {
       </main>
     </div>
   );
-};
-
-Error.propTypes = {
-  code: propTypes.number,
-  name: propTypes.string,
-  message: propTypes.string,
 };
 
 export default Error;

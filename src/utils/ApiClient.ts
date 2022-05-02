@@ -1,23 +1,25 @@
 import axios, {
-  // eslint-disable-next-line no-unused-vars
   AxiosRequestConfig,
-  // eslint-disable-next-line no-unused-vars
   AxiosRequestHeaders,
-  // eslint-disable-next-line no-unused-vars
   AxiosResponse,
 } from 'axios';
 
+export interface Token {
+  tokenType: string | null;
+  token: string | null;
+}
+
 export class ApiClient {
-  _host;
-  _token;
-  _headers;
-  _response;
-  _error;
+  protected _host: string;
+  protected _token: Token | null;
+  protected _headers: AxiosRequestHeaders | null;
+  protected _response: AxiosResponse | null;
+  protected _error: any;
 
   /**
    * @param {string} host
    */
-  constructor(host) {
+  constructor(host: string) {
     this._host = host;
     this._headers = null;
     this._response = null;
@@ -26,9 +28,9 @@ export class ApiClient {
   }
 
   /**
-   * @returns {*}
+   * @returns {string}
    */
-  get host() {
+  get host(): string {
     return this._host;
   }
 
@@ -36,7 +38,7 @@ export class ApiClient {
    *
    * @returns {AxiosResponse<*, *>|null}
    */
-  get response() {
+  get response(): AxiosResponse<any, any> | null {
     return this._response;
   }
 
@@ -44,7 +46,7 @@ export class ApiClient {
    *
    * @returns {*}
    */
-  get error() {
+  get error(): any {
     return this._error;
   }
 
@@ -53,7 +55,9 @@ export class ApiClient {
    * @param {AxiosRequestConfig} config
    * @returns {Promise<AxiosResponse<*, *>|*>}
    */
-  async request(config) {
+  async request(
+    config: AxiosRequestConfig,
+  ): Promise<AxiosResponse<any, any> | any> {
     if (this._token != null) {
       let token;
       if (this._token.tokenType) {
@@ -69,7 +73,7 @@ export class ApiClient {
       config.headers = this._headers;
     }
 
-    return this.setResponse(await axios.request(config));
+    return this.setResponse(axios.request(config));
   }
 
   /**
@@ -77,7 +81,7 @@ export class ApiClient {
    * @param {string} path
    * @returns {string}
    */
-  makeUrl(path) {
+  makeUrl(path: string) {
     if (this.host.endsWith('/')) {
       return this.host + path;
     } else {
@@ -87,10 +91,10 @@ export class ApiClient {
 
   /**
    *
-   * @param {Promise<AxiosResponse<*, *>|*>} res
-   * @returns {Promise<*|T>}
+   * @param {Promise<AxiosResponse<*, *>>} res
+   * @returns {Promise<any>}
    */
-  async setResponse(res) {
+  async setResponse(res: Promise<AxiosResponse<any, any>>): Promise<any> {
     try {
       this._response = await res;
       return this.response;
@@ -104,7 +108,7 @@ export class ApiClient {
    *
    * @returns {boolean}
    */
-  isSuccess() {
+  isSuccess(): boolean {
     return this.response?.statusText === 'OK' && this.error != null;
   }
 
@@ -114,8 +118,8 @@ export class ApiClient {
    * @param {string|null} tokenType
    * @returns {ApiClient}
    */
-  withToken(token, tokenType = null) {
-    this._token = { tokenType: tokenType, token: token };
+  withToken(token: string, tokenType?: string): ApiClient {
+    this._token = { tokenType: tokenType || null, token: token };
     return this;
   }
 
@@ -124,7 +128,7 @@ export class ApiClient {
    * @param {AxiosRequestHeaders} headers
    * @returns {ApiClient}
    */
-  withHeader(headers) {
+  withHeader(headers: AxiosRequestHeaders): ApiClient {
     this._headers = headers;
     return this;
   }
@@ -135,9 +139,8 @@ export class ApiClient {
    * @param {*} params
    * @returns {Promise<AxiosResponse<*, *>|*>}
    */
-  get(path, params = {}) {
-    /** @var {AxiosRequestConfig} config **/
-    const config = {};
+  get(path: string, params: object = {}) {
+    const config: AxiosRequestConfig = {};
     config.method = 'GET';
     config.url = this.makeUrl(path);
     config.params = params;
@@ -151,9 +154,8 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  post(path, data = {}) {
-    /** @var {AxiosRequestConfig} config **/
-    const config = {};
+  post(path: string, data: object = {}) {
+    const config: AxiosRequestConfig = {};
     config.method = 'POST';
     config.url = this.makeUrl(path);
     config.data = data;
@@ -167,9 +169,8 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  put(path, data = {}) {
-    /** @var {AxiosRequestConfig} config **/
-    const config = {};
+  put(path: string, data: object = {}) {
+    const config: AxiosRequestConfig = {};
     config.method = 'PUT';
     config.url = this.makeUrl(path);
     config.data = data;
@@ -183,9 +184,8 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  patch(path, data = {}) {
-    /** @var {AxiosRequestConfig} config **/
-    const config = {};
+  patch(path: string, data: object = {}) {
+    const config: AxiosRequestConfig = {};
     config.method = 'PATCH';
     config.url = this.makeUrl(path);
     config.data = data;
@@ -199,9 +199,8 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  delete(path, data = {}) {
-    /** @var {AxiosRequestConfig} config **/
-    const config = {};
+  delete(path: string, data: object = {}) {
+    const config: AxiosRequestConfig = {};
     config.method = 'DELETE';
     config.url = this.makeUrl(path);
     config.data = data;

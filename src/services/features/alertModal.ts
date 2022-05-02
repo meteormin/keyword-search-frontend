@@ -1,5 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+export interface AlertModalState {
+  title: string;
+  message: string;
+  show: boolean;
+}
+
 const alertModalSlice = createSlice({
   name: 'alertModal',
   initialState: {
@@ -8,17 +14,19 @@ const alertModalSlice = createSlice({
     show: false,
   },
   reducers: {
-    showAlert: (state, action) => {
+    showAlert: (state: AlertModalState, action) => {
       state.title = action.payload.title;
       state.message = action.payload.message;
       state.show = true;
     },
-    closeAlert: (state) => {
+    closeAlert: (state: AlertModalState) => {
       state.show = false;
     },
   },
 });
 
 export const { showAlert, closeAlert } = alertModalSlice.actions;
+export const selectAlertState = (state: any): AlertModalState =>
+  state.alertMoal;
 
 export default alertModalSlice.reducer;

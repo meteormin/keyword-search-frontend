@@ -1,7 +1,15 @@
 import React, { Fragment } from 'react';
-import propTypes from 'prop-types';
 
-const NavCollapsed = ({ name, iconClass, items }) => {
+export interface NavCollapsedProps {
+  name: string;
+  icon: string;
+  items: {
+    name: string;
+    url: string;
+  }[];
+}
+
+const NavCollapsed = ({ name, icon, items }: NavCollapsedProps) => {
   return (
     <Fragment>
       <a
@@ -13,7 +21,7 @@ const NavCollapsed = ({ name, iconClass, items }) => {
         aria-controls="collapseSettings"
       >
         <div className="sb-nav-link-icon">
-          <i className={iconClass}></i>
+          <i className={icon}></i>
         </div>
         {name}
         <div className="sb-sidenav-collapse-arrow">
@@ -40,17 +48,6 @@ const NavCollapsed = ({ name, iconClass, items }) => {
       </div>
     </Fragment>
   );
-};
-
-NavCollapsed.propTypes = {
-  name: propTypes.string,
-  iconClass: propTypes.string,
-  items: propTypes.arrayOf(
-    propTypes.shape({
-      name: propTypes.string,
-      url: propTypes.string,
-    }),
-  ),
 };
 
 export default NavCollapsed;

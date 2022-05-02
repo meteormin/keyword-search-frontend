@@ -2,14 +2,13 @@ import {
   decrement,
   increment,
   incrementByAmount,
+  selectCount,
 } from '../../services/features/counter';
 import React, { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const CounterButtons = () => {
-  const count = useSelector((state) => {
-    return state.counter.value;
-  });
+  const count = useSelector(selectCount);
 
   const dispatch = useDispatch();
 
