@@ -50,7 +50,7 @@ export class ApiClient {
 
   /**
    *
-   * @param config
+   * @param {AxiosRequestConfig} config
    * @returns {Promise<AxiosResponse<*, *>|*>}
    */
   async request(config) {
