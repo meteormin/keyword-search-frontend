@@ -52,7 +52,7 @@ export class ApiClient {
       let token = null;
 
       if (this._token.tokenType) {
-        token = `${this._token.tokenType} ${this._token.token}}`;
+        token = `${this._token.tokenType} ${this._token.token}`;
       } else {
         token = `${this._token}`;
       }
