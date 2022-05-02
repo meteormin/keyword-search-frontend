@@ -2,14 +2,20 @@ import React from 'react';
 import propTypes from 'prop-types';
 import NavItem from './NavItem';
 import NavCollapsed from './NavCollapsed';
-import { guard } from '../../helpers';
+import { guard, auth } from '../../helpers';
 
 const Navigator = ({ menu }) => {
   const isCollapsed = (item) => {
     return Object.prototype.hasOwnProperty.call(item, 'items');
   };
 
-  const handleGuard = () => true;
+  const handleGuard = () => {
+    if (auth.isLogin()) {
+      return false;
+    }
+
+    return !auth.isLogin();
+  };
 
   return (
     <div id="layoutSidenav_nav">

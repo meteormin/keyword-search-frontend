@@ -13,6 +13,12 @@ const loginSlice = createSlice({
     token: null,
   },
   reducers: {
+    setLoginId: (state, action) => {
+      state.id = action.payload;
+    },
+    setLoginPass: (state, action) => {
+      state.password = action.payload;
+    },
     login: (state, action) => {
       state.token = action.payload.token;
       state.user = action.payload.user;
@@ -26,7 +32,11 @@ const loginSlice = createSlice({
   },
 });
 
-export const { login, loginSubmit } = loginSlice.actions;
+export const { setLoginId, setLoginPass, login, loginSubmit } =
+  loginSlice.actions;
+
+export const selectLoginState = (state) => state.login;
+
 export default loginSlice.reducer;
 
 // logic
