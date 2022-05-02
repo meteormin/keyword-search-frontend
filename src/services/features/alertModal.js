@@ -8,17 +8,17 @@ const alertModalSlice = createSlice({
     show: false,
   },
   reducers: {
-    show: (state, action) => {
+    showAlert: (state, action) => {
       state.title = action.payload.title;
       state.message = action.payload.message;
       state.show = true;
     },
-    close: (state) => {
+    closeAlert: (state) => {
       state.show = false;
     },
   },
 });
 
-export const { show, close } = alertModalSlice.actions;
+export const { showAlert, closeAlert } = alertModalSlice.actions;
 
 export default alertModalSlice.reducer;

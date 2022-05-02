@@ -7,7 +7,7 @@ import Container from '../components/layouts/Container';
 import CounterContainer from '../pages/counter/CounterContainter';
 import { auth, config } from '../helpers';
 import { useDispatch } from 'react-redux';
-import { show } from '../services/features/alertModal';
+import { showAlert } from '../services/features/alertModal';
 
 const Router = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const Router = () => {
                 >
                   <div
                     onClick={() =>
-                      dispatch(show({ title: 'test', message: 'msg' }))
+                      dispatch(showAlert({ title: 'test', message: 'msg' }))
                     }
                   >
                     hello, please login
