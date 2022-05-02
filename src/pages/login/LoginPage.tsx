@@ -16,9 +16,11 @@ const LoginPage = () => {
 
   const onSubmit = () => dispatch(loginSubmit({ id, password }));
 
-  const onChangeId = (e) => dispatch(setLoginId(e.target.value));
+  const onChangeId = (e: { target: HTMLInputElement }) =>
+    dispatch(setLoginId(e.target.value));
 
-  const onChangePass = (e) => dispatch(setLoginPass(e.target.value));
+  const onChangePass = (e: { target: HTMLInputElement }) =>
+    dispatch(setLoginPass(e.target.value));
 
   return (
     <LoginForm>
@@ -65,8 +67,8 @@ const LoginPage = () => {
             <div className="d-flex align-items-center justify-content-between mt-4 mb-0">
               <a
                 className="small"
-                href="/login/password"
-                onClick={() => navigate('/login/password')}
+                href="/password/find"
+                onClick={() => navigate('/password/find')}
               >
                 비밀번호 찾기
               </a>

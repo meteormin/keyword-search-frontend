@@ -8,6 +8,7 @@ import { config } from './helpers';
 import Header from './components/layouts/Header';
 import { auth } from './helpers';
 import Container from './components/layouts/Container';
+import { Menu } from './components/layouts/Navigator';
 
 function App() {
   return (
@@ -18,9 +19,7 @@ function App() {
         dropDownMenu={config.layouts.header.dropDownMenu}
       />
       <Container
-        header={'Header'}
-        subject={'Subject'}
-        menu={config.layouts.menu}
+        menu={config.layouts.menu as Menu}
         footer={config.layouts.footer}
       >
         <Router />

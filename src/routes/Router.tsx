@@ -2,13 +2,13 @@ import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import React from 'react';
 import NotFoundPage from '../pages/Error/NotFoundPage';
-import { auth, config, guard } from '../helpers';
+import { auth, guard } from '../helpers';
 import Content from '../components/layouts/Content';
 import { showAlert } from '../services/features/alertModal';
 import CounterPage from '../pages/counter/CounterPage';
 import { useDispatch } from 'react-redux';
 import LoginPage from '../pages/login/LoginPage';
-import FindPassPage from '../pages/login/FindPassPage';
+import FindPassPage from '../pages/password/FindPassPage';
 
 const Router = () => {
   const dispatch = useDispatch();
@@ -23,11 +23,7 @@ const Router = () => {
                 condition={auth.isLogin() && true}
                 redirectPath="/"
               >
-                <Content
-                  header={'Header'}
-                  subject={'Subject'}
-                  footer={config.layouts.footer}
-                >
+                <Content header={'Header'} subject={'Subject'}>
                   <div
                     onClick={() =>
                       dispatch(showAlert({ title: 'test', message: 'msg' }))
@@ -50,7 +46,9 @@ const Router = () => {
         </Route>
         <Route path="/login">
           <Route index element={<LoginPage />} />
-          <Route path="password" element={<FindPassPage />} />
+        </Route>
+        <Route path="/password">
+          <Route path="find" element={<FindPassPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginForm from './LoginForm';
+import LoginForm from '../login/LoginForm';
 
 const FindPassPage = () => {
   return (
@@ -26,10 +26,10 @@ const FindPassPage = () => {
               <label htmlFor="inputEmail">Email address</label>
             </div>
             <div className="d-flex align-items-center justify-content-between mt-4 mb-0">
-              <a className="small" href="login.html">
+              <a className="small" href="/login">
                 Return to login
               </a>
-              <a className="btn btn-primary" href="login.html">
+              <a className="btn btn-primary" href="/password/reset">
                 Reset Password
               </a>
             </div>

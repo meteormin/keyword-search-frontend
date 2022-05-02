@@ -1,9 +1,12 @@
 import React from 'react';
-import propTypes from 'prop-types';
 import Loading from '../../components/Loading';
 import AlertModal from '../../components/AlertModal';
 
-const LoginForm = ({ children }) => {
+export interface LoginFormProps {
+  children: React.ReactNode | React.ReactNode[];
+}
+
+const LoginForm = ({ children }: LoginFormProps) => {
   return (
     <div id="layoutSidenav_content">
       <main>
@@ -17,10 +20,6 @@ const LoginForm = ({ children }) => {
       </main>
     </div>
   );
-};
-
-LoginForm.propTypes = {
-  children: propTypes.element,
 };
 
 export default LoginForm;
