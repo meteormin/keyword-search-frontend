@@ -71,6 +71,11 @@
 - React 컴포넌트와 Class는 PascalCase
 - 그 외, camelCase
 
+### React
+
+- React 컴포넌트 파일은 .jsx로 작성
+- React 컴포넌트가 없는(리엑트 설치 안해도 실행 가능한) 파일은 .js
+
 ### Redux
 
 - aciton type은 UPPER_SNAKE_CASE
