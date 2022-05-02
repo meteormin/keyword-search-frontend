@@ -8,6 +8,7 @@ import Navigator from './components/layouts/Navigator';
 import { config } from './helpers';
 import Header from './components/layouts/Header';
 import { auth } from './helpers';
+
 // import Loading from './pages/Loading';
 
 function App() {
