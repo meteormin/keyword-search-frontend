@@ -30,7 +30,7 @@ const Navigator = ({ menu }) => {
                   <NavCollapsed
                     key={'nav_item' + key.toString()}
                     name={item.name}
-                    iconClass={item.iconClass}
+                    icon={item.icon}
                     items={item.items}
                   />
                 );
@@ -40,7 +40,7 @@ const Navigator = ({ menu }) => {
                 <NavItem
                   key={'nav_item' + key.toString()}
                   name={item.name}
-                  iconClass={item.iconClass}
+                  icon={item.icon}
                   url={item.url}
                 />
               );
