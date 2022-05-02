@@ -14,7 +14,7 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = () => dispatch(loginSubmit(id, password));
+  const onSubmit = () => dispatch(loginSubmit({ id, password }));
 
   const onChangeId = (e) => dispatch(setLoginId(e.target.value));
 
@@ -32,7 +32,7 @@ const LoginPage = () => {
               <input
                 className="form-control"
                 id="inputEmail"
-                type="email"
+                type="text"
                 placeholder="name@example.com"
                 onChange={onChangeId}
               />

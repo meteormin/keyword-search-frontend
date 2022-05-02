@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { auth, api } from '../../helpers';
+import { auth } from '../../helpers';
 import { showAlert } from './alertModal';
-import { startLoading, endLoading } from './loader';
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { endLoading, startLoading } from './loader';
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 const loginSlice = createSlice({
   name: 'login',
@@ -41,14 +41,28 @@ export default loginSlice.reducer;
 
 // logic
 const loginApi = async (id, password) => {
-  const client = api();
+  // const client = api();
 
-  await client.post('login', {
-    id: id,
-    password: password,
+  // await client.post('login', {
+  //   id: id,
+  //   password: password,
+  // });
+  // return client;
+  return await new Promise((resolve) => {
+    setTimeout(() => {
+      if (id === 'root' && password === 'root') {
+        resolve({
+          token: 'access_token',
+          user: {
+            id: 1,
+            name: 'user',
+            role: 1,
+          },
+        });
+      }
+      resolve({ error: 'error' });
+    }, 3000);
   });
-
-  return client;
 };
 
 // sage
@@ -61,12 +75,17 @@ function* loginApiSaga(action) {
     /** @var {ApiClient} client **/
     const client = yield call(loginApi, id, password);
 
-    if (client.isSuccess() && !client.error) {
-      const token = client.response.data.token;
-      const user = client.response.data.user;
-
+    // if (client.isSuccess() && !client.error) {
+    //   const token = client.response.data.token;
+    //   const user = client.response.data.user;
+    if (
+      Object.prototype.hasOwnProperty.call(client, 'token') &&
+      Object.prototype.hasOwnProperty.call(client, 'user')
+    ) {
+      const token = client.token;
+      const user = client.user;
       yield put(endLoading());
-      yield put(login({ token: token, user: user }));
+      yield put(login({ token, user }));
     } else {
       yield put(endLoading());
       yield put(showAlert({ title: '로그인 실패', message: client.error }));
@@ -78,5 +97,5 @@ function* loginApiSaga(action) {
 }
 
 export function* loginSage() {
-  yield takeEvery(loginSubmit(), loginApiSaga);
+  yield takeLatest(loginSubmit, loginApiSaga);
 }

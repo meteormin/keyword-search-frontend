@@ -7,7 +7,10 @@ const Loading = () => {
   const isLoading = useSelector(selectIsLoading);
 
   return (
-    <div className="spinner text-center">
+    <div
+      className="spinner text-center"
+      style={isLoading ? { zIndex: 1 } : { zIndex: -1 }}
+    >
       {isLoading ? <Spinner /> : <Fragment></Fragment>}
     </div>
   );

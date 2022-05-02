@@ -1,3 +1,4 @@
 import createSagaMiddleware from 'redux-saga';
 
-export default createSagaMiddleware();
+const monitor = window['__SAGA_MONITOR_EXTENSION__'];
+export default createSagaMiddleware({ sagaMonitor: monitor });
