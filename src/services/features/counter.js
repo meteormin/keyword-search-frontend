@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+// import { all, put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 
 const _increment = (state) => {
   state.value += 1;

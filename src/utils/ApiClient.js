@@ -55,8 +55,7 @@ export class ApiClient {
    */
   async request(config) {
     if (this._token != null) {
-      let token = null;
-
+      let token;
       if (this._token.tokenType) {
         token = `${this._token.tokenType} ${this._token.token}`;
       } else {
@@ -88,13 +87,13 @@ export class ApiClient {
 
   /**
    *
-   * @param {AxiosResponse<*, *>} res
-   * @returns {*|T}
+   * @param {Promise<AxiosResponse<*, *>|*>} res
+   * @returns {Promise<*|T>}
    */
-  setResponse(res) {
+  async setResponse(res) {
     try {
-      this._response = res;
-      return this.response.data;
+      this._response = await res;
+      return this.response;
     } catch (error) {
       this._error = error;
       return this.error;
@@ -143,7 +142,7 @@ export class ApiClient {
     config.url = this.makeUrl(path);
     config.params = params;
 
-    return this.request(config);
+    return this.setResponse(this.request(config));
   }
 
   /**
@@ -152,14 +151,14 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  async post(path, data = {}) {
+  post(path, data = {}) {
     /** @var {AxiosRequestConfig} config **/
     const config = {};
     config.method = 'POST';
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(await this.request(config));
+    return this.setResponse(this.request(config));
   }
 
   /**
@@ -168,14 +167,14 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  async put(path, data = {}) {
+  put(path, data = {}) {
     /** @var {AxiosRequestConfig} config **/
     const config = {};
     config.method = 'PUT';
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(await this.request(config));
+    return this.setResponse(this.request(config));
   }
 
   /**
@@ -184,14 +183,14 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  async patch(path, data = {}) {
+  patch(path, data = {}) {
     /** @var {AxiosRequestConfig} config **/
     const config = {};
     config.method = 'PATCH';
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(await this.request(config));
+    return this.setResponse(this.request(config));
   }
 
   /**
@@ -200,13 +199,13 @@ export class ApiClient {
    * @param {*} data
    * @returns {Promise<AxiosResponse<*, *>|*|null>}
    */
-  async delete(path, data = {}) {
+  delete(path, data = {}) {
     /** @var {AxiosRequestConfig} config **/
     const config = {};
     config.method = 'DELETE';
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(await this.request(config));
+    return this.setResponse(this.request(config));
   }
 }
