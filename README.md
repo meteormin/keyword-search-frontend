@@ -48,12 +48,14 @@
 - Protected.tsx: 인증 가드 역할
 - Restricted.tsx: 접근 제한 역할, 조건에 따라 컴포넌트의 렌더잉르 할지 말지 결정하고 redirect로 다른 경로로 강제 이동시킬 수 있다.
 
-### services
+### store
 
 > Redux
 
-- features: action, reducer의 집합, ducks패턴
+- reducers: action, reducer의 집합, ducks패턴
 - middleware: redux middleware
+- sagas: redux-saga
+- store.ts: configuration store
 
 ### utils
 
@@ -78,5 +80,5 @@
 
 ### Redux
 
-- aciton type은 UPPER_SNAKE_CASE
-    - 중복 방지를 위해 앞에 기능명 구분(```feature/ACTION_TYPE```);
+- Ducks 패턴 참조
+- saga로직은 분리
