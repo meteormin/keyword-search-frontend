@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
-import store from './store';
+import store from './store/store';
 
 document.documentElement.lang = process.env.REACT_APP_LOCALE || 'ko';
 

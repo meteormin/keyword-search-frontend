@@ -25,8 +25,12 @@ const alertModalSlice = createSlice({
   },
 });
 
-export const { showAlert, closeAlert } = alertModalSlice.actions;
-export const selectAlertState = (state: any): AlertModalState =>
-  state.alertModal;
+const { showAlert, closeAlert } = alertModalSlice.actions;
+
+export const alertModal = {
+  showAlert,
+  closeAlert,
+  selectAlertState: (state: any): AlertModalState => state.alertModal,
+};
 
 export default alertModalSlice.reducer;

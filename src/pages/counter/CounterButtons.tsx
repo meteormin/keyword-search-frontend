@@ -3,7 +3,7 @@ import {
   increment,
   incrementByAmount,
   selectCount,
-} from '../../services/features/counter';
+} from '../../store/reducers/counter';
 import React, { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 

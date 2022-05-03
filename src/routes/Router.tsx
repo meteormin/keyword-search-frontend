@@ -4,7 +4,7 @@ import React from 'react';
 import NotFoundPage from '../pages/Error/NotFoundPage';
 import { auth, guard } from '../helpers';
 import Content from '../components/layouts/Content';
-import { showAlert } from '../services/features/alertModal';
+import { showAlert } from '../store/reducers/modal/alertModal';
 import CounterPage from '../pages/counter/CounterPage';
 import { useDispatch } from 'react-redux';
 import LoginPage from '../pages/login/LoginPage';

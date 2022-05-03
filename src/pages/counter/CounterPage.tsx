@@ -5,7 +5,7 @@ import { ApiClient } from '../../utils/ApiClient';
 import {
   incrementByAmount,
   selectCount,
-} from '../../services/features/counter';
+} from '../../store/reducers/counter';
 import Content from '../../components/layouts/Content';
 
 const CounterPage = () => {

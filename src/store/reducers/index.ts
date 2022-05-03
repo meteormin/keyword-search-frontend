@@ -1,19 +1,14 @@
-// import features
+// import reducers
 import { combineReducers } from 'redux';
 import counterReducer from './counter';
 import loaderReducer from './loader';
-import loginReducer, { loginSage } from './login';
-import alertModalReducer from './alertModal';
-import { fork, all } from 'redux-saga/effects';
+import loginReducer from './auth/login';
+import alertModalReducer from './modal/alertModal';
 
 export default combineReducers({
-  // features
+  // reducers
   counter: counterReducer,
   loader: loaderReducer,
   login: loginReducer,
   alertModal: alertModalReducer,
 });
-
-export function* rootSaga() {
-  yield all([fork(loginSage)]);
-}
