@@ -12,7 +12,7 @@ import { Menu } from './components/layouts/Navigator';
 
 function App() {
   return (
-    <div className="sb-nav-fixed">
+    <div className="sb-nav">
       <Header
         appName={config.app.name}
         isLogin={auth.isLogin()}
@@ -20,6 +20,7 @@ function App() {
       />
       <Container
         menu={config.layouts.menu as Menu}
+        isLogin={auth.isLogin()}
         footer={config.layouts.footer}
       >
         <Router />

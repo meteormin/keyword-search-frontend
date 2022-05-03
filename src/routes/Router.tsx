@@ -1,12 +1,11 @@
+import React from 'react';
 import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import React from 'react';
-import NotFoundPage from '../pages/Error/NotFoundPage';
-import { auth, guard } from '../helpers';
-import Content from '../components/layouts/Content';
-import { showAlert } from '../store/reducers/modal/alertModal';
-import CounterPage from '../pages/counter/CounterPage';
 import { useDispatch } from 'react-redux';
+import { auth, guard } from '../helpers';
+import { alertModalModule } from '../store/features/common/alertModal/alertModalReducer';
+import Content from '../components/layouts/Content';
+import NotFoundPage from '../pages/Error/NotFoundPage';
 import LoginPage from '../pages/login/LoginPage';
 import FindPassPage from '../pages/password/FindPassPage';
 
@@ -15,6 +14,14 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path="/"
+          element={
+            <guard.Protected auth={auth.isLogin()} redirectPath={'/login'}>
+              <Content header={'Header'} subject={'Subject'} />
+            </guard.Protected>
+          }
+        />
         <Route path="/test">
           <Route
             index
@@ -26,21 +33,18 @@ const Router = () => {
                 <Content header={'Header'} subject={'Subject'}>
                   <div
                     onClick={() =>
-                      dispatch(showAlert({ title: 'test', message: 'msg' }))
+                      dispatch(
+                        alertModalModule.showAlert({
+                          title: 'test',
+                          message: 'msg',
+                        }),
+                      )
                     }
                   >
                     hello, please login
                   </div>
                 </Content>
               </guard.Restricted>
-            }
-          />
-          <Route
-            path="counter"
-            element={
-              <guard.Protected auth={true} redirectPath={'/'}>
-                <CounterPage />
-              </guard.Protected>
             }
           />
         </Route>

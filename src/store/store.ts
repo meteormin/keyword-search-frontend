@@ -1,11 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import logger from './middleware/logger';
 import saga from './middleware/saga';
-import rootReducers from './reducers';
-import rootSaga from './sagas';
+import { rootReducer, rootSaga } from './features';
 
 export default configureStore({
-  reducer: rootReducers,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([logger, saga]),
 });

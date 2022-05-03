@@ -1,12 +1,14 @@
 import React, { Fragment } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeAlert, selectAlertState } from '../store/reducers/modal/alertModal';
+import { alertModalModule } from '../store/features/common/alertModal/alertModalReducer';
 
 const AlertModal = () => {
-  const { title, message, show } = useSelector(selectAlertState);
+  const { title, message, show } = useSelector(
+    alertModalModule.selectAlertState,
+  );
   const dispatch = useDispatch();
-  const handleClose = () => dispatch(closeAlert());
+  const handleClose = () => dispatch(alertModalModule.closeAlert());
 
   return (
     <Fragment>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginModule } from '../../store/reducers/auth/login';
+import { loginModule } from '../../store/features/auth/loginReducer';
 import LoginForm from './LoginForm';
 import { useNavigate } from 'react-router';
 

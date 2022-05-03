@@ -1,5 +1,6 @@
 import React from 'react';
 import DropDownMenu, { DropDownMenuProps } from './DropDownMenu';
+import { guard } from '../../helpers';
 
 export interface HeaderProps {
   appName: string;
@@ -28,13 +29,15 @@ const Header = ({ appName, dropDownMenu, isLogin }: HeaderProps) => {
         {appName || 'Subject'}
       </a>
       {/*Sidebar Toggle*/}
-      <button
-        className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
-        id="sidebarToggle"
-        // href="#!"
-      >
-        <i className="fas fa-bars"></i>
-      </button>
+      <guard.Protected auth={isLogin}>
+        <button
+          className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+          id="sidebarToggle"
+          // href="#!"
+        >
+          <i className="fas fa-bars"></i>
+        </button>
+      </guard.Protected>
       {/*Navbar Search*/}
       <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <div className="input-group"></div>

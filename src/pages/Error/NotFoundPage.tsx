@@ -1,4 +1,4 @@
-import Error from '../../components/layouts/Error';
+import Error from './Error';
 import React from 'react';
 
 const NotFoundPage = () => {
