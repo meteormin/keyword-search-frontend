@@ -1,6 +1,6 @@
 // sage
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
-import { endLoading, startLoading } from '../common/loader/loader';
+import { loaderModule } from '../common/loader/loaderReducer';
 import { alertModalModule } from '../common/alertModal/alertModalReducer';
 import { loginModule } from './loginReducer';
 
@@ -35,7 +35,7 @@ export const loginApi = {
 function* loginApiSaga(action: {
   payload: { id: string; password: string };
 }): Generator<any> {
-  yield put(startLoading());
+  yield put(loaderModule.startLoading());
 
   try {
     const { id, password } = action.payload;
@@ -51,10 +51,10 @@ function* loginApiSaga(action: {
     ) {
       const token = client.token;
       const user = client.user;
-      yield put(endLoading());
+      yield put(loaderModule.endLoading());
       yield put(loginModule.login({ token, user }));
     } else {
-      yield put(endLoading());
+      yield put(loaderModule.endLoading());
       yield put(
         alertModalModule.showAlert({
           title: '로그인 실패',
@@ -63,7 +63,7 @@ function* loginApiSaga(action: {
       );
     }
   } catch (error) {
-    yield put(endLoading());
+    yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({ title: '로그인 실패', message: error }),
     );
