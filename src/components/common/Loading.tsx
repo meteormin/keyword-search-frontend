@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import Spinner from './Spinner';
 import { useSelector } from 'react-redux';
 import { loaderModule } from '../../store/features/common/loader/loaderReducer';
