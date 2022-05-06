@@ -17,7 +17,7 @@ const Error = ({ code, name, message }: ErrorProps) => {
             <h1 className="display-1">{code}</h1>
             <p className="lead">{name}</p>
             <p>{message}</p>
-            <a href="src/pages/Error/Error#" onClick={() => navigate(-1)}>
+            <a href="src/pages/error/Error#" onClick={() => navigate(-1)}>
               <i className="fas fa-arrow-left me-1"></i>
               뒤로가기
             </a>

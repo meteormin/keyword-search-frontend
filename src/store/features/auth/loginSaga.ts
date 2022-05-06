@@ -53,6 +53,7 @@ function* loginApiSaga(action: {
       const user = client.user;
       yield put(loaderModule.endLoading());
       yield put(loginModule.login({ token, user }));
+      yield call(() => (location.href = '/'));
     } else {
       yield put(loaderModule.endLoading());
       yield put(

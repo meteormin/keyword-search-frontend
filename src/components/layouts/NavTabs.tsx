@@ -29,7 +29,9 @@ const NavTabs = ({ menu }: { menu: Menu }) => {
               handleCondition={handleGuard}
             >
               <Nav.Item>
-                <Nav.Link href={item.url}>{item.name}</Nav.Link>
+                <Nav.Link href={item.url} className="text-secondary">
+                  {item.name}
+                </Nav.Link>
               </Nav.Item>
             </guard.HiddenByRole>
           );

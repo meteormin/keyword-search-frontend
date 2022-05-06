@@ -5,7 +5,13 @@ export interface DropDownMenuProps {
   url: string;
 }
 
-const DropDownMenu = ({ items }: { items: DropDownMenuProps[] }) => {
+const DropDownMenu = ({
+  userName,
+  items,
+}: {
+  userName: string;
+  items: DropDownMenuProps[];
+}) => {
   const dropDownItem = (key: number, name: string, url: string) => (
     <li key={'dropdown_key' + key.toString()}>
       <a className="dropdown-item" href={url}>
@@ -25,6 +31,7 @@ const DropDownMenu = ({ items }: { items: DropDownMenuProps[] }) => {
           data-bs-toggle="dropdown"
           aria-expanded="false"
         >
+          {userName}
           <i className="fas fa-user fa-fw"></i>
         </a>
         <ul

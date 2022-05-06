@@ -20,22 +20,13 @@ export const initialState: LoginState = {
 };
 
 export default {
-  setLoginId: (state: LoginState, action: PayloadAction<any>) => {
-    state.id = action.payload;
-  },
-  setLoginPass: (state: LoginState, action: PayloadAction<any>) => {
-    state.password = action.payload;
-  },
   login: (state: LoginState, action: PayloadAction<any>) => {
     state.token = action.payload.token;
     state.user = action.payload.user;
 
-    if (state.token != null) {
-      auth.setToken(state.token);
-    }
-
-    if (state.user != null) {
+    if (state.user != null && state.token != null) {
       auth.setUser(state.user);
+      auth.setToken(state.token);
     }
   },
   loginSubmit: (state: LoginState, action: PayloadAction<any>) => {

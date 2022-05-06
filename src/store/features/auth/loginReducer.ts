@@ -7,11 +7,9 @@ const loginSlice = createSlice({
   reducers: loginAction,
 });
 
-const { setLoginId, setLoginPass, login, loginSubmit } = loginSlice.actions;
+const { login, loginSubmit } = loginSlice.actions;
 
 export const loginModule = {
-  setLoginId,
-  setLoginPass,
   login,
   loginSubmit,
   selectLoginState: (state: any) => state.login,

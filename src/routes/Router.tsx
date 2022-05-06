@@ -1,16 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { auth, guard } from '../helpers';
-import { alertModalModule } from '../store/features/common/alertModal/alertModalReducer';
-import Content from '../components/layouts/Content';
-import NotFoundPage from '../pages/Error/NotFoundPage';
-import LoginPage from '../pages/login/LoginPage';
-import FindPassPage from '../pages/password/FindPassPage';
+import { NotFoundPage } from '../pages/error';
+import { LoginPage } from '../pages/login';
+import { FindPassPage } from '../pages/password';
+import { TestMain } from '../pages/test';
 
 const Router = () => {
-  const dispatch = useDispatch();
   return (
     <BrowserRouter>
       <Routes>
@@ -18,38 +15,19 @@ const Router = () => {
           path="/"
           element={
             <guard.Protected auth={auth.isLogin()} redirectPath={'/login'}>
-              <Content header={'Header'} subject={'Subject'} />
+              <TestMain />
             </guard.Protected>
           }
         />
-        <Route path="/test">
+        <Route path="/login">
           <Route
             index
             element={
-              <guard.Restricted
-                condition={auth.isLogin() && true}
-                redirectPath="/"
-              >
-                <Content header={'Header'} subject={'Subject'}>
-                  <div
-                    onClick={() =>
-                      dispatch(
-                        alertModalModule.showAlert({
-                          title: 'test',
-                          message: 'msg',
-                        }),
-                      )
-                    }
-                  >
-                    hello, please login
-                  </div>
-                </Content>
+              <guard.Restricted condition={auth.isLogin()} redirectPath={'/'}>
+                <LoginPage />
               </guard.Restricted>
             }
           />
-        </Route>
-        <Route path="/login">
-          <Route index element={<LoginPage />} />
         </Route>
         <Route path="/password">
           <Route path="find" element={<FindPassPage />} />

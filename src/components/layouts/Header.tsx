@@ -6,12 +6,13 @@ export interface HeaderProps {
   appName: string;
   dropDownMenu: DropDownMenuProps[];
   isLogin: boolean;
+  userName: string;
 }
 
-const Header = ({ appName, dropDownMenu, isLogin }: HeaderProps) => {
+const Header = ({ appName, dropDownMenu, isLogin, userName }: HeaderProps) => {
   const userMenu = (isLogin: boolean) => {
     if (isLogin) {
-      return <DropDownMenu items={dropDownMenu} />;
+      return <DropDownMenu userName={userName} items={dropDownMenu} />;
     }
 
     return (

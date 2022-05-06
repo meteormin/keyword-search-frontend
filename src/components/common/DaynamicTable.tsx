@@ -1,5 +1,6 @@
 import React from 'react';
 import { Component } from 'react';
+import { Table } from 'react-bootstrap';
 
 export type TableProps = {
   indexColumn: string | number;
@@ -58,10 +59,10 @@ export class DynamicTable extends Component<TableProps> {
 
   render() {
     return (
-      <table className="table table-hover table-bordered table-responsive-sm">
-        <thead>{this.columnsHeader()}</thead>
+      <Table responsive="sm" hover className={'align-content-center'}>
+        <thead className={'table-light'}>{this.columnsHeader()}</thead>
         <tbody>{this.records()}</tbody>
-      </table>
+      </Table>
     );
   }
 }

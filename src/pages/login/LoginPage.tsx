@@ -1,21 +1,24 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { loginModule } from '../../store/features/auth/loginReducer';
 import LoginForm from './LoginForm';
 import { useNavigate } from 'react-router';
 
 const LoginPage = () => {
-  const { id, password } = useSelector(loginModule.selectLoginState);
+  const [id, setId] = useState('');
+  const [password, setPassword] = useState('');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = () => dispatch(loginModule.loginSubmit({ id, password }));
+  const onSubmit = () => {
+    dispatch(loginModule.loginSubmit({ id, password }));
+  };
 
-  const onChangeId = (e: { target: HTMLInputElement }) =>
-    dispatch(loginModule.setLoginId(e.target.value));
+  const onChangeId = (e: { target: HTMLInputElement }) => setId(e.target.value);
 
   const onChangePass = (e: { target: HTMLInputElement }) =>
-    dispatch(loginModule.setLoginPass(e.target.value));
+    setPassword(e.target.value);
 
   return (
     <LoginForm>

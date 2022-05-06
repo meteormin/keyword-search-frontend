@@ -8,7 +8,7 @@ import { config } from './helpers';
 import Header from './components/layouts/Header';
 import { auth } from './helpers';
 import Container from './components/layouts/Container';
-import { Menu } from './components/layouts/NavTabs';
+import { Menu } from './components/layouts/Navigator';
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
         appName={config.app.name}
         isLogin={auth.isLogin()}
         dropDownMenu={config.layouts.header.dropDownMenu}
+        userName={auth.user()?.name || ''}
       />
       <Container
         menu={config.layouts.menu as Menu}
