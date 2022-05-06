@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Spinner from './Spinner';
 import { useSelector } from 'react-redux';
-import { loaderModule } from '../store/features/common/loader/loaderReducer';
+import { loaderModule } from '../../store/features/common/loader/loaderReducer';
 
 const Loading = () => {
   const isLoading = useSelector(loaderModule.getLoaderState);
@@ -9,9 +9,9 @@ const Loading = () => {
   return (
     <div
       className="spinner text-center"
-      style={isLoading ? { zIndex: 1 } : { zIndex: -1 }}
+      style={!isLoading ? { zIndex: 1 } : { zIndex: -1 }}
     >
-      {isLoading ? <Spinner /> : <Fragment></Fragment>}
+      {!isLoading ? <Spinner /> : <Fragment></Fragment>}
     </div>
   );
 };

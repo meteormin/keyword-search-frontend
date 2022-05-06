@@ -1,9 +1,9 @@
 import React from 'react';
-import Navigator, { Menu } from './Navigator';
-import Loading from '../Loading';
-import AlertModal from '../AlertModal';
+import Loading from '../common/Loading';
+import AlertModal from '../modal/AlertModal';
 import Footer from './Footer';
 import { guard } from '../../helpers';
+import NavTabs, { Menu } from './NavTabs';
 
 export interface ContainerProps {
   isLogin: boolean;
@@ -21,18 +21,18 @@ export interface ContainerFooter {
 const Container = ({ isLogin, menu, footer, children }: ContainerProps) => {
   const year = new Date().getFullYear().toString();
   return (
-    <div id="layoutSidenav">
+    <div id="layoutAuthentication">
       <guard.Protected auth={isLogin}>
-        <Navigator menu={menu} />
+        <NavTabs menu={menu as Menu} />
       </guard.Protected>
-      <div id="layoutSidenav_content">
+      <div id="layoutAuthentication_content">
         <main>
           {children}
           <Loading />
           <AlertModal />
         </main>
-        <Footer year={year} {...footer} />
       </div>
+      <Footer year={year} {...footer} />
     </div>
   );
 };

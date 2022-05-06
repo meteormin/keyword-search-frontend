@@ -8,7 +8,7 @@ import { config } from './helpers';
 import Header from './components/layouts/Header';
 import { auth } from './helpers';
 import Container from './components/layouts/Container';
-import { Menu } from './components/layouts/Navigator';
+import { Menu } from './components/layouts/NavTabs';
 
 function App() {
   return (
