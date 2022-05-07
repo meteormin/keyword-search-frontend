@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import Loading from '../common/Loading';
-import AlertModal from '../modal/AlertModal';
+import AlertModal from '../modals/AlertModal';
 import Footer from './Footer';
 import { guard } from '../../helpers';
 import Navigator, { Menu } from './Navigator';
