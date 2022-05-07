@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import { auth, guard } from '../helpers';
 import { NotFoundPage } from '../pages/error';
-import { LoginPage } from '../pages/login';
+import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { TestMain } from '../pages/test';
 
@@ -32,6 +32,7 @@ const Router = () => {
         <Route path="/password">
           <Route path="find" element={<FindPassPage />} />
         </Route>
+        <Route path="/logout" element={<LogoutPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

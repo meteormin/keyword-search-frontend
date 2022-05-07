@@ -28,6 +28,11 @@ export const getToken = (): string | null => {
   return window.localStorage.getItem(conf.auth.tokenKey) || null;
 };
 
+export const logout = (): void => {
+  window.localStorage.removeItem(conf.auth.tokenKey);
+  window.localStorage.removeItem(conf.auth.userKey);
+};
+
 export const isLogin = (): boolean => {
   return user() != null;
 };

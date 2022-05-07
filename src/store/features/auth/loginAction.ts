@@ -33,4 +33,10 @@ export default {
     state.id = action.payload.id;
     state.password = action.payload.password;
   },
+  logout: (state: LoginState) => {
+    state.token = null;
+    state.user = null;
+
+    auth.logout();
+  },
 };

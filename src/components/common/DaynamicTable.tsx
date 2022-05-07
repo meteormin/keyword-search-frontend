@@ -2,22 +2,28 @@ import React from 'react';
 import { Component } from 'react';
 import { Table } from 'react-bootstrap';
 
-export type TableProps = {
-  indexColumn: string | number;
-  columns: string[];
-  schema: string[];
+export interface DynamicTableProps {
+  schema: DynamicSchema;
   records: any[];
   onClick?: (record: any) => void;
-};
+}
 
-export class DynamicTable extends Component<TableProps> {
+export interface DynamicSchema {
+  [key: string]: {
+    name: string;
+    primaryKey?: boolean;
+    onClick?: (records: any[]) => void;
+  };
+}
+
+export class DynamicTable extends Component<DynamicTableProps> {
   columnsHeader() {
     const columnsElement = [];
 
-    for (const column of this.props.columns) {
+    for (const [key, column] of Object.entries(this.props.schema)) {
       columnsElement.push(
-        <th scope="col" key={'col_' + column}>
-          {column}
+        <th scope="col" key={'col_' + key}>
+          {column.name}
         </th>,
       );
     }
@@ -34,27 +40,38 @@ export class DynamicTable extends Component<TableProps> {
   };
 
   records() {
-    const rowsElement = [];
+    let rowsElement = [];
+    const records: JSX.Element[] = [];
 
-    for (const row of this.props.records) {
-      for (const column of this.props.schema) {
-        if (column == this.props.indexColumn) {
+    this.props.records.forEach((row, index) => {
+      rowsElement = [];
+      for (const [key, column] of Object.entries(this.props.schema)) {
+        if (column.primaryKey) {
           rowsElement.push(
-            <th scope="row" key={column} onClick={() => this.onClick(row)}>
-              {row[this.props.indexColumn]}
+            <th
+              scope="row"
+              key={key}
+              onClick={() => {
+                if (column.onClick) {
+                  column.onClick(this.props.records);
+                }
+              }}
+            >
+              {column.name}
             </th>,
           );
-        } else if (row.hasOwnProperty(column)) {
-          rowsElement.push(
-            <td key={column} onClick={() => this.onClick(row)}>
-              {row[column].toString()}
-            </td>,
-          );
+        } else if (row.hasOwnProperty(key)) {
+          rowsElement.push(<td key={key}>{row[key].toString()}</td>);
         }
       }
-    }
+      records.push(
+        <tr key={'tr_' + index.toString()} onClick={() => this.onClick(row)}>
+          {rowsElement}
+        </tr>,
+      );
+    });
 
-    return <tr>{rowsElement}</tr>;
+    return records;
   }
 
   render() {

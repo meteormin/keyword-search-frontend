@@ -7,12 +7,7 @@ const loaderSlice = createSlice({
   reducers: loaderAction,
 });
 
-const { startLoading, endLoading } = loaderSlice.actions;
-
-export const loaderModule = {
-  startLoading,
-  endLoading,
-  getLoaderState: (state: any): LoaderState => state.loader,
-};
+export const { startLoading, endLoading } = loaderSlice.actions;
+export const getLoaderState = (state: any): LoaderState => state.loader;
 
 export default loaderSlice.reducer;

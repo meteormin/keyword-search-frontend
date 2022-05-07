@@ -1,5 +1,5 @@
-import React from 'react';
-import { Component } from 'react';
+import React, { Component } from 'react';
+import Input from './Input';
 
 export type InputProp = {
   type: 'text' | 'email' | 'password';
@@ -18,24 +18,18 @@ export type ButtonProp = {
 export type FormProps = {
   method: string;
   action: string;
-  inputs: InputProp[];
+  inputs: { [key: string]: InputProp[] };
   button: ButtonProp;
 };
 
-export class DynamicForm extends Component<FormProps> {
-  makeInput(input: InputProp) {
-    return (
-      <div className="form-group">
-        <label htmlFor={input.id}>{input.label}</label>
-        <input
-          className="form-control"
-          type={input.type}
-          name={input.name}
-          id={input.id}
-          value={input.value || ''}
-        />
-      </div>
-    );
+export interface FormState {
+  inputs: InputProp[];
+  elements: any;
+}
+
+export class DynamicForm extends Component<FormProps, FormState> {
+  makeInput(key: string, input: InputProp) {
+    return <Input {...input} />;
   }
 
   makeButton(btn: ButtonProp) {
@@ -51,8 +45,19 @@ export class DynamicForm extends Component<FormProps> {
     const inputs = this.props.inputs;
     const elements = [];
 
-    for (const input of inputs) {
-      elements.push(this.makeInput(input));
+    for (const key in inputs) {
+      elements.push(
+        <div>
+          <strong>{key}</strong>
+          <hr />
+        </div>,
+      );
+
+      for (const index in inputs[key]) {
+        elements.push(
+          this.makeInput(key + index.toString(), inputs[key][index]),
+        );
+      }
     }
     elements.push(<br />);
     elements.push(this.makeButton(this.props.button));

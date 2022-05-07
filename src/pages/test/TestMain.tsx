@@ -1,24 +1,33 @@
 import {
   DynamicTable,
-  TableProps,
+  DynamicTableProps,
 } from '../../components/common/DaynamicTable';
 import Content from '../../components/layouts/Content';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { alertModalModule } from '../../store/features/common/alertModal/alertModalReducer';
+import alertModalModule from '../../store/features/common/alertModal';
 
 const TestMain = () => {
   const dispatch = useDispatch();
-  const testTable: TableProps = {
-    indexColumn: 'id',
-    columns: ['id', 'name', 'text', 'createdAt'],
-    schema: ['id', 'name', 'text', 'createdAt'],
+  const testTable: DynamicTableProps = {
+    schema: {
+      id: { name: 'id', primaryKey: true },
+      name: { name: 'name' },
+      text: { name: 'text' },
+      createdAt: { name: 'createdAt' },
+    },
     records: [
       {
         id: '1',
         name: 'name',
         text: 'test',
         createdAt: '2022-05-06',
+      },
+      {
+        id: '2',
+        name: 'name2',
+        text: 'test2',
+        createdAt: '2022-05-07',
       },
     ],
     onClick: (record) =>

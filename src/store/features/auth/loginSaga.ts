@@ -1,8 +1,8 @@
 // sage
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
-import { loaderModule } from '../common/loader/loaderReducer';
-import { alertModalModule } from '../common/alertModal/alertModalReducer';
-import { loginModule } from './loginReducer';
+import { call, fork, put, takeLatest } from 'redux-saga/effects';
+import loaderModule from '../common/loader';
+import alertModalModule from '../common/alertModal';
+import loginModule from './index';
 
 export const loginApi = {
   // logic
@@ -71,10 +71,17 @@ function* loginApiSaga(action: {
   }
 }
 
+function* logoutSaga() {
+  yield call(() => {
+    location.href = '/login';
+  });
+}
+
 function* watchLoginSage() {
   yield takeLatest(loginModule.loginSubmit, loginApiSaga);
+  yield takeLatest(loginModule.logout, logoutSaga);
 }
 
 export default function* loginSaga() {
-  yield all([fork(watchLoginSage)]);
+  yield fork(watchLoginSage);
 }
