@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import Loading from '../../components/common/Loading';
-import AlertModal from '../../components/modals/AlertModal';
+import Loading from '../common/Loading';
+import AlertModal from '../modals/AlertModal';
 
 export interface LoginFormProps {
   children: React.ReactNode | React.ReactNode[];

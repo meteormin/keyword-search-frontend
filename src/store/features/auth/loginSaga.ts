@@ -3,54 +3,33 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import loginModule from './index';
+import { api } from '../../../helpers';
+import { ApiResponse } from '../../../utils/ApiClient';
 
 export const loginApi = {
   // logic
-  login: async (id: string, password: string): Promise<any> => {
-    // const client = api();
+  login: async (id: string, password: string): Promise<ApiResponse> => {
+    const client = api();
 
-    // await client.post('login', {
-    //   id: id,
-    //   password: password,
-    // });
-    // return client;
-    return await new Promise((resolve) => {
-      setTimeout(() => {
-        if (id === 'root' && password === 'root') {
-          resolve({
-            token: 'access_token',
-            user: {
-              id: 1,
-              name: 'user',
-              role: 1,
-            },
-          });
-        }
-        resolve({ error: 'error' });
-      }, 3000);
+    return await client.post('api/v1/auth/login', {
+      id: id,
+      password: password,
     });
   },
 };
 
-function* loginApiSaga(action: {
-  payload: { id: string; password: string };
-}): Generator<any> {
+function* loginApiSaga(action: { payload: { id: string; password: string } }) {
   yield put(loaderModule.startLoading());
 
   try {
     const { id, password } = action.payload;
 
-    const client: any = yield call(loginApi.login, id, password);
+    const response: ApiResponse = yield call(loginApi.login, id, password);
 
-    // if (client.isSuccess() && !client.error) {
-    //   const token = client.response.data.token;
-    //   const user = client.response.data.user;
-    if (
-      Object.prototype.hasOwnProperty.call(client, 'token') &&
-      Object.prototype.hasOwnProperty.call(client, 'user')
-    ) {
-      const token = client.token;
-      const user = client.user;
+    if (response.isSuccess) {
+      const token = response.res.data.token;
+      const user = response.res.data.user;
+
       yield put(loaderModule.endLoading());
       yield put(loginModule.login({ token, user }));
       yield call(() => (location.href = '/'));
@@ -59,7 +38,7 @@ function* loginApiSaga(action: {
       yield put(
         alertModalModule.showAlert({
           title: '로그인 실패',
-          message: client.error,
+          message: response.res?.toString(),
         }),
       );
     }

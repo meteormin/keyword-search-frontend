@@ -1,5 +1,13 @@
 import React, { ChangeEvent, Component } from 'react';
-import { InputProp } from './DynamicForm';
+
+export type InputProp = {
+  type: 'text' | 'email' | 'password';
+  label?: string;
+  id: string;
+  name: string;
+  value: any;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => any;
+};
 
 export type InputState = InputProp;
 
@@ -11,7 +19,6 @@ class Input extends Component<InputProp, InputState> {
       name: '',
       id: '',
       value: '',
-      label: '',
     };
   }
 
@@ -23,14 +30,27 @@ class Input extends Component<InputProp, InputState> {
     this.setState({
       value: e.target.value,
     });
+
+    if (this.state.onChange) {
+      this.state.onChange(e);
+    }
   };
+
+  makeLabel() {
+    if (this.state.label) {
+      return (
+        <label key={'label' + this.state.id} htmlFor={this.state.id}>
+          {this.state.label}
+        </label>
+      );
+    }
+    return null;
+  }
 
   render() {
     return (
       <div key={'div' + this.state.id} className="form-group">
-        <label key={'label' + this.state.id} htmlFor={this.state.id}>
-          {this.state.label}
-        </label>
+        {this.makeLabel()}
         <input
           key={'input' + this.state.id}
           className="form-control"

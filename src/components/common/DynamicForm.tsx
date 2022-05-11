@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import Input from './Input';
-
-export type InputProp = {
-  type: 'text' | 'email' | 'password';
-  label: string;
-  id: string;
-  name: string;
-  value: any;
-};
+import Input, { InputProp } from './Input';
 
 export type ButtonProp = {
   classes: string[];

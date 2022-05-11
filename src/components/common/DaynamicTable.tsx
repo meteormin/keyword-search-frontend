@@ -28,7 +28,7 @@ export class DynamicTable extends Component<DynamicTableProps> {
       );
     }
 
-    return <tr>{columnsElement}</tr>;
+    return <tr className="text-center">{columnsElement}</tr>;
   }
 
   onClick = (record: any) => {
@@ -57,15 +57,19 @@ export class DynamicTable extends Component<DynamicTableProps> {
                 }
               }}
             >
-              {column.name}
+              {row[key]}
             </th>,
           );
         } else if (row.hasOwnProperty(key)) {
-          rowsElement.push(<td key={key}>{row[key].toString()}</td>);
+          rowsElement.push(<td key={key}>{row[key]}</td>);
         }
       }
       records.push(
-        <tr key={'tr_' + index.toString()} onClick={() => this.onClick(row)}>
+        <tr
+          key={'tr_' + index.toString()}
+          className="text-center"
+          onClick={() => this.onClick(row)}
+        >
           {rowsElement}
         </tr>,
       );

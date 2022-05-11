@@ -1,31 +1,14 @@
-export default {
+const menu = {
   header: 'Menu',
-  url: '/',
-  name: 'Main',
+  url: '/users',
+  name: 'Users',
+  icon: 'fas fa-users',
   navItems: [
-    {
-      url: '/',
-      name: 'Main',
-      icon: 'fas fa-question-circle',
-    },
     {
       url: '/test',
       name: 'Test',
-      icon: 'fas fa-question-circle',
     },
-    // {
-    //   name: '열기/닫기',
-    //   icon: 'fas fa-question-circle',
-    //   items: [
-    //     {
-    //       url: '#',
-    //       name: '1',
-    //     },
-    //     {
-    //       url: '#',
-    //       name: '2',
-    //     },
-    //   ],
-    // },
   ],
 };
+
+export default menu;

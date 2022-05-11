@@ -7,6 +7,7 @@ export interface Menu {
   header: string;
   url: string;
   name: string;
+  icon: string;
   navItems: NavItemProps[] | NavCollapsedProps[];
 }
 
@@ -34,7 +35,7 @@ const Navigator = ({ menu }: { menu: Menu }) => {
             <div className="sb-sidenav-menu-heading">{menu.header}</div>
             <a className="nav-link" href={menu.url}>
               <div className="sb-nav-link-icon">
-                <i className="fas fa-tachometer-alt"></i>
+                <i className={menu.icon}></i>
               </div>
               {menu.name}
             </a>

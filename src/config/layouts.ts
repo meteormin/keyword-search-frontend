@@ -1,6 +1,6 @@
 import menu from './menu';
 
-export default {
+const layouts = {
   menu: menu,
   header: {
     dropDownMenu: [
@@ -20,3 +20,5 @@ export default {
     termsUrl: '#',
   },
 };
+
+export default layouts;

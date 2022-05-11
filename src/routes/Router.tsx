@@ -6,6 +6,7 @@ import { NotFoundPage } from '../pages/error';
 import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { TestMain } from '../pages/test';
+import { UsersPage } from '../pages/admin/users';
 
 const Router = () => {
   return (
@@ -33,6 +34,9 @@ const Router = () => {
           <Route path="find" element={<FindPassPage />} />
         </Route>
         <Route path="/logout" element={<LogoutPage />} />
+        <Route path="/users">
+          <Route index element={<UsersPage />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

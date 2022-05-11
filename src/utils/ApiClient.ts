@@ -9,6 +9,11 @@ export interface Token {
   token: string | null;
 }
 
+export interface ApiResponse {
+  isSuccess: boolean;
+  res: AxiosResponse | any;
+}
+
 export class ApiClient {
   protected _host: string;
   protected _token: Token | null;
@@ -92,15 +97,23 @@ export class ApiClient {
   /**
    *
    * @param {Promise<AxiosResponse<*, *>>} res
-   * @returns {Promise<any>}
+   * @returns {Promise<ApiResponse>}
    */
-  async setResponse(res: Promise<AxiosResponse<any, any>>): Promise<any> {
+  async setResponse(
+    res: Promise<AxiosResponse<any, any>>,
+  ): Promise<ApiResponse> {
     try {
       this._response = await res;
-      return this.response;
+      return {
+        isSuccess: this.isSuccess(),
+        res: this.response,
+      };
     } catch (error) {
       this._error = error;
-      return this.error;
+      return {
+        isSuccess: this.isSuccess(),
+        res: this.error,
+      };
     }
   }
 
@@ -137,9 +150,9 @@ export class ApiClient {
    *
    * @param {string} path
    * @param {*} params
-   * @returns {Promise<AxiosResponse<*, *>|*>}
+   * @returns {Promise<ApiResponse>|*|null>}
    */
-  get(path: string, params: object = {}) {
+  get(path: string, params: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
     config.method = 'GET';
     config.url = this.makeUrl(path);
@@ -152,9 +165,9 @@ export class ApiClient {
    *
    * @param {string} path
    * @param {*} data
-   * @returns {Promise<AxiosResponse<*, *>|*|null>}
+   * @returns {Promise<ApiResponse>}
    */
-  post(path: string, data: object = {}) {
+  post(path: string, data: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
     config.method = 'POST';
     config.url = this.makeUrl(path);
@@ -167,9 +180,9 @@ export class ApiClient {
    *
    * @param {string} path
    * @param {*} data
-   * @returns {Promise<AxiosResponse<*, *>|*|null>}
+   * @returns {Promise<ApiResponse>|*|null>}
    */
-  put(path: string, data: object = {}) {
+  put(path: string, data: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
     config.method = 'PUT';
     config.url = this.makeUrl(path);
@@ -182,9 +195,9 @@ export class ApiClient {
    *
    * @param {string} path
    * @param {*} data
-   * @returns {Promise<AxiosResponse<*, *>|*|null>}
+   * @returns {Promise<ApiResponse>|*|null>}
    */
-  patch(path: string, data: object = {}) {
+  patch(path: string, data: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
     config.method = 'PATCH';
     config.url = this.makeUrl(path);
@@ -197,9 +210,9 @@ export class ApiClient {
    *
    * @param {string} path
    * @param {*} data
-   * @returns {Promise<AxiosResponse<*, *>|*|null>}
+   * @returns {Promise<ApiResponse>|*|null>}
    */
-  delete(path: string, data: object = {}) {
+  delete(path: string, data: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
     config.method = 'DELETE';
     config.url = this.makeUrl(path);

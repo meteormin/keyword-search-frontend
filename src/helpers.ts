@@ -23,4 +23,11 @@ export const guard = {
   HiddenByRole,
   Restricted,
   Protected,
+  handleByRole: (
+    path: string,
+    role: string,
+    rules: { [key: string]: string[] },
+  ) => {
+    return path in rules[role];
+  },
 };

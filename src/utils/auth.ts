@@ -3,8 +3,13 @@ import config from '../config';
 const conf = config();
 
 export interface User {
-  id: number | string;
+  id: number;
+  loginId: string;
   name: string;
+  type: string;
+  typeId: number;
+  groupId: number;
+  group: string;
 }
 
 export const setUser = (user: object) => {
