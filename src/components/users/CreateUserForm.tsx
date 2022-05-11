@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import FormModal from './FormModal';
 import Input from '../common/Input';
 import Select, { Option } from '../common/Select';
