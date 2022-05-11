@@ -5,6 +5,8 @@ import alertModalModule from '../common/alertModal';
 import loginModule from './index';
 import { api } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
+import { LoginUser } from './loginAction';
+import { toCamel } from 'snake-camel';
 
 export const loginApi = {
   // logic
@@ -28,7 +30,8 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
 
     if (response.isSuccess) {
       const token = response.res.data.token;
-      const user = response.res.data.user;
+      const resUser = response.res.data.user;
+      const user: LoginUser = toCamel(resUser) as LoginUser;
 
       yield put(loaderModule.endLoading());
       yield put(loginModule.login({ token, user }));

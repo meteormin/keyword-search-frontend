@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Search from '../../../components/users/Search';
+import Search from '../../components/users/Search';
 import GroupSection from './GroupSection';
 import UserSection from './UserSection';
 
@@ -41,12 +41,6 @@ const UsersPage = () => {
           <UserSection />
         </div>
       </div>
-
-      {/*<CreateUserForm*/}
-      {/*  show={userModal}*/}
-      {/*  onSubmit={() => null}*/}
-      {/*  onHide={() => showUserModal(false)}*/}
-      {/*/>*/}
     </div>
   );
 };

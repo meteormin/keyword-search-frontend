@@ -1,5 +1,7 @@
 import React, { Fragment, useState } from 'react';
-import UserList from '../../../components/users/UserList';
+import UserList from '../../components/users/UserList';
+import CreateUserForm from '../../components/users/CreateUserForm';
+import { config } from '../../helpers';
 
 const UserSection = () => {
   const users = [
@@ -15,9 +17,10 @@ const UserSection = () => {
   ];
 
   const [userModal, showUserModal] = useState(false);
-
+  const [modalMethod, setModalMethod] = useState<'create' | 'edit'>('create');
   const createUser = () => {
     showUserModal(true);
+    setModalMethod('edit');
   };
 
   return (
@@ -36,6 +39,15 @@ const UserSection = () => {
       <div className="row mt-4" style={{ height: '90vh', overflowY: 'scroll' }}>
         <UserList users={users} />
       </div>
+      <CreateUserForm
+        show={userModal}
+        formInfo={{
+          method: modalMethod,
+          userTypes: config.auth.userTypes,
+        }}
+        onSave={() => null}
+        onHide={() => showUserModal(false)}
+      />
     </Fragment>
   );
 };

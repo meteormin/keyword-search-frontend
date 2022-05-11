@@ -1,8 +1,15 @@
 import { auth } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { User } from '../../../utils/auth';
 
-export interface LoginUser {
-  id: number | string;
+export interface LoginUser extends User {
+  id: number;
+  loginId: string;
+  email: string;
+  name: string;
+  userType: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface LoginState {
@@ -19,8 +26,11 @@ export const initialState: LoginState = {
   token: null,
 };
 
-export default {
-  login: (state: LoginState, action: PayloadAction<any>) => {
+const loginAction = {
+  login: (
+    state: LoginState,
+    action: PayloadAction<{ token: string; user: LoginUser }>,
+  ) => {
     state.token = action.payload.token;
     state.user = action.payload.user;
 
@@ -29,7 +39,10 @@ export default {
       auth.setToken(state.token);
     }
   },
-  loginSubmit: (state: LoginState, action: PayloadAction<any>) => {
+  loginSubmit: (
+    state: LoginState,
+    action: PayloadAction<{ id: string; password: string }>,
+  ) => {
     state.id = action.payload.id;
     state.password = action.payload.password;
   },
@@ -40,3 +53,5 @@ export default {
     auth.logout();
   },
 };
+
+export default loginAction;

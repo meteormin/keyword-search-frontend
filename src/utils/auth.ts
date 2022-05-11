@@ -4,12 +4,15 @@ const conf = config();
 
 export interface User {
   id: number;
-  loginId: string;
   name: string;
-  type: string;
-  typeId: number;
+  email: string;
+  loginId: string;
+  userType: string;
   groupId: number;
-  group: string;
+  groupCode: string;
+  groupName: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export const setUser = (user: object) => {

@@ -1,6 +1,6 @@
-import GroupList from '../../../components/users/GroupList';
-import PermList, { Permission } from '../../../components/users/PermList';
-import { config } from '../../../helpers';
+import GroupList from '../../components/users/GroupList';
+import PermList, { Permission } from '../../components/users/PermList';
+import { config } from '../../helpers';
 import React, { Fragment, useState } from 'react';
 
 const GroupSection = () => {

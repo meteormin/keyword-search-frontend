@@ -3,7 +3,7 @@ import FormModal from './FormModal';
 import Input from '../common/Input';
 import Select, { Option } from '../common/Select';
 
-export interface formInfo {
+export interface FormInfo {
   method: 'create' | 'edit';
   userTypes: Option[];
 }
@@ -16,11 +16,11 @@ const CreateUserForm = ({
   onResetPass,
   onDelete,
 }: {
-  formInfo: formInfo;
+  formInfo: FormInfo;
   show: boolean;
   onHide: () => any;
   onSave: () => any;
-  onResetPass: () => any;
+  onResetPass?: () => any;
   onDelete?: () => any;
 }) => {
   const makeButton = () => {
@@ -28,8 +28,12 @@ const CreateUserForm = ({
       case 'create':
         return (
           <div className="row justify-content-end">
-            <div className="col-3 offset-10">
-              <button type="button" className="btn btn-dark" onClick={onSave}>
+            <div className="col-4 offset-4">
+              <button
+                type="button"
+                className="btn btn-dark float-end"
+                onClick={onSave}
+              >
                 저장
               </button>
             </div>
@@ -38,10 +42,10 @@ const CreateUserForm = ({
       case 'edit':
         return (
           <div className="row justify-content-end">
-            <div className="col-sm-4 offset-4">
+            <div className="col-sm-8 offset-8">
               <button
                 type="button"
-                className="btn btn-dark"
+                className="btn btn-dark mx-4"
                 onClick={onResetPass}
               >
                 암호 초기화
@@ -49,7 +53,11 @@ const CreateUserForm = ({
               <button type="button" className="btn btn-dark" onClick={onSave}>
                 수정
               </button>
-              <button type="button" className="btn btn-dark" onClick={onDelete}>
+              <button
+                type="button"
+                className="btn btn-dark float-end"
+                onClick={onDelete}
+              >
                 삭제
               </button>
             </div>

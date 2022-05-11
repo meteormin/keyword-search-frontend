@@ -6,7 +6,7 @@ import { NotFoundPage } from '../pages/error';
 import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { TestMain } from '../pages/test';
-import { UsersPage } from '../pages/admin/users';
+import { UsersPage } from '../pages/users';
 
 const Router = () => {
   return (
