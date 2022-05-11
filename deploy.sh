@@ -24,9 +24,20 @@ else
   echo "success, backup"
 fi
 
-npm run build 2>/dev/null || res=$?
+echo "[install new package]"
+
+yarn 2>/dev/null || res=$?
+
+if [ "${res}" = 1 ]; then
+  echo "failed, install package"
+  exit 2
+else
+  echo "success, install package"
+fi
 
 echo "[start build react app]"
+
+npm run build 2>/dev/null || res=$?
 
 if [ "${res}" = 1 ]; then
   echo "failed, build"
