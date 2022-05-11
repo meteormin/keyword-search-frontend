@@ -15,13 +15,17 @@ fi
 
 echo "[start backup build]"
 
-cp -r ./build ./build_back 2>/dev/null || res=$?
-
-if [ "${res}" = 1 ]; then
-  echo "failed, backup"
-  exit 2
+if [ ! -d "./build" ]; then
+  echo 'Does not exists build'
 else
-  echo "success, backup"
+  cp -r ./build ./build_back 2>/dev/null || res=$?
+
+  if [ "${res}" = 1 ]; then
+    echo "failed, backup"
+    exit 2
+  else
+    echo "success, backup"
+  fi
 fi
 
 echo "[install new package]"
