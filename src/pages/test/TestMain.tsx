@@ -1,5 +1,4 @@
-import {
-  DynamicTable,
+import DynamicTable, {
   DynamicTableProps,
 } from '../../components/common/DaynamicTable';
 import Content from '../../components/layouts/Content';

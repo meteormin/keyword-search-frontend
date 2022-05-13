@@ -10,13 +10,13 @@ export interface DynamicTableProps {
 
 export interface DynamicSchema {
   [key: string]: {
-    name: string;
+    name: string | JSX.Element | JSX.Element[];
     primaryKey?: boolean;
     onClick?: (records: any[]) => void;
   };
 }
 
-export class DynamicTable extends Component<DynamicTableProps> {
+class DynamicTable extends Component<DynamicTableProps> {
   columnsHeader() {
     const columnsElement = [];
 
@@ -28,7 +28,7 @@ export class DynamicTable extends Component<DynamicTableProps> {
       );
     }
 
-    return <tr className="text-center">{columnsElement}</tr>;
+    return <tr className="text-center align-middle">{columnsElement}</tr>;
   }
 
   onClick = (record: any) => {
@@ -87,3 +87,5 @@ export class DynamicTable extends Component<DynamicTableProps> {
     );
   }
 }
+
+export default DynamicTable;

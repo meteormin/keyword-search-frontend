@@ -1,28 +1,74 @@
-import GroupList from '../../components/users/GroupList';
-import PermList, { Permission } from '../../components/users/PermList';
-import { config } from '../../helpers';
-import React, { Fragment, useState } from 'react';
+import GroupList, { GroupInfo } from '../../components/users/GroupList';
+import React, { Fragment, MouseEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import usersModule from '../../store/features/users';
+import CreateGroupForm from '../../components/users/CreateGroupForm';
 
 const GroupSection = () => {
-  const groups = [
-    {
-      no: 1,
-      groupCode: 'G0001',
-      groupName: 'create A',
-      operation: 'btn',
-    },
-  ];
+  const dispatch = useDispatch();
 
-  const [groupName, setGroupName] = useState<string>('');
-  const [permList, setPermList] = useState<string[] | number[]>([]);
+  const { permList, groups, editGroup } = useSelector(
+    usersModule.getUsersState,
+  );
+
+  const [groupModal, showGroupModal] = useState(false);
+  const [modalMethod, setModalMethod] = useState<'create' | 'edit'>('create');
+
   const createGroup = () => {
-    // api 요청 리덕스..
+    showGroupModal(true);
+    setModalMethod('create');
+    getPermList();
+  };
+  const updateGroup = () => {
+    showGroupModal(true);
+    setModalMethod('edit');
+  };
+  const getGroup = (id: number) => {
+    dispatch(usersModule.getGroup(id));
   };
 
-  const changePermCheck = (values: string[] | number[]) => {
-    setPermList(values);
-    console.log(values);
+  const getPermList = () => {
+    dispatch(usersModule.getPermList());
   };
+
+  const makeModifyButton = (
+    onClick: (e: MouseEvent<HTMLButtonElement>) => any,
+  ) => {
+    return (
+      <button type="button" className="btn btn-dark" onClick={onClick}>
+        수정
+      </button>
+    );
+  };
+
+  const mapGroupInfo = (): GroupInfo[] => {
+    return groups.map((group, index) => {
+      const groupInfo: GroupInfo = {
+        no: index + 1,
+        id: group.id || 0,
+        groupCode: group.code || '',
+        groupName: group.name || '',
+        operation: makeModifyButton(() => {
+          if (group.id) {
+            dispatch(usersModule.getEditGroup(group.id));
+          }
+        }),
+      };
+
+      return groupInfo;
+    });
+  };
+
+  useEffect(() => {
+    dispatch(usersModule.getGroups());
+  }, []);
+
+  useEffect(() => {
+    console.log('change edit group');
+    if (editGroup?.id) {
+      updateGroup();
+    }
+  }, [editGroup]);
 
   return (
     <Fragment>
@@ -35,17 +81,17 @@ const GroupSection = () => {
                 className="col-form-label"
                 style={{ fontSize: '1rem' }}
               >
-                사용자 그룹
+                <strong>사용자 그룹</strong>
               </label>
             </div>
             <div className="col-sm-6">
-              <input
-                className="form-control"
-                id="group_name"
-                type="text"
-                value={groupName}
-                onChange={(e) => setGroupName(e.target.value)}
-              />
+              {/*<input*/}
+              {/*  className="form-control"*/}
+              {/*  id="group_name"*/}
+              {/*  type="text"*/}
+              {/*  value={groupName}*/}
+              {/*  onChange={(e) => setGroupName(e.target.value)}*/}
+              {/*/>*/}
             </div>
           </div>
         </div>
@@ -60,20 +106,23 @@ const GroupSection = () => {
         </div>
       </div>
       <div className="row mt-4" style={{ height: '25vh', overflowY: 'scroll' }}>
-        <GroupList groups={groups} />
-      </div>
-      <div className="row mt-4">
-        <div className="col-lg-7">
-          <label htmlFor=""></label>
-        </div>
-        <div className="col-lg-5"></div>
-      </div>
-      <div className="row my-4">
-        <PermList
-          permissions={config.auth.permissions.default as Permission[]}
-          onChange={changePermCheck}
+        <GroupList
+          groups={mapGroupInfo()}
+          onClick={(group: GroupInfo) => {
+            getGroup(group.id);
+          }}
         />
       </div>
+      <CreateGroupForm
+        formInfo={{
+          method: modalMethod,
+        }}
+        permissions={permList}
+        editGroup={editGroup || null}
+        show={groupModal}
+        onHide={() => showGroupModal(false)}
+        onSave={() => null}
+      />
     </Fragment>
   );
 };

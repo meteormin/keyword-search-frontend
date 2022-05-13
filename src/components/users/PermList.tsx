@@ -1,9 +1,10 @@
-import React, { ChangeEvent, useState } from 'react';
-import { DynamicTable } from '../common/DaynamicTable';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import DynamicTable from '../common/DaynamicTable';
+import { bool } from 'prop-types';
 
 export interface Permission {
   name: string;
-  value: string;
+  id: number;
 }
 
 export interface PermRecord {
@@ -17,11 +18,16 @@ export interface PermListState {
 
 export interface PermListProps {
   permissions: Permission[];
-  onChange: (values: string[] | number[]) => void;
+  activeValues: number[];
+  onChange: (values: number[]) => void;
 }
 
-const PermList = ({ permissions, onChange }: PermListProps) => {
-  const [values, setValues] = useState<string[] | number[]>([]);
+const PermList = ({ permissions, activeValues, onChange }: PermListProps) => {
+  const [values, setValues] = useState<Set<number>>(new Set(activeValues));
+  const [records, setRecords] = useState<any[]>([]);
+  const [isChecked, setIsChecked] = useState<Set<number>>(
+    new Set(activeValues),
+  );
   const schema = {
     name: {
       name: '권한명',
@@ -31,48 +37,60 @@ const PermList = ({ permissions, onChange }: PermListProps) => {
     },
   };
 
-  const record: PermRecord = {
-    name: '',
-    check: null,
-  };
-
   const onChangeCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('check:', e.target.checked);
+    console.log('??', activeValues);
+    const tempSet = new Set(values);
+
     if (e.target.checked) {
-      if (!(e.target.value in values.values())) {
-        console.log('check:', e.target.value);
-        const tempList: Array<string | number> = values;
-        tempList.push(e.target.value);
-        setValues(tempList as string[] | number[]);
-      }
+      tempSet.add(parseInt(e.target.value));
+      setValues(tempSet);
+      setIsChecked(tempSet);
     } else {
-      const tempList: Array<string | number> = values;
-      const index = tempList.indexOf(e.target.value);
-      console.log(index);
-      if (index !== -1) {
-        tempList.splice(index, 1);
-        setValues(tempList as string[] | number[]);
-      }
+      tempSet.delete(parseInt(e.target.value));
+      setValues(tempSet);
+      setIsChecked(tempSet);
     }
-    onChange(values);
+
+    onChange([...values]);
   };
 
-  const records = permissions.map((perm) => {
-    return {
-      name: perm.name,
-      check: (
-        <input
-          className="form-check-input"
-          id={perm.name}
-          type="checkbox"
-          name={perm.name}
-          defaultValue={perm.value}
-          readOnly={true}
-          onChange={onChangeCheckbox}
-        />
-      ),
-    };
-  });
+  // useEffect(() => {}, []);
+
+  useEffect(() => {
+    setValues(new Set(activeValues));
+    console.log(activeValues);
+
+    setIsChecked(new Set(activeValues));
+    console.log(isChecked);
+    mappingRecords();
+  }, [activeValues, permissions]);
+
+  const getIsChecked = (value: number): boolean => {
+    const check = [...isChecked].filter((item) => item == value)[0];
+    console.log(value, check);
+    return !!check;
+  };
+
+  const mappingRecords = () => {
+    setRecords(
+      permissions.map((perm) => {
+        return {
+          name: perm.name,
+          check: (
+            <input
+              className="form-check-input"
+              id={perm.name}
+              type="checkbox"
+              name={perm.name}
+              defaultValue={perm.id}
+              onChange={onChangeCheckbox}
+              checked={getIsChecked(perm.id)}
+            />
+          ),
+        };
+      }),
+    );
+  };
 
   return (
     <div id="permList">
@@ -80,5 +98,4 @@ const PermList = ({ permissions, onChange }: PermListProps) => {
     </div>
   );
 };
-
 export default PermList;

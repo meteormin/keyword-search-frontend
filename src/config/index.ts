@@ -3,13 +3,14 @@ import permissions from './permissions';
 
 export default () => ({
   app: {
-    name: 'Test',
+    name: process.env.REACT_APP_NAME,
   },
   api: {
     host: process.env.REACT_APP_API_SERVER,
   },
   auth: {
     tokenKey: '_token',
+    refreshKey: '_refresh',
     userKey: '_user',
     userTypes: [
       {

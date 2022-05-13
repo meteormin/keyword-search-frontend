@@ -1,11 +1,12 @@
 import React from 'react';
-import { DynamicTable } from '../common/DaynamicTable';
+import DynamicTable from '../common/DaynamicTable';
 
 export interface UserInfo {
   no: string | number;
   id: string;
   name: string;
   groupName: string;
+  type: string;
   createdAt: string;
   operation: any;
 }

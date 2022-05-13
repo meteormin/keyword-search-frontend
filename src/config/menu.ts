@@ -1,12 +1,18 @@
 const menu = {
-  header: 'Menu',
-  url: '/users',
-  name: 'Users',
-  icon: 'fas fa-users',
+  header: '',
+  url: '/',
+  name: '',
+  icon: '',
   navItems: [
     {
-      url: '/test',
-      name: 'Test',
+      url: '/users',
+      name: 'Users',
+      icon: 'fas fa-users',
+    },
+    {
+      url: '/sentence',
+      name: '문장 생성',
+      icon: 'fas fa-file-lines',
     },
   ],
 };

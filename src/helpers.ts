@@ -4,7 +4,7 @@ import Config from './config';
 import HiddenByRole from './utils/HiddenByRole';
 import Restricted from './utils/Restricted';
 import Protected from './utils/Protected';
-import { ApiClient } from './utils/ApiClient';
+import { ApiClient, ApiResponse } from './utils/ApiClient';
 
 export const config = Config();
 export const auth = Auth;
@@ -17,6 +17,18 @@ export const api = (host?: string): ApiClient => {
   return host
     ? new Api.ApiClient(host)
     : new Api.ApiClient(config.api.host as string);
+};
+
+export const apiResponse = (res: ApiResponse) => {
+  if (res.isSuccess && res.res.status) {
+    return res.res.data;
+  }
+
+  if (res.res.hasOwnProperty('fields')) {
+    return res.res.fields;
+  } else {
+    return res.res.msg;
+  }
 };
 
 export const guard = {

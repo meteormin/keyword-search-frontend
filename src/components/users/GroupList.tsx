@@ -1,8 +1,9 @@
 import React from 'react';
-import { DynamicTable } from '../common/DaynamicTable';
+import DynamicTable from '../common/DaynamicTable';
 
 export interface GroupInfo {
   no: number;
+  id: number;
   groupCode: string;
   groupName: string;
   operation: any;
@@ -10,9 +11,10 @@ export interface GroupInfo {
 
 export interface GroupListProps {
   groups: GroupInfo[];
+  onClick: (group: GroupInfo) => any;
 }
 
-const UserList = ({ groups }: GroupListProps) => {
+const GroupList = ({ groups, onClick }: GroupListProps) => {
   const schema = {
     no: {
       name: 'No',
@@ -31,9 +33,9 @@ const UserList = ({ groups }: GroupListProps) => {
 
   return (
     <div id="groupList">
-      <DynamicTable schema={schema} records={groups} />
+      <DynamicTable schema={schema} records={groups} onClick={onClick} />
     </div>
   );
 };
 
-export default UserList;
+export default GroupList;

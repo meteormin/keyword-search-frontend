@@ -11,7 +11,7 @@ export interface Token {
 
 export interface ApiResponse {
   isSuccess: boolean;
-  res: AxiosResponse | any;
+  res: AxiosResponse<any, any> | any;
 }
 
 export class ApiClient {
@@ -68,10 +68,12 @@ export class ApiClient {
       if (this._token.tokenType) {
         token = `${this._token.tokenType} ${this._token.token}`;
       } else {
-        token = `${this._token}`;
+        token = `${this._token.token}`;
       }
 
-      this._headers = Object.assign(this._headers, { Authorization: token });
+      this._headers = Object.assign(this._headers || {}, {
+        Authorization: token,
+      });
     }
 
     if (this._headers != null) {
@@ -122,7 +124,7 @@ export class ApiClient {
    * @returns {boolean}
    */
   isSuccess(): boolean {
-    return this.response?.statusText === 'OK' && this.error != null;
+    return this.response?.statusText === 'OK' && this.error === null;
   }
 
   /**
@@ -158,7 +160,7 @@ export class ApiClient {
     config.url = this.makeUrl(path);
     config.params = params;
 
-    return this.setResponse(this.request(config));
+    return this.request(config);
   }
 
   /**
@@ -173,7 +175,7 @@ export class ApiClient {
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(this.request(config));
+    return this.request(config);
   }
 
   /**
@@ -188,7 +190,7 @@ export class ApiClient {
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(this.request(config));
+    return this.request(config);
   }
 
   /**
@@ -203,7 +205,7 @@ export class ApiClient {
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(this.request(config));
+    return this.request(config);
   }
 
   /**
@@ -218,6 +220,6 @@ export class ApiClient {
     config.url = this.makeUrl(path);
     config.data = data;
 
-    return this.setResponse(this.request(config));
+    return this.request(config);
   }
 }

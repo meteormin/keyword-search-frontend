@@ -7,8 +7,22 @@ import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { TestMain } from '../pages/test';
 import { UsersPage } from '../pages/users';
+import { TokenInfo } from '../utils/auth';
+import { CreatePage, CreatedListPage } from '../pages/sentence';
 
 const Router = () => {
+  const handlePerm = (menuNumber: number) => {
+    const token = auth.getToken();
+    if (token) {
+      const tokenInfo: TokenInfo = auth.tokenInfo(token);
+      const permissions = tokenInfo.permission;
+
+      return !permissions.includes(menuNumber);
+    }
+
+    return true;
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -35,7 +49,24 @@ const Router = () => {
         </Route>
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/users">
-          <Route index element={<UsersPage />} />
+          <Route
+            index
+            element={
+              <guard.Restricted condition={handlePerm(7)} redirectPath={'/'}>
+                <UsersPage />
+              </guard.Restricted>
+            }
+          />
+        </Route>
+        <Route path="/sentence">
+          <Route
+            index
+            element={
+              <guard.Restricted condition={handlePerm(1)}>
+                <CreatePage />
+              </guard.Restricted>
+            }
+          />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

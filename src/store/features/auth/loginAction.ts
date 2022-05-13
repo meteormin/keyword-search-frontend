@@ -27,16 +27,26 @@ export const initialState: LoginState = {
 };
 
 const loginAction = {
+  changeId: (state: LoginState, action: PayloadAction<string>) => {
+    state.id = action.payload;
+  },
+  changePass: (state: LoginState, action: PayloadAction<string>) => {
+    state.password = action.payload;
+  },
   login: (
     state: LoginState,
-    action: PayloadAction<{ token: string; user: LoginUser }>,
+    action: PayloadAction<{
+      token: { Access: string; Refresh: string };
+      user: LoginUser;
+    }>,
   ) => {
-    state.token = action.payload.token;
+    state.token = action.payload.token.Access;
     state.user = action.payload.user;
 
     if (state.user != null && state.token != null) {
       auth.setUser(state.user);
       auth.setToken(state.token);
+      auth.setRefresh(action.payload.token.Refresh);
     }
   },
   loginSubmit: (

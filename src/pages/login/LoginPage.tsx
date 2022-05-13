@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import loginModule from '../../store/features/auth';
 import LoginForm from '../../components/login/LoginForm';
 import { useNavigate } from 'react-router';
+import { getLoginState } from '../../store/features/auth/loginReducer';
 
 const LoginPage = () => {
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
+  const { id, password } = useSelector(getLoginState);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onSubmit = () => {
-    dispatch(loginModule.loginSubmit({ id, password }));
+    if (id) dispatch(loginModule.loginSubmit({ id, password }));
   };
 
-  const onChangeId = (e: { target: HTMLInputElement }) => setId(e.target.value);
+  const onChangeId = (e: { target: HTMLInputElement }) =>
+    dispatch(loginModule.changeId(e.target.value));
 
   const onChangePass = (e: { target: HTMLInputElement }) =>
-    setPassword(e.target.value);
+    dispatch(loginModule.changePass(e.target.value));
 
   return (
     <LoginForm>
@@ -33,7 +34,7 @@ const LoginPage = () => {
                 className="form-control"
                 id="inputEmail"
                 type="text"
-                placeholder="name@example.com"
+                placeholder="아이디를 입력해주세요"
                 onChange={onChangeId}
               />
               <label htmlFor="inputEmail">아이디</label>
@@ -43,35 +44,26 @@ const LoginPage = () => {
                 className="form-control"
                 id="inputPassword"
                 type="password"
-                placeholder="Password"
+                placeholder="비밀번호를 입력해주세요"
                 onChange={onChangePass}
               />
               <label htmlFor="inputPassword">비밀번호</label>
             </div>
-            <div className="form-check mb-3">
-              <input
-                className="form-check-input"
-                id="inputRememberPassword"
-                type="checkbox"
-                value=""
-              />
-              <label
-                className="form-check-label"
-                htmlFor="inputRememberPassword"
-              >
-                Remember Password
-              </label>
-            </div>
-            <div className="d-flex align-items-center justify-content-between mt-4 mb-0">
+            <div className="form-check mb-3"></div>
+            <div className="row mt-4 mb-0">
+              {/*<a*/}
+              {/*  className="small"*/}
+              {/*  href="/password/find"*/}
+              {/*  onClick={() => navigate('/password/find')}*/}
+              {/*>*/}
+              {/*  비밀번호 찾기*/}
+              {/*</a>*/}
               <a
-                className="small"
-                href="/password/find"
-                onClick={() => navigate('/password/find')}
+                className="btn btn-primary float-end"
+                href="#"
+                onClick={onSubmit}
               >
-                비밀번호 찾기
-              </a>
-              <a className="btn btn-primary" href="#" onClick={onSubmit}>
-                Login
+                로그인
               </a>
             </div>
           </form>

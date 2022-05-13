@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Router from './routes/Router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -11,10 +11,32 @@ import Container from './components/layouts/Container';
 import { Menu } from './components/layouts/Navigator';
 
 function App() {
+  useEffect(() => {
+    const htmlTitle = document.querySelector('title');
+    if (htmlTitle) {
+      htmlTitle.innerHTML = config.app.name || 'title';
+    }
+  });
+
+  const menu = config.layouts.menu as Menu;
+  let userType = auth.user()?.userType;
+
+  if (userType == 'admin') {
+    userType = '최고 관리자';
+  } else if (userType == 'review_admin') {
+    userType = '관리자';
+  } else if (userType == 'worker') {
+    userType = '작업자';
+  } else if (userType == 'reviwer') {
+    userType = '검수자';
+  }
+
+  menu.name = userType as string;
+
   return (
     <div className="sb-nav">
       <Header
-        appName={config.app.name}
+        appName={config.app.name as string}
         isLogin={auth.isLogin()}
         dropDownMenu={config.layouts.header.dropDownMenu}
         userName={auth.user()?.name || ''}

@@ -1,4 +1,5 @@
 import config from '../config';
+import jwtDecode from 'jwt-decode';
 
 const conf = config();
 
@@ -13,6 +14,13 @@ export interface User {
   groupName: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TokenInfo {
+  expires: number;
+  group: number[];
+  id: number;
+  permission: number[];
 }
 
 export const setUser = (user: object) => {
@@ -36,6 +44,14 @@ export const getToken = (): string | null => {
   return window.localStorage.getItem(conf.auth.tokenKey) || null;
 };
 
+export const setRefresh = (refresh: string) => {
+  window.localStorage.setItem(conf.auth.refreshKey, refresh);
+};
+
+export const getRefresh = () => {
+  window.localStorage.getItem(conf.auth.refreshKey);
+};
+
 export const logout = (): void => {
   window.localStorage.removeItem(conf.auth.tokenKey);
   window.localStorage.removeItem(conf.auth.userKey);
@@ -43,4 +59,8 @@ export const logout = (): void => {
 
 export const isLogin = (): boolean => {
   return user() != null;
+};
+
+export const tokenInfo = (token: string): TokenInfo => {
+  return jwtDecode(token);
 };

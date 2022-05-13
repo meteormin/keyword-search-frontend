@@ -11,7 +11,7 @@ export interface SelectProps {
 
 export interface Option {
   name: string;
-  value: string;
+  value: string | number;
 }
 
 class Select extends Component<SelectProps, SelectProps> {
@@ -23,7 +23,7 @@ class Select extends Component<SelectProps, SelectProps> {
       options: [],
       label: '',
       selectedValue: 0,
-      onChange: () => null,
+      onChange: (e: ChangeEvent<HTMLSelectElement>) => e,
     };
   }
 
@@ -33,8 +33,12 @@ class Select extends Component<SelectProps, SelectProps> {
 
   onChange = (e: ChangeEvent<HTMLSelectElement>) => {
     this.setState({
-      selectedValue: e.target.value,
+      selectedValue: e.target.options[e.target.selectedIndex].value,
     });
+
+    if (this.state.onChange) {
+      this.state.onChange(e);
+    }
   };
 
   makeLabel() {
@@ -66,7 +70,11 @@ class Select extends Component<SelectProps, SelectProps> {
     return (
       <div key={'div' + this.state.id} className="form-group">
         {this.makeLabel()}
-        <select className="form-control" id={this.state.id}>
+        <select
+          className="form-select"
+          id={this.state.id}
+          onChange={this.onChange}
+        >
           {this.makeOptions()}
         </select>
       </div>
