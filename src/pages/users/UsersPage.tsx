@@ -1,12 +1,9 @@
 import React, { Fragment, MouseEvent, useEffect, useState } from 'react';
 import Search from '../../components/users/Search';
 import GroupSection from './GroupSection';
-import { GroupInfo } from '../../components/users/GroupList';
 import UserSection from './UserSection';
 import usersModule from '../../store/features/users';
 import { useDispatch, useSelector } from 'react-redux';
-import PermList, { Permission } from '../../components/users/PermList';
-import { config } from '../../helpers';
 
 export interface SearchState {
   id: string | number;
@@ -16,11 +13,7 @@ export interface SearchState {
 
 const UsersPage = () => {
   const dispatch = useDispatch();
-  const { currentGroup, editGroup, search, groups, users } = useSelector(
-    usersModule.getUsersState,
-  );
-
-  const [permList, setPermList] = useState<number[]>([]);
+  const { search } = useSelector(usersModule.getUsersState);
 
   return (
     <div className="container">
@@ -47,7 +40,7 @@ const UsersPage = () => {
           <GroupSection />
         </div>
         <div className="col-lg-7 mt-4 ms-4">
-          <UserSection users={users} currentGroup={currentGroup} />
+          <UserSection />
         </div>
       </div>
     </div>

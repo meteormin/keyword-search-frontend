@@ -20,6 +20,8 @@ export const {
   setEditGroup,
   getPermList,
   setPermList,
+  getEditUser,
+  setEditUser,
 } = usersSlice.actions;
 export const getUsersState = (state: any): UsersState => state.users;
 

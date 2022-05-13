@@ -1,5 +1,6 @@
 import { SearchState } from '../../../pages/users/UsersPage';
 import { PayloadAction } from '@reduxjs/toolkit';
+import UserSection from '../../../pages/users/UserSection';
 
 export interface Group {
   id: number;
@@ -19,7 +20,7 @@ export interface User {
   groupId: number;
   groupCode: string;
   groupName: string;
-  createdAt: string;
+  createAt: string;
   edges?: object;
 }
 
@@ -51,11 +52,13 @@ export interface UsersState {
   search: SearchState;
   groups: Group[];
   users: User[];
+  editUser?: User;
   createGroup?: Group;
   createUser?: User;
   updateGroupPerm: UpdateGroupPerm;
   getGroupId?: number;
   editGroupId?: number;
+  editUserId?: number;
 }
 
 export const initialState: UsersState = {
@@ -96,6 +99,12 @@ const usersAction = {
   },
   setEditGroup: (state: UsersState, action: PayloadAction<Group>) => {
     state.editGroup = action.payload;
+  },
+  getEditUser: (state: UsersState, action: PayloadAction<number>) => {
+    state.editUserId = action.payload;
+  },
+  setEditUser: (state: UsersState, action: PayloadAction<User>) => {
+    state.editUser = action.payload;
   },
   setGroups: (state: UsersState, action: PayloadAction<Group[]>) => {
     state.groups = action.payload;

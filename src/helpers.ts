@@ -5,6 +5,8 @@ import HiddenByRole from './utils/HiddenByRole';
 import Restricted from './utils/Restricted';
 import Protected from './utils/Protected';
 import { ApiClient, ApiResponse } from './utils/ApiClient';
+import moment from 'moment';
+import 'moment/locale/ko';
 
 export const config = Config();
 export const auth = Auth;
@@ -43,3 +45,6 @@ export const guard = {
     return path in rules[role];
   },
 };
+
+// moment.locale('ko');
+export const date = moment;

@@ -41,7 +41,7 @@ const GroupSection = () => {
     );
   };
 
-  const mapGroupInfo = (): GroupInfo[] => {
+  const groupInfo = (): GroupInfo[] => {
     return groups.map((group, index) => {
       const groupInfo: GroupInfo = {
         no: index + 1,
@@ -107,7 +107,7 @@ const GroupSection = () => {
       </div>
       <div className="row mt-4" style={{ height: '25vh', overflowY: 'scroll' }}>
         <GroupList
-          groups={mapGroupInfo()}
+          groups={groupInfo()}
           onClick={(group: GroupInfo) => {
             getGroup(group.id);
           }}

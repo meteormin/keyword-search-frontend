@@ -2,12 +2,13 @@ import React from 'react';
 import DynamicTable from '../common/DaynamicTable';
 
 export interface UserInfo {
+  _pk?: number;
   no: string | number;
   id: string;
   name: string;
   groupName: string;
   type: string;
-  createdAt: string;
+  createAt: string;
   operation: any;
 }
 
@@ -30,7 +31,7 @@ const UserList = ({ users }: UserListProps) => {
     type: {
       name: '유형',
     },
-    createdAt: {
+    createAt: {
       name: '등록일',
     },
     operation: {

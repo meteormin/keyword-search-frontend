@@ -21,7 +21,7 @@ export const loginApi = {
   me: async (token: string): Promise<ApiResponse> => {
     const client = api();
 
-    return await client.withToken(token, 'bearer').get('api/v1/users/me');
+    return await client.withToken(token, 'bearer').get('api/v1/users/1');
   },
 };
 
