@@ -9,6 +9,7 @@ import { TestMain } from '../pages/test';
 import { UsersPage } from '../pages/users';
 import { TokenInfo } from '../utils/auth';
 import { CreatePage, CreatedListPage } from '../pages/sentence';
+import Home from '../utils/Home';
 
 const Router = () => {
   const handlePerm = (menuNumber: number) => {
@@ -23,6 +24,14 @@ const Router = () => {
     return true;
   };
 
+  const handleGoHome = () => {
+    return [
+      { role: 'admin', home: '/users' },
+      { role: 'manager', home: '/sentence' },
+      { role: 'crowd_worker', home: '/sentence' },
+    ];
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -30,7 +39,7 @@ const Router = () => {
           path="/"
           element={
             <guard.Protected auth={auth.isLogin()} redirectPath={'/login'}>
-              <TestMain />
+              <Home role={auth.user()?.userType || ''} rules={handleGoHome()} />
             </guard.Protected>
           }
         />
