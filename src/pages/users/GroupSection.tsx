@@ -2,7 +2,8 @@ import GroupList, { GroupInfo } from '../../components/users/GroupList';
 import React, { Fragment, MouseEvent, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
-import CreateGroupForm from '../../components/users/CreateGroupForm';
+import GroupForm from '../../components/users/GroupForm';
+import { Method } from '../../components/users/formTypes';
 
 const GroupSection = () => {
   const dispatch = useDispatch();
@@ -12,21 +13,22 @@ const GroupSection = () => {
   );
 
   const [groupModal, showGroupModal] = useState(false);
-  const [modalMethod, setModalMethod] = useState<'create' | 'edit'>('create');
+  const [modalMethod, setModalMethod] = useState<Method>(Method.CREATE);
 
+  const getGroupList = () => {
+    dispatch(usersModule.getGroups());
+  };
   const createGroup = () => {
     showGroupModal(true);
-    setModalMethod('create');
-    getPermList();
+    setModalMethod(Method.CREATE);
   };
   const updateGroup = () => {
     showGroupModal(true);
-    setModalMethod('edit');
+    setModalMethod(Method.UPDATE);
   };
   const getGroup = (id: number) => {
     dispatch(usersModule.getGroup(id));
   };
-
   const getPermList = () => {
     dispatch(usersModule.getPermList());
   };
@@ -51,6 +53,7 @@ const GroupSection = () => {
         operation: makeModifyButton(() => {
           if (group.id) {
             dispatch(usersModule.getEditGroup(group.id));
+            updateGroup();
           }
         }),
       };
@@ -60,14 +63,12 @@ const GroupSection = () => {
   };
 
   useEffect(() => {
-    dispatch(usersModule.getGroups());
+    getGroupList();
+    getPermList();
   }, []);
 
   useEffect(() => {
     console.log('change edit group');
-    if (editGroup?.id) {
-      updateGroup();
-    }
   }, [editGroup]);
 
   return (
@@ -84,15 +85,7 @@ const GroupSection = () => {
                 <strong>사용자 그룹</strong>
               </label>
             </div>
-            <div className="col-sm-6">
-              {/*<input*/}
-              {/*  className="form-control"*/}
-              {/*  id="group_name"*/}
-              {/*  type="text"*/}
-              {/*  value={groupName}*/}
-              {/*  onChange={(e) => setGroupName(e.target.value)}*/}
-              {/*/>*/}
-            </div>
+            <div className="col-sm-6"></div>
           </div>
         </div>
         <div className="col-lg-3">
@@ -113,11 +106,11 @@ const GroupSection = () => {
           }}
         />
       </div>
-      <CreateGroupForm
+      <GroupForm
         formInfo={{
           method: modalMethod,
+          permissions: permList,
         }}
-        permissions={permList}
         editGroup={editGroup || null}
         show={groupModal}
         onHide={() => showGroupModal(false)}

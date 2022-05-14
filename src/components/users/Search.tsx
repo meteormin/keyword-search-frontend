@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import Select from '../common/Select';
+import { config } from '../../helpers';
 
 export interface SearchProps {
   id: string | number;
@@ -15,6 +17,9 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
   const [_id, setId] = useState<string | number>(id);
   const [_name, setName] = useState<string>(name);
   const [_permission, setPermission] = useState<string | number>(permission);
+  const permissionOptions = [{ name: '권한을 선택해주세요', value: '' }].concat(
+    config.auth.userTypes,
+  );
 
   const onChangeInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -28,7 +33,7 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
   };
 
   return (
-    <div id="search" className="row justify-content-center">
+    <div id="search" className="row justify-content-end">
       <label htmlFor="userId" className="col-sm-auto col-form-label">
         아이디
       </label>
@@ -59,13 +64,13 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
         권한
       </label>
       <div className="col-sm-auto">
-        <input
-          className="form-control"
-          id="userId"
-          type="text"
-          placeholder="권한를 입력해 주세요."
-          value={_permission}
-          onChange={(e) => onChangeInput(e, setPermission)}
+        <Select
+          id="permission"
+          name="permission"
+          options={permissionOptions}
+          onChange={(e) => {
+            setPermission(e.target.options[e.target.selectedIndex].value);
+          }}
         />
       </div>
       <div className="col-sm-auto">

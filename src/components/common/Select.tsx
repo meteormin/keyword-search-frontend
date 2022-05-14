@@ -1,4 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
+import { InputProp } from './Input';
 
 export interface SelectProps {
   id: string;
@@ -29,6 +30,12 @@ class Select extends Component<SelectProps, SelectProps> {
 
   componentDidMount() {
     this.setState(this.props);
+  }
+
+  componentDidUpdate(prevProps: Readonly<SelectProps>) {
+    if (prevProps.selectedValue !== this.props.selectedValue) {
+      this.setState(this.props);
+    }
   }
 
   onChange = (e: ChangeEvent<HTMLSelectElement>) => {

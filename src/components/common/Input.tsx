@@ -27,6 +27,12 @@ class Input extends Component<InputProp, InputState> {
     this.setState(this.props);
   }
 
+  componentDidUpdate(prevProps: Readonly<InputProp>) {
+    if (prevProps.value !== this.props.value) {
+      this.setState(this.props);
+    }
+  }
+
   onChange = (e: ChangeEvent<HTMLInputElement>) => {
     this.setState({
       value: e.target.value,

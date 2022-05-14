@@ -5,14 +5,15 @@ import PermList, { Permission } from './PermList';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { Group } from '../../store/features/users/usersAction';
+import { Method } from './formTypes';
 
 export interface FormInfo {
-  method: 'create' | 'edit';
+  method: Method;
+  permissions: Permission[];
 }
 
-const CreateGroupForm = ({
+const GroupForm = ({
   formInfo,
-  permissions,
   editGroup,
   show,
   onHide,
@@ -20,7 +21,6 @@ const CreateGroupForm = ({
   onDelete,
 }: {
   formInfo: FormInfo;
-  permissions: Permission[];
   editGroup: Group | null;
   show: boolean;
   onHide: () => any;
@@ -29,21 +29,28 @@ const CreateGroupForm = ({
 }) => {
   const dispatch = useDispatch();
   const { createGroup } = useSelector(usersModule.getUsersState);
-
+  const [_editGroup, setEditGroup] = useState<Group | null>(editGroup);
   const [permList, setPermList] = useState<number[]>([]);
-  const [groupName, setGroupName] = useState<string>('');
+  const [groupName, setGroupName] = useState<string>(editGroup?.name || '');
 
   useEffect(() => {
     console.log('edit:', editGroup);
-    if (editGroup?.edges?.permissions) {
-      setPermList(
-        editGroup?.edges?.permissions.map((permission): number => {
-          return permission.id;
-        }),
-      );
+    if (show && formInfo.method == Method.UPDATE) {
+      if (editGroup?.edges?.permissions) {
+        setPermList(
+          editGroup?.edges?.permissions.map((permission): number => {
+            return permission.id;
+          }),
+        );
+      }
+      setEditGroup(editGroup);
+      setGroupName(editGroup?.name || '');
+    } else {
+      setGroupName('');
+      setEditGroup(null);
+      setPermList([]);
     }
-    setGroupName(editGroup?.name || '');
-  }, [editGroup]);
+  }, [editGroup, _editGroup, show]);
 
   const changePermCheck = (values: number[]) => {
     setPermList(values);
@@ -56,7 +63,7 @@ const CreateGroupForm = ({
 
   const makeButton = () => {
     switch (formInfo.method) {
-      case 'create':
+      case Method.CREATE:
         return (
           <div className="row justify-content-end">
             <div className="col-4 offset-4">
@@ -70,11 +77,15 @@ const CreateGroupForm = ({
             </div>
           </div>
         );
-      case 'edit':
+      case Method.UPDATE:
         return (
           <div className="row justify-content-end">
-            <div className="col-sm-8 offset-8">
-              <button type="button" className="btn btn-dark" onClick={onSave}>
+            <div className="col-sm-4">
+              <button
+                type="button"
+                className="btn btn-dark ms-0"
+                onClick={onSave}
+              >
                 수정
               </button>
               <button
@@ -91,14 +102,6 @@ const CreateGroupForm = ({
   };
   return (
     <FormModal show={show} onHide={onHide}>
-      <Input
-        type={'text'}
-        id={'id'}
-        label={'아이디'}
-        name={'id'}
-        value={editGroup?.id || ''}
-        readonly={true}
-      />
       <div className="mt-3">
         <Input
           type={'text'}
@@ -115,7 +118,7 @@ const CreateGroupForm = ({
           </label>
         </div>
         <PermList
-          permissions={permissions}
+          permissions={formInfo.permissions}
           activeValues={permList}
           onChange={changePermCheck}
         />
@@ -126,4 +129,4 @@ const CreateGroupForm = ({
   );
 };
 
-export default CreateGroupForm;
+export default GroupForm;

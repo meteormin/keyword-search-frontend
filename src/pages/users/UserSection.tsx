@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import UserList, { UserInfo } from '../../components/users/UserList';
-import CreateUserForm from '../../components/users/CreateUserForm';
+import UserForm from '../../components/users/UserForm';
 import { config, date } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { toCamel } from 'snake-camel';
 import { User } from '../../store/features/users/usersAction';
+import { Method } from '../../components/users/formTypes';
 
 const UserSection = () => {
   const dispatch = useDispatch();
@@ -14,17 +15,17 @@ const UserSection = () => {
   );
 
   const [userModal, showUserModal] = useState(false);
-  const [modalMethod, setModalMethod] = useState<'create' | 'edit'>('create');
+  const [modalMethod, setModalMethod] = useState<Method>(Method.CREATE);
   const createUser = () => {
     showUserModal(true);
-    setModalMethod('create');
+    setModalMethod(Method.CREATE);
   };
   const updateUser = () => {
     showUserModal(true);
-    setModalMethod('edit');
+    setModalMethod(Method.UPDATE);
   };
 
-  const mapUsers = (): UserInfo[] => {
+  const userInfo = (): UserInfo[] => {
     return users.map((user, index) => {
       const userInfo: UserInfo = {
         _pk: user.id,
@@ -38,7 +39,10 @@ const UserSection = () => {
           <button
             type="button"
             className="btn btn-dark"
-            onClick={() => dispatch(usersModule.getEditUser(user.id))}
+            onClick={() => {
+              dispatch(usersModule.getEditUser(user.id));
+              updateUser();
+            }}
           >
             수정
           </button>
@@ -54,13 +58,10 @@ const UserSection = () => {
     if (currentGroup.id) {
       console.log('get Users');
       dispatch(
-        usersModule.setUsers(currentGroup.edges?.users?.map(toCamel) as User[]),
+        usersModule.setUsers(
+          (currentGroup.edges?.users?.map(toCamel) as User[]) || [],
+        ),
       );
-    }
-
-    if (editUser?.id) {
-      console.log('edit user');
-      updateUser();
     }
   }, [currentGroup, editUser]);
 
@@ -82,9 +83,9 @@ const UserSection = () => {
         </div>
       </div>
       <div className="row mt-4" style={{ height: '90vh', overflowY: 'scroll' }}>
-        <UserList users={mapUsers()} />
+        <UserList users={userInfo()} />
       </div>
-      <CreateUserForm
+      <UserForm
         show={userModal}
         formInfo={{
           method: modalMethod,

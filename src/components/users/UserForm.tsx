@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import FormModal from './FormModal';
 import Input from '../common/Input';
 import Select, { Option } from '../common/Select';
-import { UserInfo } from './UserList';
-import { user } from '../../utils/auth';
 import { useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
+import { Method } from './formTypes';
 
 export interface FormInfo {
-  method: 'create' | 'edit';
+  method: Method;
   userTypes: Option[];
 }
 
-const CreateUserForm = ({
+const UserForm = ({
   formInfo,
   show,
   onHide,
@@ -27,21 +26,27 @@ const CreateUserForm = ({
   onResetPass?: () => any;
   onDelete?: () => any;
 }) => {
-  const [id, setId] = useState<number>();
+  const [id, setId] = useState<string>();
   const [name, setName] = useState<string>();
   const [userType, setUserType] = useState<string>();
   const { editUser } = useSelector(usersModule.getUsersState);
 
   useEffect(() => {
-    if (editUser) {
-      setId(editUser.id);
-      setName(editUser.name);
-      setUserType(editUser.userType);
+    if (show && formInfo.method == Method.UPDATE) {
+      if (editUser) {
+        setId(editUser.loginId);
+        setName(editUser.name);
+        setUserType(editUser.userType);
+      }
+    } else {
+      setId('');
+      setName('');
+      setUserType('');
     }
-  }, [editUser]);
+  }, [editUser, show]);
   const makeButton = () => {
     switch (formInfo.method) {
-      case 'create':
+      case Method.CREATE:
         return (
           <div className="row justify-content-end">
             <div className="col-4 offset-4">
@@ -55,7 +60,7 @@ const CreateUserForm = ({
             </div>
           </div>
         );
-      case 'edit':
+      case Method.UPDATE:
         return (
           <div className="row justify-content-end">
             <div className="col-sm-8 offset-8">
@@ -89,7 +94,7 @@ const CreateUserForm = ({
         label={'아이디'}
         name={'id'}
         value={id}
-        readonly={formInfo.method == 'edit'}
+        readonly={formInfo.method == Method.UPDATE}
       />
       <div className="mt-3">
         <Input
@@ -105,7 +110,7 @@ const CreateUserForm = ({
           id={'permission'}
           label={'사용자 권한'}
           name={'permission'}
-          selectedValue={0}
+          selectedValue={userType}
           options={formInfo.userTypes}
         />
       </div>
@@ -115,4 +120,4 @@ const CreateUserForm = ({
   );
 };
 
-export default CreateUserForm;
+export default UserForm;
