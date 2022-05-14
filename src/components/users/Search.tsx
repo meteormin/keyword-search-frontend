@@ -33,7 +33,7 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
   };
 
   return (
-    <div id="search" className="row justify-content-end">
+    <div id="search" className="row justify-content ">
       <label htmlFor="userId" className="col-sm-auto col-form-label">
         아이디
       </label>

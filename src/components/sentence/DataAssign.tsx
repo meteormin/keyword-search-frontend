@@ -23,10 +23,10 @@ const DataAssign = ({
   const [_selectedName, setSelectedName] = useState(selectedName);
   const [_searchValue, setValue] = useState(searchValue);
   return (
-    <div className="row">
+    <div className="row mx-2">
       <div className="col-4">
         <div className="row">
-          <div className="col-2 border-1 ms-2">
+          <div className="col-4">
             <label className="form-label mt-2">
               <strong>데이터</strong>
             </label>
@@ -49,7 +49,7 @@ const DataAssign = ({
           <div className="col-8">
             <input
               type={'text'}
-              className="form-control"
+              className="form-control w-100"
               id={'searchValue'}
               name={'searchValue'}
               value={_searchValue}
@@ -62,7 +62,7 @@ const DataAssign = ({
           <div className="col-4">
             <button
               type={'button'}
-              className={'btn btn-dark float-end'}
+              className={'btn btn-dark'}
               onClick={() => onSearch(_selectedName, _searchValue)}
             >
               생성 데이터 할당 받기

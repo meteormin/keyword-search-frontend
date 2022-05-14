@@ -60,7 +60,7 @@ const CreatePage = () => {
 
   return (
     <div className="container">
-      <div className="row justify-content ms-1">
+      <div className="row justify-content ms-2">
         <div className="col-lg-12 mt-4">
           <DataAssign
             searchName={searchNames}
@@ -73,7 +73,7 @@ const CreatePage = () => {
           />
         </div>
       </div>
-      <div className="row mt-4">
+      <div className="row mt-2">
         <hr />
       </div>
       <div className="row">

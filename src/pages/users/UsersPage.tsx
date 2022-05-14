@@ -17,8 +17,8 @@ const UsersPage = () => {
 
   return (
     <div className="container">
-      <div className="row justify-content ms-1">
-        <div className="col-lg-12 mt-4">
+      <div className="row justify-content mx-1">
+        <div className="col-lg-12 mt-4 ms-4">
           <Search
             {...search}
             onSubmit={(id, name, permission) => {

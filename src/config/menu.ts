@@ -6,7 +6,7 @@ const menu = {
   navItems: [
     {
       url: '/users',
-      name: 'Users',
+      name: '사용자 관리',
       icon: 'fas fa-users',
     },
     {
