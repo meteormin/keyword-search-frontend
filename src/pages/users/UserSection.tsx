@@ -7,6 +7,7 @@ import usersModule from '../../store/features/users';
 import { toCamel } from 'snake-camel';
 import { User } from '../../store/features/users/usersAction';
 import { Method } from '../../components/users/formTypes';
+import { Button, Col, Row } from 'react-bootstrap';
 
 const UserSection = () => {
   const dispatch = useDispatch();
@@ -67,24 +68,20 @@ const UserSection = () => {
 
   return (
     <Fragment>
-      <div className="row justify-content-end align-items-end">
-        <div className="col-lg-4 ms-0 ">
+      <Row className="justify-content-end align-items-end">
+        <Col lg={4} className="ms-0">
           <strong>사용자</strong>
           <span className="ms-4 text-secondary">{currentGroup.name}</span>
-        </div>
-        <div className="col-lg-8 ms-0 ">
-          <button
-            type="button"
-            className="btn btn-dark float-end"
-            onClick={createUser}
-          >
+        </Col>
+        <Col lg={8} className="ms-0">
+          <Button variant="dark" className="float-end" onClick={createUser}>
             사용자 등록
-          </button>
-        </div>
-      </div>
-      <div className="row mt-4" style={{ height: '90vh', overflowY: 'scroll' }}>
+          </Button>
+        </Col>
+      </Row>
+      <Row className="mt-4" style={{ height: '90vh', overflowY: 'scroll' }}>
         <UserList users={userInfo()} />
-      </div>
+      </Row>
       <UserForm
         show={userModal}
         formInfo={{

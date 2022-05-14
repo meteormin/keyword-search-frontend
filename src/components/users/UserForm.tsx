@@ -5,6 +5,7 @@ import Select, { Option } from '../common/Select';
 import { useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { Method } from './formTypes';
+import { Button, Col, Row } from 'react-bootstrap';
 
 export interface FormInfo {
   method: Method;
@@ -48,41 +49,29 @@ const UserForm = ({
     switch (formInfo.method) {
       case Method.CREATE:
         return (
-          <div className="row justify-content-end">
-            <div className="col-4 offset-4">
-              <button
-                type="button"
-                className="btn btn-dark float-end"
-                onClick={onSave}
-              >
+          <Row className="justify-content-end">
+            <Col md={4} className="offset-4">
+              <Button variant="dark" className="float-end" onClick={onSave}>
                 저장
-              </button>
-            </div>
-          </div>
+              </Button>
+            </Col>
+          </Row>
         );
       case Method.UPDATE:
         return (
-          <div className="row justify-content-end">
-            <div className="col-sm-8 offset-8">
-              <button
-                type="button"
-                className="btn btn-dark mx-4"
-                onClick={onResetPass}
-              >
-                암호 초기화
-              </button>
-              <button type="button" className="btn btn-dark" onClick={onSave}>
+          <Row className="justify-content-end">
+            <Col sm={8} className="offset-4">
+              <Button variant="dark" className="mx-4" onClick={onResetPass}>
+                암호초기화
+              </Button>
+              <Button variant="dark" className="mx-2" onClick={onSave}>
                 수정
-              </button>
-              <button
-                type="button"
-                className="btn btn-dark float-end"
-                onClick={onDelete}
-              >
+              </Button>
+              <Button variant="dark" className="float-end" onClick={onDelete}>
                 삭제
-              </button>
-            </div>
-          </div>
+              </Button>
+            </Col>
+          </Row>
         );
     }
   };

@@ -4,6 +4,7 @@ import DataSearch from '../../components/sentence/DataSearch';
 import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
 const CreatePage = () => {
   const [searchValue, setValue] = useState('');
@@ -59,9 +60,9 @@ const CreatePage = () => {
   };
 
   return (
-    <div className="container">
-      <div className="row justify-content ms-2">
-        <div className="col-lg-12 mt-4">
+    <Container>
+      <Row className="ms-2">
+        <Col lg={12} className="mt-4">
           <DataAssign
             searchName={searchNames}
             selectedName={selectedName}
@@ -71,32 +72,32 @@ const CreatePage = () => {
               selectName(selectedName);
             }}
           />
-        </div>
-      </div>
-      <div className="row mt-2">
+        </Col>
+      </Row>
+      <Row className="mt-2">
         <hr />
-      </div>
-      <div className="row">
-        <div className="col-4">
+      </Row>
+      <Row>
+        <Col md={4}>
           {time ? (
-            <button type="button" className="btn bg-light border">
+            <Button variant="light" className="btn bg-light border">
               진행 가능 시간
               <br />
               {time}
-            </button>
+            </Button>
           ) : null}
-        </div>
+        </Col>
         <DataSearch search={() => null} reset={() => null} />
-      </div>
-      <div className="row mt-4">
-        <div className="col-6 mt-2">
+      </Row>
+      <Row className="mt-4">
+        <Col md={6} className="mt-2">
           {time ? (
             <span className="text-danger">
               3시간 마다 생성 데이터가 재 할당 됩니다.
             </span>
           ) : null}
-        </div>
-        <div className="col-6">
+        </Col>
+        <Col md={6}>
           <div className="float-end mb-2">
             <Select
               id="limit"
@@ -109,13 +110,13 @@ const CreatePage = () => {
               }}
             />
           </div>
-        </div>
-      </div>
-      <div className="row">
+        </Col>
+      </Row>
+      <Row>
         <DynamicTable schema={sentenceSchema} records={[]} />
-      </div>
-      <div className="row mt-5 align-content-center">
-        <div className="col-lg-4"></div>
+      </Row>
+      <Row className="mt-5 align-content-center">
+        <Col lg={4}></Col>
         <Pagination
           currentPage={page}
           totalPage={totalPage}
@@ -123,13 +124,13 @@ const CreatePage = () => {
             setPage(page);
           }}
         />
-        <div className="col-lg-3 mt-5">
-          <button type="button" className="btn btn-dark float-end mt-1">
+        <Col lg={3} className="mt-5">
+          <Button variant="dark" className="float-end mt-1">
             <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

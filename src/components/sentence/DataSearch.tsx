@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import { Button, Col } from 'react-bootstrap';
 
 export interface DataSearchProps {
   search: () => any;
@@ -8,25 +9,24 @@ export interface DataSearchProps {
 const DataSearch = ({ search, reset }: DataSearchProps) => {
   return (
     <Fragment>
-      <div className="col-4">
-        <button
-          type="button"
-          className="btn btn-dark"
+      <Col md={4}>
+        <Button
+          variant="dark"
           style={{ height: '80%', width: '50%' }}
           onClick={search}
         >
           할당내 검색
-        </button>
-        <button
-          type="button"
-          className="btn btn-light border"
+        </Button>
+        <Button
+          variant="light"
+          className="border"
           style={{ height: '80%', width: '50%' }}
           onClick={reset}
         >
           초기화
-        </button>
-      </div>
-      <div className="col-4 ms-4"></div>
+        </Button>
+      </Col>
+      <Col md={4} className="ms-4"></Col>
     </Fragment>
   );
 };

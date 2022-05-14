@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import GroupForm from '../../components/users/GroupForm';
 import { Method } from '../../components/users/formTypes';
+import { Button, Col, Row } from 'react-bootstrap';
 
 const GroupSection = () => {
   const dispatch = useDispatch();
@@ -73,10 +74,10 @@ const GroupSection = () => {
 
   return (
     <Fragment>
-      <div className="row g-2">
-        <div className="col-lg-9">
-          <div className="row">
-            <div className="col-sm-6">
+      <Row className="g-2">
+        <Col lg={9}>
+          <Row>
+            <Col sm={6}>
               <label
                 htmlFor="group_name"
                 className="col-form-label"
@@ -84,28 +85,24 @@ const GroupSection = () => {
               >
                 <strong>사용자 그룹</strong>
               </label>
-            </div>
-            <div className="col-sm-6"></div>
-          </div>
-        </div>
-        <div className="col-lg-3">
-          <button
-            type="button"
-            className="btn btn-dark float-end"
-            onClick={createGroup}
-          >
+            </Col>
+            <Col sm={6}></Col>
+          </Row>
+        </Col>
+        <Col lg={3}>
+          <Button variant="dark" className="float-end" onClick={createGroup}>
             생성
-          </button>
-        </div>
-      </div>
-      <div className="row mt-4" style={{ height: '25vh', overflowY: 'scroll' }}>
+          </Button>
+        </Col>
+      </Row>
+      <Row className="mt-4" style={{ height: '25vh', overflowY: 'scroll' }}>
         <GroupList
           groups={groupInfo()}
           onClick={(group: GroupInfo) => {
             getGroup(group.id);
           }}
         />
-      </div>
+      </Row>
       <GroupForm
         formInfo={{
           method: modalMethod,

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { Group } from '../../store/features/users/usersAction';
 import { Method } from './formTypes';
+import { Button, Col, Row } from 'react-bootstrap';
 
 export interface FormInfo {
   method: Method;
@@ -65,38 +66,26 @@ const GroupForm = ({
     switch (formInfo.method) {
       case Method.CREATE:
         return (
-          <div className="row justify-content-end">
-            <div className="col-4 offset-4">
-              <button
-                type="button"
-                className="btn btn-dark float-end"
-                onClick={onSave}
-              >
+          <Row className="justify-content-end">
+            <Col md={4} className="offset-4">
+              <Button variant="dark" className="float-end" onClick={onSave}>
                 저장
-              </button>
-            </div>
-          </div>
+              </Button>
+            </Col>
+          </Row>
         );
       case Method.UPDATE:
         return (
-          <div className="row justify-content-end">
-            <div className="col-sm-4">
-              <button
-                type="button"
-                className="btn btn-dark ms-0"
-                onClick={onSave}
-              >
+          <Row className="justify-content-end">
+            <Col sm={4}>
+              <Button variant="dark" className="ms-0" onClick={onSave}>
                 수정
-              </button>
-              <button
-                type="button"
-                className="btn btn-dark float-end"
-                onClick={onDelete}
-              >
+              </Button>
+              <Button variant="dark" className="float-end" onClick={onDelete}>
                 삭제
-              </button>
-            </div>
-          </div>
+              </Button>
+            </Col>
+          </Row>
         );
     }
   };

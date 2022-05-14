@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Select, { Option } from '../common/Select';
+import { Button, Col, Row } from 'react-bootstrap';
 
 export interface DataAssignProps {
   searchName: Option[];
@@ -23,15 +24,15 @@ const DataAssign = ({
   const [_selectedName, setSelectedName] = useState(selectedName);
   const [_searchValue, setValue] = useState(searchValue);
   return (
-    <div className="row mx-2">
-      <div className="col-4">
-        <div className="row">
-          <div className="col-4">
+    <Row className="mx-2">
+      <Col md={4}>
+        <Row>
+          <Col md={4}>
             <label className="form-label mt-2">
               <strong>데이터</strong>
             </label>
-          </div>
-          <div className="col-8">
+          </Col>
+          <Col md={8}>
             <Select
               id={'searchData'}
               name={'searchData'}
@@ -41,12 +42,12 @@ const DataAssign = ({
                 setSelectedName(e.target.options[selectedIndex].value);
               }}
             />
-          </div>
-        </div>
-      </div>
-      <div className="col-8">
-        <div className="row">
-          <div className="col-8">
+          </Col>
+        </Row>
+      </Col>
+      <Col md={8}>
+        <Row>
+          <Col md={8}>
             <input
               type={'text'}
               className="form-control w-100"
@@ -58,19 +59,18 @@ const DataAssign = ({
               }}
               placeholder="검색어를 입력해 주세요."
             />
-          </div>
-          <div className="col-4">
-            <button
-              type={'button'}
-              className={'btn btn-dark'}
+          </Col>
+          <Col md={4}>
+            <Button
+              variant="dark"
               onClick={() => onSearch(_selectedName, _searchValue)}
             >
               생성 데이터 할당 받기
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Button>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
   );
 };
 
