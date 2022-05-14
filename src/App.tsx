@@ -31,7 +31,7 @@ function App() {
     userType = '검수자';
   }
 
-  menu.name = userType as string;
+  menu.header = userType as string;
 
   return (
     <div className="sb-nav">

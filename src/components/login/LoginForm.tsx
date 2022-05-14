@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import Loading from '../common/Loading';
 import AlertModal from '../modals/AlertModal';
+import { Col, Container, Row } from 'react-bootstrap';
 
 export interface LoginFormProps {
   children: React.ReactNode | React.ReactNode[];
@@ -9,11 +10,11 @@ export interface LoginFormProps {
 const LoginForm = ({ children }: LoginFormProps) => {
   return (
     <Fragment>
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-lg-5">{children}</div>
-        </div>
-      </div>
+      <Container>
+        <Row className="justify-content-center">
+          <Col lg={5}>{children}</Col>
+        </Row>
+      </Container>
       <Loading />
       <AlertModal />
     </Fragment>

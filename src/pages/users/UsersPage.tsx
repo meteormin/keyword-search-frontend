@@ -4,6 +4,7 @@ import GroupSection from './GroupSection';
 import UserSection from './UserSection';
 import usersModule from '../../store/features/users';
 import { useDispatch, useSelector } from 'react-redux';
+import { Col, Container, Row } from 'react-bootstrap';
 
 export interface SearchState {
   id: string | number;
@@ -16,9 +17,9 @@ const UsersPage = () => {
   const { search } = useSelector(usersModule.getUsersState);
 
   return (
-    <div className="container">
-      <div className="row justify-content mx-1">
-        <div className="col-lg-12 mt-4 ms-4">
+    <Container>
+      <Row className="mx-1">
+        <Col lg={12} className="mt-4 ms-4">
           <Search
             {...search}
             onSubmit={(id, name, permission) => {
@@ -32,18 +33,18 @@ const UsersPage = () => {
               );
             }}
           />
-        </div>
-        <div className="row mt-4">
+        </Col>
+        <Row className="mt-4">
           <hr />
-        </div>
-        <div className="col-lg-4 mt-4 me-2">
+        </Row>
+        <Col lg={4} className="mt-4 me-2">
           <GroupSection />
-        </div>
-        <div className="col-lg-7 mt-4 ms-4">
+        </Col>
+        <Col lg={7} className="mt-4 ms-4">
           <UserSection />
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

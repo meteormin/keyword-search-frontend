@@ -88,7 +88,7 @@ const CreatePage = () => {
         </div>
         <DataSearch search={() => null} reset={() => null} />
       </div>
-      <div className="row mt-5">
+      <div className="row mt-4">
         <div className="col-6 mt-2">
           {time ? (
             <span className="text-danger">

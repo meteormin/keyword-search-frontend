@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select from '../common/Select';
 import { config } from '../../helpers';
+import { Col, Row } from 'react-bootstrap';
 
 export interface SearchProps {
   id: string | number;
@@ -33,11 +34,11 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
   };
 
   return (
-    <div id="search" className="row justify-content ">
+    <Row id="search" className="offset-2">
       <label htmlFor="userId" className="col-sm-auto col-form-label">
         아이디
       </label>
-      <div className="col-sm-auto">
+      <Col sm="auto">
         <input
           className="form-control"
           id="userId"
@@ -46,24 +47,24 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
           value={_id}
           onChange={(e) => onChangeInput(e, setId)}
         />
-      </div>
-      <label htmlFor="userId" className="col-sm-auto col-form-label">
+      </Col>
+      <label htmlFor="userName" className="col-sm-auto col-form-label">
         이름
       </label>
-      <div className="col-sm-auto">
+      <Col sm="auto">
         <input
           className="form-control"
-          id="userId"
+          id="userName"
           type="text"
           placeholder="이름을 입력해 주세요."
           value={_name}
           onChange={(e) => onChangeInput(e, setName)}
         />
-      </div>
-      <label htmlFor="userId" className="col-sm-auto col-form-label">
+      </Col>
+      <label htmlFor="permission" className="col-sm-auto col-form-label">
         권한
       </label>
-      <div className="col-sm-auto">
+      <Col sm="auto">
         <Select
           id="permission"
           name="permission"
@@ -72,13 +73,13 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
             setPermission(e.target.options[e.target.selectedIndex].value);
           }}
         />
-      </div>
-      <div className="col-sm-auto">
+      </Col>
+      <Col sm="auto">
         <button type="button" className="btn btn-dark" onClick={onClickButton}>
           검색
         </button>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 
