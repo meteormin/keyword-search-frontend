@@ -5,7 +5,6 @@ import { auth, guard } from '../helpers';
 import { NotFoundPage } from '../pages/error';
 import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
-import { TestMain } from '../pages/test';
 import { UsersPage } from '../pages/users';
 import { TokenInfo } from '../utils/auth';
 import { CreatePage, CreatedListPage } from '../pages/sentence';
