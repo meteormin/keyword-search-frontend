@@ -7,6 +7,7 @@ import Protected from './utils/Protected';
 import { ApiClient, ApiResponse } from './utils/ApiClient';
 import moment from 'moment';
 import 'moment/locale/ko';
+import Lang from './assets/lang';
 
 export const config = Config();
 export const auth = Auth;
@@ -48,3 +49,5 @@ export const guard = {
 
 // moment.locale('ko');
 export const date = moment;
+
+export const lang = Lang();

@@ -1,4 +1,4 @@
-import CreatePage from './CreatePage';
+import AssignListPage from './AssignListPage';
 import CreatedListPage from './CreatedListPage';
 
-export { CreatePage, CreatedListPage };
+export { AssignListPage, CreatedListPage };

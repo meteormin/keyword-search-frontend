@@ -89,6 +89,12 @@ const UserSection = () => {
           userTypes: config.auth.userTypes,
         }}
         onSave={() => null}
+        onResetPass={() => {
+          if (editUser?.id) {
+            console.log('press resetPassword');
+            dispatch(usersModule.resetPassword(editUser?.id));
+          }
+        }}
         onHide={() => showUserModal(false)}
       />
     </Fragment>

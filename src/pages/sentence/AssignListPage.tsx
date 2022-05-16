@@ -1,29 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DataAssign from '../../components/sentence/DataAssign';
 import DataSearch from '../../components/sentence/DataSearch';
 import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import { Button, Col, Container, Row } from 'react-bootstrap';
+import CreateForm from '../../components/sentence/CreateForm';
+import { useDispatch, useSelector } from 'react-redux';
+import sentenceModule from '../../store/features/sentence';
 
-const CreatePage = () => {
-  const [searchValue, setValue] = useState('');
-  const [selectedName, selectName] = useState<string | number>('');
+const AssignListPage = () => {
+  const dispatch = useDispatch();
+  const [searchValue, setValue] = useState<string>('');
+  const [searchName, setName] = useState<string | number>('');
+  const [condition, setCondition] = useState<string | number>('');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [time, setTime] = useState('03:00:00');
+  const { taskList, time, workTask } = useSelector(
+    sentenceModule.getSentenceState,
+  );
 
-  const searchNames = [
-    {
-      name: '개념집합',
-      value: '개념집합',
-    },
-    {
-      name: '고유번호',
-      value: '고유번호',
-    },
-  ];
   const limitOptions = [
     {
       name: '10개씩 보기',
@@ -59,44 +56,65 @@ const CreatePage = () => {
     },
   };
 
+  const taskRecords = () => {
+    return taskList.map((t, i) => {
+      console.log(t.concepts);
+      return {
+        no: i + 1,
+        id: t.refId,
+        conceptSet: t.concepts.map((c) => c.stem).join(', '),
+        wordCount: t.posLength,
+      };
+    });
+  };
+
+  useEffect(() => {
+    dispatch(sentenceModule.actions.getTaskList({ limit: limit, page: page }));
+  }, []);
+
   return (
     <Container>
+      <Row className="mt-2 ms-2">
+        <Col lg={12}>
+          <Row className="mx-2">
+            <Col md={4} className=""></Col>
+            <Col md={4} className=""></Col>
+            <Col md={4} className="text-end">
+              {time ? (
+                <span className="text-danger">
+                  3시간 마다 생성 데이터가 재 할당 됩니다.
+                </span>
+              ) : null}
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <Row className="ms-2 mt-2">
+        <Col lg={12}>
+          <DataAssign
+            onSearch={(selectedName: string | number) => {
+              setCondition(selectedName);
+            }}
+            time={time || '03:00:00'}
+          />
+        </Col>
+      </Row>
       <Row className="ms-2">
         <Col lg={12} className="mt-4">
-          <DataAssign
-            searchName={searchNames}
-            selectedName={selectedName}
-            searchValue={searchValue}
+          <DataSearch
             onSearch={(selectedName: string | number, searchValue: string) => {
+              setName(selectedName);
               setValue(searchValue);
-              selectName(selectedName);
             }}
+            onReset={() => null}
           />
         </Col>
       </Row>
       <Row className="mt-2">
         <hr />
       </Row>
-      <Row>
-        <Col md={4}>
-          {time ? (
-            <Button variant="light" className="btn bg-light border">
-              진행 가능 시간
-              <br />
-              {time}
-            </Button>
-          ) : null}
-        </Col>
-        <DataSearch search={() => null} reset={() => null} />
-      </Row>
       <Row className="mt-4">
-        <Col md={6} className="mt-2">
-          {time ? (
-            <span className="text-danger">
-              3시간 마다 생성 데이터가 재 할당 됩니다.
-            </span>
-          ) : null}
-        </Col>
+        <Col md={6} className="mt-2"></Col>
         <Col md={6}>
           <div className="float-end mb-2">
             <Select
@@ -113,7 +131,7 @@ const CreatePage = () => {
         </Col>
       </Row>
       <Row>
-        <DynamicTable schema={sentenceSchema} records={[]} />
+        <DynamicTable schema={sentenceSchema} records={taskRecords()} />
       </Row>
       <Row className="mt-5 align-content-center">
         <Col lg={4}></Col>
@@ -130,8 +148,9 @@ const CreatePage = () => {
           </Button>
         </Col>
       </Row>
+      <CreateForm show={false} time={time || '03:00:00'} />
     </Container>
   );
 };
 
-export default CreatePage;
+export default AssignListPage;

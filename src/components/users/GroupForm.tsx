@@ -29,13 +29,15 @@ const GroupForm = ({
   onDelete?: () => any;
 }) => {
   const dispatch = useDispatch();
-  const { createGroup } = useSelector(usersModule.getUsersState);
+  const { postGroup } = useSelector(usersModule.getUsersState);
   const [_editGroup, setEditGroup] = useState<Group | null>(editGroup);
   const [permList, setPermList] = useState<number[]>([]);
   const [groupName, setGroupName] = useState<string>(editGroup?.name || '');
+  const [_show, setShow] = useState<boolean>(show);
 
   useEffect(() => {
     console.log('edit:', editGroup);
+    setShow(show);
     if (show && formInfo.method == Method.UPDATE) {
       if (editGroup?.edges?.permissions) {
         setPermList(
@@ -68,7 +70,14 @@ const GroupForm = ({
         return (
           <Row className="justify-content-end">
             <Col md={4} className="offset-4">
-              <Button variant="dark" className="float-end" onClick={onSave}>
+              <Button
+                variant="dark"
+                className="float-end"
+                onClick={() => {
+                  onHide();
+                  onSave();
+                }}
+              >
                 저장
               </Button>
             </Col>
@@ -78,10 +87,26 @@ const GroupForm = ({
         return (
           <Row className="justify-content-end">
             <Col sm={4}>
-              <Button variant="dark" className="ms-0" onClick={onSave}>
+              <Button
+                variant="dark"
+                className="ms-0"
+                onClick={() => {
+                  onHide();
+                  onSave();
+                }}
+              >
                 수정
               </Button>
-              <Button variant="dark" className="float-end" onClick={onDelete}>
+              <Button
+                variant="dark"
+                className="float-end"
+                onClick={() => {
+                  onHide();
+                  if (onDelete) {
+                    onDelete();
+                  }
+                }}
+              >
                 삭제
               </Button>
             </Col>
@@ -90,7 +115,7 @@ const GroupForm = ({
     }
   };
   return (
-    <FormModal show={show} onHide={onHide}>
+    <FormModal header={'사용자 그룹 생성'} show={_show} onHide={onHide}>
       <div className="mt-3">
         <Input
           type={'text'}

@@ -3,10 +3,8 @@ import Select, { Option } from '../common/Select';
 import { Button, Col, Row } from 'react-bootstrap';
 
 export interface DataAssignProps {
-  searchName: Option[];
-  searchValue: string;
-  selectedName: string | number;
-  onSearch: (selectedName: string | number, searchValue: string) => any;
+  onSearch: (selectedName: string | number) => any;
+  time: string;
 }
 
 export interface DataAssignState {
@@ -15,28 +13,29 @@ export interface DataAssignState {
   _selectedName: string | number;
 }
 
-const DataAssign = ({
-  searchName,
-  searchValue,
-  selectedName,
-  onSearch,
-}: DataAssignProps) => {
-  const [_selectedName, setSelectedName] = useState(selectedName);
-  const [_searchValue, setValue] = useState(searchValue);
+const DataAssign = ({ onSearch, time }: DataAssignProps) => {
+  const [selectedName, setSelectedName] = useState<string>('검색어 선택');
+  const [searchCondition, setCondition] = useState<Option[]>([
+    {
+      name: '검색어 선택',
+      value: '',
+    },
+  ]);
+
   return (
     <Row className="mx-2">
       <Col md={4}>
         <Row>
           <Col md={4}>
             <label className="form-label mt-2">
-              <strong>데이터</strong>
+              <strong>생성 조건</strong>
             </label>
           </Col>
           <Col md={8}>
             <Select
               id={'searchData'}
               name={'searchData'}
-              options={searchName}
+              options={searchCondition}
               onChange={(e) => {
                 const selectedIndex = e.target.selectedIndex;
                 setSelectedName(e.target.options[selectedIndex].value);
@@ -45,30 +44,22 @@ const DataAssign = ({
           </Col>
         </Row>
       </Col>
-      <Col md={8}>
-        <Row>
-          <Col md={8}>
-            <input
-              type={'text'}
-              className="form-control w-100"
-              id={'searchValue'}
-              name={'searchValue'}
-              value={_searchValue}
-              onChange={(e) => {
-                setValue(e.target.value);
-              }}
-              placeholder="검색어를 입력해 주세요."
-            />
-          </Col>
-          <Col md={4}>
-            <Button
-              variant="dark"
-              onClick={() => onSearch(_selectedName, _searchValue)}
-            >
-              생성 데이터 할당 받기
-            </Button>
-          </Col>
-        </Row>
+      <Col md={4}>
+        <Button variant="dark" onClick={() => onSearch(selectedName)}>
+          생성 데이터 할당 받기
+        </Button>
+      </Col>
+      <Col md={4} className="">
+        {time ? (
+          <Button
+            variant="light"
+            className="btn bg-light border float-end w-50 align-middle"
+          >
+            진행 가능 시간
+            <br />
+            {time}
+          </Button>
+        ) : null}
       </Col>
     </Row>
   );

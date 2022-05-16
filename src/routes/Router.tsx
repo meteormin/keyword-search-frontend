@@ -7,8 +7,9 @@ import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { UsersPage } from '../pages/users';
 import { TokenInfo } from '../utils/auth';
-import { CreatePage, CreatedListPage } from '../pages/sentence';
+import { AssignListPage, CreatedListPage } from '../pages/sentence';
 import Home from '../utils/Home';
+import CreateForm from '../components/sentence/CreateForm';
 
 const Router = () => {
   const handlePerm = (menuNumber: number) => {
@@ -34,6 +35,15 @@ const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
+        {/*<Route*/}
+        {/*  path="/test"*/}
+        {/*  element={*/}
+        {/*    <guard.Protected*/}
+        {/*      auth={auth.isLogin()}*/}
+        {/*      redirectPath={'/login'}*/}
+        {/*    ></guard.Protected>*/}
+        {/*  }*/}
+        {/*/>*/}
         <Route
           path="/"
           element={
@@ -71,7 +81,7 @@ const Router = () => {
             index
             element={
               <guard.Restricted condition={handlePerm(1)}>
-                <CreatePage />
+                <AssignListPage />
               </guard.Restricted>
             }
           />
