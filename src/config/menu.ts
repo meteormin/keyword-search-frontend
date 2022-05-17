@@ -10,7 +10,7 @@ const menu = {
       icon: 'fas fa-users',
     },
     {
-      url: '/sentence',
+      url: '/task',
       name: '문장 생성',
       icon: 'fas fa-file-lines',
     },

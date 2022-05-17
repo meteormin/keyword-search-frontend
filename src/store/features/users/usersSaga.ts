@@ -4,7 +4,7 @@ import alertModalModule from '../common/alertModal';
 import usersModule from './';
 import { api, apiResponse, auth } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
-import { toCamel } from 'snake-camel';
+import { toCamel, toSnake } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
 import usersAction, {
   Group,
@@ -59,13 +59,13 @@ const usersApi = {
       const url = `api/v1/users`;
       return await api()
         .withToken(auth.getToken() as string)
-        .post(url, user);
+        .post(url, toSnake(user));
     },
     updateUser: async (user: User) => {
       const url = `api/v1/users`;
       return await api()
         .withToken(auth.getToken() as string)
-        .patch(url, user);
+        .patch(url, toSnake(user));
     },
     updatePassword: async (id: number, password: string) => {
       const url = `api/v1/users/me/password`;

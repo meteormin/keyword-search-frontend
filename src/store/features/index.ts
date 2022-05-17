@@ -9,6 +9,8 @@ import usersReducer from './users/usersReducer';
 import usersSaga from './users/usersSaga';
 import sentenceSage from './sentence/sentenceSaga';
 import sentenceReducer from './sentence/sentenceReducer';
+import taskSage from './task/taskSaga';
+import taskReducer from './task/taskReducer';
 
 export const rootReducer = combineReducers({
   // reducers
@@ -16,9 +18,15 @@ export const rootReducer = combineReducers({
   login: loginReducer,
   alertModal: alertModalReducer,
   users: usersReducer,
+  task: taskReducer,
   sentence: sentenceReducer,
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([call(loginSaga), call(usersSaga), call(sentenceSage)]);
+  yield all([
+    call(loginSaga),
+    call(usersSaga),
+    call(taskSage),
+    call(sentenceSage),
+  ]);
 };

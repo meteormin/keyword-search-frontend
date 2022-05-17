@@ -3,9 +3,10 @@ import { Button, Col, Container, Row, Modal } from 'react-bootstrap';
 import Prototype from './Prototype';
 import WorkSpace from './WorkSpace';
 import { lang } from '../../helpers';
-import { useSelector } from 'react-redux';
-import { Task } from '../../store/features/sentence/sentenceAction';
+import { useDispatch, useSelector } from 'react-redux';
+import taskModule from '../../store/features/task';
 import sentenceModule from '../../store/features/sentence';
+import { CreateSentence } from '../../store/features/sentence/sentenceAction';
 
 export interface CreateFormProps {
   show: boolean;
@@ -13,9 +14,22 @@ export interface CreateFormProps {
 }
 
 const CreateForm = (props: CreateFormProps) => {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState('03:00:00');
-  const { workTask } = useSelector(sentenceModule.getSentenceState);
+
+  // 원본
+  const [sentence1, setSentence1] = useState('');
+  const [sentence2, setSentence2] = useState('');
+  // API 결과
+  const [sentence1Pat, setSentence1Pat] = useState('');
+  const [sentence2Pat, setSentence2Pat] = useState('');
+
+  // 사용자 수정 결과
+  const [sentence1Mod, setSentence1Mod] = useState('');
+  const [sentence2Mod, setSentence2Mod] = useState('');
+
+  const { workTask } = useSelector(taskModule.getTaskState);
 
   useEffect(() => {
     setShow(props.show);
@@ -24,7 +38,15 @@ const CreateForm = (props: CreateFormProps) => {
 
   return (
     <Fragment>
-      <Modal size="xl" show={show} onHide={() => setShow(false)} centered>
+      <Modal
+        size="xl"
+        show={show}
+        onHide={() => {
+          setShow(false);
+          dispatch(taskModule.actions.setWorkTask(null));
+        }}
+        centered
+      >
         <Modal.Header closeButton>
           <Container className="mt-2">
             <Row>
@@ -78,7 +100,26 @@ const CreateForm = (props: CreateFormProps) => {
                 />
               </Col>
               <Col lg={8}>
-                <WorkSpace />
+                <WorkSpace
+                  onSubmit={(data) => {
+                    if (workTask) {
+                      const createSentence: CreateSentence = {
+                        taskId: workTask.id,
+                        sentence_1: data.textArea10,
+                        sentence_2: data.textArea20,
+                        sentence1Patterned: data.origin[0],
+                        sentence2Patterned: data.origin[1],
+                        sentence1PatternedModified: data.textArea11,
+                        sentence2PatternedModified: data.textArea21,
+                      };
+                      dispatch(
+                        sentenceModule.actions.createSentence(createSentence),
+                      );
+                      dispatch(taskModule.actions.setWorkTask(null));
+                      setShow(false);
+                    }
+                  }}
+                />
               </Col>
             </Row>
           </Container>

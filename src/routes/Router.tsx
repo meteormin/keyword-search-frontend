@@ -7,9 +7,9 @@ import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { UsersPage } from '../pages/users';
 import { TokenInfo } from '../utils/auth';
-import { AssignListPage, CreatedListPage } from '../pages/sentence';
+import { AssignListPage, CreatedListPage } from '../pages/task';
 import Home from '../utils/Home';
-import CreateForm from '../components/sentence/CreateForm';
+import CreateForm from '../components/task/CreateForm';
 
 const Router = () => {
   const handlePerm = (menuNumber: number) => {
@@ -27,8 +27,8 @@ const Router = () => {
   const handleGoHome = () => {
     return [
       { role: 'admin', home: '/users' },
-      { role: 'manager', home: '/sentence' },
-      { role: 'crowd_worker', home: '/sentence' },
+      { role: 'manager', home: '/task' },
+      { role: 'crowd_worker', home: '/task' },
     ];
   };
 
@@ -76,7 +76,7 @@ const Router = () => {
             }
           />
         </Route>
-        <Route path="/sentence">
+        <Route path="/task">
           <Route
             index
             element={

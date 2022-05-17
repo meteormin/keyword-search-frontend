@@ -62,6 +62,10 @@ const loginAction = {
 
     auth.logout();
   },
+  refresh: (state: LoginState, action: PayloadAction<string>) => {
+    state.token = null;
+    state.user = null;
+  },
 };
 
 export default loginAction;

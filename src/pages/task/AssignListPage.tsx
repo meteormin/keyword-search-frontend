@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import DataAssign from '../../components/sentence/DataAssign';
-import DataSearch from '../../components/sentence/DataSearch';
+import DataAssign from '../../components/task/DataAssign';
+import DataSearch from '../../components/task/DataSearch';
 import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import CreateForm from '../../components/sentence/CreateForm';
+import CreateForm from '../../components/task/CreateForm';
 import { useDispatch, useSelector } from 'react-redux';
-import sentenceModule from '../../store/features/sentence';
-import { Task } from '../../store/features/sentence/sentenceAction';
+import taskModule from '../../store/features/task';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -18,8 +17,8 @@ const AssignListPage = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const { taskList, time, workTask } = useSelector(
-    sentenceModule.getSentenceState,
+  const { taskList, time, workTask, totalCount } = useSelector(
+    taskModule.getTaskState,
   );
 
   const limitOptions = [
@@ -70,12 +69,16 @@ const AssignListPage = () => {
   };
 
   const handleClickRecord = (record: any) => {
-    dispatch(sentenceModule.actions.setWorkTask(record._origin));
+    dispatch(taskModule.actions.setWorkTask(record._origin));
   };
 
   useEffect(() => {
-    dispatch(sentenceModule.actions.getTaskList({ limit: limit, page: page }));
+    dispatch(taskModule.actions.getTaskList({ limit: limit, page: page }));
   }, []);
+
+  useEffect(() => {
+    setTotalPage(totalCount);
+  }, [totalCount]);
 
   return (
     <Container>

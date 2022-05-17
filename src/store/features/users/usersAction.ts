@@ -142,4 +142,5 @@ const usersAction = {
     state.method = 'resetPassword';
   },
 };
+
 export default usersAction;

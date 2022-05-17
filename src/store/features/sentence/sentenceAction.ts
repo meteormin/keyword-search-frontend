@@ -1,47 +1,78 @@
 import { auth } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-export interface Task {
+export interface Sentence {
   id: number;
-  dataId: string;
-  sentence: string;
-  concepts: Concept[];
-  posLength: number;
-  tagged: string;
-  refSrc: string;
-  domain: string;
-  refId: string;
+  sentence_1: string;
+  sentence_2: string;
+  sentence1Patterned: string;
+  sentence2Patterned: string;
+  sentence1PatternedModified: string;
+  sentence2PatternedModified: string;
+  taskId: number;
+  userId: number;
 }
 
-export interface Concept {
-  stem: string;
-  posttag: string;
+export interface CreateSentence {
+  sentence_1: string;
+  sentence_2: string;
+  sentence1Patterned: string;
+  sentence2Patterned: string;
+  sentence1PatternedModified: string;
+  sentence2PatternedModified: string;
+  taskId: number;
 }
 
 export interface SentenceState {
-  time: string | null;
-  taskList: Task[];
-  workTask: Task | null;
+  totalCount: number;
+  sentences: Sentence[];
+  createSentence: CreateSentence | null;
+  editSentence: Sentence | null;
 }
 
 export const initialState: SentenceState = {
-  time: null,
-  taskList: [],
-  workTask: null,
+  totalCount: 0,
+  sentences: [],
+  createSentence: null,
+  editSentence: null,
 };
 
 const sentenceAction = {
-  getTaskList: (
+  getSentenceList: (
     state: SentenceState,
     action: PayloadAction<{ limit: number; page: number }>,
   ) => {
-    state.taskList = [];
+    state.sentences = [];
   },
-  setTaskList: (state: SentenceState, action: PayloadAction<Task[]>) => {
-    state.taskList = action.payload;
+  setSentenceList: (
+    state: SentenceState,
+    action: PayloadAction<Sentence[]>,
+  ) => {
+    state.sentences = action.payload;
   },
-  setWorkTask: (state: SentenceState, action: PayloadAction<Task>) => {
-    state.workTask = action.payload;
+  setSentence: (
+    state: SentenceState,
+    action: PayloadAction<Sentence | null>,
+  ) => {
+    state.editSentence = action.payload;
+  },
+  getSentence: (state: SentenceState, action: PayloadAction<number>) => {
+    state.editSentence = null;
+  },
+  createSentence: (
+    state: SentenceState,
+    action: PayloadAction<CreateSentence>,
+  ) => {
+    state.createSentence = action.payload;
+  },
+  updateSentence: (state: SentenceState, action: PayloadAction<Sentence>) => {
+    state.editSentence = action.payload;
+  },
+  tempSentence: (state: SentenceState, action: PayloadAction<Sentence>) => {
+    state.editSentence = action.payload;
+  },
+  setCount: (state: SentenceState, action: PayloadAction<number>) => {
+    state.totalCount = action.payload;
   },
 };
 
