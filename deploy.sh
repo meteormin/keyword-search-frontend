@@ -52,7 +52,7 @@ fi
 
 echo "copy ./build >> /var/www/front"
 
-cp ./build /var/www/font 2>/dev/null || res=$?
+cp ./build /var/www/front 2>/dev/null || res=$?
 
 if [ "${res}" = 1 ]; then
   echo "failed copy build directory"
