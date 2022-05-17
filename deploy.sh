@@ -50,4 +50,15 @@ else
   echo "success, build"
 fi
 
+echo "copy ./build >> /var/www/front"
+
+cp ./build /var/www/font
+
+if [ "${res}" = 1 ]; then
+  echo "failed copy build directory"
+  exit 4
+else
+  echo "success copy!"
+fi
+
 exit 0
