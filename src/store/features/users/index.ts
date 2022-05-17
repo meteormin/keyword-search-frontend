@@ -14,6 +14,9 @@ import {
   setPermList,
   getEditUser,
   setEditUser,
+  saveUser,
+  saveGroup,
+  resetPassword,
 } from './usersReducer';
 
 const usersModule = {
@@ -32,6 +35,9 @@ const usersModule = {
   setPermList,
   getEditUser,
   setEditUser,
+  saveUser,
+  saveGroup,
+  resetPassword,
 };
 
 export default usersModule;

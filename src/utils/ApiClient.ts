@@ -20,6 +20,7 @@ export class ApiClient {
   protected _headers: AxiosRequestHeaders | null;
   protected _response: AxiosResponse | null;
   protected _error: any;
+  protected _isSuccess: boolean;
 
   /**
    * @param {string} host
@@ -30,6 +31,7 @@ export class ApiClient {
     this._response = null;
     this._token = null;
     this._error = null;
+    this._isSuccess = false;
   }
 
   /**
@@ -106,14 +108,16 @@ export class ApiClient {
   ): Promise<ApiResponse> {
     try {
       this._response = await res;
+      this._isSuccess = true;
       return {
-        isSuccess: this.isSuccess(),
+        isSuccess: true,
         res: this.response,
       };
     } catch (error) {
+      this._isSuccess = false;
       this._error = error;
       return {
-        isSuccess: this.isSuccess(),
+        isSuccess: false,
         res: this.error,
       };
     }
@@ -124,7 +128,7 @@ export class ApiClient {
    * @returns {boolean}
    */
   isSuccess(): boolean {
-    return this.response?.statusText === 'OK' && this.error === null;
+    return this._isSuccess;
   }
 
   /**
@@ -154,11 +158,15 @@ export class ApiClient {
    * @param {*} params
    * @returns {Promise<ApiResponse>|*|null>}
    */
-  get(path: string, params: object = {}): Promise<ApiResponse> {
+  get(path: string, params: any = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
     config.method = 'GET';
     config.url = this.makeUrl(path);
-    config.params = params;
+    if (params.hasOwnProperty('data')) {
+      config.data = params.data;
+    } else {
+      config.params = params;
+    }
 
     return this.request(config);
   }

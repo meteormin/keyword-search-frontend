@@ -2,7 +2,6 @@ import React, { Fragment, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 export interface ConfirmModalProps {
-  buttonText: string;
   title: string;
   message: string;
   confirmText: string;
@@ -10,7 +9,6 @@ export interface ConfirmModalProps {
 }
 
 const ConfirmModal = ({
-  buttonText,
   title,
   message,
   confirmText,
@@ -19,14 +17,9 @@ const ConfirmModal = ({
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   return (
     <Fragment>
-      <Button variant="primary" onClick={handleShow}>
-        {buttonText}
-      </Button>
-
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>

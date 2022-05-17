@@ -30,9 +30,11 @@ const UserForm = ({
   const [id, setId] = useState<string>();
   const [name, setName] = useState<string>();
   const [userType, setUserType] = useState<string>();
+  const [_show, setShow] = useState<boolean>(false);
   const { editUser } = useSelector(usersModule.getUsersState);
 
   useEffect(() => {
+    setShow(show);
     if (show && formInfo.method == Method.UPDATE) {
       if (editUser) {
         setId(editUser.loginId);
@@ -51,7 +53,14 @@ const UserForm = ({
         return (
           <Row className="justify-content-end">
             <Col md={4} className="offset-4">
-              <Button variant="dark" className="float-end" onClick={onSave}>
+              <Button
+                variant="dark"
+                className="float-end"
+                onClick={() => {
+                  onHide();
+                  onSave();
+                }}
+              >
                 저장
               </Button>
             </Col>
@@ -61,13 +70,38 @@ const UserForm = ({
         return (
           <Row className="justify-content-end">
             <Col sm={8} className="offset-4">
-              <Button variant="dark" className="mx-4" onClick={onResetPass}>
+              <Button
+                variant="dark"
+                className="mx-4"
+                onClick={() => {
+                  onHide();
+                  if (onResetPass) {
+                    onResetPass();
+                  }
+                }}
+              >
                 암호초기화
               </Button>
-              <Button variant="dark" className="mx-2" onClick={onSave}>
+              <Button
+                variant="dark"
+                className="mx-2"
+                onClick={() => {
+                  onHide();
+                  onSave();
+                }}
+              >
                 수정
               </Button>
-              <Button variant="dark" className="float-end" onClick={onDelete}>
+              <Button
+                variant="dark"
+                className="float-end"
+                onClick={() => {
+                  onHide();
+                  if (onDelete) {
+                    onDelete();
+                  }
+                }}
+              >
                 삭제
               </Button>
             </Col>
@@ -76,7 +110,7 @@ const UserForm = ({
     }
   };
   return (
-    <FormModal show={show} onHide={onHide}>
+    <FormModal header={'사용자 등록'} show={_show} onHide={onHide}>
       <Input
         type={'text'}
         id={'id'}

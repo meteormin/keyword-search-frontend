@@ -1,6 +1,5 @@
 import { SearchState } from '../../../pages/users/UsersPage';
 import { PayloadAction } from '@reduxjs/toolkit';
-import UserSection from '../../../pages/users/UserSection';
 
 export interface Group {
   id: number;
@@ -46,6 +45,7 @@ export interface UpdateGroupPerm {
 }
 
 export interface UsersState {
+  method: string | null;
   currentGroup: Group;
   editGroup?: Group;
   permList: Permission[];
@@ -53,8 +53,8 @@ export interface UsersState {
   groups: Group[];
   users: User[];
   editUser?: User;
-  createGroup?: Group;
-  createUser?: User;
+  postGroup?: Group;
+  postUser?: User;
   updateGroupPerm: UpdateGroupPerm;
   getGroupId?: number;
   editGroupId?: number;
@@ -62,6 +62,7 @@ export interface UsersState {
 }
 
 export const initialState: UsersState = {
+  method: null,
   currentGroup: { id: 0, code: '', name: '' },
   permList: [],
   search: { id: '', name: '', permission: '' },
@@ -89,19 +90,32 @@ const usersAction = {
     state.users = [];
   },
   getGroup: (state: UsersState, action: PayloadAction<number>) => {
-    state.getGroupId = action.payload;
+    state.currentGroup.id = action.payload;
   },
   setGroup: (state: UsersState, action: PayloadAction<Group>) => {
     state.currentGroup = action.payload;
   },
   getEditGroup: (state: UsersState, action: PayloadAction<number>) => {
-    state.editGroupId = action.payload;
+    state.editGroup = {
+      id: action.payload,
+      name: '',
+      code: '',
+    };
   },
   setEditGroup: (state: UsersState, action: PayloadAction<Group>) => {
     state.editGroup = action.payload;
   },
   getEditUser: (state: UsersState, action: PayloadAction<number>) => {
-    state.editUserId = action.payload;
+    state.editUser = {
+      id: action.payload,
+      name: '',
+      loginId: '',
+      userType: '',
+      groupId: 0,
+      groupCode: '',
+      groupName: '',
+      createAt: '',
+    };
   },
   setEditUser: (state: UsersState, action: PayloadAction<User>) => {
     state.editUser = action.payload;
@@ -117,6 +131,15 @@ const usersAction = {
     action: PayloadAction<UpdateGroupPerm>,
   ) => {
     state.updateGroupPerm = action.payload;
+  },
+  saveGroup: (state: UsersState, action: PayloadAction<Group>) => {
+    state.postGroup = action.payload;
+  },
+  saveUser: (state: UsersState, action: PayloadAction<User>) => {
+    state.postUser = action.payload;
+  },
+  resetPassword: (state: UsersState, action: PayloadAction<number>) => {
+    state.method = 'resetPassword';
   },
 };
 export default usersAction;

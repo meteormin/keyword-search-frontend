@@ -10,10 +10,7 @@ export default class Card extends Component<CardProps> {
   render() {
     return (
       <div className="card mb-4">
-        <div className="card-header">
-          <i className="fas fa-table me-1"> </i>
-          {this.props.header}
-        </div>
+        <div className="card-header">{this.props.header}</div>
         <div className="card-body">{this.props.children}</div>
       </div>
     );
