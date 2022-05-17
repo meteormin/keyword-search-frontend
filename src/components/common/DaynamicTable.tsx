@@ -39,6 +39,20 @@ class DynamicTable extends Component<DynamicTableProps> {
     return;
   };
 
+  hasOnClick = (param: any) => {
+    return param.hasOwnProperty('onClick');
+  };
+
+  addCursor = (param: any) => {
+    if (this.hasOnClick(param)) {
+      return {
+        cursor: 'pointer',
+      };
+    }
+
+    return {};
+  };
+
   records() {
     let rowsElement = [];
     const records: JSX.Element[] = [];
@@ -51,6 +65,7 @@ class DynamicTable extends Component<DynamicTableProps> {
             <th
               scope="row"
               key={key}
+              style={this.addCursor(column)}
               onClick={() => {
                 if (column.onClick) {
                   column.onClick(this.props.records);
@@ -69,6 +84,7 @@ class DynamicTable extends Component<DynamicTableProps> {
           key={'tr_' + index.toString()}
           className="text-center"
           onClick={() => this.onClick(row)}
+          style={this.addCursor(this.props)}
         >
           {rowsElement}
         </tr>,

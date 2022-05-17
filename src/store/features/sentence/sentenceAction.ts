@@ -40,6 +40,9 @@ const sentenceAction = {
   setTaskList: (state: SentenceState, action: PayloadAction<Task[]>) => {
     state.taskList = action.payload;
   },
+  setWorkTask: (state: SentenceState, action: PayloadAction<Task>) => {
+    state.workTask = action.payload;
+  },
 };
 
 export default sentenceAction;

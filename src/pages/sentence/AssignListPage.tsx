@@ -8,6 +8,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import CreateForm from '../../components/sentence/CreateForm';
 import { useDispatch, useSelector } from 'react-redux';
 import sentenceModule from '../../store/features/sentence';
+import { Task } from '../../store/features/sentence/sentenceAction';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -58,14 +59,18 @@ const AssignListPage = () => {
 
   const taskRecords = () => {
     return taskList.map((t, i) => {
-      console.log(t.concepts);
       return {
         no: i + 1,
         id: t.refId,
         conceptSet: t.concepts.map((c) => c.stem).join(', '),
         wordCount: t.posLength,
+        _origin: t,
       };
     });
+  };
+
+  const handleClickRecord = (record: any) => {
+    dispatch(sentenceModule.actions.setWorkTask(record._origin));
   };
 
   useEffect(() => {
@@ -131,7 +136,11 @@ const AssignListPage = () => {
         </Col>
       </Row>
       <Row>
-        <DynamicTable schema={sentenceSchema} records={taskRecords()} />
+        <DynamicTable
+          schema={sentenceSchema}
+          records={taskRecords()}
+          onClick={handleClickRecord}
+        />
       </Row>
       <Row className="mt-5 align-content-center">
         <Col lg={4}></Col>
@@ -148,7 +157,7 @@ const AssignListPage = () => {
           </Button>
         </Col>
       </Row>
-      <CreateForm show={false} time={time || '03:00:00'} />
+      <CreateForm show={!!workTask} time={time || '03:00:00'} />
     </Container>
   );
 };

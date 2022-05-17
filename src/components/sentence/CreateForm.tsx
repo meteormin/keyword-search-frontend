@@ -2,6 +2,10 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Modal } from 'react-bootstrap';
 import Prototype from './Prototype';
 import WorkSpace from './WorkSpace';
+import { lang } from '../../helpers';
+import { useSelector } from 'react-redux';
+import { Task } from '../../store/features/sentence/sentenceAction';
+import sentenceModule from '../../store/features/sentence';
 
 export interface CreateFormProps {
   show: boolean;
@@ -11,11 +15,12 @@ export interface CreateFormProps {
 const CreateForm = (props: CreateFormProps) => {
   const [show, setShow] = useState(false);
   const [time, setTime] = useState('03:00:00');
+  const { workTask } = useSelector(sentenceModule.getSentenceState);
 
   useEffect(() => {
     setShow(props.show);
     setTime(props.time);
-  }, [props]);
+  }, [props, workTask]);
 
   return (
     <Fragment>
@@ -25,7 +30,21 @@ const CreateForm = (props: CreateFormProps) => {
             <Row>
               <Col lg={4} className="mt-2">
                 <Button variant="dark">현재 상태 저장</Button>
-                <Button variant="dark" className="ms-2">
+                <Button
+                  variant="dark"
+                  className="ms-2"
+                  onClick={() => {
+                    window.open(
+                      lang.sentence.workSpace.dictLink,
+                      'new',
+                      'toolbar=yes, menubar=yes, scrollbar=yes, resizeable=yes, width=' +
+                        screen.width / 3 +
+                        ', height=' +
+                        screen.height +
+                        ', left=0, top=0',
+                    );
+                  }}
+                >
                   우리말 샘 사전
                 </Button>
               </Col>
@@ -51,11 +70,11 @@ const CreateForm = (props: CreateFormProps) => {
             <Row>
               <Col lg={4}>
                 <Prototype
-                  concepts={['a', 'b', 'c', 'd']}
-                  conceptsTag={['xx', 'vc', 'sab', 'dk']}
-                  wordCount={15}
-                  basicSentence={'기본 문형'}
-                  prototypeSentence={'원천 데이터 문장'}
+                  concepts={workTask?.concepts.map((t) => t.stem) || []}
+                  conceptsTag={workTask?.concepts.map((t) => t.posttag) || []}
+                  wordCount={workTask?.posLength || 0}
+                  basicSentence={workTask?.sentence || ''}
+                  prototypeSentence={workTask?.tagged || ''}
                 />
               </Col>
               <Col lg={8}>
