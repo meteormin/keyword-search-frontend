@@ -4,7 +4,7 @@ import Input from '../common/Input';
 import PermList, { Permission } from './PermList';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
-import { Group } from '../../store/features/users/usersAction';
+import { CreateGroup, Group } from '../../store/features/users/userAction';
 import { Method } from './formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
 
@@ -60,8 +60,14 @@ const GroupForm = ({
     console.log(permList);
   };
 
+  const createGroup = (group: CreateGroup) => {
+    dispatch(usersModule.actions.saveGroup(group));
+  };
+
   const saveGroupPermission = (id: number) => {
-    dispatch(usersModule.setGroupPermission({ id: id, permissions: permList }));
+    dispatch(
+      usersModule.actions.setGroupPermission({ id: id, permissions: permList }),
+    );
   };
 
   const makeButton = () => {
@@ -74,8 +80,13 @@ const GroupForm = ({
                 variant="dark"
                 className="float-end"
                 onClick={() => {
-                  onHide();
+                  if (groupName) {
+                    createGroup({
+                      name: groupName,
+                    });
+                  }
                   onSave();
+                  onHide();
                 }}
               >
                 저장
@@ -91,8 +102,11 @@ const GroupForm = ({
                 variant="dark"
                 className="ms-0"
                 onClick={() => {
-                  onHide();
+                  if (_editGroup) {
+                    saveGroupPermission(_editGroup.id);
+                  }
                   onSave();
+                  onHide();
                 }}
               >
                 수정
@@ -123,6 +137,9 @@ const GroupForm = ({
           label={'그룹명'}
           name={'name'}
           value={groupName}
+          onChange={(e) => {
+            setGroupName(e.target.value);
+          }}
         />
       </div>
       <div className="mt-3">

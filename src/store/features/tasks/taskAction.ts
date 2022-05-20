@@ -32,6 +32,9 @@ export const initialState: TaskState = {
 };
 
 const taskAction = {
+  assign: (state: TaskState) => {
+    state.taskList = [];
+  },
   getTaskList: (
     state: TaskState,
     action: PayloadAction<{ limit: number; page: number }>,

@@ -3,7 +3,7 @@ import Select, { Option } from '../common/Select';
 import { Button, Col, Row } from 'react-bootstrap';
 
 export interface DataAssignProps {
-  onSearch: (selectedName: string | number) => any;
+  onAssign: (selectedName: string | number) => any;
   time: string;
 }
 
@@ -13,7 +13,7 @@ export interface DataAssignState {
   _selectedName: string | number;
 }
 
-const DataAssign = ({ onSearch, time }: DataAssignProps) => {
+const DataAssign = ({ onAssign, time }: DataAssignProps) => {
   const [selectedName, setSelectedName] = useState<string>('검색어 선택');
   const [searchCondition, setCondition] = useState<Option[]>([
     {
@@ -45,7 +45,7 @@ const DataAssign = ({ onSearch, time }: DataAssignProps) => {
         </Row>
       </Col>
       <Col md={4}>
-        <Button variant="dark" onClick={() => onSearch(selectedName)}>
+        <Button variant="dark" onClick={() => onAssign(selectedName)}>
           생성 데이터 할당 받기
         </Button>
       </Col>

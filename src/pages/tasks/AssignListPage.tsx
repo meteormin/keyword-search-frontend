@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import DataAssign from '../../components/task/DataAssign';
-import DataSearch from '../../components/task/DataSearch';
+import DataAssign from '../../components/tasks/DataAssign';
+import DataSearch from '../../components/tasks/DataSearch';
 import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import CreateForm from '../../components/task/CreateForm';
+import CreateForm from '../../components/tasks/CreateForm';
 import { useDispatch, useSelector } from 'react-redux';
-import taskModule from '../../store/features/task';
+import taskModule from '../../store/features/tasks';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const AssignListPage = () => {
     },
   ];
 
-  const sentenceSchema = {
+  const taskSchema = {
     no: {
       name: 'NO',
     },
@@ -74,7 +74,7 @@ const AssignListPage = () => {
 
   useEffect(() => {
     dispatch(taskModule.actions.getTaskList({ limit: limit, page: page }));
-  }, []);
+  }, [page, limit]);
 
   useEffect(() => {
     setTotalPage(totalCount);
@@ -100,8 +100,9 @@ const AssignListPage = () => {
       <Row className="ms-2 mt-2">
         <Col lg={12}>
           <DataAssign
-            onSearch={(selectedName: string | number) => {
+            onAssign={(selectedName: string | number) => {
               setCondition(selectedName);
+              dispatch(taskModule.actions.assign());
             }}
             time={time || '03:00:00'}
           />
@@ -140,7 +141,7 @@ const AssignListPage = () => {
       </Row>
       <Row>
         <DynamicTable
-          schema={sentenceSchema}
+          schema={taskSchema}
           records={taskRecords()}
           onClick={handleClickRecord}
         />
@@ -154,7 +155,7 @@ const AssignListPage = () => {
             setPage(page);
           }}
         />
-        <Col lg={3} className="mt-5">
+        <Col lg={4} className="mt-5">
           <Button variant="dark" className="float-end mt-1">
             <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
           </Button>

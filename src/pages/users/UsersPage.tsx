@@ -25,7 +25,7 @@ const UsersPage = () => {
             onSubmit={(id, name, permission) => {
               console.log(id, name, permission);
               dispatch(
-                usersModule.searchUser({
+                usersModule.actions.searchUser({
                   id: id as string,
                   name: name,
                   permission: permission as string,

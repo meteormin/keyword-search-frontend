@@ -3,7 +3,7 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import loginModule from './index';
-import { api, apiResponse } from '../../../helpers';
+import { api, apiResponse, auth } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { LoginUser } from './loginAction';
 import { toCamel } from 'snake-camel';

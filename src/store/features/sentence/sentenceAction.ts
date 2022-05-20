@@ -1,38 +1,81 @@
-import { auth } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { Concept, Task } from '../tasks/taskAction';
+import { User } from '../users/userAction';
+import { SentenceReview } from '../reviews/reviewAction';
 
 export interface Sentence {
   id: number;
-  sentence_1: string;
-  sentence_2: string;
+  sentence1: string;
+  sentence2: string;
   sentence1Patterned: string;
   sentence2Patterned: string;
   sentence1PatternedModified: string;
   sentence2PatternedModified: string;
+  sentence1Count: number;
+  sentence2Count: number;
   taskId: number;
   userId: number;
+  createAt?: string | null;
+  updateAt?: string | null;
+  edges?: {
+    tasks: Task;
+    users: User;
+    sentenceReviews1: SentenceReview;
+    sentenceReviews2: SentenceReview;
+  };
 }
 
 export interface CreateSentence {
-  sentence_1: string;
-  sentence_2: string;
+  sentence1: string;
+  sentence2: string;
   sentence1Patterned: string;
   sentence2Patterned: string;
   sentence1PatternedModified: string;
   sentence2PatternedModified: string;
+  sentence1Count: number;
+  sentence2Count: number;
   taskId: number;
 }
 
+export interface SentenceHistory {
+  id: number;
+  refId: string;
+  concepts: Concept[];
+  posLength: number;
+  created1Length: number;
+  created2Length: number;
+  createState?: CreateState;
+  creatorId: string;
+  createdAt: string;
+  reviewer1Id: string;
+  review1At: string;
+  reviewer2Id: string;
+  review2At: string;
+  reviewResult: boolean;
+  reviewRsTxt?: string;
+  reviewReasons: number[];
+}
+
+export enum CreateState {
+  WAIT = '생성대기',
+  COMPLETE = '생성완료',
+  TEMP = '작성중',
+}
+
 export interface SentenceState {
+  time?: number;
   totalCount: number;
   sentences: Sentence[];
+  sentenceHistory: SentenceHistory[];
   createSentence: CreateSentence | null;
   editSentence: Sentence | null;
 }
 
 export const initialState: SentenceState = {
+  time: 0,
   totalCount: 0,
   sentences: [],
+  sentenceHistory: [],
   createSentence: null,
   editSentence: null,
 };
@@ -49,6 +92,12 @@ const sentenceAction = {
     action: PayloadAction<Sentence[]>,
   ) => {
     state.sentences = action.payload;
+  },
+  setSentenceHistories: (
+    state: SentenceState,
+    action: PayloadAction<SentenceHistory[]>,
+  ) => {
+    state.sentenceHistory = action.payload;
   },
   setSentence: (
     state: SentenceState,

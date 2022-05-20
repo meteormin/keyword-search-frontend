@@ -25,6 +25,7 @@ export interface User {
 
 export interface Permission {
   id: number;
+  code: string;
   name: string;
   edges?: object;
 }
@@ -33,6 +34,7 @@ export interface CreateUser {
   loginId: string;
   name: string;
   userType: string;
+  groupId: number;
 }
 
 export interface CreateGroup {
@@ -53,8 +55,8 @@ export interface UsersState {
   groups: Group[];
   users: User[];
   editUser?: User;
-  postGroup?: Group;
-  postUser?: User;
+  postGroup?: Group | CreateGroup;
+  postUser?: User | CreateUser;
   updateGroupPerm: UpdateGroupPerm;
   getGroupId?: number;
   editGroupId?: number;
@@ -71,7 +73,7 @@ export const initialState: UsersState = {
   updateGroupPerm: { permissions: [] },
 };
 
-const usersAction = {
+const userAction = {
   searchUser: (state: UsersState, action: PayloadAction<SearchState>) => {
     state.search = action.payload;
     state.users = [];
@@ -132,10 +134,13 @@ const usersAction = {
   ) => {
     state.updateGroupPerm = action.payload;
   },
-  saveGroup: (state: UsersState, action: PayloadAction<Group>) => {
+  saveGroup: (
+    state: UsersState,
+    action: PayloadAction<Group | CreateGroup>,
+  ) => {
     state.postGroup = action.payload;
   },
-  saveUser: (state: UsersState, action: PayloadAction<User>) => {
+  saveUser: (state: UsersState, action: PayloadAction<User | CreateUser>) => {
     state.postUser = action.payload;
   },
   resetPassword: (state: UsersState, action: PayloadAction<number>) => {
@@ -143,4 +148,4 @@ const usersAction = {
   },
 };
 
-export default usersAction;
+export default userAction;

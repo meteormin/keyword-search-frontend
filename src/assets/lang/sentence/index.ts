@@ -12,6 +12,10 @@ const sentence = {
       '문장은 평서형 ‘-다 종결 어미와 마침표로 종결되어야 합니다.',
     dictLink: 'https://opendict.korean.go.kr/main',
   },
+  reviewState: {
+    review1: { pass: '1차 승인', fail: '1차 반려' },
+    review2: { pass: '2차 승인', fail: '2차 반려' },
+  },
 };
 
 export default sentence;

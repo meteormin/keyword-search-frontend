@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Modal } from 'react-bootstrap';
-import Prototype from './Prototype';
-import WorkSpace from './WorkSpace';
+import Prototype from '../common/Prototype';
+import WorkSpace from '../common/WorkSpace';
 import { lang } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
-import taskModule from '../../store/features/task';
+import taskModule from '../../store/features/tasks';
 import sentenceModule from '../../store/features/sentence';
 import { CreateSentence } from '../../store/features/sentence/sentenceAction';
 
@@ -28,6 +28,10 @@ const CreateForm = (props: CreateFormProps) => {
   // 사용자 수정 결과
   const [sentence1Mod, setSentence1Mod] = useState('');
   const [sentence2Mod, setSentence2Mod] = useState('');
+
+  // 단어 수
+  const [sentence1Count, setCount1] = useState(1);
+  const [sentence2Count, setCount2] = useState(1);
 
   const { workTask } = useSelector(taskModule.getTaskState);
 
@@ -93,7 +97,10 @@ const CreateForm = (props: CreateFormProps) => {
               <Col lg={4}>
                 <Prototype
                   concepts={workTask?.concepts.map((t) => t.stem) || []}
-                  conceptsTag={workTask?.concepts.map((t) => t.posttag) || []}
+                  conceptsTag={
+                    workTask?.concepts.map((t) => `${t.stem}(${t.posttag})`) ||
+                    []
+                  }
                   wordCount={workTask?.posLength || 0}
                   basicSentence={workTask?.sentence || ''}
                   prototypeSentence={workTask?.tagged || ''}
@@ -105,18 +112,38 @@ const CreateForm = (props: CreateFormProps) => {
                     if (workTask) {
                       const createSentence: CreateSentence = {
                         taskId: workTask.id,
-                        sentence_1: data.textArea10,
-                        sentence_2: data.textArea20,
+                        sentence1: data.textArea10,
+                        sentence2: data.textArea20,
                         sentence1Patterned: data.origin[0],
                         sentence2Patterned: data.origin[1],
                         sentence1PatternedModified: data.textArea11,
                         sentence2PatternedModified: data.textArea21,
+                        sentence1Count: sentence1Count,
+                        sentence2Count: sentence2Count,
                       };
                       dispatch(
                         sentenceModule.actions.createSentence(createSentence),
                       );
                       dispatch(taskModule.actions.setWorkTask(null));
                       setShow(false);
+                    }
+                  }}
+                  wordCount1={sentence1Count}
+                  wordCount2={sentence2Count}
+                  onChange={(data) => {
+                    if (workTask) {
+                      const createSentence: CreateSentence = {
+                        taskId: workTask.id,
+                        sentence1: data.textArea10,
+                        sentence2: data.textArea20,
+                        sentence1Patterned: data.origin[0],
+                        sentence2Patterned: data.origin[1],
+                        sentence1PatternedModified: data.textArea11,
+                        sentence2PatternedModified: data.textArea21,
+                        sentence1Count: sentence1Count,
+                        sentence2Count: sentence2Count,
+                      };
+                      console.log(createSentence);
                     }
                   }}
                 />

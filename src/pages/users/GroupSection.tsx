@@ -17,7 +17,7 @@ const GroupSection = () => {
   const [modalMethod, setModalMethod] = useState<Method>(Method.CREATE);
 
   const getGroupList = () => {
-    dispatch(usersModule.getGroups());
+    dispatch(usersModule.actions.getGroups());
   };
   const createGroup = () => {
     showGroupModal(true);
@@ -28,10 +28,10 @@ const GroupSection = () => {
     setModalMethod(Method.UPDATE);
   };
   const getGroup = (id: number) => {
-    dispatch(usersModule.getGroup(id));
+    dispatch(usersModule.actions.getGroup(id));
   };
   const getPermList = () => {
-    dispatch(usersModule.getPermList());
+    dispatch(usersModule.actions.getPermList());
   };
 
   const makeModifyButton = (
@@ -53,7 +53,7 @@ const GroupSection = () => {
         groupName: group.name || '',
         operation: makeModifyButton(() => {
           if (group.id) {
-            dispatch(usersModule.getEditGroup(group.id));
+            dispatch(usersModule.actions.getEditGroup(group.id));
             updateGroup();
           }
         }),

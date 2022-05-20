@@ -1,43 +1,5 @@
-import {
-  getGroups,
-  getUsersByGroup,
-  searchUser,
-  getUsersState,
-  setUsers,
-  setGroups,
-  getGroup,
-  setGroup,
-  setGroupPermission,
-  getEditGroup,
-  setEditGroup,
-  getPermList,
-  setPermList,
-  getEditUser,
-  setEditUser,
-  saveUser,
-  saveGroup,
-  resetPassword,
-} from './usersReducer';
+import { actions, getUsersState } from './userReducer';
 
-const usersModule = {
-  getGroups,
-  getUsersByGroup,
-  searchUser,
-  getUsersState,
-  setUsers,
-  setGroups,
-  getGroup,
-  setGroup,
-  setGroupPermission,
-  getEditGroup,
-  setEditGroup,
-  getPermList,
-  setPermList,
-  getEditUser,
-  setEditUser,
-  saveUser,
-  saveGroup,
-  resetPassword,
-};
+const usersModule = { actions, getUsersState };
 
 export default usersModule;

@@ -1,4 +1,6 @@
-const menu = {
+import { Menu } from '../components/layouts/Navigator';
+
+const menu: Menu = {
   header: '',
   url: '/',
   name: '',
@@ -10,8 +12,33 @@ const menu = {
       icon: 'fas fa-users',
     },
     {
-      url: '/task',
+      url: '/tasks',
       name: '문장 생성',
+      icon: 'fas fa-file-lines',
+    },
+    {
+      url: '/sentences',
+      name: '문장 생성 내역',
+      icon: 'fas fa-file-lines',
+    },
+    {
+      url: '/reviews/1/assign',
+      name: '문장 검수 1',
+      icon: 'fas fa-file-lines',
+    },
+    {
+      url: '/reviews/1',
+      name: '문장 검수 내역 1',
+      icon: 'fas fa-file-lines',
+    },
+    {
+      url: '/reviews/2/assign',
+      name: '문장 검수 2',
+      icon: 'fas fa-file-lines',
+    },
+    {
+      url: '/reviews/2',
+      name: '문장 검수 내역 2',
       icon: 'fas fa-file-lines',
     },
   ],

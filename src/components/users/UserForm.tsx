@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FormModal from './FormModal';
 import Input from '../common/Input';
 import Select, { Option } from '../common/Select';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { Method } from './formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
@@ -27,11 +27,23 @@ const UserForm = ({
   onResetPass?: () => any;
   onDelete?: () => any;
 }) => {
-  const [id, setId] = useState<string>();
-  const [name, setName] = useState<string>();
-  const [userType, setUserType] = useState<string>();
+  const dispatch = useDispatch();
+  const [id, setId] = useState<string>('');
+  const [name, setName] = useState<string>('');
+  const [userType, setUserType] = useState<string>('');
   const [_show, setShow] = useState<boolean>(false);
-  const { editUser } = useSelector(usersModule.getUsersState);
+  const { editUser, currentGroup } = useSelector(usersModule.getUsersState);
+
+  const createUser = () => {
+    dispatch(
+      usersModule.actions.saveUser({
+        loginId: id,
+        name: name,
+        userType: userType,
+        groupId: currentGroup.id,
+      }),
+    );
+  };
 
   useEffect(() => {
     setShow(show);
@@ -57,8 +69,9 @@ const UserForm = ({
                 variant="dark"
                 className="float-end"
                 onClick={() => {
-                  onHide();
+                  createUser();
                   onSave();
+                  onHide();
                 }}
               >
                 저장
@@ -74,10 +87,10 @@ const UserForm = ({
                 variant="dark"
                 className="mx-4"
                 onClick={() => {
-                  onHide();
                   if (onResetPass) {
                     onResetPass();
                   }
+                  onHide();
                 }}
               >
                 암호초기화
@@ -96,10 +109,10 @@ const UserForm = ({
                 variant="dark"
                 className="float-end"
                 onClick={() => {
-                  onHide();
                   if (onDelete) {
                     onDelete();
                   }
+                  onHide();
                 }}
               >
                 삭제
@@ -118,6 +131,7 @@ const UserForm = ({
         name={'id'}
         value={id}
         readonly={formInfo.method == Method.UPDATE}
+        onChange={(e) => setId(e.target.value)}
       />
       <div className="mt-3">
         <Input
@@ -126,6 +140,7 @@ const UserForm = ({
           label={'이름'}
           name={'name'}
           value={name}
+          onChange={(e) => setName(e.target.value)}
         />
       </div>
       <div className="mt-3">
@@ -135,6 +150,9 @@ const UserForm = ({
           name={'permission'}
           selectedValue={userType}
           options={formInfo.userTypes}
+          onChange={(e) =>
+            setUserType(e.target.options[e.target.selectedIndex].value)
+          }
         />
       </div>
       <br />

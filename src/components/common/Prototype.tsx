@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import Card from '../common/Card';
+import Card from './Card';
 import { lang } from '../../helpers';
 import { Table } from 'react-bootstrap';
 
@@ -44,7 +44,7 @@ const Prototype = (props: PrototypeProps) => {
             <td className="bg-white">{concepts.join(', ')}</td>
           </tr>
           <tr>
-            <th scope="col">개념집합</th>
+            <th scope="col">개념집합태그</th>
             <td className="bg-white">{conceptsTag.join(', ')}</td>
           </tr>
           <tr>

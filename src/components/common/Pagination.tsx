@@ -18,12 +18,16 @@ const Pagination = (props: PaginationProps) => {
     for (let i = 1; i <= props.totalPage; i++) {
       if (i === props.currentPage) {
         items.push(
-          <Pages.Item active onClick={() => onClick(i)}>
+          <Pages.Item key={`page_${i}`} active onClick={() => onClick(i)}>
             {i}
           </Pages.Item>,
         );
       } else {
-        items.push(<Pages.Item onClick={() => onClick(i)}>{i}</Pages.Item>);
+        items.push(
+          <Pages.Item key={`page_${i}`} onClick={() => onClick(i)}>
+            {i}
+          </Pages.Item>,
+        );
       }
     }
 
@@ -37,9 +41,9 @@ const Pagination = (props: PaginationProps) => {
 
   return (
     <Fragment>
-      <div className="col-lg-4 offset-1">
+      <div className="col-lg-4">
         <div className="mx-4 mt-5">
-          <Pages>
+          <Pages className="justify-content-center text-center">
             <Pages.First className="text-dark" onClick={() => onClick(1)} />
             <Pages.Prev
               className="text-dark"

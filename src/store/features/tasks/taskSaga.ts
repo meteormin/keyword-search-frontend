@@ -8,12 +8,17 @@ import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Task } from './taskAction';
 
+const apiClient = api({
+  token: { token: auth.getToken(), tokenType: 'bearer' },
+});
+
 const taskApi = {
+  assign: async () => {
+    return await apiClient.post('api/v1/tasks/assign');
+  },
   getTaskList: async (limit: number, page: number) => {
-    const url = `/api/v1/tasks/assigned`;
-    return await api()
-      .withToken(auth.getToken() as string, 'bearer')
-      .get(url, { limit: limit, page: page });
+    const url = `api/v1/tasks/assigned`;
+    return await apiClient.get(url, { limit: limit, page: page });
   },
 };
 
@@ -55,8 +60,40 @@ function* getTaskList(action: PayloadAction<{ limit: number; page: number }>) {
   }
 }
 
+function* assign() {
+  try {
+    yield put(loaderModule.startLoading());
+    const response: ApiResponse = yield call(taskApi.assign);
+    yield put(loaderModule.endLoading());
+    if (response.isSuccess) {
+      yield put(
+        alertModalModule.showAlert({
+          title: '할당 완료',
+          message: '할당 완료',
+        }),
+      );
+      yield put(taskModule.actions.getTaskList);
+    } else {
+      yield put(
+        alertModalModule.showAlert({
+          title: '할당 실패',
+          message: '할당 실패',
+        }),
+      );
+    }
+  } catch (e) {
+    yield put(
+      alertModalModule.showAlert({
+        title: '할당 실패',
+        message: '할당 실패',
+      }),
+    );
+  }
+}
+
 function* watchTaskSage() {
   yield takeLatest(taskModule.actions.getTaskList, getTaskList);
+  yield takeLatest(taskModule.actions.assign, assign);
 }
 
 export default function* taskSage() {

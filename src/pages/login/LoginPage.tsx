@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import loginModule from '../../store/features/auth';
 import LoginForm from '../../components/login/LoginForm';
-import { useNavigate } from 'react-router';
 import { getLoginState } from '../../store/features/auth/loginReducer';
 
 const LoginPage = () => {
   const { id, password } = useSelector(getLoginState);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const onSubmit = () => {
-    if (id) dispatch(loginModule.loginSubmit({ id, password }));
+    if (id && password) dispatch(loginModule.loginSubmit({ id, password }));
   };
 
   const onChangeId = (e: { target: HTMLInputElement }) =>

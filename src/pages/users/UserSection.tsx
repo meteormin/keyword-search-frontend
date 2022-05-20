@@ -5,7 +5,7 @@ import { config, date } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { toCamel } from 'snake-camel';
-import { User } from '../../store/features/users/usersAction';
+import { User } from '../../store/features/users/userAction';
 import { Method } from '../../components/users/formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
 
@@ -41,7 +41,7 @@ const UserSection = () => {
             type="button"
             className="btn btn-dark"
             onClick={() => {
-              dispatch(usersModule.getEditUser(user.id));
+              dispatch(usersModule.actions.getEditUser(user.id));
               updateUser();
             }}
           >
@@ -59,7 +59,7 @@ const UserSection = () => {
     if (currentGroup.id) {
       console.log('get Users');
       dispatch(
-        usersModule.setUsers(
+        usersModule.actions.setUsers(
           (currentGroup.edges?.users?.map(toCamel) as User[]) || [],
         ),
       );
@@ -92,7 +92,7 @@ const UserSection = () => {
         onResetPass={() => {
           if (editUser?.id) {
             console.log('press resetPassword');
-            dispatch(usersModule.resetPassword(editUser?.id));
+            dispatch(usersModule.actions.resetPassword(editUser?.id));
           }
         }}
         onHide={() => showUserModal(false)}

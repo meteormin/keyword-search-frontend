@@ -2,24 +2,25 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import sentenceModule from './';
-import { api, apiResponse, auth } from '../../../helpers';
+import { api, apiResponse, auth, lang } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
-import { toCamel, toSnake } from 'snake-camel';
+import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { CreateSentence, Sentence } from './sentenceAction';
+import { CreateSentence, CreateState, SentenceHistory } from './sentenceAction';
+import { ReviewResult } from '../../../components/common/WorkSpace';
+
+const apiClient = api({
+  token: { token: auth.getToken(), tokenType: 'bearer' },
+});
 
 const sentenceApi = {
   getSentenceList: async (limit: number, page: number) => {
     const url = `api/v1/sentences`;
-    return await api()
-      .withToken(auth.getToken() as string, 'bearer')
-      .get(url, { limit: limit, page: page });
+    return await apiClient.get(url, { limit: limit, page: page });
   },
   createSentence: async (sentence: CreateSentence) => {
     const url = `api/v1/sentences`;
-    return await api()
-      .withToken(auth.getToken() as string, 'bearer')
-      .post(url, toSnake(sentence));
+    return await apiClient.post(url, sentence);
   },
 };
 
@@ -37,11 +38,30 @@ function* getSentenceList(
     const res = apiResponse(response);
     console.log(response);
     if (response.isSuccess) {
-      const sentences: Sentence[] = res.data.sentences.map(toCamel);
+      const sentences: SentenceHistory[] = res.data.sentences.map(toCamel);
       yield put(loaderModule.endLoading());
 
       yield put(sentenceModule.actions.setCount(res.data.count || 0));
-      yield put(sentenceModule.actions.setSentenceList(sentences));
+      // yield put(sentenceModule.actions.setSentenceList(sentences));
+      const sentenceHistory: SentenceHistory[] = sentences.map((s) => {
+        const sh: SentenceHistory = s;
+        let createState = CreateState.COMPLETE;
+
+        if (!sh.reviewResult) {
+          createState = CreateState.WAIT;
+          if (sh.reviewer1Id) {
+            sh.reviewRsTxt = lang.sentence.reviewState.review1.fail;
+          }
+
+          if (sh.reviewer2Id) {
+            sh.reviewRsTxt = lang.sentence.reviewState.review2.fail;
+          }
+        }
+        sh.createState = createState;
+        return sh;
+      });
+
+      yield put(sentenceModule.actions.setSentenceHistories(sentenceHistory));
     } else {
       yield put(loaderModule.endLoading());
       yield put(

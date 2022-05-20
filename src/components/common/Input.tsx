@@ -8,6 +8,7 @@ export type InputProp = {
   value: any;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => any;
   readonly?: boolean;
+  placeholder?: string;
 };
 
 export type InputState = InputProp;
@@ -67,6 +68,7 @@ class Input extends Component<InputProp, InputState> {
           value={this.state.value || ''}
           onChange={this.onChange}
           readOnly={this.state?.readonly || false}
+          placeholder={this.state.placeholder || ''}
         />
       </div>
     );

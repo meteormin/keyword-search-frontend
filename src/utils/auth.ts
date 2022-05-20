@@ -17,10 +17,10 @@ export interface User {
 }
 
 export interface TokenInfo {
-  expires: number;
+  exp: number;
   group: number[];
   id: number;
-  permission: number[];
+  permission: string[];
 }
 
 export const setUser = (user: object) => {
