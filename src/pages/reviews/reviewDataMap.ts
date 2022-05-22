@@ -1,6 +1,45 @@
 import { Sentence } from '../../store/features/sentence/sentenceAction';
 import { ReviewResult, WorkData } from '../../components/common/WorkSpace';
-import { CreateReview } from '../../store/features/reviews/reviewAction';
+import {
+  CreateReview,
+  SentenceReject,
+} from '../../store/features/reviews/reviewAction';
+
+const getEtcReason = (
+  reasons: ((SentenceReject | undefined)[] | undefined)[],
+) => {
+  let reason1;
+  let reason2;
+  let memo1;
+  let memo2;
+  reason1 = reasons[0];
+  reason2 = reasons[1];
+
+  const etc1 = reason1?.filter((r) => {
+    return r?.sentenceRejectCode == 9;
+  })[0];
+  reason1 = reason1?.map((r) => {
+    return r?.sentenceRejectCode;
+  });
+
+  const etc2 = reason2?.filter((r) => {
+    return r?.sentenceRejectCode == 9;
+  })[0];
+
+  reason2 = reason2?.map((r) => {
+    return r?.sentenceRejectCode;
+  });
+
+  if (etc1) {
+    memo1 = etc1.memo;
+  }
+
+  if (etc2) {
+    memo2 = etc2.memo;
+  }
+
+  return { reason1, reason2, memo1, memo2 };
+};
 
 export const sentenceToWorkData = (
   seq: number,
@@ -10,6 +49,7 @@ export const sentenceToWorkData = (
   let result2;
   let rejectReason1;
   let rejectReason2;
+  let etcReason;
   let memo1;
   let memo2;
 
@@ -30,28 +70,11 @@ export const sentenceToWorkData = (
       return filtered?.includes(reject) ? reject : undefined;
     });
 
-    const etc = rejectReason1?.filter((r) => {
-      return r?.sentenceRejectCode == 9;
-    })[0];
-    rejectReason1 = rejectReason1?.map((r) => {
-      return r?.sentenceRejectCode;
-    });
-
-    const etc2 = rejectReason2?.filter((r) => {
-      return r?.sentenceRejectCode == 9;
-    })[0];
-
-    rejectReason2 = rejectReason2?.map((r) => {
-      return r?.sentenceRejectCode;
-    });
-
-    if (etc) {
-      memo1 = etc.memo;
-    }
-
-    if (etc2) {
-      memo2 = etc2.memo;
-    }
+    etcReason = getEtcReason([rejectReason1, rejectReason2]);
+    rejectReason1 = etcReason.reason1;
+    rejectReason2 = etcReason.reason2;
+    memo1 = etcReason.memo1;
+    memo2 = etcReason.memo2;
   }
 
   if (seq == 2) {
@@ -71,27 +94,11 @@ export const sentenceToWorkData = (
       return filtered?.includes(reject) ? reject : undefined;
     });
 
-    const etc = rejectReason1?.filter((r) => {
-      return r?.sentenceRejectCode == 9;
-    })[0];
-    rejectReason1 = rejectReason1?.map((r) => {
-      return r?.sentenceRejectCode;
-    });
-
-    const etc2 = rejectReason2?.filter((r) => {
-      return r?.sentenceRejectCode == 9;
-    })[0];
-    rejectReason2 = rejectReason2?.map((r) => {
-      return r?.sentenceRejectCode;
-    });
-
-    if (etc) {
-      memo1 = etc.memo;
-    }
-
-    if (etc2) {
-      memo2 = etc2.memo;
-    }
+    etcReason = getEtcReason([rejectReason1, rejectReason2]);
+    rejectReason1 = etcReason.reason1;
+    rejectReason2 = etcReason.reason2;
+    memo1 = etcReason.memo1;
+    memo2 = etcReason.memo2;
   }
 
   return {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import { auth, guard } from '../helpers';
-import { NotFoundPage } from '../pages/error';
+import { ForbiddenPage, NotFoundPage } from '../pages/error';
 import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { UsersPage } from '../pages/users';
@@ -19,10 +19,12 @@ const Router = () => {
   const handlePerm = (menuNumber: string) => {
     const token = auth.getToken();
     if (token) {
-      const tokenInfo: TokenInfo = auth.tokenInfo(token);
-      const permissions = tokenInfo.permission;
+      const tokenInfo: TokenInfo | null = auth.tokenInfo(token);
+      if (tokenInfo) {
+        const permissions = tokenInfo.permission;
 
-      return !permissions.includes(menuNumber);
+        return !permissions.includes(menuNumber);
+      }
     }
 
     return true;
@@ -31,8 +33,8 @@ const Router = () => {
   const handleGoHome = () => {
     return [
       { role: 'admin', home: '/users' },
-      { role: 'manager', home: '/tasks' },
-      { role: 'crowd_worker', home: '/tasks' },
+      { role: 'manager', home: '/reviews' },
+      { role: 'cloud_worker', home: '/tasks' },
     ];
   };
 
@@ -76,7 +78,7 @@ const Router = () => {
             element={
               <guard.Restricted
                 condition={handlePerm('MANAGE_GROUP')}
-                redirectPath={'/'}
+                redirectPath={'/error/403'}
               >
                 <UsersPage />
               </guard.Restricted>
@@ -89,7 +91,7 @@ const Router = () => {
             element={
               <guard.Restricted
                 condition={handlePerm('CREATE_SENTENCE')}
-                redirectPath={'/'}
+                redirectPath={'/error/403'}
               >
                 <AssignTask />
               </guard.Restricted>
@@ -102,7 +104,7 @@ const Router = () => {
             element={
               <guard.Restricted
                 condition={handlePerm('CREATE_SENTENCE')}
-                redirectPath={'/'}
+                redirectPath={'/error/403'}
               >
                 <SentenceListPage />
               </guard.Restricted>
@@ -114,7 +116,10 @@ const Router = () => {
             <Route
               index
               element={
-                <guard.Restricted condition={handlePerm('REVIEW_SENTENCE')}>
+                <guard.Restricted
+                  condition={handlePerm('REVIEW_SENTENCE')}
+                  redirectPath={'/error/403'}
+                >
                   <ReviewListPage seq={1} />
                 </guard.Restricted>
               }
@@ -124,7 +129,7 @@ const Router = () => {
               element={
                 <guard.Restricted
                   condition={handlePerm('REVIEW_SENTENCE')}
-                  redirectPath={'/'}
+                  redirectPath={'/error/403'}
                 >
                   <AssignReview seq={1} />
                 </guard.Restricted>
@@ -135,7 +140,10 @@ const Router = () => {
             <Route
               index
               element={
-                <guard.Restricted condition={handlePerm('REVIEW_SENTENCE_2')}>
+                <guard.Restricted
+                  condition={handlePerm('REVIEW_SENTENCE_2')}
+                  redirectPath={'/error/403'}
+                >
                   <ReviewListPage seq={2} />
                 </guard.Restricted>
               }
@@ -145,7 +153,7 @@ const Router = () => {
               element={
                 <guard.Restricted
                   condition={handlePerm('REVIEW_SENTENCE_2')}
-                  redirectPath={'/'}
+                  redirectPath={'/error/403'}
                 >
                   <AssignReview seq={2} />
                 </guard.Restricted>
@@ -153,7 +161,9 @@ const Router = () => {
             />
           </Route>
         </Route>
-
+        <Route path="error">
+          <Route path="403" element={<ForbiddenPage />} />
+        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

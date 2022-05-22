@@ -6,8 +6,12 @@ import { api, apiResponse, auth, lang } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { CreateSentence, CreateState, SentenceHistory } from './sentenceAction';
-import { ReviewResult } from '../../../components/common/WorkSpace';
+import {
+  CreateSentence,
+  CreateState,
+  Sentence,
+  SentenceHistory,
+} from './sentenceAction';
 
 const apiClient = api({
   token: { token: auth.getToken(), tokenType: 'bearer' },
@@ -17,6 +21,9 @@ const sentenceApi = {
   getSentenceList: async (limit: number, page: number) => {
     const url = `api/v1/sentences`;
     return await apiClient.get(url, { limit: limit, page: page });
+  },
+  getSentence: async (id: number) => {
+    return await apiClient.get(`api/v1/sentences/${id}`);
   },
   createSentence: async (sentence: CreateSentence) => {
     const url = `api/v1/sentences`;
@@ -82,6 +89,38 @@ function* getSentenceList(
   }
 }
 
+function* getSentence(action: PayloadAction<number>) {
+  yield put(loaderModule.startLoading());
+
+  try {
+    const response: ApiResponse = yield call(
+      sentenceApi.getSentence,
+      action.payload,
+    );
+    const res = apiResponse(response);
+    yield put(loaderModule.endLoading());
+    if (response.isSuccess) {
+      const sentence: Sentence = toCamel(res.data.sentence) as Sentence;
+      yield put(sentenceModule.actions.setSentence(sentence));
+    } else {
+      yield put(
+        alertModalModule.showAlert({
+          title: '데이터 조회',
+          message: '데이터 조회 실패',
+        }),
+      );
+    }
+  } catch (e) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '데이터 조회',
+        message: '데이터 조회 실패',
+      }),
+    );
+  }
+}
+
 function* createSentence(action: PayloadAction<CreateSentence>) {
   yield put(loaderModule.startLoading());
 
@@ -123,6 +162,7 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
 
 function* watchSentenceSage() {
   yield takeLatest(sentenceModule.actions.getSentenceList, getSentenceList);
+  yield takeLatest(sentenceModule.actions.getSentence, getSentence);
   yield takeLatest(sentenceModule.actions.createSentence, createSentence);
 }
 

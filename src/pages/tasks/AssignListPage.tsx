@@ -8,6 +8,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import CreateForm from '../../components/tasks/CreateForm';
 import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
+import { str } from '../../helpers';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ const AssignListPage = () => {
       return {
         no: i + 1,
         id: t.refId,
-        conceptSet: t.concepts.map((c) => c.stem).join(', '),
+        conceptSet: str.limit(t.concepts.map((c) => c.stem).join(', '), 20),
         wordCount: t.posLength,
         _origin: t,
       };
@@ -161,7 +162,13 @@ const AssignListPage = () => {
           </Button>
         </Col>
       </Row>
-      <CreateForm show={!!workTask} time={time || '03:00:00'} />
+      <CreateForm
+        show={!!workTask}
+        time={time || '03:00:00'}
+        onCreate={() =>
+          taskModule.actions.getTaskList({ limit: limit, page: page })
+        }
+      />
     </Container>
   );
 };

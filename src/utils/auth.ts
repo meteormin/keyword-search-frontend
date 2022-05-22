@@ -32,8 +32,11 @@ export const user = (): User | null => {
   if (conf.auth.userKey) {
     user = window.localStorage.getItem(conf.auth.userKey) || null;
   }
-
-  return user ? JSON.parse(user) : null;
+  try {
+    return user ? JSON.parse(user) : null;
+  } catch (e) {
+    return null;
+  }
 };
 
 export const setToken = (token: string) => {
@@ -58,9 +61,16 @@ export const logout = (): void => {
 };
 
 export const isLogin = (): boolean => {
-  return user() != null;
+  return user() != null && tokenInfo(getToken() as string) != null;
 };
 
-export const tokenInfo = (token: string): TokenInfo => {
-  return jwtDecode(token);
+export const tokenInfo = (token: string): TokenInfo | null => {
+  if (token) {
+    try {
+      return jwtDecode(token);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return null;
 };

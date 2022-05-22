@@ -16,6 +16,7 @@ export interface CreateFormProps {
   show: boolean;
   time: string;
   seq: number;
+  onCreate: () => any;
 }
 
 const ReviewForm = (props: CreateFormProps) => {
@@ -28,8 +29,8 @@ const ReviewForm = (props: CreateFormProps) => {
   const [sentence2Pat, setSentence2Pat] = useState('');
 
   // 단어 수
-  const [sentence1Count, setCount1] = useState(1);
-  const [sentence2Count, setCount2] = useState(1);
+  const [sentence1Count, setCount1] = useState(0);
+  const [sentence2Count, setCount2] = useState(0);
 
   const { assignSentence, editReview } = useSelector(
     reviewModule.getReviewState,
@@ -140,10 +141,9 @@ const ReviewForm = (props: CreateFormProps) => {
                       );
                       dispatch(reviewModule.actions.setAssign(null));
                       setShow(false);
+                      props.onCreate();
                     }
                   }}
-                  wordCount1={sentence1Count}
-                  wordCount2={sentence2Count}
                   onChange={(data) => {
                     console.log('on ch data', data);
                     if (review) {

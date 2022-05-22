@@ -7,7 +7,7 @@ import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import assignListSchema from './AssignListSchema';
-import { date } from '../../helpers';
+import { date, str } from '../../helpers';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import reviewModule from '../../store/features/reviews';
 
@@ -43,7 +43,10 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       return {
         no: i + 1,
         refId: s.edges?.tasks.refId,
-        concepts: s.edges?.tasks.concepts.map((c) => c.stem).join(', '),
+        concepts: str.limit(
+          s.edges?.tasks?.concepts?.map((c) => c.stem).join(', ') || '',
+          20,
+        ),
         posLength: s.edges?.tasks.posLength,
         sentenceCount: s.sentence1Count + '/' + s.sentence2Count,
         createdBy: s.edges?.users.loginId,
@@ -161,6 +164,15 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         seq={seq}
         show={!!assignSentence}
         time={time?.toString() || '03:00:00'}
+        onCreate={() =>
+          dispatch(
+            reviewModule.actions.getAssignList({
+              seq: seq,
+              limit: limit,
+              page: page,
+            }),
+          )
+        }
       />
     </Container>
   );

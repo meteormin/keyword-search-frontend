@@ -1,5 +1,5 @@
-export const filterKorean = (value: string) => {
-  const regExp = /^[ㄱ-ㅎ가-힣ㅏ-ㅣ|]*$/;
+export const filterKorean = (value: string): string | boolean => {
+  const regExp = /^[^a-zA-Z]*$/;
   if (value) {
     if (value.match(regExp)) {
       return value;
@@ -8,4 +8,20 @@ export const filterKorean = (value: string) => {
   }
 
   return true;
+};
+
+export const limit = (value: string, limit: number, end = '...'): string => {
+  let limitedStr = value;
+
+  if (value) {
+    if (!limit) {
+      return value;
+    }
+
+    if (value.length > limit) {
+      limitedStr = value.substring(0, limit) + end;
+    }
+  }
+
+  return limitedStr;
 };

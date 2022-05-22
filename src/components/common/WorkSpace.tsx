@@ -33,8 +33,6 @@ export interface ReviewData {
 export interface WorkSpaceProps {
   workType?: 'work' | 'review';
   workData?: WorkData;
-  wordCount1: number;
-  wordCount2: number;
   onSubmit: (data: WorkData) => any;
   onChange: (data: WorkData) => any;
 }
@@ -54,23 +52,25 @@ const WorkSpace = (props: WorkSpaceProps) => {
   const [reviewHoldBtn, setReviewHoldBtn] = useState<boolean>(true);
 
   const handleChange = (id: number, v: string) => {
-    if (str.filterKorean(v)) {
-      switch (id) {
-        case 10:
+    switch (id) {
+      case 10:
+        if (str.filterKorean(v)) {
           setText10(v);
-          break;
-        case 11:
-          setText11(v);
-          break;
-        case 20:
+        }
+        break;
+      case 11:
+        setText11(v);
+        break;
+      case 20:
+        if (str.filterKorean(v)) {
           setText20(v);
-          break;
-        case 21:
-          setText21(v);
-          break;
-        default:
-          break;
-      }
+        }
+        break;
+      case 21:
+        setText21(v);
+        break;
+      default:
+        break;
     }
   };
 
@@ -109,8 +109,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
   };
 
   useEffect(() => {
-    setCount1(props.wordCount1);
-    setCount2(props.wordCount2);
+    setCount1(props.workData?.wordCount1 || 0);
+    setCount2(props.workData?.wordCount2 || 0);
     setText10(props.workData?.textArea10 || '');
     setText11(props.workData?.textArea11 || '');
     setText20(props.workData?.textArea20 || '');
@@ -165,6 +165,26 @@ const WorkSpace = (props: WorkSpaceProps) => {
     return await baikalNlp.getPosLength(str);
   };
 
+  const handleWordCount = (cntNo: number, str: string) => {
+    let setCnt: React.Dispatch<React.SetStateAction<number>>;
+    if (cntNo == 1) {
+      setCnt = setCount1;
+    } else if (cntNo == 2) {
+      setCnt = setCount2;
+    } else {
+      return;
+    }
+
+    countWord(str)
+      .then((count) => {
+        setCnt(count);
+      })
+      .catch((reason) => {
+        console.log(reason);
+        setCnt(0);
+      });
+  };
+
   return (
     <Fragment>
       <Card header={lang.sentence.workSpace.subject}>
@@ -184,9 +204,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
                   handleChange(10, e.target.value);
                 }}
                 onBlur={(e) => {
-                  countWord(e.target.value).then((count) => {
-                    setCount1(count);
-                  });
+                  handleWordCount(1, e.target.value);
                 }}
               />
             </FloatingLabel>
@@ -217,11 +235,6 @@ const WorkSpace = (props: WorkSpaceProps) => {
               onChange={(e) => {
                 handleChange(11, e.target.value);
               }}
-              onBlur={(e) => {
-                countWord(e.target.value).then((count) => {
-                  setCount1(count);
-                });
-              }}
             />
           </FloatingLabel>
         </Col>
@@ -247,6 +260,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
                   onClick={() => {
                     setText10('');
                     setText11('');
+                    setCount1(0);
                   }}
                 >
                   다시쓰기
@@ -267,6 +281,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 value={textArea20}
                 onChange={(e) => {
                   handleChange(20, e.target.value);
+                }}
+                onBlur={(e) => {
+                  handleWordCount(2, e.target.value);
                 }}
               />
             </FloatingLabel>
@@ -321,6 +338,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
                   onClick={() => {
                     setText20('');
                     setText21('');
+                    setCount2(0);
                   }}
                 >
                   다시쓰기

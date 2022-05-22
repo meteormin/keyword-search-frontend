@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import DynamicTable, {
   DynamicSchema,
 } from '../../components/common/DaynamicTable';
-import SentenceListSchema from './SentenceListSchema';
+import { SentenceListSchema, SentenceRecord } from './SentenceListSchema';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import Search, { SearchStats } from '../../components/sentences/Search';
 import Pagination from '../../components/common/Pagination';
 import Select from '../../components/common/Select';
 import { useDispatch, useSelector } from 'react-redux';
 import sentenceModule from '../../store/features/sentence';
-import { date } from '../../helpers';
+import { CreateState } from '../../store/features/sentence/sentenceAction';
+import { date, str } from '../../helpers';
 import CreateForm from '../../components/tasks/CreateForm';
 
 const SentenceListPage = () => {
@@ -17,7 +18,7 @@ const SentenceListPage = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const { sentences, sentenceHistory } = useSelector(
+  const { sentences, sentenceHistory, editSentence, time } = useSelector(
     sentenceModule.getSentenceState,
   );
 
@@ -46,7 +47,7 @@ const SentenceListPage = () => {
     rejectSecond: 100,
   };
 
-  const records = (): any[] => {
+  const records = (): SentenceRecord[] => {
     return sentenceHistory.map((s, i) => {
       let reviewAt: string | null = s.review2At || s.review1At || null;
       if (reviewAt) {
@@ -55,17 +56,26 @@ const SentenceListPage = () => {
       return {
         no: i + 1,
         refId: s.refId,
-        concepts: s.concepts.map((c) => c.stem).join(', '),
+        concepts: str.limit(s.concepts.map((c) => c.stem).join(', '), 20),
         posLength: s.posLength,
-        sentenceState: s.createState,
+        sentenceState: s?.createState || '',
         createdAt: date(s.createdAt).format('YYYY.MM.DD'),
-        reviewState: s.reviewRsTxt,
+        reviewState: s?.reviewRsTxt || '',
         rejectReason: s.reviewReasons
           ? s.reviewReasons.map((reason) => reason.toString()).join(', ')
           : '',
-        reviewAt: reviewAt,
+        reviewAt: reviewAt || '',
+        _origin: s,
       };
     });
+  };
+
+  const handleClickRecord = (record: SentenceRecord) => {
+    if (record) {
+      if (record._origin.createState != CreateState.COMPLETE) {
+        dispatch(sentenceModule.actions.getSentence(record._origin.id));
+      }
+    }
   };
 
   useEffect(() => {
@@ -97,7 +107,11 @@ const SentenceListPage = () => {
         </Col>
       </Row>
       <Row className="mt-2">
-        <DynamicTable schema={schema} records={records()} />
+        <DynamicTable
+          schema={schema}
+          records={records()}
+          onClick={handleClickRecord}
+        />
       </Row>
       <Row className="mt-5 align-content-center">
         <Col lg={4} className="mt-5">
@@ -118,6 +132,11 @@ const SentenceListPage = () => {
           </Button>
         </Col>
       </Row>
+      <CreateForm
+        show={!!editSentence}
+        onCreate={() => null}
+        time={time?.toString() || '--:--:--'}
+      />
     </Container>
   );
 };

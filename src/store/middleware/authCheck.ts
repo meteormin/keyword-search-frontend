@@ -2,8 +2,9 @@ import { api, auth, date } from '../../helpers';
 
 const authCheck = (store: any) => (next: any) => (action: any) => {
   if (auth.getToken()) {
-    const tokenInfo = auth.tokenInfo((auth.getToken() as string) || '');
     let isValid = false;
+    console.debug('hi');
+    const tokenInfo = auth.tokenInfo(auth.getToken() as string);
 
     if (tokenInfo) {
       const expAt = date.unix(tokenInfo.exp);
@@ -31,12 +32,12 @@ const authCheck = (store: any) => (next: any) => (action: any) => {
           }
 
           auth.logout();
-          window.location.href = '/';
+          window.location.href = '/login';
         })
-        .catch((res) => {
-          console.log('need refresh');
+        .catch((reason) => {
+          console.log('need refresh', reason);
           auth.logout();
-          window.location.href = '/';
+          window.location.href = '/login';
         });
     }
   }

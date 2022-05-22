@@ -13,6 +13,7 @@ import { SearchStats } from '../../components/reviews/Search';
 import Search from '../../components/reviews/Search';
 import { ReviewListSchema, ReviewList } from './ReviewListSchema';
 import { Review } from '../../store/features/reviews/reviewAction';
+import { str } from '../../helpers';
 
 export interface Record extends ReviewList {
   _origin: Review;
@@ -69,7 +70,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       return {
         no: i + 1,
         refId: r.refId,
-        concepts: r.concepts.map((c) => c.stem).join(', '),
+        concepts: str.limit(r.concepts.map((c) => c.stem).join(', '), 20),
         posLength: r.posLength,
         sentenceCount: r.created1Length + '/' + r.created2Length,
         creatorId: r.creatorId,
@@ -156,6 +157,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         seq={seq}
         show={!!editReview}
         time={time?.toString() || '--:--:--'}
+        onCreate={() => null}
       />
     </Container>
   );

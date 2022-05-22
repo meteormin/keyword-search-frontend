@@ -1,6 +1,7 @@
 import { DynamicSchema } from '../../components/common/DaynamicTable';
+import { SentenceHistory } from '../../store/features/sentence/sentenceAction';
 
-const SentenceListSchema: DynamicSchema = {
+export const SentenceListSchema: DynamicSchema = {
   no: {
     name: 'NO',
   },
@@ -30,4 +31,15 @@ const SentenceListSchema: DynamicSchema = {
   },
 };
 
-export default SentenceListSchema;
+export interface SentenceRecord {
+  no: number;
+  refId: string;
+  concepts: string;
+  posLength: number;
+  sentenceState: string;
+  createdAt: string;
+  reviewState: string;
+  rejectReason: string;
+  reviewAt: string;
+  _origin: SentenceHistory;
+}
