@@ -54,7 +54,7 @@ function* getSentenceList(
         const sh: SentenceHistory = s;
         let createState = CreateState.COMPLETE;
 
-        if (!sh.reviewResult) {
+        if (!sh.reviewResult && sh.reviewResult != null) {
           createState = CreateState.WAIT;
           if (sh.reviewer1Id) {
             sh.reviewRsTxt = lang.sentence.reviewState.review1.fail;

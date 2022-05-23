@@ -30,7 +30,7 @@ const UserForm = ({
   const dispatch = useDispatch();
   const [id, setId] = useState<string>('');
   const [name, setName] = useState<string>('');
-  const [userType, setUserType] = useState<string>('');
+  const [userType, setUserType] = useState<string>('admin');
   const [_show, setShow] = useState<boolean>(false);
   const { editUser, currentGroup } = useSelector(usersModule.getUsersState);
 
@@ -56,7 +56,7 @@ const UserForm = ({
     } else {
       setId('');
       setName('');
-      setUserType('');
+      setUserType('admin');
     }
   }, [editUser, show]);
   const makeButton = () => {
@@ -148,7 +148,7 @@ const UserForm = ({
           id={'permission'}
           label={'사용자 권한'}
           name={'permission'}
-          selectedValue={userType}
+          selectedValue={userType || 'admin'}
           options={formInfo.userTypes}
           onChange={(e) =>
             setUserType(e.target.options[e.target.selectedIndex].value)

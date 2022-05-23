@@ -87,10 +87,19 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   };
 
   const handleClickRecord = (record: Record) => {
+    let reviewId = 0;
+    if (seq == 1) {
+      reviewId = record._origin.review1Id;
+    }
+
+    if (seq == 2) {
+      reviewId = record._origin.review2Id;
+    }
+
     dispatch(
       reviewModule.actions.getReview({
         seq: seq,
-        id: record._origin.id,
+        id: reviewId,
       }),
     );
   };
@@ -154,6 +163,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         </Col>
       </Row>
       <ReviewForm
+        readOnly={true}
         seq={seq}
         show={!!editReview}
         time={time?.toString() || '--:--:--'}

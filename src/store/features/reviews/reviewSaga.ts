@@ -137,6 +137,7 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
         reviewModule.actions.setAssign(toCamel(res.data.sentence) as Sentence),
       );
     } else {
+      console.log(res);
       yield put(
         alertModal.showAlert({
           title: '데이터 조회 실패',
@@ -145,6 +146,7 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
       );
     }
   } catch (e) {
+    console.log(e);
     yield put(
       alertModal.showAlert({
         title: '데이터 조회 실패',
@@ -177,7 +179,7 @@ function* getReviewList(
       const reviewsData: Review[] = res.data.sentences.map(toCamel);
       const reviews: Review[] = reviewsData.map((item) => {
         const r = item;
-        if (!r.reviewResult) {
+        if (!r.reviewResult && r.reviewResult != null) {
           if (r.reviewer1Id) {
             r.reviewRsTxt = lang.sentence.reviewState.review1.fail;
           }
@@ -191,6 +193,7 @@ function* getReviewList(
 
       yield put(reviewModule.actions.setReviewList(reviews));
     } else {
+      console.log(res);
       yield put(
         alertModal.showAlert({
           title: '데이터 조회 실패',
@@ -218,7 +221,9 @@ function* getReview(action: PayloadAction<{ seq: number; id: number }>) {
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {
-      yield put(reviewModule.actions.setReview(res.data.sentence));
+      yield put(
+        reviewModule.actions.setReview(toCamel(res.data.sentence) as Sentence),
+      );
     } else {
       yield put(
         alertModal.showAlert({

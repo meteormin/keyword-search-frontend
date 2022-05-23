@@ -11,11 +11,14 @@ import {
   workDataToCreateReview,
 } from '../../pages/reviews/reviewDataMap';
 import { Sentence } from '../../store/features/sentence/sentenceAction';
+import alertModal from '../../store/features/common/alertModal';
+import { reviewValidate } from '../../utils/validation/review';
 
 export interface CreateFormProps {
   show: boolean;
   time: string;
   seq: number;
+  readOnly?: boolean;
   onCreate: () => any;
 }
 
@@ -37,6 +40,20 @@ const ReviewForm = (props: CreateFormProps) => {
   );
 
   const [review, setReview] = useState<Sentence | null>(null);
+
+  const validate = (create: CreateReview) => {
+    const validated = reviewValidate(review as Sentence, create);
+    if (!validated.status) {
+      dispatch(
+        alertModal.showAlert({
+          title: '문장 생성하기',
+          message: validated.messages.toString(),
+        }),
+      );
+    }
+
+    return validated.status;
+  };
 
   useEffect(() => {
     setShow(props.show);
@@ -66,7 +83,9 @@ const ReviewForm = (props: CreateFormProps) => {
           <Container className="mt-2">
             <Row>
               <Col lg={4} className="mt-2">
-                <Button variant="dark">현재 상태 저장</Button>
+                <Button variant="dark" disabled={props.readOnly}>
+                  현재 상태 저장
+                </Button>
                 <Button
                   variant="dark"
                   className="ms-2"
@@ -122,6 +141,7 @@ const ReviewForm = (props: CreateFormProps) => {
               </Col>
               <Col lg={8}>
                 <WorkSpace
+                  readOnly={props.readOnly}
                   workType="review"
                   workData={sentenceToWorkData(props.seq, review)}
                   onSubmit={(data) => {
@@ -133,15 +153,17 @@ const ReviewForm = (props: CreateFormProps) => {
                         data,
                       );
                       console.log('create review req', createReview);
-                      dispatch(
-                        reviewModule.actions.createReview({
-                          seq: props.seq,
-                          review: createReview,
-                        }),
-                      );
-                      dispatch(reviewModule.actions.setAssign(null));
-                      setShow(false);
-                      props.onCreate();
+                      if (validate(createReview)) {
+                        dispatch(
+                          reviewModule.actions.createReview({
+                            seq: props.seq,
+                            review: createReview,
+                          }),
+                        );
+                        dispatch(reviewModule.actions.setAssign(null));
+                        setShow(false);
+                        props.onCreate();
+                      }
                     }
                   }}
                   onChange={(data) => {

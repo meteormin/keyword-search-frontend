@@ -1,7 +1,9 @@
 import React from 'react';
 import { components, OptionProps } from 'react-select';
 
-const CheckBoxOption = (props: OptionProps) => {
+const CheckBoxOption = (
+  props: OptionProps<{ label: string; value: string | number }>,
+) => {
   return (
     <div>
       <components.Option {...props}>

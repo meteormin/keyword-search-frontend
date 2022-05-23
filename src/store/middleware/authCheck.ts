@@ -26,7 +26,7 @@ const authCheck = (store: any) => (next: any) => (action: any) => {
             return;
           }
 
-          if (res.res.status == 401) {
+          if (res.res && res.res.status == 401) {
             // refresh
             console.log('need refresh');
           }
