@@ -1,7 +1,7 @@
 import { apiResponse, api, auth, lang } from '../../../helpers';
 import { CreateReview, Review, UpdateReview } from './reviewAction';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { put, call, takeLatest, fork } from 'redux-saga/effects';
+import { put, call, takeLatest, fork, select } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import { ApiResponse } from '../../../utils/ApiClient';
 import reviewModule from './index';
@@ -10,6 +10,8 @@ import alertModalModule from '../common/alertModal';
 import taskModule from '../tasks';
 import { toCamel } from 'snake-camel';
 import { Sentence } from '../sentence/sentenceAction';
+import { SearchParameter, SearchState } from '../search/searchAction';
+import searchModule from '../search';
 
 const apiClient = api({
   token: { token: auth.getToken(), tokenType: 'bearer' },
@@ -19,20 +21,30 @@ const reviewApi = {
   assign: async (seq: number) => {
     return await apiClient.post(`api/v1/reviews/${seq}/assign`);
   },
-  getAssignList: async (seq: number, limit: number, page: number) => {
-    return await apiClient.get(`api/v1/reviews/${seq}/assigned`, {
-      limit: limit,
-      page: page,
-    });
+  getAssignList: async (
+    seq: number,
+    limit: number,
+    page: number,
+    search?: SearchParameter,
+  ) => {
+    const parameters: any = { ...search };
+    parameters.limit = limit;
+    parameters.page = page;
+    return await apiClient.get(`api/v1/reviews/${seq}/assigned`, parameters);
   },
   getAssign: async (seq: number, assignId: number) => {
     return await apiClient.get(`api/v1/sentences/${assignId}`);
   },
-  getReviewList: async (seq: number, limit: number, page: number) => {
-    return await apiClient.get(`api/v1/reviews/${seq}`, {
-      limit: limit,
-      page: page,
-    });
+  getReviewList: async (
+    seq: number,
+    limit: number,
+    page: number,
+    search?: SearchParameter,
+  ) => {
+    const parameters: any = { ...search };
+    parameters.limit = limit;
+    parameters.page = page;
+    return await apiClient.get(`api/v1/reviews/${seq}`, parameters);
   },
   getReview: async (seq: number, id: number) => {
     return await apiClient.get(`api/v1/reviews/${seq}/${id}`);
@@ -81,7 +93,7 @@ function* getAssignList(
   action: PayloadAction<{ seq: number; page: number; limit: number }>,
 ) {
   const { seq, page, limit } = action.payload;
-
+  const search: SearchState = yield select(searchModule.getSearchState);
   try {
     yield put(loaderModule.startLoading());
     const response: ApiResponse = yield call(
@@ -89,6 +101,7 @@ function* getAssignList(
       seq,
       limit,
       page,
+      search.parameters || undefined,
     );
 
     yield put(loaderModule.endLoading());
@@ -137,6 +150,7 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
         reviewModule.actions.setAssign(toCamel(res.data.sentence) as Sentence),
       );
     } else {
+      console.log(res);
       yield put(
         alertModal.showAlert({
           title: '데이터 조회 실패',
@@ -145,6 +159,7 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
       );
     }
   } catch (e) {
+    console.log(e);
     yield put(
       alertModal.showAlert({
         title: '데이터 조회 실패',
@@ -158,7 +173,7 @@ function* getReviewList(
   action: PayloadAction<{ seq: number; page: number; limit: number }>,
 ) {
   const { seq, page, limit } = action.payload;
-
+  const search: SearchState = yield select(searchModule.getSearchState);
   try {
     yield put(loaderModule.startLoading());
     const response: ApiResponse = yield call(
@@ -166,6 +181,7 @@ function* getReviewList(
       seq,
       limit,
       page,
+      search.parameters || undefined,
     );
 
     yield put(loaderModule.endLoading());
@@ -177,7 +193,7 @@ function* getReviewList(
       const reviewsData: Review[] = res.data.sentences.map(toCamel);
       const reviews: Review[] = reviewsData.map((item) => {
         const r = item;
-        if (!r.reviewResult) {
+        if (!r.reviewResult && r.reviewResult != null) {
           if (r.reviewer1Id) {
             r.reviewRsTxt = lang.sentence.reviewState.review1.fail;
           }
@@ -191,6 +207,7 @@ function* getReviewList(
 
       yield put(reviewModule.actions.setReviewList(reviews));
     } else {
+      console.log(res);
       yield put(
         alertModal.showAlert({
           title: '데이터 조회 실패',
@@ -218,7 +235,9 @@ function* getReview(action: PayloadAction<{ seq: number; id: number }>) {
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {
-      yield put(reviewModule.actions.setReview(res.data.sentence));
+      yield put(
+        reviewModule.actions.setReview(toCamel(res.data.sentence) as Sentence),
+      );
     } else {
       yield put(
         alertModal.showAlert({

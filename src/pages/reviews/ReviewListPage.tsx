@@ -87,10 +87,19 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   };
 
   const handleClickRecord = (record: Record) => {
+    let reviewId = 0;
+    if (seq == 1) {
+      reviewId = record._origin.review1Id;
+    }
+
+    if (seq == 2) {
+      reviewId = record._origin.review2Id;
+    }
+
     dispatch(
       reviewModule.actions.getReview({
         seq: seq,
-        id: record._origin.id,
+        id: reviewId,
       }),
     );
   };
@@ -108,7 +117,19 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   return (
     <Container>
       <Row className="mt-2 ms-2">
-        <Search seq={seq} stats={tempStats} />
+        <Search
+          seq={seq}
+          stats={tempStats}
+          onSearch={() => {
+            dispatch(
+              reviewModule.actions.getReviewList({
+                seq: seq,
+                limit: limit,
+                page: page,
+              }),
+            );
+          }}
+        />
       </Row>
       <Row className="mt-4">
         <Col md={6} className="mt-2"></Col>
@@ -154,6 +175,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         </Col>
       </Row>
       <ReviewForm
+        readOnly={true}
         seq={seq}
         show={!!editReview}
         time={time?.toString() || '--:--:--'}

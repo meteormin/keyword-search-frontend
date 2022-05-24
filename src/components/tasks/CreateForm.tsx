@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Button, Col, Container, Row, Modal } from 'react-bootstrap';
+import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import Prototype from '../common/Prototype';
 import WorkSpace, { WorkData } from '../common/WorkSpace';
 import { lang } from '../../helpers';
@@ -12,9 +12,12 @@ import {
 } from '../../store/features/sentence/sentenceAction';
 import { Task } from '../../store/features/tasks/taskAction';
 import { sentenceToWorkData } from '../../pages/sentences/sentenceDataMap';
+import { sentenceValidate } from '../../utils/validation/sentence';
+import alertModal from '../../store/features/common/alertModal';
 
 export interface CreateFormProps {
   show: boolean;
+  readOnly?: boolean;
   onCreate: () => any;
   time: string;
 }
@@ -68,6 +71,21 @@ const CreateForm = (props: CreateFormProps) => {
     return undefined;
   };
 
+  const validate = (create: CreateSentence) => {
+    const validated = sentenceValidate(task as Task, create);
+
+    if (!validated.status) {
+      dispatch(
+        alertModal.showAlert({
+          title: '문장 생성하기',
+          message: validated.messages.toString(),
+        }),
+      );
+    }
+
+    return validated.status;
+  };
+
   return (
     <Fragment>
       <Modal
@@ -84,7 +102,9 @@ const CreateForm = (props: CreateFormProps) => {
           <Container className="mt-2">
             <Row>
               <Col lg={4} className="mt-2">
-                <Button variant="dark">현재 상태 저장</Button>
+                <Button variant="dark" disabled={props.readOnly}>
+                  현재 상태 저장
+                </Button>
                 <Button
                   variant="dark"
                   className="ms-2"
@@ -136,6 +156,7 @@ const CreateForm = (props: CreateFormProps) => {
               </Col>
               <Col lg={8}>
                 <WorkSpace
+                  readOnly={props.readOnly}
                   workData={toWorkData()}
                   onSubmit={(data) => {
                     if (task) {
@@ -150,12 +171,15 @@ const CreateForm = (props: CreateFormProps) => {
                         sentence1Count: data.wordCount1,
                         sentence2Count: data.wordCount2,
                       };
-                      dispatch(
-                        sentenceModule.actions.createSentence(createSentence),
-                      );
-                      dispatch(taskModule.actions.setWorkTask(null));
-                      setShow(false);
-                      props.onCreate();
+
+                      if (validate(createSentence)) {
+                        dispatch(
+                          sentenceModule.actions.createSentence(createSentence),
+                        );
+                        dispatch(taskModule.actions.setWorkTask(null));
+                        setShow(false);
+                        props.onCreate();
+                      }
                     }
                   }}
                   onChange={(data) => {

@@ -13,6 +13,8 @@ import taskSage from './tasks/taskSaga';
 import taskReducer from './tasks/taskReducer';
 import reviewReducer from './reviews/reviewReducer';
 import reviewSage from './reviews/reviewSaga';
+import searchReducer from './search/searchReducer';
+import searchSaga from './search/searchSaga';
 
 export const rootReducer = combineReducers({
   // reducers
@@ -23,6 +25,7 @@ export const rootReducer = combineReducers({
   task: taskReducer,
   sentence: sentenceReducer,
   review: reviewReducer,
+  search: searchReducer,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -32,5 +35,6 @@ export const rootSaga = function* rootSaga() {
     call(taskSage),
     call(sentenceSage),
     call(reviewSage),
+    call(searchSaga),
   ]);
 };

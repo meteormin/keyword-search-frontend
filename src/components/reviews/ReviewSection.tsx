@@ -8,13 +8,14 @@ import { ReviewResult as ReviewResultEnum } from '../common/WorkSpace';
 
 export interface ReviewResultState {
   radio: ReviewResultEnum;
-  check: number[];
-  memo: string;
+  check?: number[];
+  memo?: string;
 }
 
 export interface ReviewResultProps {
   seq: number;
   data?: any;
+  readOnly?: boolean;
   onChange: (state: ReviewResultState) => any;
 }
 
@@ -24,13 +25,21 @@ const ReviewSection = (props: ReviewResultProps) => {
   const [memo, setMemo] = useState<string>('');
 
   const selectOptions = config.selectOptions.rejectReason.map((i) => ({
-    value: i.value,
     label: i.name,
+    value: i.value,
   }));
 
   const reasonList = selectOptions.map((v) => {
     return v.value as number;
   });
+
+  const getSelectOptionByValue = (
+    value: number,
+  ): { label: string; value: string | number } => {
+    return selectOptions.filter((option) => {
+      return option.value == value;
+    })[0];
+  };
 
   useEffect(() => {
     if (props.data) {
@@ -38,7 +47,7 @@ const ReviewSection = (props: ReviewResultProps) => {
       setCheck(props.data.check);
       setMemo(props.data.memo);
     }
-  }, []);
+  }, [props.data]);
 
   useEffect(() => {
     props.onChange({
@@ -62,6 +71,7 @@ const ReviewSection = (props: ReviewResultProps) => {
           onChange={(e) => {
             setRadio(e.target.value as ReviewResultEnum);
           }}
+          disabled={props.readOnly || false}
         />
       </Col>
       <Col className="mt-2">
@@ -76,6 +86,7 @@ const ReviewSection = (props: ReviewResultProps) => {
           onChange={(e) => {
             setRadio(e.target.value as ReviewResultEnum);
           }}
+          disabled={props.readOnly || false}
         />
       </Col>
       {radio == ReviewResultEnum.FAIL || null ? (
@@ -91,14 +102,19 @@ const ReviewSection = (props: ReviewResultProps) => {
               id="rejectReason"
               name="rejectReason"
               options={selectOptions}
+              value={check?.map(
+                (i): { label: string; value: string | number } =>
+                  getSelectOptionByValue(i),
+              )}
               onChange={(e) => {
                 console.log(e);
                 const multiCheck: number[] = e.map((v: any): number => v.value);
                 setCheck(multiCheck);
               }}
+              isDisabled={props.readOnly || false}
             ></ReactSelect>
           </Col>
-          {check.includes(reasonList[reasonList.length - 1]) ? (
+          {check?.includes(reasonList[reasonList.length - 1]) ? (
             <Col>
               <FloatingLabel
                 controlId={'memo' + props.seq}
@@ -113,6 +129,7 @@ const ReviewSection = (props: ReviewResultProps) => {
                   onChange={(e) => {
                     setMemo(e.target.value);
                   }}
+                  readOnly={props.readOnly || false}
                 />
               </FloatingLabel>
             </Col>

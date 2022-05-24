@@ -1,4 +1,4 @@
-import { call, fork, put, takeLatest } from 'redux-saga/effects';
+import { call, fork, put, takeLatest, select } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import sentenceModule from './';
@@ -12,15 +12,24 @@ import {
   Sentence,
   SentenceHistory,
 } from './sentenceAction';
+import { SearchParameter, SearchState } from '../search/searchAction';
+import searchModule from '../search';
 
 const apiClient = api({
   token: { token: auth.getToken(), tokenType: 'bearer' },
 });
 
 const sentenceApi = {
-  getSentenceList: async (limit: number, page: number) => {
+  getSentenceList: async (
+    limit: number,
+    page: number,
+    search?: SearchParameter,
+  ) => {
     const url = `api/v1/sentences`;
-    return await apiClient.get(url, { limit: limit, page: page });
+    const parameters: any = { ...search };
+    parameters.limit = limit;
+    parameters.page = page;
+    return await apiClient.get(url, parameters);
   },
   getSentence: async (id: number) => {
     return await apiClient.get(`api/v1/sentences/${id}`);
@@ -35,12 +44,14 @@ function* getSentenceList(
   action: PayloadAction<{ limit: number; page: number }>,
 ) {
   yield put(loaderModule.startLoading());
+  const search: SearchState = yield select(searchModule.getSearchState);
 
   try {
     const response: ApiResponse = yield call(
       sentenceApi.getSentenceList,
       action.payload.limit,
       action.payload.page,
+      search.parameters || undefined,
     );
     const res = apiResponse(response);
     console.log(response);
@@ -54,7 +65,7 @@ function* getSentenceList(
         const sh: SentenceHistory = s;
         let createState = CreateState.COMPLETE;
 
-        if (!sh.reviewResult) {
+        if (!sh.reviewResult && sh.reviewResult != null) {
           createState = CreateState.WAIT;
           if (sh.reviewer1Id) {
             sh.reviewRsTxt = lang.sentence.reviewState.review1.fail;

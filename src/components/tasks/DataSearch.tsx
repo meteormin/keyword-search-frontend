@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import Select, { Option } from '../common/Select';
+import Select from '../common/Select';
 
 export interface DataSearchProps {
   onSearch: (selectedName: string | number, searchValue: string) => any;
@@ -23,10 +23,6 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
     {
       name: '주제',
       value: '주제',
-    },
-    {
-      name: '도메인',
-      value: 'domain',
     },
   ];
 

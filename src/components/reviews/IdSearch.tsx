@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import CreateState from '../sentences/CreateState';
+import IdState from './IdState';
 import Input from '../common/Input';
 
 export interface IdSearchState {
@@ -32,7 +32,7 @@ const IdSearch = (props: IdSearchProps) => {
           onChange={(selectedValue) => {
             setSelected(selectedValue as string);
           }}
-          options={CreateState}
+          options={IdState}
         />
       </Col>
       <Col md={4}>

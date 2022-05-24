@@ -46,14 +46,12 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
 };
 
 export const apiResponse = (res: ApiResponse) => {
-  if (res.isSuccess && res.res.status) {
+  if (res.isSuccess && res.res) {
     return res.res.data;
   }
 
-  if (res.res.hasOwnProperty('fields')) {
-    return res.res.fields;
-  } else {
-    return res.res.msg;
+  if (res.error) {
+    return res.error;
   }
 };
 

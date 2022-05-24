@@ -33,6 +33,7 @@ export interface ReviewData {
 export interface WorkSpaceProps {
   workType?: 'work' | 'review';
   workData?: WorkData;
+  readOnly?: boolean;
   onSubmit: (data: WorkData) => any;
   onChange: (data: WorkData) => any;
 }
@@ -42,7 +43,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
   const [textArea20, setText20] = useState('');
   const [textArea11, setText11] = useState('');
   const [textArea21, setText21] = useState('');
-  const [patternedText, setPatText] = useState<string[]>(['temp', 'temp2']);
+  const [patternedText, setPatText] = useState<string[]>(['', '']);
   const [wordCount1, setCount1] = useState(0);
   const [wordCount2, setCount2] = useState(0);
   const [reviewData1, setReview1] = useState<ReviewResultState | undefined>();
@@ -85,10 +86,16 @@ const WorkSpace = (props: WorkSpaceProps) => {
   };
 
   const handleMakeSPClick = (no: number) => {
+    const newPatternedText = patternedText;
+
     if (no === 0) {
-      setText11(patternedText[no]);
+      setText11(patternedText[no] || textArea10);
+      newPatternedText[no] = patternedText[no] || textArea10;
+      setPatText(newPatternedText);
     } else if (no === 1) {
-      setText21(patternedText[no]);
+      setText21(patternedText[no] || textArea20);
+      newPatternedText[no] = patternedText[no] || textArea10;
+      setPatText(newPatternedText);
     }
   };
 
@@ -98,6 +105,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
       reviewData2?.radio == ReviewResult.PASS
     ) {
       setReviewPassBtn(true);
+    } else {
+      setReviewPassBtn(false);
     }
 
     if (
@@ -105,6 +114,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
       reviewData2?.radio != ReviewResult.PASS
     ) {
       setReviewOpinionBtn(true);
+    } else {
+      setReviewOpinionBtn(false);
     }
   };
 
@@ -115,7 +126,19 @@ const WorkSpace = (props: WorkSpaceProps) => {
     setText11(props.workData?.textArea11 || '');
     setText20(props.workData?.textArea20 || '');
     setText21(props.workData?.textArea21 || '');
-    setPatText(props.workData?.origin || ['temp', 'temp2']);
+    setPatText(props.workData?.origin || ['', '']);
+
+    setReview1({
+      radio: props.workData?.reviewData?.result1 as ReviewResult,
+      check: props.workData?.reviewData?.rejectReason1 as number[],
+      memo: props.workData?.reviewData?.memo1 || '',
+    });
+
+    setReview2({
+      radio: props.workData?.reviewData?.result2 as ReviewResult,
+      check: props.workData?.reviewData?.rejectReason2 as number[],
+      memo: props.workData?.reviewData?.memo2 || '',
+    });
   }, []);
 
   const toWorkData = (): WorkData => {
@@ -200,12 +223,13 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 as="textarea"
                 placeholder="문장1"
                 value={textArea10}
+                readOnly={props?.readOnly || false}
                 onChange={(e) => {
                   handleChange(10, e.target.value);
                 }}
-                onBlur={(e) => {
-                  handleWordCount(1, e.target.value);
-                }}
+                // onBlur={(e) => {
+                //   handleWordCount(1, e.target.value);
+                // }}
               />
             </FloatingLabel>
           </Row>
@@ -217,10 +241,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
           <Button
             variant={textArea10 ? 'primary' : 'light'}
             style={{ fontSize: '0.85em' }}
-            disabled={!textArea10}
+            disabled={props?.readOnly || false ? true : !textArea10}
             onClick={() => {
               console.log('get api');
               handleMakeSPClick(0);
+              handleWordCount(1, textArea10);
             }}
           >
             문형 만들기
@@ -232,6 +257,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
               as="textarea"
               placeholder="문장1"
               value={textArea11}
+              readOnly={props?.readOnly || false}
               onChange={(e) => {
                 handleChange(11, e.target.value);
               }}
@@ -244,7 +270,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
         <Row id="review1" className="mt-2">
           <ReviewSection
             seq={1}
-            data={reviewData2}
+            readOnly={props.readOnly}
+            data={reviewData1}
             onChange={(state) => handleReviewChange(1, state)}
           />
         </Row>
@@ -257,6 +284,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
                   id="resetBtn1"
                   variant="dark"
                   className="float-end"
+                  disabled={props.readOnly || false}
                   onClick={() => {
                     setText10('');
                     setText11('');
@@ -279,12 +307,13 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 as="textarea"
                 placeholder="문장2"
                 value={textArea20}
+                readOnly={props?.readOnly || false}
                 onChange={(e) => {
                   handleChange(20, e.target.value);
                 }}
-                onBlur={(e) => {
-                  handleWordCount(2, e.target.value);
-                }}
+                // onBlur={(e) => {
+                //   handleWordCount(2, e.target.value);
+                // }}
               />
             </FloatingLabel>
           </Row>
@@ -296,10 +325,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
           <Button
             variant={textArea20 ? 'primary' : 'light'}
             style={{ fontSize: '0.85em' }}
-            disabled={!textArea20}
+            disabled={props?.readOnly || false ? true : !textArea20}
             onClick={() => {
               console.log('get api');
               handleMakeSPClick(1);
+              handleWordCount(2, textArea20);
             }}
           >
             문형 만들기
@@ -311,6 +341,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
               as="textarea"
               placeholder="문장2"
               value={textArea21}
+              readOnly={props?.readOnly || false}
               onChange={(e) => {
                 handleChange(21, e.target.value);
               }}
@@ -322,6 +353,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
         <Row id="review2" className="mt-2">
           <ReviewSection
             seq={2}
+            readOnly={props.readOnly}
             data={reviewData2}
             onChange={(state) => handleReviewChange(2, state)}
           />
@@ -335,6 +367,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
                   id="resetBtn2"
                   variant="dark"
                   className="float-end"
+                  disabled={props?.readOnly || false}
                   onClick={() => {
                     setText20('');
                     setText21('');
@@ -349,7 +382,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
           <Col></Col>
         </Row>
       )}
-      {props.workType == 'review' ? (
+
+      {props.workType == 'review' && props.readOnly != true ? (
         <Row className="mt-xxl-5 mx-0">
           <Col>
             <Button
@@ -360,13 +394,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 if (reviewHoldBtn) {
                   setReview1({
                     radio: ReviewResult.HOLD,
-                    check: reviewData1?.check || [],
-                    memo: reviewData1?.memo || '',
                   });
                   setReview2({
                     radio: ReviewResult.HOLD,
-                    check: reviewData2?.check || [],
-                    memo: reviewData2?.memo || '',
                   });
                   props.onSubmit(toWorkData());
                 }
@@ -404,7 +434,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
             </Button>
           </Col>
         </Row>
-      ) : (
+      ) : props.readOnly != true ? (
         <Row className="mt-xxl-5 mx-0">
           <Button
             variant={
@@ -418,7 +448,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
             검수 요청
           </Button>
         </Row>
-      )}
+      ) : null}
     </Fragment>
   );
 };

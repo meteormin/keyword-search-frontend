@@ -73,7 +73,9 @@ export interface Review {
   created2Length: number;
   creatorId: string;
   createdAt: string;
+  review1Id: number;
   reviewer1Id: string;
+  review2Id: number;
   reviewer2Id: string;
   review1At: string;
   review2At: string;

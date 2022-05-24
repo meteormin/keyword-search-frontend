@@ -2,6 +2,7 @@ import axios, {
   AxiosRequestConfig,
   AxiosRequestHeaders,
   AxiosResponse,
+  AxiosError,
 } from 'axios';
 
 export interface Token {
@@ -11,7 +12,13 @@ export interface Token {
 
 export interface ApiResponse {
   isSuccess: boolean;
-  res: AxiosResponse<any, any> | any;
+  res: AxiosResponse<any, any> | null;
+  error: ErrorResponse | null;
+}
+
+export interface ErrorResponse {
+  name: string;
+  message: string;
 }
 
 export class ApiClient {
@@ -112,13 +119,35 @@ export class ApiClient {
       return {
         isSuccess: true,
         res: this.response,
+        error: null,
       };
-    } catch (error) {
+    } catch (error: any | AxiosError) {
       this._isSuccess = false;
       this._error = error;
+      const errorResponse: ErrorResponse = {
+        name: '서버 에러',
+        message: '관리자에게 문의해주세요.',
+      };
+      if (error instanceof AxiosError) {
+        if (error.response?.status || 500 < 500) {
+          if (this.error.response.data.hasOwnProperty('fields')) {
+            errorResponse.name = '유효성 검사 실패';
+            const messages = [];
+            for (const [key] of Object.entries(error.response?.data.fields)) {
+              messages.push(`${key}(이)가 형식에 맞지 않습니다.`);
+            }
+            errorResponse.message = messages.join(', ');
+          } else {
+            const message = error.response?.data.msg || '';
+            errorResponse.message = message.split(':')[1];
+          }
+        }
+      }
+
       return {
         isSuccess: false,
-        res: this.error,
+        res: error,
+        error: errorResponse,
       };
     }
   }

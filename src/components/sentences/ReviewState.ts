@@ -1,25 +1,26 @@
 import { Option } from '../common/Select';
+import { ReviewStatus } from '../../store/features/search/searchAction';
 
 const ReviewState: Option[] = [
   {
     name: '검수대기',
-    value: 'wait',
+    value: ReviewStatus.WAITING,
   },
   {
     name: '1차승인',
-    value: 'first',
+    value: ReviewStatus.PASS1,
   },
   {
     name: '1차반려',
-    value: 'rejectFirst',
+    value: ReviewStatus.REJECT1,
   },
   {
     name: '2차승인',
-    value: 'second',
+    value: ReviewStatus.PASS2,
   },
   {
     name: '2차반려',
-    value: 'rejectSecond',
+    value: ReviewStatus.REJECT2,
   },
 ];
 
