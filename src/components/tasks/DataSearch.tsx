@@ -101,8 +101,8 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
                 default:
                   break;
               }
-              onSearch(state);
             }
+            onSearch(state);
           }}
         >
           할당내 검색

@@ -16,35 +16,41 @@ export interface IdSearchProps {
 }
 
 const IdSearch = (props: IdSearchProps) => {
-  const [selected, setSelected] = useState<IdStateEnum | undefined>();
+  const [selected, setSelected] = useState<number | undefined>();
   const [value, setValue] = useState<string | undefined>();
 
-  useEffect(() => {
-    const state: IdSearchState = {
+  const onChange = () => {
+    const idSearchState: IdSearchState = {
       sentenceGroupName: undefined,
       sentenceUserID: undefined,
       review1UserID: undefined,
       review2UserID: undefined,
     };
-
-    switch (selected) {
-      case IdStateEnum.GROUP_NAME:
-        state.sentenceGroupName = value;
-        break;
-      case IdStateEnum.CREATOR_ID:
-        state.sentenceUserID = value;
-        break;
-      case IdStateEnum.REVIEWER1_ID:
-        state.review1UserID = value;
-        break;
-      case IdStateEnum.REVIEWER2_ID:
-        state.review2UserID = value;
-        break;
-      default:
-        break;
+    if (selected && value) {
+      console.log(parseInt(selected.toString()));
+      switch (parseInt(selected.toString())) {
+        case IdStateEnum.GROUP_NAME:
+          idSearchState.sentenceGroupName = value;
+          break;
+        case IdStateEnum.CREATOR_ID:
+          console.log('is??');
+          idSearchState.sentenceUserID = value;
+          break;
+        case IdStateEnum.REVIEWER1_ID:
+          idSearchState.review1UserID = value;
+          break;
+        case IdStateEnum.REVIEWER2_ID:
+          idSearchState.review2UserID = value;
+          break;
+        default:
+          break;
+      }
     }
+    props.onChange(idSearchState);
+  };
 
-    props.onChange(state);
+  useEffect(() => {
+    onChange();
   }, [selected, value]);
 
   return (
@@ -53,7 +59,7 @@ const IdSearch = (props: IdSearchProps) => {
         <SelectFilter
           label={'ID'}
           onChange={(selectedValue) => {
-            setSelected(selectedValue as IdStateEnum);
+            setSelected(selectedValue as number);
           }}
           options={IdState}
         />
@@ -68,6 +74,7 @@ const IdSearch = (props: IdSearchProps) => {
           onChange={(e) => {
             setValue(e.target.value);
           }}
+          onBlur={onChange}
         />
       </Col>
       <Col md={4}></Col>

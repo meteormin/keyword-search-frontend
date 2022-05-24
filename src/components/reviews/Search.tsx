@@ -27,7 +27,8 @@ const Search = ({ seq, stats, onSearch, onReset }: SearchProps) => {
   const dispatch = useDispatch();
   const { parameters } = useSelector(searchModule.getSearchState);
   const setSearchParameter = (state: SearchParameter) => {
-    dispatch(searchModule.actions.search(Object.assign(state, parameters)));
+    const newParameter = { ...parameters, ...state };
+    dispatch(searchModule.actions.search(newParameter));
   };
   return (
     <Fragment>
@@ -38,6 +39,7 @@ const Search = ({ seq, stats, onSearch, onReset }: SearchProps) => {
               refID: state.refId,
               domain: state.domain,
             });
+
             if (onSearch) {
               onSearch();
             }
@@ -52,7 +54,7 @@ const Search = ({ seq, stats, onSearch, onReset }: SearchProps) => {
       <Row className="mt-4">
         <IdSearch
           onChange={(state) => {
-            console.log(state);
+            console.log('Id search', state);
             setSearchParameter(state);
           }}
         />
@@ -60,7 +62,7 @@ const Search = ({ seq, stats, onSearch, onReset }: SearchProps) => {
       <Row className="mt-4">
         <StateSearch
           onChange={(state) => {
-            console.log(state);
+            console.log('state search', state);
             setSearchParameter({
               reviewStatus: state.review,
               rejectReason: state.reject,

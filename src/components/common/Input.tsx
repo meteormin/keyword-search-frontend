@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component } from 'react';
+import React, { ChangeEvent, Component, FocusEvent } from 'react';
 
 export type InputProp = {
   type: 'text' | 'email' | 'password';
@@ -9,6 +9,7 @@ export type InputProp = {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => any;
   readonly?: boolean;
   placeholder?: string;
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => any;
 };
 
 export type InputState = InputProp;
@@ -69,6 +70,7 @@ class Input extends Component<InputProp, InputState> {
           onChange={this.onChange}
           readOnly={this.state?.readonly || false}
           placeholder={this.state.placeholder || ''}
+          onBlur={this.props.onBlur}
         />
       </div>
     );

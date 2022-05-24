@@ -22,7 +22,7 @@ const SelectFilter = (props: selectFilterProps) => {
           name={'selectFilter'}
           options={props.options}
           onChange={(e) => {
-            const value = e.target.options[e.target.selectedIndex];
+            const value = e.target.options[e.target.selectedIndex].value;
             props.onChange(value || '');
           }}
         />

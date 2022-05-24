@@ -31,7 +31,8 @@ const Search = ({ stats, onSearch, onReset }: SearchProps) => {
   const { parameters } = useSelector(searchModule.getSearchState);
 
   const setSearchParameter = (state: SearchParameter) => {
-    dispatch(searchModule.actions.search(Object.assign(state, parameters)));
+    const newParameter = { ...parameters, ...state };
+    dispatch(searchModule.actions.search(newParameter));
   };
 
   return (

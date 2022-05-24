@@ -33,7 +33,7 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'검수 상태'}
           onChange={(selectedValue) => {
-            setReview(selectedValue as ReviewStatus);
+            setReview(selectedValue);
           }}
           options={ReviewState}
         />
