@@ -334,10 +334,11 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
       response = yield call(usersApi.group.createGroup, action.payload);
     }
 
-    const res: ApiResponse = apiResponse(response);
+    const res = apiResponse(response);
     yield put(loaderModule.endLoading());
     if (response.isSuccess) {
       yield put(usersModule.actions.getGroups());
+      yield put(usersModule.actions.setGroupPermission(res.groups.id));
       yield put(
         alertModalModule.showAlert({
           title: message + ' 성공',

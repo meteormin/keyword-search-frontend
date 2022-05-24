@@ -84,8 +84,6 @@ const GroupForm = ({
                     createGroup({
                       name: groupName,
                     });
-
-                    saveGroupPermission(currentGroup.id);
                   }
                   onSave();
                   onHide();
