@@ -338,22 +338,22 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
     yield put(loaderModule.endLoading());
     if (response.isSuccess) {
       yield put(usersModule.actions.getGroups());
-      if ('permissions' in action.payload) {
-        const updateGroup: UpdateGroupPerm = {
-          id: res.groups.id,
-          permissions: action.payload.permissions,
-        };
-        response = yield call(usersApi.group.patchGroupPerm, updateGroup);
-        if (response.isSuccess) {
-          yield put(usersModule.actions.getGroups());
-        } else {
-          yield put(
-            alertModalModule.showAlert({
-              title: message + ' 실패',
-              message: message + ' 실패',
-            }),
-          );
-        }
+      // if ('permissions' in action.payload) {
+      //   const updateGroup: UpdateGroupPerm = {
+      //     id: res.groups.id,
+      //     permissions: action.payload.permissions,
+      //   };
+      //   response = yield call(usersApi.group.patchGroupPerm, updateGroup);
+      //   if (response.isSuccess) {
+      //     yield put(usersModule.actions.getGroups());
+      //   } else {
+      //     yield put(
+      //       alertModalModule.showAlert({
+      //         title: message + ' 실패',
+      //         message: message + ' 실패',
+      //       }),
+      //     );
+      //   }
       }
 
       yield put(
