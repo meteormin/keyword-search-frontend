@@ -117,7 +117,19 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   return (
     <Container>
       <Row className="mt-2 ms-2">
-        <Search seq={seq} stats={tempStats} />
+        <Search
+          seq={seq}
+          stats={tempStats}
+          onSearch={() => {
+            dispatch(
+              reviewModule.actions.getReviewList({
+                seq: seq,
+                limit: limit,
+                page: page,
+              }),
+            );
+          }}
+        />
       </Row>
       <Row className="mt-4">
         <Col md={6} className="mt-2"></Col>

@@ -18,7 +18,7 @@ const SentenceListPage = () => {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const { sentences, sentenceHistory, editSentence, time } = useSelector(
+  const { sentenceHistory, editSentence, time, totalCount } = useSelector(
     sentenceModule.getSentenceState,
   );
 
@@ -84,10 +84,24 @@ const SentenceListPage = () => {
     );
   }, []);
 
+  useEffect(() => {
+    setTotalPage(totalCount);
+  }, [totalCount]);
+
   return (
     <Container>
       <Row className="mx-1 mt-4">
-        <Search stats={tempStats} />
+        <Search
+          stats={tempStats}
+          onSearch={() => {
+            dispatch(
+              sentenceModule.actions.getSentenceList({
+                limit: limit,
+                page: page,
+              }),
+            );
+          }}
+        />
       </Row>
       <Row className="mt-4">
         <Col md={6} className="mt-2"></Col>

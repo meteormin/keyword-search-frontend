@@ -19,10 +19,14 @@ export interface DateSearchProps {
 }
 
 const DateSearch = (props: DateSearchProps) => {
-  const [startCreatedAt, setStartCreatedAt] = useState<Date>(new Date());
-  const [endCreatedAt, setEndCreatedAt] = useState<Date>(new Date());
-  const [startReviewAt, setStartReviewAt] = useState<Date>(new Date());
-  const [endReviewAt, setEndReviewAt] = useState<Date>(new Date());
+  const now = new Date();
+  const monthAgo = new Date(now);
+  monthAgo.setMonth(now.getMonth() - 1);
+
+  const [startCreatedAt, setStartCreatedAt] = useState<Date>(monthAgo);
+  const [endCreatedAt, setEndCreatedAt] = useState<Date>(now);
+  const [startReviewAt, setStartReviewAt] = useState<Date>(monthAgo);
+  const [endReviewAt, setEndReviewAt] = useState<Date>(now);
 
   useEffect(() => {
     props.onChange({

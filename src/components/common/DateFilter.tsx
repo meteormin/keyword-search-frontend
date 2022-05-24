@@ -17,8 +17,12 @@ export interface DateFilterProps {
 }
 
 const DateFilter = (props: DateFilterProps) => {
-  const [start, setStart] = useState<Date>(new Date());
-  const [end, setEnd] = useState<Date>(new Date());
+  const now = new Date();
+  const monthAgo = new Date(now);
+  monthAgo.setMonth(now.getMonth() - 1);
+
+  const [start, setStart] = useState<Date>(monthAgo);
+  const [end, setEnd] = useState<Date>(now);
 
   useEffect(() => {
     props.onChange({

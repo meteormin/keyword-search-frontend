@@ -3,11 +3,12 @@ import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
 import RejectReason from '../sentences/RejectReason';
 import ReviewState from '../sentences/ReviewState';
+import { ReviewStatus } from '../../store/features/search/searchAction';
 
 export interface StateSearchState {
-  create: string;
-  review: string;
-  reject: string;
+  create?: string;
+  review?: ReviewStatus;
+  reject?: number;
 }
 
 export interface StateSearchProps {
@@ -15,17 +16,16 @@ export interface StateSearchProps {
 }
 
 const StateSearch = (props: StateSearchProps) => {
-  const [create, setCreate] = useState('');
-  const [review, setReview] = useState('');
-  const [reject, setReject] = useState('');
+  // const [create, setCreate] = useState<string | undefined>();
+  const [review, setReview] = useState<ReviewStatus | undefined>();
+  const [reject, setReject] = useState<number | undefined>();
 
   useEffect(() => {
     props.onChange({
-      create,
       review,
       reject,
     });
-  }, [create, reject, review]);
+  }, [reject, review]);
 
   return (
     <Row className="mx-2">
@@ -33,7 +33,7 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'검수 상태'}
           onChange={(selectedValue) => {
-            setReview(selectedValue as string);
+            setReview(selectedValue as ReviewStatus);
           }}
           options={ReviewState}
         />
@@ -42,7 +42,7 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'반려 사유'}
           onChange={(selectedValue) => {
-            setReject(selectedValue as string);
+            setReject(selectedValue as number);
           }}
           options={RejectReason}
         />
