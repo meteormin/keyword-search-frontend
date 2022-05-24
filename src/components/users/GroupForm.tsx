@@ -32,6 +32,7 @@ const GroupForm = ({
   const { postGroup, currentGroup } = useSelector(usersModule.getUsersState);
   const [_editGroup, setEditGroup] = useState<Group | null>(editGroup);
   const [permList, setPermList] = useState<number[]>([]);
+  const [initPermList, setInitPermList] = useState<number[]>([]);
   const [groupName, setGroupName] = useState<string>(editGroup?.name || '');
   const [_show, setShow] = useState<boolean>(show);
 
@@ -45,6 +46,11 @@ const GroupForm = ({
             return permission.id;
           }),
         );
+        setInitPermList(
+          editGroup?.edges?.permissions.map((permission): number => {
+            return permission.id;
+          }),
+        );
       }
       setEditGroup(editGroup);
       setGroupName(editGroup?.name || '');
@@ -52,6 +58,7 @@ const GroupForm = ({
       setGroupName('');
       setEditGroup(null);
       setPermList([]);
+      setInitPermList([]);
     }
   }, [editGroup, _editGroup, show]);
 
@@ -151,7 +158,7 @@ const GroupForm = ({
         </div>
         <PermList
           permissions={formInfo.permissions}
-          activeValues={permList}
+          activeValues={initPermList}
           onChange={changePermCheck}
         />
       </div>

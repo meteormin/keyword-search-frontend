@@ -354,7 +354,7 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
       //       }),
       //     );
       //   }
-      }
+      //}
 
       yield put(
         alertModalModule.showAlert({

@@ -23,11 +23,10 @@ export interface PermListProps {
 }
 
 const PermList = ({ permissions, activeValues, onChange }: PermListProps) => {
-  const [values, setValues] = useState<Set<number>>(new Set(activeValues));
+  const [values, setValues] = useState<Set<number>>();
   const [records, setRecords] = useState<any[]>([]);
-  const [isChecked, setIsChecked] = useState<Set<number>>(
-    new Set(activeValues),
-  );
+  const [isChecked, setIsChecked] = useState<Set<number>>();
+
   const schema = {
     name: {
       name: '권한명',
@@ -50,11 +49,7 @@ const PermList = ({ permissions, activeValues, onChange }: PermListProps) => {
       setValues(tempSet);
       setIsChecked(tempSet);
     }
-
-    onChange([...values]);
   };
-
-  // useEffect(() => {}, []);
 
   useEffect(() => {
     setValues(new Set(activeValues));
@@ -63,12 +58,23 @@ const PermList = ({ permissions, activeValues, onChange }: PermListProps) => {
     setIsChecked(new Set(activeValues));
     console.log(isChecked);
     mappingRecords();
-  }, [activeValues, permissions]);
+  }, [activeValues]);
+
+  useEffect(() => {
+    if (values) {
+      onChange([...values]);
+      setIsChecked(values);
+      mappingRecords();
+    }
+  }, [values]);
 
   const getIsChecked = (value: number): boolean => {
-    const check = [...isChecked].filter((item) => item == value)[0];
-    console.log(value, check);
-    return !!check;
+    if (isChecked) {
+      const check = [...isChecked].filter((item) => item == value)[0];
+      console.log(value, check);
+      return !!check;
+    }
+    return false;
   };
 
   const mappingRecords = () => {
