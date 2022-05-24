@@ -39,6 +39,7 @@ export interface CreateUser {
 
 export interface CreateGroup {
   name: string;
+  permissions: number[];
 }
 
 export interface UpdateGroupPerm {

@@ -83,6 +83,7 @@ const GroupForm = ({
                   if (groupName) {
                     createGroup({
                       name: groupName,
+                      permissions: permList,
                     });
                   }
                   onSave();

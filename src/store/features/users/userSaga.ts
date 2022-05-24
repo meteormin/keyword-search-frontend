@@ -338,7 +338,14 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
     yield put(loaderModule.endLoading());
     if (response.isSuccess) {
       yield put(usersModule.actions.getGroups());
-      yield put(usersModule.actions.setGroupPermission(res.groups.id));
+      if ('permissions' in action.payload) {
+        const updateGroup: UpdateGroupPerm = {
+          id: res.groups.id,
+          permissions: action.payload.permissions,
+        };
+        yield put(usersModule.actions.setGroupPermission(updateGroup));
+      }
+
       yield put(
         alertModalModule.showAlert({
           title: message + ' 성공',
