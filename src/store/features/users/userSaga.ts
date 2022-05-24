@@ -343,7 +343,17 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
           id: res.groups.id,
           permissions: action.payload.permissions,
         };
-        yield put(usersModule.actions.setGroupPermission(updateGroup));
+        response = yield call(usersApi.group.patchGroupPerm, updateGroup);
+        if (response.isSuccess) {
+          yield put(usersModule.actions.getGroups());
+        } else {
+          yield put(
+            alertModalModule.showAlert({
+              title: message + ' 실패',
+              message: message + ' 실패',
+            }),
+          );
+        }
       }
 
       yield put(
