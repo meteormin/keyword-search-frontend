@@ -34,6 +34,7 @@ export const initialState: TaskState = {
 const taskAction = {
   assign: (state: TaskState) => {
     state.taskList = [];
+    state.totalCount = 0;
   },
   getTaskList: (
     state: TaskState,

@@ -28,13 +28,17 @@ const UserSection = () => {
 
   const userInfo = (): UserInfo[] => {
     return users.map((user, index) => {
+      const userType = config.auth.userTypes.filter(
+        (type) => type.value == user.userType,
+      )[0];
+
       const userInfo: UserInfo = {
         _pk: user.id,
         no: index + 1,
         id: user.loginId,
         name: user.name,
         groupName: currentGroup.name,
-        type: user.userType,
+        type: userType?.name || user.userType,
         createAt: date(user.createAt).format('yyyy.MM.DD'),
         operation: (
           <button

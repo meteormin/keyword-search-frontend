@@ -49,12 +49,12 @@ function* getTaskList(action: PayloadAction<{ limit: number; page: number }>) {
         }),
       );
     }
-  } catch (e) {
+  } catch (error) {
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({
         title: '데이터 조회 실패',
-        message: e,
+        message: error,
       }),
     );
   }
@@ -65,19 +65,21 @@ function* assign() {
     yield put(loaderModule.startLoading());
     const response: ApiResponse = yield call(taskApi.assign);
     yield put(loaderModule.endLoading());
+    const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(
         alertModalModule.showAlert({
           title: '할당 완료',
           message: '할당 완료',
+          refresh: true,
         }),
       );
-      yield put(taskModule.actions.getTaskList);
     } else {
       yield put(
         alertModalModule.showAlert({
           title: '할당 실패',
-          message: '할당 실패',
+          message: res.message,
+          refresh: true,
         }),
       );
     }
@@ -86,6 +88,7 @@ function* assign() {
       alertModalModule.showAlert({
         title: '할당 실패',
         message: '할당 실패',
+        refresh: true,
       }),
     );
   }

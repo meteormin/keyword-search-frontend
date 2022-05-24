@@ -10,9 +10,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
 import { str } from '../../helpers';
 import searchModule from '../../store/features/search';
+import { useNavigate } from 'react-router';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [searchValue, setValue] = useState<string>('');
   const [searchName, setName] = useState<string | number>('');
   const [condition, setCondition] = useState<string | number>('');
@@ -81,6 +83,10 @@ const AssignListPage = () => {
   useEffect(() => {
     setTotalPage(totalCount);
   }, [totalCount]);
+
+  useEffect(() => {
+    taskRecords();
+  }, [taskList]);
 
   return (
     <Container>
