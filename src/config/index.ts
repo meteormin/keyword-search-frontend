@@ -28,7 +28,7 @@ export default () => ({
       },
       {
         name: '크라우드 워커',
-        value: 'cloud_worker',
+        value: 'crowd_worker',
       },
     ],
     permissions: permissions,
