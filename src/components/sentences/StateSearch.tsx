@@ -4,11 +4,15 @@ import SelectFilter from '../common/SelectFilter';
 import CreateState from './CreateState';
 import RejectReason from './RejectReason';
 import ReviewState from './ReviewState';
+import {
+  CreateStatus,
+  ReviewStatus,
+} from '../../store/features/search/searchAction';
 
 export interface StateSearchState {
-  create: string;
-  review: string;
-  reject: string;
+  create?: CreateStatus;
+  review?: ReviewStatus;
+  reject?: number;
 }
 
 export interface StateSearchProps {
@@ -16,9 +20,9 @@ export interface StateSearchProps {
 }
 
 const StateSearch = (props: StateSearchProps) => {
-  const [create, setCreate] = useState('');
-  const [review, setReview] = useState('');
-  const [reject, setReject] = useState('');
+  const [create, setCreate] = useState<CreateStatus>();
+  const [review, setReview] = useState<ReviewStatus>();
+  const [reject, setReject] = useState<number>();
 
   useEffect(() => {
     props.onChange({
@@ -34,7 +38,7 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'생성 상태'}
           onChange={(selectedValue) => {
-            setCreate(selectedValue as string);
+            setCreate(selectedValue as CreateStatus);
           }}
           options={CreateState}
         />
@@ -43,7 +47,7 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'검수 상태'}
           onChange={(selectedValue) => {
-            setReview(selectedValue as string);
+            setReview(selectedValue as ReviewStatus);
           }}
           options={ReviewState}
         />
@@ -52,7 +56,7 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'반려 사유'}
           onChange={(selectedValue) => {
-            setReject(selectedValue as string);
+            setReject(selectedValue as number);
           }}
           options={RejectReason}
         />

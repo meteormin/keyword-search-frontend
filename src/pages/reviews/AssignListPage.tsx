@@ -10,18 +10,18 @@ import assignListSchema from './AssignListSchema';
 import { date, str } from '../../helpers';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import reviewModule from '../../store/features/reviews';
+import searchModule from '../../store/features/search';
 
 const AssignListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState(10);
-  const [searchValue, setValue] = useState<string>('');
-  const [searchName, setName] = useState<string | number>('');
-  const [condition, setCondition] = useState<string | number>('');
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const { sentences, totalCount, time, assignSentence } = useSelector(
     reviewModule.getReviewState,
   );
+
+  const { parameters } = useSelector(searchModule.getSearchState);
 
   const limitOptions = [
     {
@@ -99,8 +99,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       <Row className="ms-2 mt-2">
         <Col lg={12}>
           <DataAssign
-            onAssign={(selectedName: string | number) => {
-              setCondition(selectedName);
+            onAssign={() => {
               dispatch(reviewModule.actions.assign(seq));
             }}
             time={time?.toString() || '03:00:00'}
@@ -110,9 +109,14 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       <Row className="ms-2">
         <Col lg={12} className="mt-4">
           <DataSearch
-            onSearch={(selectedName: string | number, searchValue: string) => {
-              setName(selectedName);
-              setValue(searchValue);
+            onSearch={() => {
+              dispatch(
+                reviewModule.actions.getAssignList({
+                  seq: seq,
+                  limit: limit,
+                  page: page,
+                }),
+              );
             }}
             onReset={() => null}
           />

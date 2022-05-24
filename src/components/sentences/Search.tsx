@@ -38,9 +38,12 @@ const Search = ({ stats, onSearch, onReset }: SearchProps) => {
     <Fragment>
       <Row>
         <DataSearch
-          onSearch={(selectedName, searchValue) => {
-            console.log(selectedName, searchValue);
-            // setSearchParameter(state)
+          onSearch={(state) => {
+            console.log(state);
+            setSearchParameter({
+              refID: state.refId,
+              domain: state.domain,
+            });
             if (onSearch) {
               onSearch();
             }
@@ -53,7 +56,16 @@ const Search = ({ stats, onSearch, onReset }: SearchProps) => {
         />
       </Row>
       <Row className="mt-4">
-        <StateSearch onChange={(state) => console.log(state)} />
+        <StateSearch
+          onChange={(state) => {
+            console.log(state);
+            setSearchParameter({
+              createStatus: state.create,
+              reviewStatus: state.review,
+              rejectReason: state.reject,
+            });
+          }}
+        />
       </Row>
       <Row className="mt-4">
         <DateSearch

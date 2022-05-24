@@ -33,7 +33,11 @@ const Search = ({ seq, stats, onSearch, onReset }: SearchProps) => {
     <Fragment>
       <Row>
         <DataSearch
-          onSearch={(selectedName, searchValue) => {
+          onSearch={(state) => {
+            setSearchParameter({
+              refID: state.refId,
+              domain: state.domain,
+            });
             if (onSearch) {
               onSearch();
             }
@@ -49,6 +53,7 @@ const Search = ({ seq, stats, onSearch, onReset }: SearchProps) => {
         <IdSearch
           onChange={(state) => {
             console.log(state);
+            setSearchParameter(state);
           }}
         />
       </Row>

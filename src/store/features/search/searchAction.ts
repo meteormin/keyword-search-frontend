@@ -1,5 +1,4 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { ReviewResult } from '../../../components/common/WorkSpace';
 
 export interface SearchParameter {
   reviewStatus?: ReviewStatus;
@@ -8,6 +7,18 @@ export interface SearchParameter {
   reviewedAtStart?: string;
   reviewedAtEnd?: string;
   rejectReason?: number;
+  createStatus?: CreateStatus;
+  refID?: number;
+  domain?: string;
+  sentenceGroupName?: string;
+  sentenceUserID?: string;
+  review1UserID?: string;
+  review2UserID?: string;
+}
+
+export enum CreateStatus {
+  WAITING = 'WAITING',
+  CREATED = 'CREATED',
 }
 
 export enum ReviewStatus {

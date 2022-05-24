@@ -9,6 +9,7 @@ import CreateForm from '../../components/tasks/CreateForm';
 import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
 import { str } from '../../helpers';
+import searchModule from '../../store/features/search';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -112,9 +113,10 @@ const AssignListPage = () => {
       <Row className="ms-2">
         <Col lg={12} className="mt-4">
           <DataSearch
-            onSearch={(selectedName: string | number, searchValue: string) => {
-              setName(selectedName);
-              setValue(searchValue);
+            onSearch={() => {
+              dispatch(
+                taskModule.actions.getTaskList({ limit: limit, page: page }),
+              );
             }}
             onReset={() => null}
           />

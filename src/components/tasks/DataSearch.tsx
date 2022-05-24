@@ -3,26 +3,38 @@ import { Button, Col, Row } from 'react-bootstrap';
 import Select from '../common/Select';
 
 export interface DataSearchProps {
-  onSearch: (selectedName: string | number, searchValue: string) => any;
+  onSearch: (state: SearchName) => any;
   onReset: () => any;
 }
 
+export interface SearchName {
+  concept?: string;
+  refId?: number;
+  domain?: string;
+}
+
+export enum SearchNames {
+  CONCEPT,
+  REF_ID,
+  DOMAIN,
+}
+
 const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
-  const [selectedName, setSelectedName] = useState('');
-  const [searchValue, setSearchValue] = useState('');
+  const [selectedName, setSelectedName] = useState<SearchNames | undefined>();
+  const [searchValue, setSearchValue] = useState<string | undefined>();
 
   const searchNames = [
     {
       name: '개념집합',
-      value: '개념집합',
+      value: SearchNames.CONCEPT,
     },
     {
       name: '고유번호',
-      value: '고유번호',
+      value: SearchNames.REF_ID,
     },
     {
       name: '주제',
-      value: '주제',
+      value: SearchNames.DOMAIN,
     },
   ];
 
@@ -42,7 +54,10 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
               options={searchNames}
               onChange={(e) => {
                 const selectedIndex = e.target.selectedIndex;
-                setSelectedName(e.target.options[selectedIndex].value);
+                const value = e.target.options[selectedIndex].value;
+                if (value) {
+                  setSelectedName(parseInt(value) as SearchNames);
+                }
               }}
             />
           </Col>
@@ -66,7 +81,28 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
           variant="dark"
           style={{ height: '100%', width: '50%' }}
           onClick={() => {
-            onSearch(selectedName, searchValue);
+            const state: SearchName = {
+              concept: undefined,
+              refId: undefined,
+              domain: undefined,
+            };
+
+            if (searchValue) {
+              switch (selectedName) {
+                case SearchNames.CONCEPT:
+                  state.concept = searchValue;
+                  break;
+                case SearchNames.REF_ID:
+                  state.refId = parseInt(searchValue as string);
+                  break;
+                case SearchNames.DOMAIN:
+                  state.domain = searchValue;
+                  break;
+                default:
+                  break;
+              }
+              onSearch(state);
+            }
           }}
         >
           할당내 검색

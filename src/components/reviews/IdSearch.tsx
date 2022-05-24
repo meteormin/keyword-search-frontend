@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import IdState from './IdState';
+import IdState, { IdStateEnum } from './IdState';
 import Input from '../common/Input';
 
 export interface IdSearchState {
-  selected: string;
-  value: string;
+  sentenceGroupName?: string;
+  sentenceUserID?: string;
+  review1UserID?: string;
+  review2UserID?: string;
 }
 
 export interface IdSearchProps {
@@ -14,14 +16,35 @@ export interface IdSearchProps {
 }
 
 const IdSearch = (props: IdSearchProps) => {
-  const [selected, setSelected] = useState('');
-  const [value, setValue] = useState('');
+  const [selected, setSelected] = useState<IdStateEnum | undefined>();
+  const [value, setValue] = useState<string | undefined>();
 
   useEffect(() => {
-    props.onChange({
-      selected,
-      value,
-    });
+    const state: IdSearchState = {
+      sentenceGroupName: undefined,
+      sentenceUserID: undefined,
+      review1UserID: undefined,
+      review2UserID: undefined,
+    };
+
+    switch (selected) {
+      case IdStateEnum.GROUP_NAME:
+        state.sentenceGroupName = value;
+        break;
+      case IdStateEnum.CREATOR_ID:
+        state.sentenceUserID = value;
+        break;
+      case IdStateEnum.REVIEWER1_ID:
+        state.review1UserID = value;
+        break;
+      case IdStateEnum.REVIEWER2_ID:
+        state.review2UserID = value;
+        break;
+      default:
+        break;
+    }
+
+    props.onChange(state);
   }, [selected, value]);
 
   return (
@@ -30,7 +53,7 @@ const IdSearch = (props: IdSearchProps) => {
         <SelectFilter
           label={'ID'}
           onChange={(selectedValue) => {
-            setSelected(selectedValue as string);
+            setSelected(selectedValue as IdStateEnum);
           }}
           options={IdState}
         />

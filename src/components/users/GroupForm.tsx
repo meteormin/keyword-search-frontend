@@ -29,7 +29,7 @@ const GroupForm = ({
   onDelete?: () => any;
 }) => {
   const dispatch = useDispatch();
-  const { postGroup } = useSelector(usersModule.getUsersState);
+  const { postGroup, currentGroup } = useSelector(usersModule.getUsersState);
   const [_editGroup, setEditGroup] = useState<Group | null>(editGroup);
   const [permList, setPermList] = useState<number[]>([]);
   const [groupName, setGroupName] = useState<string>(editGroup?.name || '');
@@ -84,6 +84,8 @@ const GroupForm = ({
                     createGroup({
                       name: groupName,
                     });
+
+                    saveGroupPermission(currentGroup.id);
                   }
                   onSave();
                   onHide();
