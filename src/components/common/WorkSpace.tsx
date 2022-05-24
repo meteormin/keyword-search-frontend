@@ -86,6 +86,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
   };
 
   const handleMakeSPClick = (no: number) => {
+    setPatText(['', '']);
+
     const newPatternedText = patternedText;
 
     if (no === 0) {
