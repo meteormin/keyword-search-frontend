@@ -84,28 +84,44 @@ const Search = ({ seq, stats, onSearch, onReset }: SearchProps) => {
       </Row>
       <Row className="mt-4">
         <Col>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             전체 목록
             <br />
             {stats.all}건
           </Button>
         </Col>
         <Col>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             {seq}차 승인
             <br />
             {stats.pass}건
           </Button>
         </Col>
         <Col>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             {seq}차 반려 중
             <br />
             {stats.reject}건
           </Button>
         </Col>
         <Col>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             {seq}차 반려(누적)
             <br />
             {stats.totalReject}건

@@ -51,7 +51,11 @@ class Select extends Component<SelectProps, SelectProps> {
   makeLabel() {
     if (this.state.label) {
       return (
-        <label key={'label' + this.state.id} htmlFor={this.state.id}>
+        <label
+          key={'label' + this.state.id}
+          htmlFor={this.state.id}
+          className="form-label"
+        >
           {this.state.label}
         </label>
       );

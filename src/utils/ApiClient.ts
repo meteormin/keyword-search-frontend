@@ -4,6 +4,7 @@ import axios, {
   AxiosResponse,
   AxiosError,
 } from 'axios';
+import { makePath } from './str';
 
 export interface Token {
   tokenType: string | null;
@@ -98,11 +99,9 @@ export class ApiClient {
    * @returns {string}
    */
   makeUrl(path: string) {
-    if (this.host.endsWith('/')) {
-      return this.host + path;
-    } else {
-      return `${this.host}/${path}`;
-    }
+    const [schema, host] = this.host.split('://');
+    const url = makePath(host, path);
+    return schema + '://' + url;
   }
 
   /**

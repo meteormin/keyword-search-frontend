@@ -11,12 +11,14 @@ import Lang from './assets/lang';
 import { AxiosRequestHeaders } from 'axios';
 import * as Str from './utils/str';
 import BaikalNlp from './utils/BaikalNlp';
+import { makePath } from './utils/str';
 
 export const config = Config();
 export const auth = Auth;
 
 export interface ApiConfig {
   host?: string | null;
+  prefix?: string | null;
   headers?: AxiosRequestHeaders;
   token?: Token;
 }
@@ -26,6 +28,18 @@ export interface ApiConfig {
  * @returns {ApiClient}
  */
 export const api = (apiConfig?: ApiConfig): ApiClient => {
+  if (apiConfig?.prefix) {
+    if (!apiConfig?.host) {
+      apiConfig.host = config.api.host as string;
+    }
+    const [schema, host] = apiConfig.host.split('://');
+    if (host) {
+      apiConfig.host = schema + '://' + makePath(host, apiConfig.prefix);
+    } else {
+      apiConfig.host = makePath(schema, apiConfig.prefix);
+    }
+  }
+
   const client = apiConfig?.host
     ? new Api.ApiClient(apiConfig.host)
     : new Api.ApiClient(config.api.host as string);

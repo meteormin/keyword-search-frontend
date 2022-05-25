@@ -67,6 +67,7 @@ function* assign() {
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {
+      yield put(taskModule.actions.getTaskList({ limit: 10, page: 1 }));
       yield put(
         alertModalModule.showAlert({
           title: '할당 완료',

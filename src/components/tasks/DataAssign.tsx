@@ -54,6 +54,7 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
           <Button
             variant="light"
             className="btn bg-light border float-end w-50 align-middle"
+            style={{ cursor: 'default' }}
           >
             진행 가능 시간
             <br />

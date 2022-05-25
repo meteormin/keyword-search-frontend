@@ -27,7 +27,7 @@ const Prototype = (props: PrototypeProps) => {
   }, [props]);
 
   return (
-    <Fragment>
+    <div>
       <Card header={lang.sentence.prototype.subject}>
         <p>{lang.sentence.prototype.description}</p>
       </Card>
@@ -61,7 +61,7 @@ const Prototype = (props: PrototypeProps) => {
           </tr>
         </tbody>
       </Table>
-    </Fragment>
+    </div>
   );
 };
 

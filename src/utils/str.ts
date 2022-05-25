@@ -25,3 +25,8 @@ export const limit = (value: string, limit: number, end = '...'): string => {
 
   return limitedStr;
 };
+
+export const makePath = (source: string, target: string): string => {
+  const path = source + target;
+  return path.replace('//', '/');
+};

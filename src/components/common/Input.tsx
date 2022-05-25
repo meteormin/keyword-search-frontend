@@ -48,7 +48,11 @@ class Input extends Component<InputProp, InputState> {
   makeLabel() {
     if (this.state.label) {
       return (
-        <label key={'label' + this.state.id} htmlFor={this.state.id}>
+        <label
+          key={'label' + this.state.id}
+          htmlFor={this.state.id}
+          className="form-label"
+        >
           {this.state.label}
         </label>
       );

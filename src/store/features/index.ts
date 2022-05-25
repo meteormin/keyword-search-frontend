@@ -15,6 +15,8 @@ import reviewReducer from './reviews/reviewReducer';
 import reviewSage from './reviews/reviewSaga';
 import searchReducer from './search/searchReducer';
 import searchSaga from './search/searchSaga';
+import questionReducer from './questions/questionReducer';
+import questionSaga from './questions/questionSaga';
 
 export const rootReducer = combineReducers({
   // reducers
@@ -26,6 +28,7 @@ export const rootReducer = combineReducers({
   sentence: sentenceReducer,
   review: reviewReducer,
   search: searchReducer,
+  question: questionReducer,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -36,5 +39,6 @@ export const rootSaga = function* rootSaga() {
     call(sentenceSage),
     call(reviewSage),
     call(searchSaga),
+    call(questionSaga),
   ]);
 };

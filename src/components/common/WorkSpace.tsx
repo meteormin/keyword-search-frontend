@@ -220,10 +220,12 @@ const WorkSpace = (props: WorkSpaceProps) => {
       <Row>
         <Col lg={5}>
           <Row>
-            <FloatingLabel label="문장1" controlId="floatingTextarea">
+            <Form.Group>
+              <Form.Label>문장1</Form.Label>
               <Form.Control
                 as="textarea"
-                placeholder="문장1"
+                className="h-auto"
+                rows={5}
                 value={textArea10}
                 readOnly={props?.readOnly || false}
                 onChange={(e) => {
@@ -233,16 +235,17 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 //   handleWordCount(1, e.target.value);
                 // }}
               />
-            </FloatingLabel>
+            </Form.Group>
           </Row>
           <Row>
             <span className="text-end">단어 수: {wordCount1}</span>
           </Row>
         </Col>
-        <Col lg={2} className="mt-2">
+        <Col lg={2} className="mt-5 text-center">
           <Button
             variant={textArea10 ? 'primary' : 'light'}
             style={{ fontSize: '0.85em' }}
+            className="mt-4"
             disabled={props?.readOnly || false ? true : !textArea10}
             onClick={() => {
               console.log('get api');
@@ -254,17 +257,19 @@ const WorkSpace = (props: WorkSpaceProps) => {
           </Button>
         </Col>
         <Col lg={5}>
-          <FloatingLabel label="문장1" controlId="floatingTextarea">
+          <Form.Group>
+            <Form.Label>문장1</Form.Label>
             <Form.Control
               as="textarea"
-              placeholder="문장1"
+              className="h-25"
+              rows={5}
               value={textArea11}
               readOnly={props?.readOnly || false}
               onChange={(e) => {
                 handleChange(11, e.target.value);
               }}
             />
-          </FloatingLabel>
+          </Form.Group>
         </Col>
       </Row>
 
@@ -304,10 +309,12 @@ const WorkSpace = (props: WorkSpaceProps) => {
       <Row className="mt-4">
         <Col lg={5}>
           <Row>
-            <FloatingLabel label="문장2" controlId="floatingTextarea">
+            <Form.Group>
+              <Form.Label>문장2</Form.Label>
               <Form.Control
                 as="textarea"
-                placeholder="문장2"
+                className="h-auto"
+                rows={5}
                 value={textArea20}
                 readOnly={props?.readOnly || false}
                 onChange={(e) => {
@@ -317,14 +324,15 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 //   handleWordCount(2, e.target.value);
                 // }}
               />
-            </FloatingLabel>
+            </Form.Group>
           </Row>
           <Row>
             <span className="text-end">단어 수: {wordCount2}</span>
           </Row>
         </Col>
-        <Col lg={2} className="mt-2">
+        <Col lg={2} className="mt-5 text-center">
           <Button
+            className="mt-4"
             variant={textArea20 ? 'primary' : 'light'}
             style={{ fontSize: '0.85em' }}
             disabled={props?.readOnly || false ? true : !textArea20}
@@ -338,17 +346,19 @@ const WorkSpace = (props: WorkSpaceProps) => {
           </Button>
         </Col>
         <Col lg={5}>
-          <FloatingLabel label="문장2" controlId="floatingTextarea">
+          <Form.Group>
+            <Form.Label>문장2</Form.Label>
             <Form.Control
               as="textarea"
-              placeholder="문장2"
               value={textArea21}
+              className="h-25"
+              rows={5}
               readOnly={props?.readOnly || false}
               onChange={(e) => {
                 handleChange(21, e.target.value);
               }}
             />
-          </FloatingLabel>
+          </Form.Group>
         </Col>
       </Row>
       {props.workType == 'review' ? (

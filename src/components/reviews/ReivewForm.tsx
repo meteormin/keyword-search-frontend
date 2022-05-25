@@ -105,16 +105,28 @@ const ReviewForm = (props: CreateFormProps) => {
                 </Button>
               </Col>
               <Col lg={8} className="text-center">
-                <Button variant="light" className="bg-light border">
+                <Button
+                  variant="light"
+                  className="bg-light border"
+                  style={{ cursor: 'default' }}
+                >
                   진행 가능 시간
                   <br />
                   <span>{time}</span>
                 </Button>
 
-                <Button variant="light" className="bg-light border h-100">
+                <Button
+                  variant="light"
+                  className="bg-light border h-100"
+                  style={{ cursor: 'default' }}
+                >
                   생성 가능 개념집합
                 </Button>
-                <Button variant="light" className="bg-light border h-100">
+                <Button
+                  variant="light"
+                  className="bg-light border h-100"
+                  style={{ cursor: 'default' }}
+                >
                   생성 완료 개념집합
                 </Button>
               </Col>
@@ -123,8 +135,8 @@ const ReviewForm = (props: CreateFormProps) => {
         </Modal.Header>
         <Modal.Body>
           <Container className="mt-2">
-            <Row>
-              <Col lg={4}>
+            <Row className="bg-light">
+              <Col lg={4} className="bg-light">
                 <Prototype
                   concepts={
                     review?.edges?.tasks?.concepts.map((t) => t.stem) || []

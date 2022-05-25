@@ -82,42 +82,66 @@ const Search = ({ stats, onSearch, onReset }: SearchProps) => {
       </Row>
       <Row className="mt-4">
         <Col lg={2}>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             전체 목록
             <br />
             {stats.all}건
           </Button>
         </Col>
         <Col lg={2}>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             검수 대기
             <br />
             {stats.wait}건
           </Button>
         </Col>
         <Col lg={2}>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             1차 승인
             <br />
             {stats.first}건
           </Button>
         </Col>
         <Col lg={2}>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             1차 반려
             <br />
             {stats.rejectFirst}건
           </Button>
         </Col>
         <Col lg={2}>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             2차 승인
             <br />
             {stats.second}건
           </Button>
         </Col>
         <Col lg={2}>
-          <Button variant="light" className="w-100">
+          <Button
+            style={{ cursor: 'default' }}
+            variant="light"
+            className="w-100"
+          >
             2차 반려
             <br />
             {stats.rejectSecond}건

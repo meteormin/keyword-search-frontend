@@ -124,16 +124,28 @@ const CreateForm = (props: CreateFormProps) => {
                 </Button>
               </Col>
               <Col lg={8} className="text-center">
-                <Button variant="light" className="bg-light border">
+                <Button
+                  variant="light"
+                  className="bg-light border cursor-default"
+                  style={{ cursor: 'default' }}
+                >
                   진행 가능 시간
                   <br />
                   <span>{time}</span>
                 </Button>
 
-                <Button variant="light" className="bg-light border h-100">
+                <Button
+                  variant="light"
+                  className="bg-light border h-100"
+                  style={{ cursor: 'default' }}
+                >
                   생성 가능 개념집합
                 </Button>
-                <Button variant="light" className="bg-light border h-100">
+                <Button
+                  variant="light"
+                  className="bg-light border h-100"
+                  style={{ cursor: 'default' }}
+                >
                   생성 완료 개념집합
                 </Button>
               </Col>
