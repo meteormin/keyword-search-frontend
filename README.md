@@ -11,6 +11,7 @@
 - redux-thunk
 
 ## Install
+
 ```shell
 git clone https://{your-github-username}@github.com/testworksPF/nia-15-front.git
 
@@ -19,7 +20,9 @@ git clone https://{your-github-username}@github.com/testworksPF/nia-15-front.git
 ## or sh ./deploy.sh
 ## 배포 스크립트는 react build 후, /var/www/front 폴더로 copy
 ```
+
 ### Configuration
+
 ```dotenv
 # .env
 
@@ -32,6 +35,7 @@ REACT_APP_API_SERVER=http://nia15dapi.aiworks.co.kr
  # CORS 이슈 때문에 apache 프록시를 이용하여 같은 도메인으로 연결해야 한다.
 REACT_APP_BAIKAL_NLP=http://localhost
 ```
+
 ```apacheconf
 # apache: sites-available
 <VirtualHost *:80>

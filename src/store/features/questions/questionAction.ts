@@ -36,12 +36,16 @@ export interface Questions {
   replyUserLoginId: string;
 }
 
+export interface QuestionType {
+  id: number;
+  name: string;
+}
+
 export interface Question {
   id: number;
   title: string;
   content: string;
   div: QuestionDiv;
-  type: string;
   reply: string;
   fileName: string;
   filePath: string;
@@ -50,6 +54,7 @@ export interface Question {
   edges: {
     user: QuestionUser;
     replyUser?: QuestionUser;
+    questionType: QuestionType;
   };
 }
 
