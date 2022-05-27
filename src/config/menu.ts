@@ -23,22 +23,22 @@ const menu: Menu = {
     },
     {
       url: '/reviews/1/assign',
-      name: '문장 검수 1',
+      name: '1차 문장 검수',
       icon: 'fas fa-file-lines',
     },
     {
       url: '/reviews/1',
-      name: '문장 검수 내역 1',
+      name: '1차 문장 검수 내역',
       icon: 'fas fa-file-lines',
     },
     {
       url: '/reviews/2/assign',
-      name: '문장 검수 2',
+      name: '2차 문장 검수',
       icon: 'fas fa-file-lines',
     },
     {
       url: '/reviews/2',
-      name: '문장 검수 내역 2',
+      name: '2차 문장 검수 내역',
       icon: 'fas fa-file-lines',
     },
   ],

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router';
+import { Route, Routes } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import { auth, guard } from '../helpers';
 import { ForbiddenPage, NotFoundPage } from '../pages/error';
@@ -14,16 +14,18 @@ import {
   AssignListPage as AssignReview,
   ReviewListPage,
 } from '../pages/reviews';
+import { UserType } from '../config/UserType';
+import CreateForm from '../components/tasks/CreateForm';
 
 const Router = () => {
-  const handlePerm = (menuNumber: string) => {
+  const handlePerm = (menuPerm: string[]) => {
     const token = auth.getToken();
     if (token) {
       const tokenInfo: TokenInfo | null = auth.tokenInfo(token);
       if (tokenInfo) {
-        const permissions = tokenInfo.permission;
+        const permission = tokenInfo.userType || auth.user()?.userType || '';
 
-        return !permissions.includes(menuNumber);
+        return !menuPerm.includes(permission);
       }
     }
 
@@ -32,24 +34,29 @@ const Router = () => {
 
   const handleGoHome = () => {
     return [
-      { role: 'admin', home: '/users' },
-      { role: 'manager', home: '/reviews' },
-      { role: 'cloud_worker', home: '/tasks' },
+      { role: UserType.ADMIN, home: '/users' },
+      { role: UserType.WORKER, home: '/tasks' },
+      { role: UserType.REVIEWER1, home: '/reviews/1' },
+      { role: UserType.REVIEWER2, home: '/reviews/2' },
+      { role: UserType.SCORE, home: '/' },
+      { role: UserType.SCORE_REVIEWER, home: '/' },
     ];
   };
 
   return (
     <BrowserRouter>
       <Routes>
-        {/*<Route*/}
-        {/*  path="/test"*/}
-        {/*  element={*/}
-        {/*    <guard.Protected*/}
-        {/*      auth={auth.isLogin()}*/}
-        {/*      redirectPath={'/login'}*/}
-        {/*    ></guard.Protected>*/}
-        {/*  }*/}
-        {/*/>*/}
+        <Route
+          path="/test"
+          element={
+            <CreateForm
+              workType={'rework'}
+              show={true}
+              time={'03:00:00'}
+              onCreate={() => console.log('hi')}
+            />
+          }
+        />
         <Route
           path="/"
           element={
@@ -77,7 +84,7 @@ const Router = () => {
             index
             element={
               <guard.Restricted
-                condition={handlePerm('MANAGE_GROUP')}
+                condition={handlePerm([UserType.ADMIN])}
                 redirectPath={'/error/403'}
               >
                 <UsersPage />
@@ -90,7 +97,7 @@ const Router = () => {
             index
             element={
               <guard.Restricted
-                condition={handlePerm('CREATE_SENTENCE')}
+                condition={handlePerm([UserType.WORKER, UserType.ADMIN])}
                 redirectPath={'/error/403'}
               >
                 <AssignTask />
@@ -103,7 +110,7 @@ const Router = () => {
             index
             element={
               <guard.Restricted
-                condition={handlePerm('CREATE_SENTENCE')}
+                condition={handlePerm([UserType.WORKER, UserType.ADMIN])}
                 redirectPath={'/error/403'}
               >
                 <SentenceListPage />
@@ -117,7 +124,7 @@ const Router = () => {
               index
               element={
                 <guard.Restricted
-                  condition={handlePerm('REVIEW_SENTENCE')}
+                  condition={handlePerm([UserType.REVIEWER1, UserType.ADMIN])}
                   redirectPath={'/error/403'}
                 >
                   <ReviewListPage seq={1} />
@@ -128,7 +135,7 @@ const Router = () => {
               path="assign"
               element={
                 <guard.Restricted
-                  condition={handlePerm('REVIEW_SENTENCE')}
+                  condition={handlePerm([UserType.REVIEWER1, UserType.ADMIN])}
                   redirectPath={'/error/403'}
                 >
                   <AssignReview seq={1} />
@@ -141,7 +148,7 @@ const Router = () => {
               index
               element={
                 <guard.Restricted
-                  condition={handlePerm('REVIEW_SENTENCE_2')}
+                  condition={handlePerm([UserType.REVIEWER2, UserType.ADMIN])}
                   redirectPath={'/error/403'}
                 >
                   <ReviewListPage seq={2} />
@@ -152,7 +159,7 @@ const Router = () => {
               path="assign"
               element={
                 <guard.Restricted
-                  condition={handlePerm('REVIEW_SENTENCE_2')}
+                  condition={handlePerm([UserType.REVIEWER2, UserType.ADMIN])}
                   redirectPath={'/error/403'}
                 >
                   <AssignReview seq={2} />

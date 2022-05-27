@@ -14,6 +14,7 @@ export interface SearchName {
 }
 
 export enum SearchNames {
+  NONE,
   CONCEPT,
   REF_ID,
   DOMAIN,
@@ -24,6 +25,10 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
   const [searchValue, setSearchValue] = useState<string | undefined>();
 
   const searchNames = [
+    {
+      name: '선택',
+      value: SearchNames.NONE,
+    },
     {
       name: '개념집합',
       value: SearchNames.CONCEPT,
@@ -105,7 +110,7 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
             onSearch(state);
           }}
         >
-          할당내 검색
+          검색
         </Button>
         <Button
           variant="light"

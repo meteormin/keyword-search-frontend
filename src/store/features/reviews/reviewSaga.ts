@@ -1,5 +1,10 @@
 import { apiResponse, api, auth, lang } from '../../../helpers';
-import { CreateReview, Review, UpdateReview } from './reviewAction';
+import {
+  CreateReview,
+  Review,
+  UpdateReview,
+  SentenceReview,
+} from './reviewAction';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { put, call, takeLatest, fork, select } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
@@ -7,11 +12,10 @@ import { ApiResponse } from '../../../utils/ApiClient';
 import reviewModule from './index';
 import alertModal from '../common/alertModal';
 import alertModalModule from '../common/alertModal';
-import taskModule from '../tasks';
 import { toCamel } from 'snake-camel';
-import { Sentence } from '../sentence/sentenceAction';
 import { SearchParameter, SearchState } from '../search/searchAction';
 import searchModule from '../search';
+import { Sentence } from '../sentence/sentenceAction';
 
 const apiClient = api({
   token: { token: auth.getToken(), tokenType: 'bearer' },
@@ -50,7 +54,7 @@ const reviewApi = {
     return await apiClient.get(`api/v1/reviews/${seq}/${id}`);
   },
   createReview: async (seq: number, createReview: CreateReview) => {
-    return await apiClient.post(`api/v1/reviews/${seq}/`, createReview);
+    return await apiClient.post(`api/v1/reviews/${seq}`, createReview);
   },
   updateReview: async (seq: number, id: number, updateReview: UpdateReview) => {
     return await apiClient.patch(`api/v1/reviews/${seq}/${id}`, updateReview);
@@ -63,21 +67,32 @@ function* assign(action: PayloadAction<number>) {
     yield put(loaderModule.startLoading());
     const response: ApiResponse = yield call(reviewApi.assign, seq);
     yield put(loaderModule.endLoading());
+    const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(
         alertModalModule.showAlert({
           title: '할당 완료',
           message: '할당 완료',
+          refresh: true,
         }),
       );
       yield put(reviewModule.actions.getAssignList);
     } else {
-      yield put(
-        alertModalModule.showAlert({
-          title: '할당 실패',
-          message: '할당 실패',
-        }),
-      );
+      if ('name' in res && 'message' in res) {
+        yield put(
+          alertModalModule.showAlert({
+            title: res.name,
+            message: res.message,
+          }),
+        );
+      } else {
+        yield put(
+          alertModalModule.showAlert({
+            title: '할당 실패',
+            message: '할당 실패',
+          }),
+        );
+      }
     }
   } catch (e) {
     yield put(
@@ -147,7 +162,9 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(
-        reviewModule.actions.setAssign(toCamel(res.data.sentence) as Sentence),
+        reviewModule.actions.setAssign(
+          toCamel(res.data.sentence) as SentenceReview,
+        ),
       );
     } else {
       console.log(res);
@@ -193,13 +210,26 @@ function* getReviewList(
       const reviewsData: Review[] = res.data.sentences.map(toCamel);
       const reviews: Review[] = reviewsData.map((item) => {
         const r = item;
-        if (!r.reviewResult && r.reviewResult != null) {
+
+        if (r.reviewResult) {
           if (r.reviewer1Id) {
-            r.reviewRsTxt = lang.sentence.reviewState.review1.fail;
+            if (r.reviewResult === 'WAITING') {
+              r.reviewRsTxt = lang.sentence.reviewState.review1.wait;
+            } else if (r.reviewResult == 'REJECT_1') {
+              r.reviewRsTxt = lang.sentence.reviewState.review1.fail;
+            } else {
+              r.reviewRsTxt = lang.sentence.reviewState.review1.pass;
+            }
           }
 
           if (r.reviewer2Id) {
-            r.reviewRsTxt = lang.sentence.reviewState.review2.fail;
+            if (r.reviewResult === 'WAITING') {
+              r.reviewRsTxt = lang.sentence.reviewState.review2.wait;
+            } else if (r.reviewResult == 'REJECT_2') {
+              r.reviewRsTxt = lang.sentence.reviewState.review2.fail;
+            } else {
+              r.reviewRsTxt = lang.sentence.reviewState.review2.pass;
+            }
           }
         }
         return r;
@@ -236,7 +266,9 @@ function* getReview(action: PayloadAction<{ seq: number; id: number }>) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(
-        reviewModule.actions.setReview(toCamel(res.data.sentence) as Sentence),
+        reviewModule.actions.setReview(
+          toCamel(res.data.sentence) as SentenceReview,
+        ),
       );
     } else {
       yield put(
@@ -277,16 +309,19 @@ function* createReview(
         alertModal.showAlert({
           title: '검수 완료',
           message: '검수 완료',
+          refresh: true,
         }),
       );
     } else {
       console.log(res);
-      yield put(
-        alertModal.showAlert({
-          title: '검수 실패',
-          message: '검수 결과 저장 실패',
-        }),
-      );
+      if ('message' in res && 'name' in res) {
+        yield put(
+          alertModal.showAlert({
+            title: res.name,
+            message: res.message,
+          }),
+        );
+      }
     }
   } catch (e) {
     yield put(loaderModule.endLoading());

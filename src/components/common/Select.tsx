@@ -85,6 +85,7 @@ class Select extends Component<SelectProps, SelectProps> {
           className="form-select"
           id={this.state.id}
           onChange={this.onChange}
+          value={this.state.selectedValue}
         >
           {this.makeOptions()}
         </select>

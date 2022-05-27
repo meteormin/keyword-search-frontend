@@ -4,12 +4,14 @@ export interface Task {
   id: number;
   dataId: string;
   sentence: string;
-  concepts: Concept[];
   posLength: number;
   tagged: string;
   refSrc: string;
   domain: string;
   refId: string;
+  edges?: {
+    concepts: Concept[];
+  };
 }
 
 export interface Concept {

@@ -150,18 +150,18 @@ const GroupForm = ({
           }}
         />
       </div>
-      <div className="mt-3">
-        <div className="col-lg-7">
-          <label htmlFor="" className="col-form-label">
-            <strong>권한 선택</strong>
-          </label>
-        </div>
-        <PermList
-          permissions={formInfo.permissions}
-          activeValues={initPermList}
-          onChange={changePermCheck}
-        />
-      </div>
+      {/*<div className="mt-3">*/}
+      {/*  <div className="col-lg-7">*/}
+      {/*    <label htmlFor="" className="col-form-label">*/}
+      {/*      <strong>권한 선택</strong>*/}
+      {/*    </label>*/}
+      {/*  </div>*/}
+      {/*  <PermList*/}
+      {/*    permissions={formInfo.permissions}*/}
+      {/*    activeValues={initPermList}*/}
+      {/*    onChange={changePermCheck}*/}
+      {/*  />*/}
+      {/*</div>*/}
       <br />
       {makeButton()}
     </FormModal>

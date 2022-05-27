@@ -9,6 +9,7 @@ import Header from './components/layouts/Header';
 import { auth } from './helpers';
 import Container from './components/layouts/Container';
 import { Menu } from './components/layouts/Navigator';
+import { UserType } from './config/UserType';
 
 function App() {
   useEffect(() => {
@@ -21,14 +22,14 @@ function App() {
   const menu = config.layouts.menu as Menu;
   let userType = auth.user()?.userType;
 
-  if (userType == 'admin') {
+  if (userType == UserType.ADMIN) {
     userType = '최고 관리자';
-  } else if (userType == 'review_admin') {
-    userType = '관리자';
-  } else if (userType == 'worker') {
-    userType = '작업자';
-  } else if (userType == 'reviwer') {
-    userType = '검수자';
+  } else if (userType == UserType.REVIEWER1) {
+    userType = '1차 검수자';
+  } else if (userType == UserType.WORKER) {
+    userType = '생성자';
+  } else if (userType == UserType.REVIEWER2) {
+    userType = '2차 검수자';
   }
 
   menu.header = userType as string;
@@ -39,7 +40,7 @@ function App() {
         appName={config.app.name as string}
         isLogin={auth.isLogin()}
         dropDownMenu={config.layouts.header.dropDownMenu}
-        userName={auth.user()?.name || ''}
+        userName={auth.user()?.loginId || ''}
       />
       <Container
         menu={config.layouts.menu as Menu}

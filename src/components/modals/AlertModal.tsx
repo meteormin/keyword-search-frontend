@@ -14,7 +14,18 @@ const AlertModal = () => {
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{message}</Modal.Body>
+        <Modal.Body>
+          <samp
+            style={{
+              wordBreak: 'break-all',
+              overflow: 'hidden',
+              whiteSpace: 'pre-wrap',
+              fontFamily: 'var(--bs-font-sans-serif)',
+            }}
+          >
+            {message}
+          </samp>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             닫기

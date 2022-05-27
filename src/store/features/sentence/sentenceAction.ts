@@ -1,25 +1,37 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Concept, Task } from '../tasks/taskAction';
 import { User } from '../users/userAction';
-import { SentenceReview } from '../reviews/reviewAction';
+import { ReviewStatus, SentenceReview } from '../reviews/reviewAction';
+
+export interface SentenceReviewReject {
+  id: number;
+  memo: string;
+  rejectReason: number;
+}
+
+export interface SentenceChild {
+  id: number;
+  sentence: string;
+  sentenceCount: number;
+  sentencePatterned: string;
+  sentencePatternedModified: string;
+  edges?: {
+    sentenceReviewReject: SentenceReviewReject[];
+  };
+}
 
 export interface Sentence {
   id: number;
-  sentence1: string;
-  sentence2: string;
-  sentence1Patterned: string;
-  sentence2Patterned: string;
-  sentence1PatternedModified: string;
-  sentence2PatternedModified: string;
-  sentence1Count: number;
-  sentence2Count: number;
+  status: ReviewStatus;
   taskId: number;
   userId: number;
   createAt?: string | null;
   updateAt?: string | null;
   edges?: {
-    tasks: Task;
-    users: User;
+    task: Task;
+    user: User;
+    sentence1: SentenceChild;
+    sentence2: SentenceChild;
     sentenceReviews1: SentenceReview;
     sentenceReviews2: SentenceReview;
   };
@@ -51,7 +63,7 @@ export interface SentenceHistory {
   review1At: string;
   reviewer2Id: string;
   review2At: string;
-  reviewResult: boolean;
+  reviewResult: ReviewStatus;
   reviewRsTxt?: string;
   reviewReasons: number[];
 }

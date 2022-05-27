@@ -62,10 +62,14 @@ const AssignListPage = () => {
 
   const taskRecords = () => {
     return taskList.map((t, i) => {
+      console.log('t', t.edges?.concepts);
       return {
         no: i + 1,
         id: t.refId,
-        conceptSet: str.limit(t.concepts.map((c) => c.stem).join(', '), 20),
+        conceptSet: str.limit(
+          t.edges?.concepts?.map((c) => c.stem).join(', ') || '',
+          20,
+        ),
         wordCount: t.posLength,
         _origin: t,
       };
@@ -171,6 +175,7 @@ const AssignListPage = () => {
         </Col>
       </Row>
       <CreateForm
+        workType={'work'}
         show={!!workTask}
         time={time || '03:00:00'}
         onCreate={() =>

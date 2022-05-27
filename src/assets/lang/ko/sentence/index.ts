@@ -13,8 +13,8 @@ const sentence = {
     dictLink: 'https://opendict.korean.go.kr/main',
   },
   reviewState: {
-    review1: { pass: '1차 승인', fail: '1차 반려' },
-    review2: { pass: '2차 승인', fail: '2차 반려' },
+    review1: { pass: '1차 승인', fail: '1차 반려', wait: '검수 대기' },
+    review2: { pass: '2차 승인', fail: '2차 반려', wait: '검수 대기' },
   },
 };
 

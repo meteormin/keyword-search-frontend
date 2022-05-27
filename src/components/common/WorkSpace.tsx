@@ -1,8 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Button, Col, FloatingLabel, Form, Row } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import Card from './Card';
 import { baikalNlp, lang, str } from '../../helpers';
 import ReviewSection, { ReviewResultState } from '../reviews/ReviewSection';
+import { useDispatch } from 'react-redux';
+import alertModal from '../../store/features/common/alertModal';
+import { usePrev } from '../../helpers';
 
 export enum ReviewResult {
   PASS = 'PASS',
@@ -31,7 +34,8 @@ export interface ReviewData {
 }
 
 export interface WorkSpaceProps {
-  workType?: 'work' | 'review';
+  seq?: number;
+  workType: 'work' | 'rework' | 'review';
   workData?: WorkData;
   readOnly?: boolean;
   onSubmit: (data: WorkData) => any;
@@ -39,6 +43,8 @@ export interface WorkSpaceProps {
 }
 
 const WorkSpace = (props: WorkSpaceProps) => {
+  const dispatch = useDispatch();
+  const [isMount, setMount] = useState<boolean>(false);
   const [textArea10, setText10] = useState('');
   const [textArea20, setText20] = useState('');
   const [textArea11, setText11] = useState('');
@@ -51,75 +57,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
   const [reviewPassBtn, setReviewPassBtn] = useState<boolean>(false);
   const [reviewOpinionBtn, setReviewOpinionBtn] = useState<boolean>(false);
   const [reviewHoldBtn, setReviewHoldBtn] = useState<boolean>(true);
-
-  const handleChange = (id: number, v: string) => {
-    switch (id) {
-      case 10:
-        if (str.filterKorean(v)) {
-          setText10(v);
-        }
-        break;
-      case 11:
-        setText11(v);
-        break;
-      case 20:
-        if (str.filterKorean(v)) {
-          setText20(v);
-        }
-        break;
-      case 21:
-        setText21(v);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleReviewChange = (seq: number, state: ReviewResultState) => {
-    if (seq == 1) {
-      setReview1(state);
-    }
-
-    if (seq == 2) {
-      setReview2(state);
-    }
-  };
-
-  const handleMakeSPClick = (no: number) => {
-    setPatText(['', '']);
-
-    const newPatternedText = patternedText;
-
-    if (no === 0) {
-      setText11(patternedText[no] || textArea10);
-      newPatternedText[no] = patternedText[no] || textArea10;
-      setPatText(newPatternedText);
-    } else if (no === 1) {
-      setText21(patternedText[no] || textArea20);
-      newPatternedText[no] = patternedText[no] || textArea10;
-      setPatText(newPatternedText);
-    }
-  };
-
-  const checkBtnActivate = () => {
-    if (
-      reviewData1?.radio == ReviewResult.PASS &&
-      reviewData2?.radio == ReviewResult.PASS
-    ) {
-      setReviewPassBtn(true);
-    } else {
-      setReviewPassBtn(false);
-    }
-
-    if (
-      reviewData1?.radio != ReviewResult.PASS ||
-      reviewData2?.radio != ReviewResult.PASS
-    ) {
-      setReviewOpinionBtn(true);
-    } else {
-      setReviewOpinionBtn(false);
-    }
-  };
+  const [s1Danger, setDanger1] = useState<string>('');
+  const [s2Danger, setDanger2] = useState<string>('');
+  const prevPatText = usePrev<string[]>(patternedText);
 
   useEffect(() => {
     setCount1(props.workData?.wordCount1 || 0);
@@ -142,6 +82,141 @@ const WorkSpace = (props: WorkSpaceProps) => {
       memo: props.workData?.reviewData?.memo2 || '',
     });
   }, []);
+
+  useEffect(() => {
+    const patText = patternedText;
+    if (prevPatText && patternedText[0] == prevPatText[0]) {
+      patText[0] = textArea10;
+    }
+
+    if (prevPatText && patternedText[1] == prevPatText[1]) {
+      patText[1] = textArea20;
+    }
+    setPatText(patText);
+  }, [textArea10, textArea20]);
+
+  useEffect(() => {
+    console.log('prevPatText', prevPatText);
+    if (prevPatText && patternedText[0] != prevPatText[0]) {
+      setText11(patternedText[0] || textArea10);
+    }
+
+    if (prevPatText && patternedText[1] != prevPatText[0]) {
+      setText21(patternedText[1] || textArea20);
+    }
+  }, [patternedText]);
+
+  /**
+   * return 0 = pass,
+   * return 1 = not korean,
+   * return 2 = end dot
+   * @param {string} v
+   * @return {number}
+   */
+  const catchSentenceValid = (v: string): number => {
+    if (str.filterKorean(v)) {
+      if (v[v.length - 2] == '.') {
+        return 2;
+      }
+      return 0;
+    } else {
+      return 1;
+    }
+  };
+
+  const showAlert = (valid: number) => {
+    if (valid == 1) {
+      dispatch(
+        alertModal.showAlert({
+          title: '문장 생성',
+          message: '인용 부호를 제외한 영문과 특수문자는 입력할 수 없습니다.',
+        }),
+      );
+    } else if (valid == 2) {
+      dispatch(
+        alertModal.showAlert({
+          title: '문장 생성',
+          message: '마침표는 문장 마지막에만 사용 가능합니다.',
+        }),
+      );
+    }
+  };
+
+  const handleChange = (id: number, v: string) => {
+    switch (id) {
+      case 10:
+        setDanger1('');
+        const valid1 = catchSentenceValid(v);
+        if (!valid1) {
+          setText10(v);
+        } else {
+          showAlert(valid1);
+        }
+        break;
+      case 11:
+        setText11(v);
+        break;
+      case 20:
+        setDanger2('');
+        const valid2 = catchSentenceValid(v);
+        if (!valid2) {
+          setText20(v);
+        } else {
+          showAlert(valid2);
+        }
+
+        break;
+      case 21:
+        setText21(v);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleReviewChange = (seq: number, state: ReviewResultState) => {
+    if (seq == 1) {
+      setReview1(state);
+    }
+
+    if (seq == 2) {
+      setReview2(state);
+    }
+  };
+
+  const handleMakeSPClick = (no: number) => {
+    const newPatternedText = patternedText;
+
+    if (no === 0) {
+      newPatternedText[no] = patternedText[no] || textArea10;
+      setPatText(newPatternedText);
+      setText11(patternedText[no] || textArea10);
+    } else if (no === 1) {
+      newPatternedText[no] = patternedText[no] || textArea10;
+      setPatText(newPatternedText);
+      setText21(patternedText[no] || textArea20);
+    }
+  };
+
+  const checkBtnActivate = () => {
+    if (
+      reviewData1?.radio == ReviewResult.PASS &&
+      reviewData2?.radio == ReviewResult.PASS
+    ) {
+      setReviewPassBtn(true);
+    } else {
+      setReviewPassBtn(false);
+    }
+
+    if (
+      reviewData1?.radio != ReviewResult.PASS ||
+      reviewData2?.radio != ReviewResult.PASS
+    ) {
+      setReviewOpinionBtn(true);
+    } else {
+      setReviewOpinionBtn(false);
+    }
+  };
 
   const toWorkData = (): WorkData => {
     let reviewData: ReviewData | undefined = undefined;
@@ -221,7 +296,16 @@ const WorkSpace = (props: WorkSpaceProps) => {
         <Col lg={5}>
           <Row>
             <Form.Group>
-              <Form.Label>문장1</Form.Label>
+              <Row>
+                <Col lg={3}>
+                  <Form.Label>문장1</Form.Label>
+                </Col>
+                <Col lg={9} className="text-end text-danger text-break">
+                  <span className="text-danger" style={{ fontSize: '0.70rem' }}>
+                    {s1Danger}
+                  </span>
+                </Col>
+              </Row>
               <Form.Control
                 as="textarea"
                 className="h-auto"
@@ -272,12 +356,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
           </Form.Group>
         </Col>
       </Row>
-
-      {props.workType == 'review' ? (
+      {props.workType == 'review' || props.workType == 'rework' ? (
         <Row id="review1" className="mt-2">
           <ReviewSection
             seq={1}
-            readOnly={props.readOnly}
+            readOnly={props.workType == 'rework' ? true : props.readOnly}
             data={reviewData1}
             onChange={(state) => handleReviewChange(1, state)}
           />
@@ -310,7 +393,16 @@ const WorkSpace = (props: WorkSpaceProps) => {
         <Col lg={5}>
           <Row>
             <Form.Group>
-              <Form.Label>문장2</Form.Label>
+              <Row>
+                <Col lg={3}>
+                  <Form.Label>문장2</Form.Label>
+                </Col>
+                <Col lg={9} className="text-end text-danger text-break">
+                  <span className="text-danger" style={{ fontSize: '0.70rem' }}>
+                    {s2Danger}
+                  </span>
+                </Col>
+              </Row>
               <Form.Control
                 as="textarea"
                 className="h-auto"
@@ -361,11 +453,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
           </Form.Group>
         </Col>
       </Row>
-      {props.workType == 'review' ? (
+      {props.workType == 'review' || props.workType == 'rework' ? (
         <Row id="review2" className="mt-2">
           <ReviewSection
             seq={2}
-            readOnly={props.readOnly}
+            readOnly={props.workType == 'rework' ? true : props.readOnly}
             data={reviewData2}
             onChange={(state) => handleReviewChange(2, state)}
           />
@@ -398,24 +490,26 @@ const WorkSpace = (props: WorkSpaceProps) => {
       {props.workType == 'review' && props.readOnly != true ? (
         <Row className="mt-xxl-5 mx-0">
           <Col>
-            <Button
-              variant={reviewHoldBtn ? 'warning' : 'secondary'}
-              className="w-100"
-              disabled={!reviewHoldBtn}
-              onClick={() => {
-                if (reviewHoldBtn) {
-                  setReview1({
-                    radio: ReviewResult.HOLD,
-                  });
-                  setReview2({
-                    radio: ReviewResult.HOLD,
-                  });
-                  props.onSubmit(toWorkData());
-                }
-              }}
-            >
-              보류
-            </Button>
+            {props.seq == 1 ? (
+              <Button
+                variant={reviewHoldBtn ? 'warning' : 'secondary'}
+                className="w-100"
+                disabled={!reviewHoldBtn}
+                onClick={() => {
+                  if (reviewHoldBtn) {
+                    setReview1({
+                      radio: ReviewResult.HOLD,
+                    });
+                    setReview2({
+                      radio: ReviewResult.HOLD,
+                    });
+                    props.onSubmit(toWorkData());
+                  }
+                }}
+              >
+                보류
+              </Button>
+            ) : null}
           </Col>
           <Col>
             <Button

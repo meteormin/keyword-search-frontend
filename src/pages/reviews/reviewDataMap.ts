@@ -1,13 +1,11 @@
-import { Sentence } from '../../store/features/sentence/sentenceAction';
-import { ReviewResult, WorkData } from '../../components/common/WorkSpace';
 import {
-  CreateReview,
-  SentenceReject,
-} from '../../store/features/reviews/reviewAction';
+  Sentence,
+  SentenceReviewReject,
+} from '../../store/features/sentence/sentenceAction';
+import { ReviewResult, WorkData } from '../../components/common/WorkSpace';
+import { CreateReview } from '../../store/features/reviews/reviewAction';
 
-const getEtcReason = (
-  reasons: ((SentenceReject | undefined)[] | undefined)[],
-) => {
+const getEtcReason = (reasons: (SentenceReviewReject[] | undefined)[]) => {
   let reason1;
   let reason2;
   let memo1;
@@ -16,18 +14,18 @@ const getEtcReason = (
   reason2 = reasons[1];
 
   const etc1 = reason1?.filter((r) => {
-    return r?.sentenceRejectCode == 9;
+    return r?.rejectReason == 9;
   })[0];
   reason1 = reason1?.map((r) => {
-    return r?.sentenceRejectCode;
+    return r?.rejectReason;
   });
 
   const etc2 = reason2?.filter((r) => {
-    return r?.sentenceRejectCode == 9;
+    return r?.rejectReason == 9;
   })[0];
 
   reason2 = reason2?.map((r) => {
-    return r?.sentenceRejectCode;
+    return r?.rejectReason;
   });
 
   if (etc1) {
@@ -55,63 +53,59 @@ export const sentenceToWorkData = (
 
   if (seq == 1) {
     const review1 = sentence?.edges?.sentenceReviews1;
-    result1 = review1?.sentence1Result;
-    result2 = review1?.sentence2Result;
-    rejectReason1 = review1?.edges?.sentenceReject1?.map((reject) => {
-      const filtered = review1?.edges?.sentenceReject1?.filter((reject) => {
-        return reject.sentenceNumber == 1;
-      });
-      return filtered?.includes(reject) ? reject : undefined;
-    });
-    rejectReason2 = review1?.edges?.sentenceReject1?.map((reject) => {
-      const filtered = review1?.edges?.sentenceReject1?.filter((reject) => {
-        return reject.sentenceNumber == 2;
-      });
-      return filtered?.includes(reject) ? reject : undefined;
-    });
+    console.log('hi', sentence);
+    if (sentence?.status === 'REJECT_1') {
+      result1 = sentence?.edges?.sentence1.edges?.sentenceReviewReject
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
+      result2 = sentence?.edges?.sentence2.edges?.sentenceReviewReject
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
 
-    etcReason = getEtcReason([rejectReason1, rejectReason2]);
-    rejectReason1 = etcReason.reason1;
-    rejectReason2 = etcReason.reason2;
-    memo1 = etcReason.memo1;
-    memo2 = etcReason.memo2;
+      rejectReason1 = sentence?.edges?.sentence1?.edges?.sentenceReviewReject;
+      rejectReason2 = sentence?.edges?.sentence2?.edges?.sentenceReviewReject;
+
+      etcReason = getEtcReason([rejectReason1, rejectReason2]);
+
+      rejectReason1 = etcReason.reason1;
+      rejectReason2 = etcReason.reason2;
+      memo1 = etcReason.memo1;
+      memo2 = etcReason.memo2;
+    }
   }
 
   if (seq == 2) {
     const review2 = sentence?.edges?.sentenceReviews2;
-    result1 = review2?.sentence1Result;
-    result2 = review2?.sentence2Result;
-    rejectReason1 = review2?.edges?.sentenceReject2?.map((reject) => {
-      const filtered = review2?.edges?.sentenceReject2?.filter((reject) => {
-        return reject.sentenceNumber == 1;
-      });
-      return filtered?.includes(reject) ? reject : undefined;
-    });
-    rejectReason2 = review2?.edges?.sentenceReject2?.map((reject) => {
-      const filtered = review2?.edges?.sentenceReject2?.filter((reject) => {
-        return reject.sentenceNumber == 2;
-      });
-      return filtered?.includes(reject) ? reject : undefined;
-    });
+    if (sentence?.status === 'REJECT_2') {
+      result1 = sentence?.edges?.sentence1.edges?.sentenceReviewReject
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
+      result2 = sentence?.edges?.sentence2.edges?.sentenceReviewReject
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
 
-    etcReason = getEtcReason([rejectReason1, rejectReason2]);
-    rejectReason1 = etcReason.reason1;
-    rejectReason2 = etcReason.reason2;
-    memo1 = etcReason.memo1;
-    memo2 = etcReason.memo2;
+      rejectReason1 = sentence?.edges?.sentence1?.edges?.sentenceReviewReject;
+
+      rejectReason2 = sentence?.edges?.sentence2?.edges?.sentenceReviewReject;
+
+      etcReason = getEtcReason([rejectReason1, rejectReason2]);
+      rejectReason1 = etcReason.reason1;
+      rejectReason2 = etcReason.reason2;
+      memo1 = etcReason.memo1;
+      memo2 = etcReason.memo2;
+    }
   }
 
+  const child1 = sentence?.edges?.sentence1;
+  const child2 = sentence?.edges?.sentence2;
   return {
-    textArea10: sentence?.sentence1 || '',
-    textArea11: sentence?.sentence1PatternedModified || '',
-    textArea20: sentence?.sentence2 || '',
-    textArea21: sentence?.sentence2PatternedModified || '',
-    wordCount1: sentence?.sentence1Count || 0,
-    wordCount2: sentence?.sentence2Count || 0,
-    origin: [
-      sentence?.sentence1Patterned || '',
-      sentence?.sentence2Patterned || '',
-    ],
+    textArea10: child1?.sentence || '',
+    textArea11: child1?.sentencePatternedModified || '',
+    textArea20: child2?.sentence || '',
+    textArea21: child2?.sentencePatternedModified || '',
+    wordCount1: child1?.sentenceCount || 0,
+    wordCount2: child2?.sentenceCount || 0,
+    origin: [child1?.sentencePatterned || '', child2?.sentencePatterned || ''],
     reviewData: {
       result1: result1 || ReviewResult.FAIL,
       result2: result2 || ReviewResult.FAIL,

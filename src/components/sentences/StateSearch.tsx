@@ -38,7 +38,9 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'생성 상태'}
           onChange={(selectedValue) => {
-            setCreate(selectedValue as CreateStatus);
+            if (selectedValue) {
+              setCreate(selectedValue as CreateStatus);
+            }
           }}
           options={CreateState}
         />
@@ -47,7 +49,9 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'검수 상태'}
           onChange={(selectedValue) => {
-            setReview(selectedValue as ReviewStatus);
+            if (selectedValue) {
+              setReview(selectedValue as ReviewStatus);
+            }
           }}
           options={ReviewState}
         />
@@ -56,7 +60,9 @@ const StateSearch = (props: StateSearchProps) => {
         <SelectFilter
           label={'반려 사유'}
           onChange={(selectedValue) => {
-            setReject(selectedValue as number);
+            if (parseInt(selectedValue)) {
+              setReject(parseInt(selectedValue));
+            }
           }}
           options={RejectReason}
         />

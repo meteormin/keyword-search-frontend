@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { CreateSentence, Sentence } from '../sentence/sentenceAction';
+import { Sentence } from '../sentence/sentenceAction';
 import { ReviewResult } from '../../../components/common/WorkSpace';
 import { Concept } from '../tasks/taskAction';
 
@@ -8,33 +8,15 @@ export interface User {
   loginId: number;
 }
 
-export interface Task {
-  id: number;
-  concepts: Concept[];
-  pos_length: number;
-  refId: number;
-}
+// export interface SentenceReject {
+//   id: number;
+//   sentenceNumber: number;
+//   sentenceRejectCode: number;
+//   memo?: string;
+// }
 
-export interface SentenceReject {
-  id: number;
-  sentenceNumber: number;
-  sentenceRejectCode: number;
-  memo?: string;
-}
-
-export interface SentenceReview {
-  id: number;
-  userId: number;
-  sentenceId: number;
-  sentence1Result: ReviewResult;
-  sentence2Result: ReviewResult;
-  createAt: string;
-  updateAt: string;
-  edges?: {
-    users: User;
-    sentenceReject1?: SentenceReject[];
-    sentenceReject2?: SentenceReject[];
-  };
+export interface SentenceReview extends Sentence {
+  status: ReviewStatus;
 }
 
 export interface CreateReview {
@@ -64,6 +46,14 @@ export interface UpdateReview extends Sentence {
   memo2: string;
 }
 
+export enum ReviewStatus {
+  WAITING = 'WAITING',
+  REJECT1 = 'REJECT_1',
+  PASS1 = 'PASS_1',
+  REJECT2 = 'REJECT_2',
+  PASS2 = 'PASS_2',
+}
+
 export interface Review {
   id: number;
   refId: string;
@@ -79,9 +69,9 @@ export interface Review {
   reviewer2Id: string;
   review1At: string;
   review2At: string;
-  reviewResult: boolean;
-  reviewRsTxt?: string;
+  reviewResult: ReviewStatus;
   reviewReasons: number[];
+  reviewRsTxt?: string;
 }
 
 export interface ReviewState {
@@ -91,7 +81,7 @@ export interface ReviewState {
   reviews: Review[];
   sentences: Sentence[];
   assignSentence: Sentence | null;
-  editReview: Sentence | null;
+  editReview: SentenceReview | null;
   createReview: CreateReview | null;
 }
 
@@ -152,7 +142,10 @@ const reviewAction = {
   ) => {
     state.editReview = null;
   },
-  setReview: (state: ReviewState, action: PayloadAction<Sentence | null>) => {
+  setReview: (
+    state: ReviewState,
+    action: PayloadAction<SentenceReview | null>,
+  ) => {
     state.editReview = action.payload;
   },
   createReview: (

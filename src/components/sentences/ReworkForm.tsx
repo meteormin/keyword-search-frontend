@@ -5,15 +5,15 @@ import WorkSpace from '../common/WorkSpace';
 import { lang } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import reviewModule from '../../store/features/reviews';
-import { CreateReview } from '../../store/features/reviews/reviewAction';
+import { sentenceToWorkData } from '../../pages/reviews/reviewDataMap';
 import {
-  sentenceToWorkData,
-  workDataToCreateReview,
-} from '../../pages/reviews/reviewDataMap';
-import { Sentence } from '../../store/features/sentence/sentenceAction';
+  CreateSentence,
+  Sentence,
+} from '../../store/features/sentence/sentenceAction';
 import alertModal from '../../store/features/common/alertModal';
-import { reviewValidate } from '../../utils/validation/review';
 import sentenceModule from '../../store/features/sentence';
+import taskModule from '../../store/features/tasks';
+import { reworkValidate } from '../../utils/validation/sentence';
 
 export interface CreateFormProps {
   show: boolean;
@@ -36,16 +36,12 @@ const ReviewForm = (props: CreateFormProps) => {
   const [sentence1Count, setCount1] = useState(0);
   const [sentence2Count, setCount2] = useState(0);
 
-  const { assignSentence, editReview } = useSelector(
-    reviewModule.getReviewState,
-  );
-
   const { editSentence } = useSelector(sentenceModule.getSentenceState);
 
   const [review, setReview] = useState<Sentence | null>(null);
 
-  const validate = (create: CreateReview) => {
-    const validated = reviewValidate(review as Sentence, create);
+  const validate = (create: CreateSentence) => {
+    const validated = reworkValidate(review as Sentence, create);
     if (!validated.status) {
       dispatch(
         alertModal.showAlert({
@@ -61,18 +57,11 @@ const ReviewForm = (props: CreateFormProps) => {
   useEffect(() => {
     setShow(props.show);
     setTime(props.time);
-    if (assignSentence) {
-      setReview(assignSentence);
-    }
-
-    if (editReview) {
-      setReview(editReview);
-    }
 
     if (editSentence) {
       setReview(editSentence);
     }
-  }, [props, assignSentence, editReview]);
+  }, [props, editSentence]);
 
   return (
     <Fragment>
@@ -162,38 +151,46 @@ const ReviewForm = (props: CreateFormProps) => {
                 <WorkSpace
                   seq={props.seq}
                   readOnly={props.readOnly}
-                  workType="review"
+                  workType="rework"
                   workData={sentenceToWorkData(props.seq, review)}
                   onSubmit={(data) => {
-                    if (review) {
-                      console.log('create review data', data);
+                    if (editSentence) {
+                      const createSentence: CreateSentence = {
+                        taskId: editSentence.edges?.task.id || 0,
+                        sentence1: data.textArea10,
+                        sentence2: data.textArea20,
+                        sentence1Patterned: data.origin[0],
+                        sentence2Patterned: data.origin[1],
+                        sentence1PatternedModified: data.textArea11,
+                        sentence2PatternedModified: data.textArea21,
+                        sentence1Count: data.wordCount1,
+                        sentence2Count: data.wordCount2,
+                      };
 
-                      const createReview: CreateReview = workDataToCreateReview(
-                        review.id,
-                        data,
-                      );
-                      console.log('create review req', createReview);
-                      if (validate(createReview)) {
+                      if (validate(createSentence)) {
                         dispatch(
-                          reviewModule.actions.createReview({
-                            seq: props.seq,
-                            review: createReview,
-                          }),
+                          sentenceModule.actions.createSentence(createSentence),
                         );
-                        dispatch(reviewModule.actions.setAssign(null));
+                        dispatch(taskModule.actions.setWorkTask(null));
                         setShow(false);
                         props.onCreate();
                       }
                     }
                   }}
                   onChange={(data) => {
-                    console.log('on ch data', data);
-                    if (review) {
-                      const createReview: CreateReview = workDataToCreateReview(
-                        review.id,
-                        data,
-                      );
-                      console.log('on ch cr', createReview);
+                    if (editSentence) {
+                      const createSentence: CreateSentence = {
+                        taskId: editSentence.edges?.task.id || 0,
+                        sentence1: data.textArea10,
+                        sentence2: data.textArea20,
+                        sentence1Patterned: data.origin[0],
+                        sentence2Patterned: data.origin[1],
+                        sentence1PatternedModified: data.textArea11,
+                        sentence2PatternedModified: data.textArea21,
+                        sentence1Count: data.wordCount1,
+                        sentence2Count: data.wordCount2,
+                      };
+                      console.log(createSentence);
                     }
                   }}
                 />

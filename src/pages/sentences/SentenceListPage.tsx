@@ -11,13 +11,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import sentenceModule from '../../store/features/sentence';
 import { CreateState } from '../../store/features/sentence/sentenceAction';
 import { date, str } from '../../helpers';
-import CreateForm from '../../components/tasks/CreateForm';
+import ReworkForm from '../../components/sentences/ReworkForm';
 
 const SentenceListPage = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [formSeq, setFormSeq] = useState<number>(1);
   const { sentenceHistory, editSentence, time, totalCount } = useSelector(
     sentenceModule.getSentenceState,
   );
@@ -56,7 +57,7 @@ const SentenceListPage = () => {
       return {
         no: i + 1,
         refId: s.refId,
-        concepts: str.limit(s.concepts.map((c) => c.stem).join(', '), 20),
+        concepts: str.limit(s.concepts?.map((c) => c.stem).join(', '), 20),
         posLength: s.posLength,
         sentenceState: s?.createState || '',
         createdAt: date(s.createdAt).format('YYYY.MM.DD'),
@@ -73,6 +74,12 @@ const SentenceListPage = () => {
   const handleClickRecord = (record: SentenceRecord) => {
     if (record) {
       if (record._origin.createState != CreateState.COMPLETE) {
+        if (record._origin.review1At) {
+          setFormSeq(1);
+        }
+        if (record._origin.review2At) {
+          setFormSeq(2);
+        }
         dispatch(sentenceModule.actions.getSentence(record._origin.id));
       }
     }
@@ -146,7 +153,9 @@ const SentenceListPage = () => {
           </Button>
         </Col>
       </Row>
-      <CreateForm
+
+      <ReworkForm
+        seq={formSeq}
         show={!!editSentence}
         onCreate={() => null}
         time={time?.toString() || '--:--:--'}

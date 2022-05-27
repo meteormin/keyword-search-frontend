@@ -2,6 +2,10 @@ import { Option } from '../common/Select';
 
 const RejectReason: Option[] = [
   {
+    name: '반려 사유 선택',
+    value: 0,
+  },
+  {
     name: '1. 단어 수 미흡',
     value: 1,
   },

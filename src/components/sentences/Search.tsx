@@ -70,14 +70,28 @@ const Search = ({ stats, onSearch, onReset }: SearchProps) => {
       </Row>
       <Row className="mt-4">
         <DateSearch
-          onChange={(state) =>
-            setSearchParameter({
-              createdAtStart: date(state.startCreatedAt).utc().format(),
-              createdAtEnd: date(state.endCreatedAt).utc().format(),
-              reviewedAtStart: date(state.startReviewAt).utc().format(),
-              reviewedAtEnd: date(state.endReviewAt).utc().format(),
-            })
-          }
+          onChange={(state) => {
+            const dateParameters: SearchParameter = {};
+            if (state.startCreatedAt && state.endCreatedAt) {
+              dateParameters.createdAtStart = date(state.startCreatedAt)
+                .utc()
+                .format();
+              dateParameters.createdAtEnd = date(state.endCreatedAt)
+                .utc()
+                .format();
+            }
+
+            if (state.startReviewAt && state.endReviewAt) {
+              dateParameters.reviewedAtStart = date(state.startReviewAt)
+                .utc()
+                .format();
+              dateParameters.reviewedAtEnd = date(state.endReviewAt)
+                .utc()
+                .format();
+            }
+
+            setSearchParameter(dateParameters);
+          }}
         />
       </Row>
       <Row className="mt-4">

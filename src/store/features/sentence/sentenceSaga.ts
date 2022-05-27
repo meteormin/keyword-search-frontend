@@ -65,14 +65,29 @@ function* getSentenceList(
         const sh: SentenceHistory = s;
         let createState = CreateState.COMPLETE;
 
-        if (!sh.reviewResult && sh.reviewResult != null) {
-          createState = CreateState.WAIT;
+        if (sh.reviewResult) {
           if (sh.reviewer1Id) {
-            sh.reviewRsTxt = lang.sentence.reviewState.review1.fail;
+            createState = CreateState.WAIT;
+            if (sh.reviewResult === 'WAITING') {
+              sh.reviewRsTxt = lang.sentence.reviewState.review1.wait;
+            } else if (sh.reviewResult == 'REJECT_1') {
+              sh.reviewRsTxt = lang.sentence.reviewState.review1.fail;
+            } else {
+              sh.reviewRsTxt = lang.sentence.reviewState.review1.pass;
+              createState = CreateState.COMPLETE;
+            }
           }
 
           if (sh.reviewer2Id) {
-            sh.reviewRsTxt = lang.sentence.reviewState.review2.fail;
+            createState = CreateState.WAIT;
+            if (sh.reviewResult === 'WAITING') {
+              sh.reviewRsTxt = lang.sentence.reviewState.review2.wait;
+            } else if (sh.reviewResult == 'REJECT_2') {
+              sh.reviewRsTxt = lang.sentence.reviewState.review2.fail;
+            } else {
+              sh.reviewRsTxt = lang.sentence.reviewState.review2.pass;
+              createState = CreateState.COMPLETE;
+            }
           }
         }
         sh.createState = createState;
@@ -147,6 +162,7 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
         alertModalModule.showAlert({
           title: '검수 요청',
           message: '검수 요청 완료',
+          refresh: true,
         }),
       );
     } else {
@@ -156,6 +172,7 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
         alertModalModule.showAlert({
           title: '검수 요청',
           message: '검수 요청 실패',
+          refresh: true,
         }),
       );
     }
@@ -166,6 +183,7 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
       alertModalModule.showAlert({
         title: '검수 요청',
         message: '검수 요청 실패',
+        refresh: true,
       }),
     );
   }

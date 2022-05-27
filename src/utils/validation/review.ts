@@ -8,7 +8,8 @@ export const reviewValidate = (
   reviewSentence: Sentence,
   create: CreateReview,
 ) => {
-  const validated = sentenceValidate(reviewSentence.edges?.tasks as Task, {
+  const msg: Message[] = [];
+  const validated = sentenceValidate(reviewSentence.edges?.task as Task, {
     sentence1: create.sentence1,
     sentence2: create.sentence2,
     sentence1Patterned: create.sentence1Patterned,
@@ -20,27 +21,29 @@ export const reviewValidate = (
     taskId: reviewSentence.taskId,
   });
 
-  if (!validated.status) {
-    return validated;
-  }
-
-  const msg: Message[] = [];
-
-  if (reviewSentence.sentence1 != create.sentence1) {
+  if (reviewSentence.edges?.sentence1.sentence != create.sentence1) {
     if (!create.sentence1PatternedModified) {
       msg.push({
         key: '문장1',
         message: '수정 후 문형1(을)를 수정하지 않았습니다.',
       });
+    } else {
+      if (!validated.status) {
+        return validated;
+      }
     }
   }
 
-  if (reviewSentence.sentence2 != create.sentence2) {
+  if (reviewSentence.edges?.sentence2.sentence != create.sentence2) {
     if (!create.sentence2PatternedModified) {
       msg.push({
         key: '문장2',
-        message: '문장2(을)를 수정 후 문형2(을)를 수정하지 않았습니다.',
+        message: '수정 후 문형2(을)를 수정하지 않았습니다.',
       });
+    } else {
+      if (!validated.status) {
+        return validated;
+      }
     }
   }
 

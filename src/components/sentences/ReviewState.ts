@@ -3,6 +3,10 @@ import { ReviewStatus } from '../../store/features/search/searchAction';
 
 const ReviewState: Option[] = [
   {
+    name: ' 검수 상태 선택',
+    value: ReviewStatus.NONE,
+  },
+  {
     name: '검수대기',
     value: ReviewStatus.WAITING,
   },

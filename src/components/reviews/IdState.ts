@@ -1,6 +1,7 @@
 import { Option } from '../common/Select';
 
 export enum IdStateEnum {
+  NONE,
   GROUP_NAME,
   CREATOR_ID,
   REVIEWER1_ID,
@@ -8,6 +9,10 @@ export enum IdStateEnum {
 }
 
 const IdState: Option[] = [
+  {
+    name: '선택',
+    value: IdStateEnum.NONE,
+  },
   {
     name: '생성그룹명',
     value: IdStateEnum.GROUP_NAME,

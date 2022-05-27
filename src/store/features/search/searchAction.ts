@@ -22,6 +22,7 @@ export enum CreateStatus {
 }
 
 export enum ReviewStatus {
+  NONE,
   WAITING = 'WAITING',
   REJECT1 = 'REJECT1',
   PASS1 = 'PASS1',

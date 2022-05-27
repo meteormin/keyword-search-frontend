@@ -59,7 +59,7 @@ const ReviewSection = (props: ReviewResultProps) => {
 
   return (
     <Fragment>
-      <Col className="mt-2">
+      <Col lg={3} className="mt-2">
         <Form.Check
           type="radio"
           id={ReviewResultEnum.PASS + props.seq}
@@ -74,7 +74,7 @@ const ReviewSection = (props: ReviewResultProps) => {
           disabled={props.readOnly || false}
         />
       </Col>
-      <Col className="mt-2">
+      <Col lg={3} className="mt-2">
         <Form.Check
           type="radio"
           id={ReviewResultEnum.FAIL + props.seq}
@@ -116,22 +116,21 @@ const ReviewSection = (props: ReviewResultProps) => {
           </Col>
           {check?.includes(reasonList[reasonList.length - 1]) ? (
             <Col>
-              <FloatingLabel
-                controlId={'memo' + props.seq}
-                label="기타 사유"
-                className="mb-3"
-              >
+              <Form.Group>
+                <Form.Label controlId={'memo' + props.seq} className="mb-3">
+                  기타 사유
+                </Form.Label>
                 <Form.Control
-                  type="text"
+                  as="textarea"
                   name={'memo' + props.seq}
                   value={memo}
-                  placeholder="기타 사유"
+                  placeholder=""
                   onChange={(e) => {
                     setMemo(e.target.value);
                   }}
                   readOnly={props.readOnly || false}
                 />
-              </FloatingLabel>
+              </Form.Group>
             </Col>
           ) : null}
         </Fragment>

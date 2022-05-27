@@ -21,6 +21,7 @@ export interface TokenInfo {
   group: number[];
   id: number;
   permission: string;
+  userType: string;
 }
 
 export const setUser = (user: object) => {

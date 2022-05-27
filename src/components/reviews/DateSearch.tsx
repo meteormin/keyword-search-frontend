@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
+import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import DateFilter from '../common/DateFilter';
 
 registerLocale('ko', ko);
 
 export interface DateSearchState {
-  startCreatedAt: Date;
-  endCreatedAt: Date;
-  startReviewAt: Date;
-  endReviewAt: Date;
+  startCreatedAt: Date | null;
+  endCreatedAt: Date | null;
+  startReviewAt: Date | null;
+  endReviewAt: Date | null;
 }
 
 export interface DateSearchProps {
@@ -19,14 +19,10 @@ export interface DateSearchProps {
 }
 
 const DateSearch = (props: DateSearchProps) => {
-  const now = new Date();
-  const monthAgo = new Date(now);
-  monthAgo.setMonth(now.getMonth() - 1);
-
-  const [startCreatedAt, setStartCreatedAt] = useState<Date>(monthAgo);
-  const [endCreatedAt, setEndCreatedAt] = useState<Date>(now);
-  const [startReviewAt, setStartReviewAt] = useState<Date>(monthAgo);
-  const [endReviewAt, setEndReviewAt] = useState<Date>(now);
+  const [startCreatedAt, setStartCreatedAt] = useState<Date | null>(null);
+  const [endCreatedAt, setEndCreatedAt] = useState<Date | null>(null);
+  const [startReviewAt, setStartReviewAt] = useState<Date | null>(null);
+  const [endReviewAt, setEndReviewAt] = useState<Date | null>(null);
 
   useEffect(() => {
     props.onChange({
@@ -43,8 +39,10 @@ const DateSearch = (props: DateSearchProps) => {
         <DateFilter
           label="생성 일자"
           onChange={(state) => {
-            setStartCreatedAt(state.start);
-            setEndCreatedAt(state.end);
+            if (state.start && state.end) {
+              setStartCreatedAt(state.start);
+              setEndCreatedAt(state.end);
+            }
           }}
         />
       </Col>
@@ -53,8 +51,10 @@ const DateSearch = (props: DateSearchProps) => {
         <DateFilter
           label="검수일자"
           onChange={(state) => {
-            setStartReviewAt(state.start);
-            setEndReviewAt(state.end);
+            if (state.start && state.end) {
+              setStartReviewAt(state.start);
+              setEndReviewAt(state.end);
+            }
           }}
         />
       </Col>

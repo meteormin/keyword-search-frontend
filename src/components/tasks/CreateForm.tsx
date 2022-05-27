@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import Prototype from '../common/Prototype';
 import WorkSpace, { WorkData } from '../common/WorkSpace';
-import { lang } from '../../helpers';
+import { lang, makeSentencePattern } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
 import sentenceModule from '../../store/features/sentence';
@@ -14,12 +14,14 @@ import { Task } from '../../store/features/tasks/taskAction';
 import { sentenceToWorkData } from '../../pages/sentences/sentenceDataMap';
 import { sentenceValidate } from '../../utils/validation/sentence';
 import alertModal from '../../store/features/common/alertModal';
+import { getFrameRequest } from '../../utils/tmkor/TmKor';
 
 export interface CreateFormProps {
   show: boolean;
   readOnly?: boolean;
   onCreate: () => any;
   time: string;
+  workType: 'work' | 'rework';
 }
 
 const CreateForm = (props: CreateFormProps) => {
@@ -60,9 +62,26 @@ const CreateForm = (props: CreateFormProps) => {
     if (editSentence) {
       setMethod('edit');
       setSentence(editSentence);
-      setTask(editSentence.edges?.tasks || null);
+      setTask(editSentence.edges?.task || null);
     }
+
+    makeTagged().then((tempTask) => {
+      if (tempTask) {
+        setTask(tempTask);
+      }
+    });
   }, [props, workTask, editSentence]);
+
+  const makeTagged = async () => {
+    const tempTask = workTask;
+    if (!tempTask?.tagged) {
+      if (tempTask?.sentence) {
+        tempTask.tagged = (await makeSentencePattern(tempTask)) || '';
+      }
+    }
+
+    return tempTask;
+  };
 
   const toWorkData = (): WorkData | undefined => {
     if (sentence) {
@@ -89,14 +108,14 @@ const CreateForm = (props: CreateFormProps) => {
   return (
     <Fragment>
       <Modal
-        fullscreen
+        centered
+        dialogClassName={'modal-80w'}
         show={show}
         onHide={() => {
           setShow(false);
           dispatch(taskModule.actions.setWorkTask(null));
           dispatch(sentenceModule.actions.setSentence(null));
         }}
-        centered
       >
         <Modal.Header closeButton>
           <Container className="mt-2">
@@ -157,9 +176,11 @@ const CreateForm = (props: CreateFormProps) => {
             <Row>
               <Col lg={4}>
                 <Prototype
-                  concepts={task?.concepts.map((t) => t.stem) || []}
+                  concepts={task?.edges?.concepts.map((t) => t.stem) || []}
                   conceptsTag={
-                    task?.concepts.map((t) => `${t.stem}(${t.posttag})`) || []
+                    task?.edges?.concepts.map(
+                      (t) => `${t.stem}(${t.posttag})`,
+                    ) || []
                   }
                   wordCount={task?.posLength || 0}
                   basicSentence={task?.sentence || ''}
@@ -168,6 +189,7 @@ const CreateForm = (props: CreateFormProps) => {
               </Col>
               <Col lg={8}>
                 <WorkSpace
+                  workType={props.workType}
                   readOnly={props.readOnly}
                   workData={toWorkData()}
                   onSubmit={(data) => {

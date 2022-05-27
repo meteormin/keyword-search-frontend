@@ -95,7 +95,7 @@ const GroupSection = () => {
           </Button>
         </Col>
       </Row>
-      <Row className="mt-4" style={{ height: '25vh', overflowY: 'scroll' }}>
+      <Row className="mt-4" style={{ height: '90vh', overflowY: 'scroll' }}>
         <GroupList
           groups={groupInfo()}
           onClick={(group: GroupInfo) => {

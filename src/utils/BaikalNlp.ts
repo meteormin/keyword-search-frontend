@@ -1,11 +1,14 @@
 import { ApiClient, ApiResponse } from './ApiClient';
 import { apiResponse } from '../helpers';
+import { toCamel } from 'snake-camel';
 
 export interface AnalyzeData {
-  sentences: {
-    text: AnalyzeText;
-    tokens: AnalyzeToken[];
-  }[];
+  sentences: AnalyzeSentence[];
+}
+
+export interface AnalyzeSentence {
+  text: AnalyzeText;
+  tokens: AnalyzeToken[];
 }
 
 export interface AnalyzeText {
@@ -16,6 +19,8 @@ export interface AnalyzeText {
 export interface AnalyzeToken {
   text: AnalyzeText;
   morphemes: Morphemes[];
+  lemma: string;
+  tagged: string;
 }
 
 export interface Morphemes {
@@ -27,13 +32,13 @@ export interface Morphemes {
 }
 
 class BaikalNlp {
-  protected client: ApiClient;
+  private client: ApiClient;
 
   constructor(client: ApiClient) {
     this.client = client;
   }
 
-  protected async analyze(sentence: string): Promise<AnalyzeData | null> {
+  public async analyze(sentence: string): Promise<AnalyzeData | null> {
     const response: ApiResponse = await this.client.post(
       'baikal-nlp/api/v1/analyze',
       {
@@ -46,7 +51,7 @@ class BaikalNlp {
     );
 
     if (response.isSuccess) {
-      return apiResponse(response);
+      return toCamel(apiResponse(response)) as AnalyzeData;
     }
 
     return null;

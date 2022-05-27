@@ -2,16 +2,15 @@ import { WorkData } from '../../components/common/WorkSpace';
 import { Sentence } from '../../store/features/sentence/sentenceAction';
 
 export const sentenceToWorkData = (sentence: Sentence): WorkData => {
+  const child1 = sentence?.edges?.sentence1;
+  const child2 = sentence?.edges?.sentence2;
   return {
-    textArea10: sentence?.sentence1 || '',
-    textArea11: sentence?.sentence1PatternedModified || '',
-    textArea20: sentence?.sentence2 || '',
-    textArea21: sentence?.sentence2PatternedModified || '',
-    wordCount1: sentence?.sentence1Count || 0,
-    wordCount2: sentence?.sentence2Count || 0,
-    origin: [
-      sentence?.sentence1Patterned || '',
-      sentence?.sentence2Patterned || '',
-    ],
+    textArea10: child1?.sentence || '',
+    textArea11: child1?.sentencePatternedModified || '',
+    textArea20: child2?.sentence || '',
+    textArea21: child2?.sentencePatternedModified || '',
+    wordCount1: child1?.sentenceCount || 0,
+    wordCount2: child2?.sentenceCount || 0,
+    origin: [child1?.sentencePatterned || '', child2?.sentencePatterned || ''],
   };
 };

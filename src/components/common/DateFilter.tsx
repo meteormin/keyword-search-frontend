@@ -7,8 +7,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 registerLocale('ko', ko);
 
 export interface DateFilterState {
-  start: Date;
-  end: Date;
+  start: Date | null;
+  end: Date | null;
 }
 
 export interface DateFilterProps {
@@ -17,12 +17,8 @@ export interface DateFilterProps {
 }
 
 const DateFilter = (props: DateFilterProps) => {
-  const now = new Date();
-  const monthAgo = new Date(now);
-  monthAgo.setMonth(now.getMonth() - 1);
-
-  const [start, setStart] = useState<Date>(monthAgo);
-  const [end, setEnd] = useState<Date>(now);
+  const [start, setStart] = useState<Date | null>(null);
+  const [end, setEnd] = useState<Date | null>(null);
 
   useEffect(() => {
     props.onChange({

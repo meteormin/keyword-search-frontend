@@ -34,9 +34,9 @@ const usersApi = {
         permissions: permissions.permissions,
       });
     },
-    getPermissions: async () => {
-      return await apiClient.get('api/v1/groups/permissions');
-    },
+    // getPermissions: async () => {
+    //   return await apiClient.get('api/v1/groups/permissions');
+    // },
     createGroup: async (group: Group | CreateGroup) => {
       return await apiClient.post('api/v1/groups', group);
     },
@@ -218,33 +218,42 @@ function* getEditUserSaga(action: PayloadAction<number>) {
   }
 }
 
-function* getPermListSaga() {
-  yield put(loaderModule.startLoading());
-
-  try {
-    const response: ApiResponse = yield call(usersApi.group.getPermissions);
-    const res = apiResponse(response);
-    if (response.isSuccess) {
-      const permList: Permission[] = res.data.permissions.map(toCamel);
-      yield put(loaderModule.endLoading());
-      yield put(usersModule.actions.setPermList(permList));
-    } else {
-      yield put(
-        alertModalModule.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터를 불러오는데 실패했습니다.',
-        }),
-      );
-    }
-  } catch (error) {
-    yield put(
-      alertModalModule.showAlert({
-        title: '데이터 조회 실패',
-        message: '데이터를 불러오는데 실패했습니다.',
-      }),
-    );
-  }
-}
+// function* getPermListSaga() {
+//   yield put(loaderModule.startLoading());
+//
+//   try {
+//     const response: ApiResponse = yield call(usersApi.group.getPermissions);
+//     const res = apiResponse(response);
+//     if (response.isSuccess) {
+//       const permList: Permission[] = res.data.permissions.map(toCamel);
+//       yield put(loaderModule.endLoading());
+//       yield put(usersModule.actions.setPermList(permList));
+//     } else {
+//       if ('name' in res && 'message' in res) {
+//         yield put(
+//           alertModalModule.showAlert({
+//             title: res.name,
+//             message: res.message,
+//           }),
+//         );
+//       } else {
+//         yield put(
+//           alertModalModule.showAlert({
+//             title: '데이터 조회 실패',
+//             message: '데이터를 불러오는데 실패했습니다.',
+//           }),
+//         );
+//       }
+//     }
+//   } catch (error) {
+//     yield put(
+//       alertModalModule.showAlert({
+//         title: '데이터 조회 실패',
+//         message: '데이터를 불러오는데 실패했습니다.',
+//       }),
+//     );
+//   }
+// }
 
 function* saveGroupPermSage(action: PayloadAction<UpdateGroupPerm>) {
   yield put(loaderModule.startLoading());
@@ -432,7 +441,7 @@ function* watchUsersSaga() {
   yield takeLatest(usersModule.actions.getGroup, getGroupSaga);
   yield takeLatest(usersModule.actions.getEditGroup, getEditGroupSaga);
   yield takeLatest(usersModule.actions.setGroupPermission, saveGroupPermSage);
-  yield takeLatest(usersModule.actions.getPermList, getPermListSaga);
+  // yield takeLatest(usersModule.actions.getPermList, getPermListSaga);
 
   yield takeLatest(usersModule.actions.getEditUser, getEditUserSaga);
   yield takeLatest(usersModule.actions.resetPassword, resetPassword);

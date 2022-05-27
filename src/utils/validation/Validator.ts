@@ -27,7 +27,7 @@ export class Validator implements ValidateData {
         const msgArr = messages.map((value) => {
           return `${value.key}: ${value.message}`;
         });
-        return msgArr.join('\n');
+        return msgArr.join('\n\n');
       },
     };
   }

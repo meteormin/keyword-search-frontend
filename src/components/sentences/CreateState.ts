@@ -3,6 +3,10 @@ import { CreateStatus } from '../../store/features/search/searchAction';
 
 const CreateState: Option[] = [
   {
+    name: '선택',
+    value: '',
+  },
+  {
     name: '생성대기',
     value: CreateStatus.WAITING,
   },

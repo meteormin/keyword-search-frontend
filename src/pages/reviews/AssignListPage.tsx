@@ -42,14 +42,19 @@ const AssignListPage = ({ seq }: { seq: number }) => {
     return sentences.map((s, i) => {
       return {
         no: i + 1,
-        refId: s.edges?.tasks.refId,
+        refId: s.edges?.task.refId,
         concepts: str.limit(
-          s.edges?.tasks?.concepts?.map((c) => c.stem).join(', ') || '',
-          20,
+          s.edges?.task?.edges?.concepts
+            ?.map((c, i) => (i < 6 ? c.stem : ''))
+            .join(', ') || '',
+          50,
         ),
-        posLength: s.edges?.tasks.posLength,
-        sentenceCount: s.sentence1Count + '/' + s.sentence2Count,
-        createdBy: s.edges?.users.loginId,
+        posLength: s.edges?.task.posLength,
+        sentenceCount:
+          s.edges?.sentence1.sentenceCount +
+          '/' +
+          s.edges?.sentence2.sentenceCount,
+        createdBy: s.edges?.user.loginId,
         createdAt: date(s.createAt).format('YYYY.MM.DD'),
         _origin: s,
       };

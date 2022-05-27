@@ -70,7 +70,10 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       return {
         no: i + 1,
         refId: r.refId,
-        concepts: str.limit(r.concepts.map((c) => c.stem).join(', '), 20),
+        concepts: str.limit(
+          r.concepts.map((c, i) => (i < 5 ? c.stem : '')).join(', '),
+          50,
+        ),
         posLength: r.posLength,
         sentenceCount: r.created1Length + '/' + r.created2Length,
         creatorId: r.creatorId,
@@ -175,7 +178,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         </Col>
       </Row>
       <ReviewForm
-        readOnly={true}
+        readOnly={editReview?.status != 'WAITING'}
         seq={seq}
         show={!!editReview}
         time={time?.toString() || '--:--:--'}
