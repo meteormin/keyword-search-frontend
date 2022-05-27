@@ -30,6 +30,8 @@ function App() {
     userType = '생성자';
   } else if (userType == UserType.REVIEWER2) {
     userType = '2차 검수자';
+  } else {
+    auth.logout();
   }
 
   menu.header = userType as string;

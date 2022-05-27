@@ -51,7 +51,7 @@ else
 fi
 
 echo "copy ./build >> /var/www/front"
-
+rm -rf /var/www/front/*
 cp -r ./build/* /var/www/front && cp ./public/.htaccess /var/www/front 2>/dev/null || res=$?
 
 if [ "${res}" = 1 ]; then
@@ -60,6 +60,5 @@ if [ "${res}" = 1 ]; then
 else
   echo "success copy!"
 fi
-
 
 exit 0
