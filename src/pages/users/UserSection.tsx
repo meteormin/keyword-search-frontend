@@ -78,7 +78,7 @@ const UserSection = () => {
           <span className="ms-4 text-secondary">{currentGroup.name}</span>
         </Col>
         <Col lg={8} className="ms-0">
-          {currentGroup ? (
+          {currentGroup.id ? (
             <Button variant="dark" className="float-end" onClick={createUser}>
               사용자 등록
             </Button>
