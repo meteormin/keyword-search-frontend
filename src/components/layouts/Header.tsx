@@ -26,7 +26,7 @@ const Header = ({ appName, dropDownMenu, isLogin, userName }: HeaderProps) => {
   return (
     <nav className="sb-topnav navbar navbar-expand navbar-dark bg-dark">
       {/*Navbar Brand*/}
-      <a className="navbar-brand ps-3" href="/">
+      <a className="navbar-brand ps-3" href="/" style={{ fontSize: '0.98em' }}>
         {appName || 'Subject'}
       </a>
       {/*Sidebar Toggle*/}
