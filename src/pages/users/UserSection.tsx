@@ -78,9 +78,11 @@ const UserSection = () => {
           <span className="ms-4 text-secondary">{currentGroup.name}</span>
         </Col>
         <Col lg={8} className="ms-0">
-          <Button variant="dark" className="float-end" onClick={createUser}>
-            사용자 등록
-          </Button>
+          {currentGroup ? (
+            <Button variant="dark" className="float-end" onClick={createUser}>
+              사용자 등록
+            </Button>
+          ) : null}
         </Col>
       </Row>
       <Row className="mt-4" style={{ height: '90vh', overflowY: 'scroll' }}>
