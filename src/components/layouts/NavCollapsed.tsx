@@ -6,6 +6,7 @@ export interface NavCollapsedProps {
   items: {
     name: string;
     url: string;
+    disabled?: boolean;
   }[];
 }
 
@@ -41,15 +42,17 @@ const NavCollapsed = ({ name, icon, items }: NavCollapsedProps) => {
         data-bs-parent="#sidenavAccordion"
       >
         <nav className="sb-sidenav-menu-nested nav">
-          {items.map((item, key) => (
-            <a
-              key={'nav_collapse' + key.toString()}
-              className={`nav-link ${activeUrl(item.url) ? 'active' : ''}`}
-              href={item.url}
-            >
-              {item.name}
-            </a>
-          ))}
+          {items.map((item, key) =>
+            !item.disabled ? (
+              <a
+                key={'nav_collapse' + key.toString()}
+                className={`nav-link ${activeUrl(item.url) ? 'active' : ''}`}
+                href={item.url}
+              >
+                {item.name}
+              </a>
+            ) : null,
+          )}
         </nav>
       </div>
     </Fragment>

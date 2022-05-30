@@ -6,7 +6,6 @@ import { ForbiddenPage, NotFoundPage } from '../pages/error';
 import { LoginPage, LogoutPage } from '../pages/login';
 import { FindPassPage } from '../pages/password';
 import { UsersPage } from '../pages/users';
-import { TokenInfo } from '../utils/auth';
 import { AssignListPage as AssignTask } from '../pages/tasks';
 import { SentenceListPage } from '../pages/sentences';
 import Home from '../utils/Home';
@@ -16,33 +15,9 @@ import {
 } from '../pages/reviews';
 import { UserType } from '../config/UserType';
 import CreateForm from '../components/tasks/CreateForm';
+import { handlePerm, handleGoHome } from './handler';
 
 const Router = () => {
-  const handlePerm = (menuPerm: string[]) => {
-    const token = auth.getToken();
-    if (token) {
-      const tokenInfo: TokenInfo | null = auth.tokenInfo(token);
-      if (tokenInfo) {
-        const permission = tokenInfo.userType || auth.user()?.userType || '';
-
-        return !menuPerm.includes(permission);
-      }
-    }
-
-    return true;
-  };
-
-  const handleGoHome = () => {
-    return [
-      { role: UserType.ADMIN, home: '/users' },
-      { role: UserType.WORKER, home: '/tasks' },
-      { role: UserType.REVIEWER1, home: '/reviews/1/assign' },
-      { role: UserType.REVIEWER2, home: '/reviews/2/assign' },
-      { role: UserType.SCORE, home: '/' },
-      { role: UserType.SCORE_REVIEWER, home: '/' },
-    ];
-  };
-
   return (
     <BrowserRouter>
       <Routes>

@@ -10,6 +10,7 @@ import { auth } from './helpers';
 import Container from './components/layouts/Container';
 import { Menu } from './components/layouts/Navigator';
 import { UserType } from './config/UserType';
+import { handleMenuVisible } from './routes/handler';
 
 function App() {
   useEffect(() => {
@@ -47,7 +48,7 @@ function App() {
         userName={auth.user()?.loginId || ''}
       />
       <Container
-        menu={config.layouts.menu as Menu}
+        menu={handleMenuVisible(config.layouts.menu as Menu)}
         isLogin={auth.isLogin()}
         footer={config.layouts.footer}
       >

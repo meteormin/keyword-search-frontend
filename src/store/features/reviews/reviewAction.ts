@@ -52,6 +52,7 @@ export enum ReviewStatus {
   PASS1 = 'PASS_1',
   REJECT2 = 'REJECT_2',
   PASS2 = 'PASS_2',
+  TEMP = 'TEMP',
 }
 
 export interface Review {

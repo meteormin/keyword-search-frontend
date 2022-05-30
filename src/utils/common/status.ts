@@ -30,5 +30,15 @@ export const switchReviewStatus = (
         reviewStatus: lang.sentence.reviewState.common.wait,
         createStatus: lang.sentence.createState.complete,
       };
+    case ReviewStatus.TEMP:
+      return {
+        reviewStatus: '',
+        createStatus: lang.sentence.createState.temp,
+      };
+    default:
+      return {
+        reviewStatus: '',
+        createStatus: '',
+      };
   }
 };

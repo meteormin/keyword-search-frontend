@@ -69,6 +69,7 @@ function* getSentenceList(
           sh.reviewRsTxt = reviewStatus;
           sh.createState = createStatus;
         }
+
         return sh;
       });
 

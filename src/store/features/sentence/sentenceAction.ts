@@ -51,6 +51,7 @@ export interface CreateSentence {
 
 export interface SentenceHistory {
   id: number;
+  status: ReviewStatus;
   refId: string;
   concepts: Concept[];
   posLength: number;

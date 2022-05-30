@@ -8,7 +8,7 @@ export interface Menu {
   url: string;
   name: string;
   icon: string;
-  navItems: NavItemProps[] | NavCollapsedProps[];
+  navItems: (NavItemProps | NavCollapsedProps)[];
 }
 
 const Navigator = ({ menu }: { menu: Menu }) => {
@@ -74,6 +74,7 @@ const Navigator = ({ menu }: { menu: Menu }) => {
                     icon={item.icon}
                     url={'url' in item ? item.url : ''}
                     active={activeUrl('url' in item ? item.url : '')}
+                    disabled={('disabled' in item && item?.disabled) || false}
                   />
                 </guard.HiddenByRole>
               );
