@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NavItem, { NavItemProps } from './NavItem';
 import NavCollapsed, { NavCollapsedProps } from './NavCollapsed';
 import { guard, auth } from '../../helpers';

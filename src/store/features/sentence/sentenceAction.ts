@@ -56,7 +56,7 @@ export interface SentenceHistory {
   posLength: number;
   created1Length: number;
   created2Length: number;
-  createState?: CreateState;
+  createState?: string;
   creatorId: string;
   createdAt: string;
   reviewer1Id: string;
@@ -66,12 +66,6 @@ export interface SentenceHistory {
   reviewResult: ReviewStatus;
   reviewRsTxt?: string;
   reviewReasons: number[];
-}
-
-export enum CreateState {
-  WAIT = '생성대기',
-  COMPLETE = '생성완료',
-  TEMP = '작성중',
 }
 
 export interface SentenceState {
@@ -120,7 +114,19 @@ const sentenceAction = {
   getSentence: (state: SentenceState, action: PayloadAction<number>) => {
     state.editSentence = null;
   },
+  setCreateSentence: (
+    state: SentenceState,
+    action: PayloadAction<CreateSentence>,
+  ) => {
+    state.createSentence = action.payload;
+  },
   createSentence: (
+    state: SentenceState,
+    action: PayloadAction<CreateSentence>,
+  ) => {
+    state.createSentence = action.payload;
+  },
+  createTempSentence: (
     state: SentenceState,
     action: PayloadAction<CreateSentence>,
   ) => {

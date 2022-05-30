@@ -112,19 +112,20 @@ const ReviewSection = (props: ReviewResultProps) => {
                 setCheck(multiCheck);
               }}
               isDisabled={props.readOnly || false}
-            ></ReactSelect>
+              placeholder={'반력 사유 선택'}
+            />
           </Col>
           {check?.includes(reasonList[reasonList.length - 1]) ? (
             <Col>
               <Form.Group>
-                <Form.Label controlId={'memo' + props.seq} className="mb-3">
+                <Form.Label controlid={'memo' + props.seq} className="mb-3">
                   기타 사유
                 </Form.Label>
                 <Form.Control
                   as="textarea"
                   name={'memo' + props.seq}
                   value={memo}
-                  placeholder=""
+                  placeholder="기타 사유"
                   onChange={(e) => {
                     setMemo(e.target.value);
                   }}

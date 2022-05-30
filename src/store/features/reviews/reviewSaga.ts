@@ -1,12 +1,12 @@
-import { apiResponse, api, auth, lang } from '../../../helpers';
+import { api, apiResponse, auth, switchReviewStatus } from '../../../helpers';
 import {
   CreateReview,
   Review,
-  UpdateReview,
   SentenceReview,
+  UpdateReview,
 } from './reviewAction';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { put, call, takeLatest, fork, select } from 'redux-saga/effects';
+import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import { ApiResponse } from '../../../utils/ApiClient';
 import reviewModule from './index';
@@ -78,21 +78,7 @@ function* assign(action: PayloadAction<number>) {
       );
       yield put(reviewModule.actions.getAssignList);
     } else {
-      if ('name' in res && 'message' in res) {
-        yield put(
-          alertModalModule.showAlert({
-            title: res.name,
-            message: res.message,
-          }),
-        );
-      } else {
-        yield put(
-          alertModalModule.showAlert({
-            title: '할당 실패',
-            message: '할당 실패',
-          }),
-        );
-      }
+      yield put(alertModalModule.errorAlert({ res: res }));
     }
   } catch (e) {
     yield put(
@@ -131,9 +117,8 @@ function* getAssignList(
       );
     } else {
       yield put(
-        alertModal.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터 조회 실패',
+        alertModal.errorAlert({
+          res: res,
         }),
       );
     }
@@ -169,9 +154,8 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
     } else {
       console.log(res);
       yield put(
-        alertModal.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터 조회 실패',
+        alertModal.errorAlert({
+          res: res,
         }),
       );
     }
@@ -212,25 +196,8 @@ function* getReviewList(
         const r = item;
 
         if (r.reviewResult) {
-          if (r.reviewer1Id) {
-            if (r.reviewResult === 'WAITING') {
-              r.reviewRsTxt = lang.sentence.reviewState.review1.wait;
-            } else if (r.reviewResult == 'REJECT_1') {
-              r.reviewRsTxt = lang.sentence.reviewState.review1.fail;
-            } else {
-              r.reviewRsTxt = lang.sentence.reviewState.review1.pass;
-            }
-          }
-
-          if (r.reviewer2Id) {
-            if (r.reviewResult === 'WAITING') {
-              r.reviewRsTxt = lang.sentence.reviewState.review2.wait;
-            } else if (r.reviewResult == 'REJECT_2') {
-              r.reviewRsTxt = lang.sentence.reviewState.review2.fail;
-            } else {
-              r.reviewRsTxt = lang.sentence.reviewState.review2.pass;
-            }
-          }
+          const { reviewStatus } = switchReviewStatus(r.reviewResult);
+          r.reviewRsTxt = reviewStatus;
         }
         return r;
       });
@@ -239,9 +206,8 @@ function* getReviewList(
     } else {
       console.log(res);
       yield put(
-        alertModal.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터 조회 실패',
+        alertModal.errorAlert({
+          res: res,
         }),
       );
     }
@@ -272,9 +238,8 @@ function* getReview(action: PayloadAction<{ seq: number; id: number }>) {
       );
     } else {
       yield put(
-        alertModal.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터 조회 실패',
+        alertModal.errorAlert({
+          res: res,
         }),
       );
     }
@@ -314,14 +279,12 @@ function* createReview(
       );
     } else {
       console.log(res);
-      if ('message' in res && 'name' in res) {
-        yield put(
-          alertModal.showAlert({
-            title: res.name,
-            message: res.message,
-          }),
-        );
-      }
+
+      yield put(
+        alertModal.errorAlert({
+          res: res,
+        }),
+      );
     }
   } catch (e) {
     yield put(loaderModule.endLoading());

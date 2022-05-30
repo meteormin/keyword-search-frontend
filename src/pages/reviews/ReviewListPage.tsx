@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { date } from '../../helpers';
+import { date, str } from '../../helpers';
 import reviewModule from '../../store/features/reviews';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Col, Container, Row } from 'react-bootstrap';
@@ -9,11 +9,12 @@ import DynamicTable, {
 } from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import ReviewForm from '../../components/reviews/ReivewForm';
-import { SearchStats } from '../../components/reviews/Search';
-import Search from '../../components/reviews/Search';
-import { ReviewListSchema, ReviewList } from './ReviewListSchema';
-import { Review } from '../../store/features/reviews/reviewAction';
-import { str } from '../../helpers';
+import Search, { SearchStats } from '../../components/reviews/Search';
+import { ReviewList, ReviewListSchema } from './ReviewListSchema';
+import {
+  Review,
+  ReviewStatus,
+} from '../../store/features/reviews/reviewAction';
 
 export interface Record extends ReviewList {
   _origin: Review;
@@ -109,6 +110,14 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
     );
   };
 
+  const checkReadOnly = (status?: ReviewStatus) => {
+    if (seq == 2) {
+      return status != ReviewStatus.PASS1;
+    }
+
+    return status != 'WAITING';
+  };
+
   useEffect(() => {
     dispatch(
       reviewModule.actions.getReviewList({
@@ -184,7 +193,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         </Col>
       </Row>
       <ReviewForm
-        readOnly={editReview?.status != 'WAITING'}
+        readOnly={checkReadOnly(editReview?.status || ReviewStatus.WAITING)}
         seq={seq}
         show={!!editReview}
         time={time?.toString() || '--:--:--'}

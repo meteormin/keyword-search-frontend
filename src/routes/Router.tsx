@@ -36,8 +36,8 @@ const Router = () => {
     return [
       { role: UserType.ADMIN, home: '/users' },
       { role: UserType.WORKER, home: '/tasks' },
-      { role: UserType.REVIEWER1, home: '/reviews/1' },
-      { role: UserType.REVIEWER2, home: '/reviews/2' },
+      { role: UserType.REVIEWER1, home: '/reviews/1/assign' },
+      { role: UserType.REVIEWER2, home: '/reviews/2/assign' },
       { role: UserType.SCORE, home: '/' },
       { role: UserType.SCORE_REVIEWER, home: '/' },
     ];

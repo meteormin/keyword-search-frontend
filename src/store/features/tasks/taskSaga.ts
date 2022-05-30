@@ -43,9 +43,8 @@ function* getTaskList(action: PayloadAction<{ limit: number; page: number }>) {
     } else {
       yield put(loaderModule.endLoading());
       yield put(
-        alertModalModule.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터를 불러오는데 실패했습니다.',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
@@ -77,9 +76,8 @@ function* assign() {
       );
     } else {
       yield put(
-        alertModalModule.showAlert({
-          title: '할당 실패',
-          message: res.message,
+        alertModalModule.errorAlert({
+          res: res,
           refresh: true,
         }),
       );

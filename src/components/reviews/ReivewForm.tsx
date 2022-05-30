@@ -89,9 +89,9 @@ const ReviewForm = (props: CreateFormProps) => {
           <Container className="mt-2">
             <Row>
               <Col lg={4} className="mt-2">
-                <Button variant="dark" disabled={props.readOnly}>
-                  현재 상태 저장
-                </Button>
+                {/*<Button variant="dark" disabled={props.readOnly}>*/}
+                {/*  현재 상태 저장*/}
+                {/*</Button>*/}
                 <Button
                   variant="dark"
                   className="ms-2"

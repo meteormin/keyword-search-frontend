@@ -1,17 +1,12 @@
-import { call, fork, put, takeLatest, select } from 'redux-saga/effects';
+import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import sentenceModule from './';
-import { api, apiResponse, auth, lang } from '../../../helpers';
+import { api, apiResponse, auth, switchReviewStatus } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
-import {
-  CreateSentence,
-  CreateState,
-  Sentence,
-  SentenceHistory,
-} from './sentenceAction';
+import { CreateSentence, Sentence, SentenceHistory } from './sentenceAction';
 import { SearchParameter, SearchState } from '../search/searchAction';
 import searchModule from '../search';
 
@@ -38,6 +33,9 @@ const sentenceApi = {
     const url = `api/v1/sentences`;
     return await apiClient.post(url, sentence);
   },
+  createTempSentence: async (sentence: CreateSentence) => {
+    return await apiClient.post('api/v1/sentences/temp', sentence);
+  },
 };
 
 function* getSentenceList(
@@ -63,36 +61,14 @@ function* getSentenceList(
       // yield put(sentenceModule.actions.setSentenceList(sentences));
       const sentenceHistory: SentenceHistory[] = sentences.map((s) => {
         const sh: SentenceHistory = s;
-        let createState = CreateState.COMPLETE;
 
         if (sh.reviewResult) {
-          if (sh.reviewer1Id) {
-            if (sh.reviewResult === 'WAITING') {
-              sh.reviewRsTxt = lang.sentence.reviewState.review1.wait;
-              createState = CreateState.COMPLETE;
-            } else if (sh.reviewResult == 'REJECT_1') {
-              sh.reviewRsTxt = lang.sentence.reviewState.review1.fail;
-              createState = CreateState.WAIT;
-            } else {
-              sh.reviewRsTxt = lang.sentence.reviewState.review1.pass;
-              createState = CreateState.COMPLETE;
-            }
-          }
-
-          if (sh.reviewer2Id) {
-            if (sh.reviewResult === 'WAITING') {
-              sh.reviewRsTxt = lang.sentence.reviewState.review2.wait;
-              createState = CreateState.COMPLETE;
-            } else if (sh.reviewResult == 'REJECT_2') {
-              sh.reviewRsTxt = lang.sentence.reviewState.review2.fail;
-              createState = CreateState.WAIT;
-            } else {
-              sh.reviewRsTxt = lang.sentence.reviewState.review2.pass;
-              createState = CreateState.COMPLETE;
-            }
-          }
+          const { reviewStatus, createStatus } = switchReviewStatus(
+            sh.reviewResult,
+          );
+          sh.reviewRsTxt = reviewStatus;
+          sh.createState = createStatus;
         }
-        sh.createState = createState;
         return sh;
       });
 
@@ -100,9 +76,8 @@ function* getSentenceList(
     } else {
       yield put(loaderModule.endLoading());
       yield put(
-        alertModalModule.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터를 불러오는데 실패했습니다.',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
@@ -132,9 +107,8 @@ function* getSentence(action: PayloadAction<number>) {
       yield put(sentenceModule.actions.setSentence(sentence));
     } else {
       yield put(
-        alertModalModule.showAlert({
-          title: '데이터 조회',
-          message: '데이터 조회 실패',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
@@ -171,9 +145,8 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
       yield put(loaderModule.endLoading());
       console.log(res);
       yield put(
-        alertModalModule.showAlert({
-          title: '검수 요청',
-          message: '검수 요청 실패',
+        alertModalModule.errorAlert({
+          res: res,
           refresh: true,
         }),
       );
@@ -191,10 +164,52 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
   }
 }
 
+function* createTemp(action: PayloadAction<CreateSentence>) {
+  yield put(loaderModule.startLoading());
+
+  try {
+    const response: ApiResponse = yield call(
+      sentenceApi.createTempSentence,
+      action.payload,
+    );
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      yield put(loaderModule.endLoading());
+      yield put(
+        alertModalModule.showAlert({
+          title: '임시 저장',
+          message: '임시 저장 완료',
+          refresh: true,
+        }),
+      );
+    } else {
+      yield put(loaderModule.endLoading());
+      console.log(res);
+      yield put(
+        alertModalModule.errorAlert({
+          res: res,
+          refresh: true,
+        }),
+      );
+    }
+  } catch (e) {
+    console.log(e);
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '임시 저장',
+        message: '임시 저장 실패',
+        refresh: true,
+      }),
+    );
+  }
+}
+
 function* watchSentenceSage() {
   yield takeLatest(sentenceModule.actions.getSentenceList, getSentenceList);
   yield takeLatest(sentenceModule.actions.getSentence, getSentence);
   yield takeLatest(sentenceModule.actions.createSentence, createSentence);
+  yield takeLatest(sentenceModule.actions.createTempSentence, createTemp);
 }
 
 export default function* sentenceSage() {

@@ -21,6 +21,7 @@ import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
 import TmKor, { getFrameRequest } from './utils/tmkor/TmKor';
 import { Task } from './store/features/tasks/taskAction';
+import { switchReviewStatus as switchRS } from './utils/common/status';
 
 export const config = Config();
 export const auth = Auth;
@@ -147,6 +148,8 @@ export const makeSentencePattern = async (
 export const checkSentencePattern = () => {
   return;
 };
+
+export const switchReviewStatus = switchRS;
 
 export function usePrev<T>(value: T): T {
   const ref = useRef();

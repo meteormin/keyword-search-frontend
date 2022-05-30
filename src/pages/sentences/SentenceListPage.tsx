@@ -9,8 +9,7 @@ import Pagination from '../../components/common/Pagination';
 import Select from '../../components/common/Select';
 import { useDispatch, useSelector } from 'react-redux';
 import sentenceModule from '../../store/features/sentence';
-import { CreateState } from '../../store/features/sentence/sentenceAction';
-import { date, str } from '../../helpers';
+import { date, lang, str } from '../../helpers';
 import ReworkForm from '../../components/sentences/ReworkForm';
 
 const SentenceListPage = () => {
@@ -73,7 +72,7 @@ const SentenceListPage = () => {
 
   const handleClickRecord = (record: SentenceRecord) => {
     if (record) {
-      if (record._origin.createState != CreateState.COMPLETE) {
+      if (record._origin.createState != lang.sentence.createState.complete) {
         if (record._origin.review1At) {
           setFormSeq(1);
         }

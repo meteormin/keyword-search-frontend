@@ -3,7 +3,7 @@ import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import usersModule from './';
 import { api, apiResponse, auth } from '../../../helpers';
-import { ApiResponse } from '../../../utils/ApiClient';
+import { ApiResponse, ErrorResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -135,9 +135,8 @@ function* getGroupSaga(action: PayloadAction<number>) {
       console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
-        alertModalModule.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터를 불러오는데 실패했습니다.',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
@@ -172,9 +171,8 @@ function* getEditGroupSaga(action: PayloadAction<number>) {
       console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
-        alertModalModule.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터를 불러오는데 실패했습니다.',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
@@ -205,9 +203,8 @@ function* getEditUserSaga(action: PayloadAction<number>) {
       yield put(loaderModule.endLoading());
     } else {
       yield put(
-        alertModalModule.showAlert({
-          title: '데이터 조회 실패',
-          message: '데이터를 불러오는데 실패했습니다.',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
@@ -274,9 +271,8 @@ function* saveGroupPermSage(action: PayloadAction<UpdateGroupPerm>) {
       console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
-        alertModalModule.showAlert({
-          title: '저장 실패',
-          message: '권한을 저장하는데 실패했습니다.',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
@@ -312,9 +308,8 @@ function* resetPassword(action: PayloadAction<number>) {
       );
     } else {
       yield put(
-        alertModalModule.showAlert({
-          title: '암호초기화 실패',
-          message: '암호 초기화 실패',
+        alertModalModule.errorAlert({
+          res: res,
         }),
       );
     }
