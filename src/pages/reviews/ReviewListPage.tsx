@@ -26,7 +26,9 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   const [limit, setLimit] = useState(10);
   const [reviewStatus, setReviewStatus] = useState<string>('ALL');
   const [totalPage, setTotalPage] = useState(1);
-  const { reviews, editReview } = useSelector(reviewModule.getReviewState);
+  const { reviews, editReview, totalCount } = useSelector(
+    reviewModule.getReviewState,
+  );
 
   const limitOptions = [
     {
@@ -116,6 +118,10 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       }),
     );
   }, []);
+
+  useEffect(() => {
+    setTotalPage(Math.ceil(totalCount / limit));
+  }, [totalCount]);
 
   return (
     <Container>

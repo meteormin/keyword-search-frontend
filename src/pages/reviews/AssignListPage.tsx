@@ -81,7 +81,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
   }, []);
 
   useEffect(() => {
-    setTotalPage(totalCount);
+    setTotalPage(Math.ceil(totalCount / limit));
   }, [totalCount]);
 
   return (

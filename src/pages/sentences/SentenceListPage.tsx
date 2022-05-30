@@ -92,7 +92,7 @@ const SentenceListPage = () => {
   }, []);
 
   useEffect(() => {
-    setTotalPage(totalCount);
+    setTotalPage(Math.ceil(totalCount / limit));
   }, [totalCount]);
 
   return (
