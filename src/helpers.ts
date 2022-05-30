@@ -7,6 +7,7 @@ import Protected from './utils/Protected';
 import {
   ApiClient,
   ApiResponse,
+  ErrorResInterface,
   ErrorResponse,
   Token,
 } from './utils/ApiClient';
@@ -40,11 +41,12 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
     if (!apiConfig?.host) {
       apiConfig.host = config.api.default.host as string;
     }
-    const [schema, host] = apiConfig.host.split('://');
-    if (host) {
-      apiConfig.host = schema + '://' + makePath(host, apiConfig.prefix);
-    } else {
-      apiConfig.host = makePath(schema, apiConfig.prefix);
+
+    try {
+      const url = new URL(apiConfig.host);
+      apiConfig.host = url.protocol + makePath(url.host, apiConfig.prefix);
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -67,7 +69,7 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
   return client;
 };
 
-export const apiResponse = (res: ApiResponse): any | ErrorResponse => {
+export const apiResponse = (res: ApiResponse): any | ErrorResInterface => {
   if (res.isSuccess && res.res) {
     return res.res.data;
   }

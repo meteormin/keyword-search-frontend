@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavItem, { NavItemProps } from './NavItem';
 import NavCollapsed, { NavCollapsedProps } from './NavCollapsed';
 import { guard, auth } from '../../helpers';
@@ -22,6 +22,12 @@ const Navigator = ({ menu }: { menu: Menu }) => {
     }
 
     return !auth.isLogin();
+  };
+
+  const activeUrl = (url: string) => {
+    const realUrl = new URL(location.href);
+
+    return realUrl.pathname == url;
   };
 
   return (
@@ -67,6 +73,7 @@ const Navigator = ({ menu }: { menu: Menu }) => {
                     name={item.name}
                     icon={item.icon}
                     url={'url' in item ? item.url : ''}
+                    active={activeUrl('url' in item ? item.url : '')}
                   />
                 </guard.HiddenByRole>
               );

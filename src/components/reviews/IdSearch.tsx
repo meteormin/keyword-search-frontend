@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import IdState, { IdStateEnum } from './IdState';
+import { IdStateEnum } from './IdState';
 import Input from '../common/Input';
+import { config } from '../../helpers';
 
 export interface IdSearchState {
   sentenceGroupName?: string;
@@ -61,7 +62,7 @@ const IdSearch = (props: IdSearchProps) => {
           onChange={(selectedValue) => {
             setSelected(selectedValue as number);
           }}
-          options={IdState}
+          options={config.selectOptions.IdState}
         />
       </Col>
       <Col md={4}>

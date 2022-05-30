@@ -10,6 +10,12 @@ export interface NavCollapsedProps {
 }
 
 const NavCollapsed = ({ name, icon, items }: NavCollapsedProps) => {
+  const activeUrl = (url: string) => {
+    const realUrl = new URL(location.href);
+
+    return realUrl.pathname == url;
+  };
+
   return (
     <Fragment>
       <a
@@ -38,7 +44,7 @@ const NavCollapsed = ({ name, icon, items }: NavCollapsedProps) => {
           {items.map((item, key) => (
             <a
               key={'nav_collapse' + key.toString()}
-              className="nav-link"
+              className={`nav-link ${activeUrl(item.url) ? 'active' : ''}`}
               href={item.url}
             >
               {item.name}

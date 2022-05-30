@@ -24,7 +24,7 @@ const ReviewSection = (props: ReviewResultProps) => {
   const [check, setCheck] = useState<number[]>([]);
   const [memo, setMemo] = useState<string>('');
 
-  const selectOptions = config.selectOptions.rejectReason.map((i) => ({
+  const selectOptions = config.selectOptions.RejectReason.map((i) => ({
     label: i.name,
     value: i.value,
   }));

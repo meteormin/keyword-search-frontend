@@ -1,29 +1,41 @@
 import { Option } from '../components/common/Select';
+import { ReviewStatus } from '../store/features/search/searchAction';
+import { CreateStatus } from '../store/features/search/searchAction';
+import { IdStateEnum } from '../components/reviews/IdState';
+import { SearchNames } from '../components/tasks/DataSearch';
 
-const reviewState: Option[] = [
+const ReviewState: Option[] = [
+  {
+    name: ' 검수 상태 선택',
+    value: ReviewStatus.NONE,
+  },
   {
     name: '검수대기',
-    value: 'wait',
+    value: ReviewStatus.WAITING,
   },
   {
     name: '1차승인',
-    value: 'first',
+    value: ReviewStatus.PASS1,
   },
   {
     name: '1차반려',
-    value: 'rejectFirst',
+    value: ReviewStatus.REJECT1,
   },
   {
     name: '2차승인',
-    value: 'second',
+    value: ReviewStatus.PASS2,
   },
   {
     name: '2차반려',
-    value: 'rejectSecond',
+    value: ReviewStatus.REJECT2,
   },
 ];
 
-const rejectReason: Option[] = [
+const RejectReason: Option[] = [
+  {
+    name: '반려 사유 선택',
+    value: 0,
+  },
   {
     name: '1. 단어 수 미흡',
     value: 1,
@@ -62,10 +74,14 @@ const rejectReason: Option[] = [
   },
 ];
 
-const createState: Option[] = [
+const CreateState: Option[] = [
+  {
+    name: '선택',
+    value: '',
+  },
   {
     name: '생성대기',
-    value: 'wait',
+    value: CreateStatus.WAITING,
   },
   {
     name: '생성중',
@@ -73,10 +89,58 @@ const createState: Option[] = [
   },
   {
     name: '생성완료',
-    value: 'complete',
+    value: CreateStatus.CREATED,
   },
 ];
 
-const selectOptions = { rejectReason, reviewState, createState };
+const IdState: Option[] = [
+  {
+    name: '선택',
+    value: IdStateEnum.NONE,
+  },
+  {
+    name: '생성그룹명',
+    value: IdStateEnum.GROUP_NAME,
+  },
+  {
+    name: '생성자 ID',
+    value: IdStateEnum.CREATOR_ID,
+  },
+  {
+    name: '1차 검수자 ID',
+    value: IdStateEnum.REVIEWER1_ID,
+  },
+  {
+    name: '2차 검수자 ID',
+    value: IdStateEnum.REVIEWER2_ID,
+  },
+];
+
+const DataSearchNames = [
+  {
+    name: '선택',
+    value: SearchNames.NONE,
+  },
+  {
+    name: '개념집합',
+    value: SearchNames.CONCEPT,
+  },
+  {
+    name: '고유번호',
+    value: SearchNames.REF_ID,
+  },
+  {
+    name: '주제',
+    value: SearchNames.DOMAIN,
+  },
+];
+
+const selectOptions = {
+  RejectReason,
+  ReviewState,
+  CreateState,
+  IdState,
+  DataSearchNames,
+};
 
 export default selectOptions;

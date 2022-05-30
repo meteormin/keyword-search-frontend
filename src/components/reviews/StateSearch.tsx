@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import RejectReason from '../sentences/RejectReason';
-import ReviewState from '../sentences/ReviewState';
 import { ReviewStatus } from '../../store/features/search/searchAction';
+import { config } from '../../helpers';
 
 export interface StateSearchState {
   create?: string;
@@ -35,7 +34,7 @@ const StateSearch = (props: StateSearchProps) => {
           onChange={(selectedValue) => {
             setReview(selectedValue);
           }}
-          options={ReviewState}
+          options={config.selectOptions.ReviewState}
         />
       </Col>
       <Col md={4}>
@@ -44,7 +43,7 @@ const StateSearch = (props: StateSearchProps) => {
           onChange={(selectedValue) => {
             setReject(selectedValue as number);
           }}
-          options={RejectReason}
+          options={config.selectOptions.RejectReason}
         />
       </Col>
     </Row>

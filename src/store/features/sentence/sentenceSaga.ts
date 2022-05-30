@@ -67,11 +67,12 @@ function* getSentenceList(
 
         if (sh.reviewResult) {
           if (sh.reviewer1Id) {
-            createState = CreateState.WAIT;
             if (sh.reviewResult === 'WAITING') {
               sh.reviewRsTxt = lang.sentence.reviewState.review1.wait;
+              createState = CreateState.COMPLETE;
             } else if (sh.reviewResult == 'REJECT_1') {
               sh.reviewRsTxt = lang.sentence.reviewState.review1.fail;
+              createState = CreateState.WAIT;
             } else {
               sh.reviewRsTxt = lang.sentence.reviewState.review1.pass;
               createState = CreateState.COMPLETE;
@@ -79,11 +80,12 @@ function* getSentenceList(
           }
 
           if (sh.reviewer2Id) {
-            createState = CreateState.WAIT;
             if (sh.reviewResult === 'WAITING') {
               sh.reviewRsTxt = lang.sentence.reviewState.review2.wait;
+              createState = CreateState.COMPLETE;
             } else if (sh.reviewResult == 'REJECT_2') {
               sh.reviewRsTxt = lang.sentence.reviewState.review2.fail;
+              createState = CreateState.WAIT;
             } else {
               sh.reviewRsTxt = lang.sentence.reviewState.review2.pass;
               createState = CreateState.COMPLETE;

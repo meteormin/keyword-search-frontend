@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import Select from '../common/Select';
+import { config } from '../../helpers';
 
 export interface DataSearchProps {
   onSearch: (state: SearchName) => any;
@@ -24,24 +25,7 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
   const [selectedName, setSelectedName] = useState<SearchNames | undefined>();
   const [searchValue, setSearchValue] = useState<string | undefined>();
 
-  const searchNames = [
-    {
-      name: '선택',
-      value: SearchNames.NONE,
-    },
-    {
-      name: '개념집합',
-      value: SearchNames.CONCEPT,
-    },
-    {
-      name: '고유번호',
-      value: SearchNames.REF_ID,
-    },
-    {
-      name: '주제',
-      value: SearchNames.DOMAIN,
-    },
-  ];
+  const searchNames = config.selectOptions.DataSearchNames;
 
   return (
     <Row className="mx-2">

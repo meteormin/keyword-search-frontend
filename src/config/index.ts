@@ -33,7 +33,7 @@ export default () => ({
         value: 'SentenceReview1',
       },
       {
-        name: '1차 검수자',
+        name: '2차 검수자',
         value: 'SentenceReview2',
       },
       {

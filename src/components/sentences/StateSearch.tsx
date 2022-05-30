@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import CreateState from './CreateState';
-import RejectReason from './RejectReason';
-import ReviewState from './ReviewState';
 import {
   CreateStatus,
   ReviewStatus,
 } from '../../store/features/search/searchAction';
+import { config } from '../../helpers';
 
 export interface StateSearchState {
   create?: CreateStatus;
@@ -42,7 +40,7 @@ const StateSearch = (props: StateSearchProps) => {
               setCreate(selectedValue as CreateStatus);
             }
           }}
-          options={CreateState}
+          options={config.selectOptions.CreateState}
         />
       </Col>
       <Col md={4}>
@@ -53,7 +51,7 @@ const StateSearch = (props: StateSearchProps) => {
               setReview(selectedValue as ReviewStatus);
             }
           }}
-          options={ReviewState}
+          options={config.selectOptions.ReviewState}
         />
       </Col>
       <Col md={4}>
@@ -64,7 +62,7 @@ const StateSearch = (props: StateSearchProps) => {
               setReject(parseInt(selectedValue));
             }
           }}
-          options={RejectReason}
+          options={config.selectOptions.RejectReason}
         />
       </Col>
     </Row>

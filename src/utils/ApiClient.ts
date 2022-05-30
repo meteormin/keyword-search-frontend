@@ -14,12 +14,30 @@ export interface Token {
 export interface ApiResponse {
   isSuccess: boolean;
   res: AxiosResponse<any, any> | null;
-  error: ErrorResponse | null;
+  error: ErrorResInterface | null;
 }
 
-export interface ErrorResponse {
+export interface ErrorResInterface {
   name: string;
   message: string;
+}
+
+export class ErrorResponse implements ErrorResInterface {
+  private readonly _name: string;
+  private readonly _message: string;
+
+  constructor(props: ErrorResInterface) {
+    this._name = props.name;
+    this._message = props.message;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get message() {
+    return this._message;
+  }
 }
 
 export class ApiClient {
@@ -123,10 +141,11 @@ export class ApiClient {
     } catch (error: any | AxiosError) {
       this._isSuccess = false;
       this._error = error;
-      const errorResponse: ErrorResponse = {
+      const errorResponse: ErrorResInterface = {
         name: '서버 에러',
         message: '관리자에게 문의해주세요.',
       };
+
       if (error instanceof AxiosError) {
         if (error.response?.status || 500 < 500) {
           if (this.error.response.data.hasOwnProperty('fields')) {
@@ -146,7 +165,7 @@ export class ApiClient {
       return {
         isSuccess: false,
         res: error,
-        error: errorResponse,
+        error: new ErrorResponse(errorResponse),
       };
     }
   }
