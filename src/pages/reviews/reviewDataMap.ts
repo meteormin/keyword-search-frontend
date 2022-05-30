@@ -3,7 +3,10 @@ import {
   SentenceReviewReject,
 } from '../../store/features/sentence/sentenceAction';
 import { ReviewResult, WorkData } from '../../components/common/WorkSpace';
-import { CreateReview } from '../../store/features/reviews/reviewAction';
+import {
+  CreateReview,
+  ReviewStatus,
+} from '../../store/features/reviews/reviewAction';
 
 const getEtcReason = (reasons: (SentenceReviewReject[] | undefined)[]) => {
   let reason1;
@@ -54,7 +57,10 @@ export const sentenceToWorkData = (
   if (seq == 1) {
     const review1 = sentence?.edges?.sentenceReviews1;
     console.log('hi', sentence);
-    if (sentence?.status === 'REJECT_1') {
+    if (
+      sentence?.status === ReviewStatus.REJECT1 ||
+      sentence?.status == ReviewStatus.WAITING
+    ) {
       result1 = sentence?.edges?.sentence1.edges?.sentenceReviewReject
         ? ReviewResult.FAIL
         : ReviewResult.PASS;
@@ -76,7 +82,10 @@ export const sentenceToWorkData = (
 
   if (seq == 2) {
     const review2 = sentence?.edges?.sentenceReviews2;
-    if (sentence?.status === 'REJECT_2') {
+    if (
+      sentence?.status === ReviewStatus.REJECT2 ||
+      sentence?.status == ReviewStatus.PASS1
+    ) {
       result1 = sentence?.edges?.sentence1.edges?.sentenceReviewReject
         ? ReviewResult.FAIL
         : ReviewResult.PASS;
