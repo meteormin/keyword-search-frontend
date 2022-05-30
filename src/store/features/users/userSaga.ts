@@ -76,6 +76,9 @@ const usersApi = {
         password: password,
       });
     },
+    me: async () => {
+      return await apiClient.get('api/v1/users/me');
+    },
   },
 };
 

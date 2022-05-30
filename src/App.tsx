@@ -4,7 +4,7 @@ import Router from './routes/Router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './assets/css/styles.css';
-import { config } from './helpers';
+import { baikalNlp, config } from './helpers';
 import Header from './components/layouts/Header';
 import { auth } from './helpers';
 import Container from './components/layouts/Container';
@@ -18,6 +18,8 @@ function App() {
       htmlTitle.innerHTML = config.app.name || 'title';
     }
   });
+
+  console.log(baikalNlp);
 
   const menu = config.layouts.menu as Menu;
   let userType = auth.user()?.userType;
