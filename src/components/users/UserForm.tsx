@@ -149,7 +149,7 @@ const UserForm = ({
           id={'permission'}
           label={'사용자 권한'}
           name={'permission'}
-          selectedValue={userType || 'admin'}
+          selectedValue={userType || UserType.ADMIN}
           options={formInfo.userTypes}
           onChange={(e) =>
             setUserType(e.target.options[e.target.selectedIndex].value)
