@@ -54,7 +54,7 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
       apiConfig.host =
         url.protocol +
         '//' +
-        makePath(url.host + url.pathname, apiConfig.prefix);
+        makePath(url.host + apiConfig.host, apiConfig.prefix);
     }
   }
 
@@ -64,7 +64,7 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
       apiConfig.host = url.protocol + '//' + url.host + url.pathname;
     } catch (error) {
       const url = new URL(window.location.href);
-      apiConfig.host = url.protocol + '//' + url.host + url.pathname;
+      apiConfig.host = url.protocol + '//' + url.host + apiConfig.host;
     }
   }
 
