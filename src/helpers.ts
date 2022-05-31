@@ -46,22 +46,25 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
     try {
       const url = new URL(apiConfig.host);
       apiConfig.host =
-        url.protocol + '//' + makePath(url.host, apiConfig.prefix);
+        url.protocol +
+        '//' +
+        makePath(url.host + url.pathname, apiConfig.prefix);
     } catch (error) {
       const url = new URL(window.location.href);
       apiConfig.host =
-        url.protocol + '//' + makePath(url.host, apiConfig.prefix);
+        url.protocol +
+        '//' +
+        makePath(url.host + url.pathname, apiConfig.prefix);
     }
   }
 
   if (apiConfig?.host) {
     try {
       const url = new URL(apiConfig.host);
-      apiConfig.host = url.protocol + '//' + url.host;
+      apiConfig.host = url.protocol + '//' + url.host + url.pathname;
     } catch (error) {
-      console.error(error);
       const url = new URL(window.location.href);
-      apiConfig.host = url.protocol + '//' + url.host;
+      apiConfig.host = url.protocol + '//' + url.host + url.pathname;
     }
   }
 
