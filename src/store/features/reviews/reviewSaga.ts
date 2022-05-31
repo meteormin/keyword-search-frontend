@@ -343,10 +343,31 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
         );
       } else {
         console.log(res);
+        yield put(
+          reviewModule.actions.getReviewList({
+            seq: action.payload.seq,
+            limit: 10,
+            page: 1,
+          }),
+        );
+        yield put(
+          alertModalModule.showAlert({
+            title: '진행 가능 시간 초과',
+            message: '진행 가능 시간이 초과 되었습니다.',
+            refresh: true,
+          }),
+        );
       }
     }
   } catch (e) {
     console.log(e);
+    yield put(
+      alertModalModule.showAlert({
+        title: '진행 불가능',
+        message: '진행 시간을 가져올 수 없습니다.',
+        refresh: true,
+      }),
+    );
   }
 }
 

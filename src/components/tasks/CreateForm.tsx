@@ -78,7 +78,7 @@ const CreateForm = (props: CreateFormProps) => {
     const tempTask = workTask;
     if (!tempTask?.tagged) {
       if (tempTask?.sentence) {
-        tempTask.tagged = (await makeSentencePattern(tempTask)) || '';
+        // tempTask.tagged = (await makeSentencePattern(tempTask)) || '';
       }
     }
 

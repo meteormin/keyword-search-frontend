@@ -122,10 +122,25 @@ function* getTime() {
         );
       } else {
         console.log(res);
+        yield put(taskModule.actions.getTaskList({ page: 1, limit: 10 }));
+        yield put(
+          alertModalModule.showAlert({
+            title: '진행 가능 시간 초과',
+            message: '진행 가능 시간이 초과 되었습니다.',
+            refresh: true,
+          }),
+        );
       }
     }
   } catch (e) {
     console.log(e);
+    yield put(
+      alertModalModule.showAlert({
+        title: '진행 불가능',
+        message: '진행 시간을 가져올 수 없습니다.',
+        refresh: true,
+      }),
+    );
   }
 }
 
