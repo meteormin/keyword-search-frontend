@@ -118,7 +118,7 @@ export class ApiClient {
    */
   makeUrl(path: string) {
     const u = new URL(this.host);
-    const url = makePath(u.host, path);
+    const url = makePath(u.host + u.pathname, path);
     return u.protocol + '//' + url;
   }
 
