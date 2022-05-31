@@ -78,6 +78,11 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         page: page,
       }),
     );
+
+    setInterval(
+      () => dispatch(reviewModule.actions.getExpiredAt({ seq: seq })),
+      1000,
+    );
   }, []);
 
   useEffect(() => {
@@ -107,7 +112,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
             onAssign={() => {
               dispatch(reviewModule.actions.assign(seq));
             }}
-            time={time?.toString() || '03:00:00'}
+            time={time || '00:00:00'}
           />
         </Col>
       </Row>

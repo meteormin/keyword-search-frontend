@@ -2,11 +2,12 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import taskModule from './';
-import { api, apiResponse, auth } from '../../../helpers';
+import { api, apiResponse, auth, date } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Task } from './taskAction';
+import { UserType } from '../../../config/UserType';
 
 const apiClient = api({
   token: { token: auth.getToken(), tokenType: 'bearer' },
@@ -19,6 +20,9 @@ const taskApi = {
   getTaskList: async (limit: number, page: number) => {
     const url = `api/v1/tasks/assigned`;
     return await apiClient.get(url, { limit: limit, page: page });
+  },
+  getExpiredAt: async () => {
+    return await apiClient.get('api/v1/tasks/assign/expiredAt');
   },
 };
 
@@ -93,9 +97,38 @@ function* assign() {
   }
 }
 
+function* getTime() {
+  try {
+    const now = date();
+    console.log(auth.getJobTimeAt(UserType.WORKER));
+    if (auth.getJobTimeAt(UserType.WORKER)) {
+      const time = date
+        .duration(auth.getJobTimeAt(UserType.WORKER)?.diff(now))
+        .asMilliseconds();
+      yield put(taskModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
+    } else {
+      const response: ApiResponse = yield call(taskApi.getExpiredAt);
+      const res = apiResponse(response);
+      if (response.isSuccess) {
+        const expiredAt = date(res.data.expired_at);
+        auth.setJobTimeAt(UserType.WORKER, res.data.expired_at);
+        const time = date.duration(expiredAt.diff(now)).asMilliseconds();
+        yield put(
+          taskModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
+        );
+      } else {
+        console.log(res);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function* watchTaskSage() {
   yield takeLatest(taskModule.actions.getTaskList, getTaskList);
   yield takeLatest(taskModule.actions.assign, assign);
+  yield takeLatest(taskModule.actions.getExpiredAt, getTime);
 }
 
 export default function* taskSage() {

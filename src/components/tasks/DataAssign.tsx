@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select, { Option } from '../common/Select';
 import { Button, Col, Row } from 'react-bootstrap';
+import Timer from '../common/Timer';
 
 export interface DataAssignProps {
   onAssign: (selectedName: string | number) => any;
@@ -50,17 +51,7 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
         </Button>
       </Col>
       <Col md={4} className="">
-        {time ? (
-          <Button
-            variant="light"
-            className="btn bg-light border float-end w-50 align-middle"
-            style={{ cursor: 'default' }}
-          >
-            진행 가능 시간
-            <br />
-            {time}
-          </Button>
-        ) : null}
+        <Timer time={time} />
       </Col>
     </Row>
   );

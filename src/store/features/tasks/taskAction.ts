@@ -56,6 +56,12 @@ const taskAction = {
   setCount: (state: TaskState, action: PayloadAction<number>) => {
     state.totalCount = action.payload;
   },
+  getExpiredAt: (state: TaskState) => {
+    state.time = null;
+  },
+  setTime: (state: TaskState, action: PayloadAction<string>) => {
+    state.time = action.payload;
+  },
 };
 
 export default taskAction;

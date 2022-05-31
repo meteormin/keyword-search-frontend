@@ -81,6 +81,10 @@ const AssignListPage = () => {
   };
 
   useEffect(() => {
+    setInterval(() => dispatch(taskModule.actions.getExpiredAt()), 1000);
+  }, []);
+
+  useEffect(() => {
     dispatch(taskModule.actions.getTaskList({ limit: limit, page: page }));
   }, [page, limit]);
 
@@ -116,7 +120,7 @@ const AssignListPage = () => {
               setCondition(selectedName);
               dispatch(taskModule.actions.assign());
             }}
-            time={time || '03:00:00'}
+            time={time || '00:00:00'}
           />
         </Col>
       </Row>

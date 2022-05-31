@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { Method } from './formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
+import { UserType } from '../../config/UserType';
 
 export interface FormInfo {
   method: Method;
@@ -30,7 +31,7 @@ const UserForm = ({
   const dispatch = useDispatch();
   const [id, setId] = useState<string>('');
   const [name, setName] = useState<string>('');
-  const [userType, setUserType] = useState<string>('admin');
+  const [userType, setUserType] = useState<string>(UserType.ADMIN);
   const [_show, setShow] = useState<boolean>(false);
   const { editUser, currentGroup } = useSelector(usersModule.getUsersState);
 

@@ -23,6 +23,7 @@ export default () => ({
     tokenKey: '_token',
     refreshKey: '_refresh',
     userKey: '_user',
+    jobExpiredAt: '_jobTime',
     userTypes: [
       {
         name: '최고 관리자',

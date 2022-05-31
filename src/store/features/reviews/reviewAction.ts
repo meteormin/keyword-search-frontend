@@ -124,6 +124,13 @@ const reviewAction = {
     state.seq = action.payload.seq;
     state.assignSentence = null;
   },
+  getExpiredAt: (
+    state: ReviewState,
+    action: PayloadAction<{ seq: number }>,
+  ) => {
+    state.time = null;
+    state.seq = action.payload.seq;
+  },
   setAssign: (state: ReviewState, action: PayloadAction<Sentence | null>) => {
     state.assignSentence = action.payload;
   },
@@ -157,5 +164,4 @@ const reviewAction = {
     state.createReview = action.payload.review;
   },
 };
-
 export default reviewAction;

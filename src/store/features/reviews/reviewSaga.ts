@@ -1,4 +1,10 @@
-import { api, apiResponse, auth, switchReviewStatus } from '../../../helpers';
+import {
+  api,
+  apiResponse,
+  auth,
+  date,
+  switchReviewStatus,
+} from '../../../helpers';
 import {
   CreateReview,
   Review,
@@ -16,6 +22,8 @@ import { toCamel } from 'snake-camel';
 import { SearchParameter, SearchState } from '../search/searchAction';
 import searchModule from '../search';
 import { Sentence } from '../sentence/sentenceAction';
+import taskModule from '../tasks';
+import { UserType } from '../../../config/UserType';
 
 const apiClient = api({
   token: { token: auth.getToken(), tokenType: 'bearer' },
@@ -58,6 +66,9 @@ const reviewApi = {
   },
   updateReview: async (seq: number, id: number, updateReview: UpdateReview) => {
     return await apiClient.patch(`api/v1/reviews/${seq}/${id}`, updateReview);
+  },
+  getExpiredAt: async (seq: number) => {
+    return await apiClient.get(`api/v1/reviews/${seq}/assign/expiredAt`);
   },
 };
 
@@ -298,6 +309,41 @@ function* createReview(
   }
 }
 
+function* getTime(action: PayloadAction<{ seq: number }>) {
+  let userType = UserType.REVIEWER1;
+  if (action.payload.seq == 2) {
+    userType = UserType.REVIEWER2;
+  }
+  try {
+    const now = date();
+    console.log(auth.getJobTimeAt(userType));
+    if (auth.getJobTimeAt(userType)) {
+      const time = date
+        .duration(auth.getJobTimeAt(userType)?.diff(now))
+        .asMilliseconds();
+      yield put(taskModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
+    } else {
+      const response: ApiResponse = yield call(
+        reviewApi.getExpiredAt,
+        action.payload.seq,
+      );
+      const res = apiResponse(response);
+      if (response.isSuccess) {
+        const expiredAt = date(res.data.expired_at);
+        auth.setJobTimeAt(userType, res.data.expired_at);
+        const time = date.duration(expiredAt.diff(now)).asMilliseconds();
+        yield put(
+          taskModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
+        );
+      } else {
+        console.log(res);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 function* watchReviewSage() {
   yield takeLatest(reviewModule.actions.assign, assign);
   yield takeLatest(reviewModule.actions.getReviewList, getReviewList);
@@ -305,6 +351,7 @@ function* watchReviewSage() {
   yield takeLatest(reviewModule.actions.getReview, getReview);
   yield takeLatest(reviewModule.actions.getAssignList, getAssignList);
   yield takeLatest(reviewModule.actions.getAssign, getAssign);
+  yield takeLatest(reviewModule.actions.getExpiredAt, getTime);
 }
 
 export default function* reviewSage() {

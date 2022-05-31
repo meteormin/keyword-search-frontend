@@ -1,5 +1,7 @@
 import config from '../config';
 import jwtDecode from 'jwt-decode';
+import { auth, date } from '../helpers';
+import { UserType } from '../config/UserType';
 
 const conf = config();
 
@@ -74,4 +76,30 @@ export const tokenInfo = (token: string): TokenInfo | null => {
     }
   }
   return null;
+};
+
+export const getJobTimeAt = (userType: UserType) => {
+  const now = date();
+  const expiredAt = window.localStorage.getItem(
+    userType + conf.auth.jobExpiredAt,
+  );
+
+  if (expiredAt) {
+    const leftTime = date(expiredAt).diff(now);
+    console.log('left time', leftTime);
+    if (leftTime >= 0) {
+      return date(expiredAt);
+    } else {
+      window.localStorage.removeItem(userType + conf.auth.jobExpiredAt);
+    }
+  }
+
+  return null;
+};
+
+export const setJobTimeAt = (userType: UserType, expiredAt: string) => {
+  return window.localStorage.setItem(
+    userType + conf.auth.jobExpiredAt,
+    expiredAt,
+  );
 };
