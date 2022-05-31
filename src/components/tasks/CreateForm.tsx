@@ -15,6 +15,7 @@ import { sentenceToWorkData } from '../../pages/sentences/sentenceDataMap';
 import { sentenceValidate } from '../../utils/validation/sentence';
 import alertModal from '../../store/features/common/alertModal';
 import { getFrameRequest } from '../../utils/tmkor/TmKor';
+import Timer from '../../components/common/Timer';
 
 export interface CreateFormProps {
   show: boolean;
@@ -165,15 +166,7 @@ const CreateForm = (props: CreateFormProps) => {
                 </Button>
               </Col>
               <Col lg={8} className="text-center">
-                <Button
-                  variant="light"
-                  className="bg-light border cursor-default"
-                  style={{ cursor: 'default' }}
-                >
-                  진행 가능 시간
-                  <br />
-                  <span>{time}</span>
-                </Button>
+                <Timer time={time} />
 
                 <Button
                   variant="light"

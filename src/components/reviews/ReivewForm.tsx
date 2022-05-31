@@ -14,6 +14,7 @@ import { Sentence } from '../../store/features/sentence/sentenceAction';
 import alertModal from '../../store/features/common/alertModal';
 import { reviewValidate } from '../../utils/validation/review';
 import sentenceModule from '../../store/features/sentence';
+import Timer from '../../components/common/Timer';
 
 export interface CreateFormProps {
   show: boolean;
@@ -111,16 +112,7 @@ const ReviewForm = (props: CreateFormProps) => {
                 </Button>
               </Col>
               <Col lg={8} className="text-center">
-                <Button
-                  variant="light"
-                  className="bg-light border"
-                  style={{ cursor: 'default' }}
-                >
-                  진행 가능 시간
-                  <br />
-                  <span>{time}</span>
-                </Button>
-
+                <Timer time={time} />
                 <Button
                   variant="light"
                   className="bg-light border h-100"
