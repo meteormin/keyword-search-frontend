@@ -1,4 +1,4 @@
-import { call, fork, put, takeLatest } from 'redux-saga/effects';
+import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import taskModule from './';
@@ -98,6 +98,10 @@ function* assign() {
 }
 
 function* getTime() {
+  const { taskList } = yield select(taskModule.getTaskState);
+  if (taskList.length == 0) {
+    return;
+  }
   try {
     const now = date();
     console.log(auth.getJobTimeAt(UserType.WORKER));

@@ -22,7 +22,6 @@ import { toCamel } from 'snake-camel';
 import { SearchParameter, SearchState } from '../search/searchAction';
 import searchModule from '../search';
 import { Sentence } from '../sentence/sentenceAction';
-import taskModule from '../tasks';
 import { UserType } from '../../../config/UserType';
 
 const apiClient = api({
@@ -314,6 +313,11 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
   if (action.payload.seq == 2) {
     userType = UserType.REVIEWER2;
   }
+
+  const { reviews } = yield select(reviewModule.getReviewState);
+  if (reviews.length == 0) {
+    return;
+  }
   try {
     const now = date();
     console.log(auth.getJobTimeAt(userType));
@@ -321,7 +325,9 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
       const time = date
         .duration(auth.getJobTimeAt(userType)?.diff(now))
         .asMilliseconds();
-      yield put(taskModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
+      yield put(
+        reviewModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
+      );
     } else {
       const response: ApiResponse = yield call(
         reviewApi.getExpiredAt,
@@ -333,7 +339,7 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
         auth.setJobTimeAt(userType, res.data.expired_at);
         const time = date.duration(expiredAt.diff(now)).asMilliseconds();
         yield put(
-          taskModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
+          reviewModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
         );
       } else {
         console.log(res);
