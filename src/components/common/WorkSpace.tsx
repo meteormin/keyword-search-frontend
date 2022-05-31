@@ -356,7 +356,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
           </Form.Group>
         </Col>
       </Row>
-      {props.workType == 'review' || props.workType == 'rework' ? (
+      {props.workType == 'review' ||
+      (props.workType == 'rework' && reviewData1?.check) ? (
         <Row id="review1" className="mt-2">
           <ReviewSection
             seq={1}
@@ -453,7 +454,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
           </Form.Group>
         </Col>
       </Row>
-      {props.workType == 'review' || props.workType == 'rework' ? (
+      {props.workType == 'review' ||
+      (props.workType == 'rework' && reviewData1?.check) ? (
         <Row id="review2" className="mt-2">
           <ReviewSection
             seq={2}

@@ -37,7 +37,9 @@ const ReviewForm = (props: CreateFormProps) => {
   const [sentence1Count, setCount1] = useState(0);
   const [sentence2Count, setCount2] = useState(0);
 
-  const { editSentence } = useSelector(sentenceModule.getSentenceState);
+  const { editSentence, createSentence } = useSelector(
+    sentenceModule.getSentenceState,
+  );
 
   const [review, setReview] = useState<Sentence | null>(null);
 
@@ -79,7 +81,27 @@ const ReviewForm = (props: CreateFormProps) => {
           <Container className="mt-2">
             <Row>
               <Col lg={4} className="mt-2">
-                <Button variant="dark" disabled={props.readOnly}>
+                <Button
+                  variant="dark"
+                  disabled={props.readOnly}
+                  onClick={() => {
+                    if (createSentence) {
+                      dispatch(
+                        sentenceModule.actions.createTempSentence(
+                          createSentence,
+                        ),
+                      );
+                    } else {
+                      dispatch(
+                        alertModal.showAlert({
+                          title: '임시 저장',
+                          message:
+                            '입력한 값이 없어, 임시 저장을 할 수 없습니다.',
+                        }),
+                      );
+                    }
+                  }}
+                >
                   현재 상태 저장
                 </Button>
                 <Button
@@ -184,6 +206,11 @@ const ReviewForm = (props: CreateFormProps) => {
                         sentence2Count: data.wordCount2,
                       };
                       console.log(createSentence);
+                      dispatch(
+                        sentenceModule.actions.setCreateSentence(
+                          createSentence,
+                        ),
+                      );
                     }
                   }}
                 />
