@@ -88,7 +88,7 @@ const SentenceListPage = () => {
     dispatch(
       sentenceModule.actions.getSentenceList({ limit: limit, page: page }),
     );
-  }, []);
+  }, [page, limit]);
 
   useEffect(() => {
     setTotalPage(Math.ceil(totalCount / limit));

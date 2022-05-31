@@ -73,10 +73,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       return {
         no: i + 1,
         refId: r.refId,
-        concepts: str.limit(
-          r.concepts.map((c, i) => (i < 5 ? c.stem : '')).join(', '),
-          50,
-        ),
+        concepts: str.limitArray(r.concepts.map((c) => c.stem) || [''], 6),
         posLength: r.posLength,
         sentenceCount: r.created1Length + '/' + r.created2Length,
         creatorId: r.creatorId,
@@ -126,7 +123,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         page: page,
       }),
     );
-  }, []);
+  }, [page, limit]);
 
   useEffect(() => {
     setTotalPage(Math.ceil(totalCount / limit));

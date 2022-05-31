@@ -69,6 +69,13 @@ const AssignListPage = ({ seq }: { seq: number }) => {
   };
 
   useEffect(() => {
+    setInterval(
+      () => dispatch(reviewModule.actions.getExpiredAt({ seq: seq })),
+      1000,
+    );
+  }, []);
+
+  useEffect(() => {
     dispatch(
       reviewModule.actions.getAssignList({
         seq: seq,
@@ -76,12 +83,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         page: page,
       }),
     );
-
-    setInterval(
-      () => dispatch(reviewModule.actions.getExpiredAt({ seq: seq })),
-      1000,
-    );
-  }, []);
+  }, [page, limit]);
 
   useEffect(() => {
     setTotalPage(Math.ceil(totalCount / limit));
