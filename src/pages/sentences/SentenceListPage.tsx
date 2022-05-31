@@ -18,7 +18,7 @@ const SentenceListPage = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [formSeq, setFormSeq] = useState<number>(1);
-  const { sentenceHistory, editSentence, time, totalCount } = useSelector(
+  const { sentenceHistory, editSentence, totalCount } = useSelector(
     sentenceModule.getSentenceState,
   );
 
@@ -157,7 +157,7 @@ const SentenceListPage = () => {
         seq={formSeq}
         show={!!editSentence}
         onCreate={() => null}
-        time={time?.toString() || '--:--:--'}
+        time={'--:--:--'}
       />
     </Container>
   );

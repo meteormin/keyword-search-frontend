@@ -45,9 +45,23 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
 
     try {
       const url = new URL(apiConfig.host);
-      apiConfig.host = url.protocol + makePath(url.host, apiConfig.prefix);
+      apiConfig.host =
+        url.protocol + '//' + makePath(url.host, apiConfig.prefix);
+    } catch (error) {
+      const url = new URL(window.location.href);
+      apiConfig.host =
+        url.protocol + '//' + makePath(url.host, apiConfig.prefix);
+    }
+  }
+
+  if (apiConfig?.host) {
+    try {
+      const url = new URL(apiConfig.host);
+      apiConfig.host = url.protocol + '//' + url.host;
     } catch (error) {
       console.error(error);
+      const url = new URL(window.location.href);
+      apiConfig.host = url.protocol + '//' + url.host;
     }
   }
 

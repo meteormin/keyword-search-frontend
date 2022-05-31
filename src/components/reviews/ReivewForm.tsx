@@ -83,6 +83,8 @@ const ReviewForm = (props: CreateFormProps) => {
         onHide={() => {
           setShow(false);
           dispatch(reviewModule.actions.setAssign(null));
+          dispatch(reviewModule.actions.setReview(null));
+          dispatch(sentenceModule.actions.setSentence(null));
         }}
         centered
       >

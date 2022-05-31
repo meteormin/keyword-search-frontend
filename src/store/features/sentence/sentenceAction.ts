@@ -70,7 +70,6 @@ export interface SentenceHistory {
 }
 
 export interface SentenceState {
-  time?: number;
   totalCount: number;
   sentences: Sentence[];
   sentenceHistory: SentenceHistory[];
@@ -79,7 +78,6 @@ export interface SentenceState {
 }
 
 export const initialState: SentenceState = {
-  time: 0,
   totalCount: 0,
   sentences: [],
   sentenceHistory: [],
