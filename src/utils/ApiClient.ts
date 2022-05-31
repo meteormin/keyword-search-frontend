@@ -117,9 +117,9 @@ export class ApiClient {
    * @returns {string}
    */
   makeUrl(path: string) {
-    const u = new URL(this.host);
-    const url = makePath(u.host + u.pathname, path);
-    return u.protocol + '//' + url;
+    const [schema, host] = this.host.split('://');
+    const url = makePath(host, path);
+    return schema + '://' + url;
   }
 
   /**
