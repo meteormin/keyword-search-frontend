@@ -57,7 +57,7 @@ const UserForm = ({
     } else {
       setId('');
       setName('');
-      setUserType('admin');
+      setUserType(UserType.ADMIN);
     }
   }, [editUser, show]);
   const makeButton = () => {
