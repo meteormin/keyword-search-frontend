@@ -8,7 +8,7 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 import CreateForm from '../../components/tasks/CreateForm';
 import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
-import { str } from '../../helpers';
+import { lang, str } from '../../helpers';
 import searchModule from '../../store/features/search';
 import { useNavigate } from 'react-router';
 
@@ -106,7 +106,7 @@ const AssignListPage = () => {
             <Col md={4} className="text-end">
               {time ? (
                 <span className="text-danger">
-                  3시간 마다 생성 데이터가 재 할당 됩니다.
+                  {lang.assign.assignedMessage}
                 </span>
               ) : null}
             </Col>

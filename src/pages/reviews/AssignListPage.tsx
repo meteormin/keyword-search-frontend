@@ -7,7 +7,7 @@ import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import assignListSchema from './AssignListSchema';
-import { date, str } from '../../helpers';
+import { date, lang, str } from '../../helpers';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import reviewModule from '../../store/features/reviews';
 import searchModule from '../../store/features/search';
@@ -99,7 +99,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
             <Col md={4} className="text-end">
               {time ? (
                 <span className="text-danger">
-                  3시간 마다 생성 데이터가 재 할당 됩니다.
+                  {lang.assign.assignedMessage}
                 </span>
               ) : null}
             </Col>
