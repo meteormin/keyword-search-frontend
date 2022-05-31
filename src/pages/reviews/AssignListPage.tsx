@@ -43,11 +43,9 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       return {
         no: i + 1,
         refId: s.edges?.task.refId,
-        concepts: str.limit(
-          s.edges?.task?.edges?.concepts
-            ?.map((c, i) => (i < 6 ? c.stem : ''))
-            .join(', ') || '',
-          50,
+        concepts: str.limitArray(
+          s.edges?.task?.edges?.concepts?.map((c): string => c.stem) || [''],
+          6,
         ),
         posLength: s.edges?.task.posLength,
         sentenceCount:

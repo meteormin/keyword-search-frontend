@@ -66,9 +66,9 @@ const AssignListPage = () => {
       return {
         no: i + 1,
         id: t.refId,
-        conceptSet: str.limit(
-          t.edges?.concepts?.map((c) => c.stem).join(', ') || '',
-          20,
+        conceptSet: str.limitArray(
+          t.edges?.concepts?.map((c): string => c.stem) || [''],
+          6,
         ),
         wordCount: t.posLength,
         _origin: t,

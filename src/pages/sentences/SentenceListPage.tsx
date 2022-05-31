@@ -56,7 +56,7 @@ const SentenceListPage = () => {
       return {
         no: i + 1,
         refId: s.refId,
-        concepts: str.limit(s.concepts?.map((c) => c.stem).join(', '), 20),
+        concepts: str.limitArray(s.concepts?.map((c) => c.stem) || [''], 6),
         posLength: s.posLength,
         sentenceState: s?.createState || '',
         createdAt: date(s.createdAt).format('YYYY.MM.DD'),
