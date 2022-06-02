@@ -15,16 +15,9 @@ const apiClient = api({
 });
 
 const sentenceApi = {
-  getSentenceList: async (
-    limit: number,
-    page: number,
-    search?: SearchParameter,
-  ) => {
+  getSentenceList: async (search?: SearchParameter) => {
     const url = `api/v1/sentences`;
-    const parameters: any = { ...search };
-    parameters.limit = limit;
-    parameters.page = page;
-    return await apiClient.get(url, parameters);
+    return await apiClient.get(url, search);
   },
   getSentence: async (id: number) => {
     return await apiClient.get(`api/v1/sentences/${id}`);
@@ -38,17 +31,13 @@ const sentenceApi = {
   },
 };
 
-function* getSentenceList(
-  action: PayloadAction<{ limit: number; page: number }>,
-) {
+function* getSentenceList() {
   yield put(loaderModule.startLoading());
   const search: SearchState = yield select(searchModule.getSearchState);
 
   try {
     const response: ApiResponse = yield call(
       sentenceApi.getSentenceList,
-      action.payload.limit,
-      action.payload.page,
       search.parameters || undefined,
     );
     const res = apiResponse(response);
@@ -135,11 +124,13 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(loaderModule.endLoading());
+      yield put(sentenceModule.actions.getSentenceList());
+      yield put(sentenceModule.actions.setSentence(null));
       yield put(
         alertModalModule.showAlert({
           title: '검수 요청',
           message: '검수 요청 완료',
-          refresh: true,
+          refresh: false,
         }),
       );
     } else {
@@ -176,11 +167,12 @@ function* createTemp(action: PayloadAction<CreateSentence>) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(loaderModule.endLoading());
+      yield put(sentenceModule.actions.getSentenceList());
       yield put(
         alertModalModule.showAlert({
           title: '임시 저장',
           message: '임시 저장 완료',
-          refresh: true,
+          refresh: false,
         }),
       );
     } else {

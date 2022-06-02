@@ -3,13 +3,12 @@ import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import usersModule from './';
 import { api, apiResponse, auth } from '../../../helpers';
-import { ApiResponse, ErrorResponse } from '../../../utils/ApiClient';
+import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
   Group,
   UpdateGroupPerm,
-  Permission,
   User,
   CreateGroup,
   CreateUser,

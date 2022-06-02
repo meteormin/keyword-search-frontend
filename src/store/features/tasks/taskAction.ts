@@ -38,10 +38,7 @@ const taskAction = {
     state.taskList = [];
     state.totalCount = 0;
   },
-  getTaskList: (
-    state: TaskState,
-    action: PayloadAction<{ limit: number; page: number }>,
-  ) => {
+  getTaskList: (state: TaskState) => {
     state.taskList = [];
   },
   setTaskList: (state: TaskState, action: PayloadAction<Task[]>) => {

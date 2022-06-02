@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import Card from './Card';
-import { baikalNlp, lang, str } from '../../helpers';
+import { baikalNlp, config, lang, str } from '../../helpers';
 import ReviewSection, { ReviewResultState } from '../reviews/ReviewSection';
 import { useDispatch } from 'react-redux';
 import alertModal from '../../store/features/common/alertModal';
@@ -52,6 +52,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
   const [patternedText, setPatText] = useState<string[]>(['', '']);
   const [wordCount1, setCount1] = useState(0);
   const [wordCount2, setCount2] = useState(0);
+  const [clickedMkSp, setClickedMkSp] = useState<boolean[]>([false, false]);
+  const [requestBtn, setRequestBtn] = useState<boolean>(false);
   const [reviewData1, setReview1] = useState<ReviewResultState | undefined>();
   const [reviewData2, setReview2] = useState<ReviewResultState | undefined>();
   const [reviewPassBtn, setReviewPassBtn] = useState<boolean>(false);
@@ -59,7 +61,10 @@ const WorkSpace = (props: WorkSpaceProps) => {
   const [reviewHoldBtn, setReviewHoldBtn] = useState<boolean>(true);
   const [s1Danger, setDanger1] = useState<string>('');
   const [s2Danger, setDanger2] = useState<string>('');
+
   const prevPatText = usePrev<string[]>(patternedText);
+  const prevTextArea10 = usePrev<string>(textArea10);
+  const prevTextArea20 = usePrev<string>(textArea20);
 
   useEffect(() => {
     setCount1(props.workData?.wordCount1 || 0);
@@ -81,28 +86,56 @@ const WorkSpace = (props: WorkSpaceProps) => {
       check: props.workData?.reviewData?.rejectReason2 as number[],
       memo: props.workData?.reviewData?.memo2 || '',
     });
+
+    if (props.workType == 'rework' || props.workType == 'review') {
+      setClickedMkSp([true, true]);
+    }
   }, []);
 
   useEffect(() => {
     const patText = patternedText;
     if (prevPatText && patternedText[0] == prevPatText[0]) {
       patText[0] = textArea10;
+      if (
+        textArea10 != props?.workData?.textArea10 &&
+        textArea10 != prevTextArea10
+      ) {
+        const prevMkSp = clickedMkSp;
+        prevMkSp[0] = false;
+        setClickedMkSp(prevMkSp);
+      }
     }
 
     if (prevPatText && patternedText[1] == prevPatText[1]) {
       patText[1] = textArea20;
+      if (
+        textArea20 != props?.workData?.textArea20 &&
+        textArea20 != prevTextArea20
+      ) {
+        const prevMkSp = clickedMkSp;
+        prevMkSp[1] = false;
+        setClickedMkSp(prevMkSp);
+      }
     }
+
     setPatText(patText);
+    setRequestBtn(false);
+    setReviewPassBtn(false);
+    setReviewOpinionBtn(false);
+
+    console.log('change text');
   }, [textArea10, textArea20]);
 
   useEffect(() => {
     console.log('prevPatText', prevPatText);
     if (prevPatText && patternedText[0] != prevPatText[0]) {
       setText11(patternedText[0] || textArea10);
+      checkBtnActivate();
     }
 
     if (prevPatText && patternedText[1] != prevPatText[0]) {
       setText21(patternedText[1] || textArea20);
+      checkBtnActivate();
     }
   }, [patternedText]);
 
@@ -191,19 +224,46 @@ const WorkSpace = (props: WorkSpaceProps) => {
       newPatternedText[no] = patternedText[no] || textArea10;
       setPatText(newPatternedText);
       setText11(patternedText[no] || textArea10);
+      console.log('makeSPC');
+      const prevMkSp = clickedMkSp;
+      prevMkSp[no] = true;
+      setClickedMkSp(prevMkSp);
     } else if (no === 1) {
       newPatternedText[no] = patternedText[no] || textArea10;
       setPatText(newPatternedText);
       setText21(patternedText[no] || textArea20);
+      console.log('makeSPC');
+      const prevMkSp = clickedMkSp;
+      prevMkSp[no] = true;
+      setClickedMkSp(prevMkSp);
     }
   };
 
+  const isClickedMkSp = () => {
+    return clickedMkSp[0] && clickedMkSp[1];
+  };
+
   const checkBtnActivate = () => {
+    console.log('checkBtnActivate');
+    if (textArea10 && textArea20 && textArea11 && textArea21) {
+      if (isClickedMkSp()) {
+        setRequestBtn(true);
+      } else {
+        setRequestBtn(false);
+      }
+    } else {
+      setRequestBtn(false);
+    }
+
     if (
       reviewData1?.radio == ReviewResult.PASS &&
       reviewData2?.radio == ReviewResult.PASS
     ) {
-      setReviewPassBtn(true);
+      if (isClickedMkSp()) {
+        setReviewPassBtn(true);
+      } else {
+        setReviewPassBtn(false);
+      }
     } else {
       setReviewPassBtn(false);
     }
@@ -212,7 +272,34 @@ const WorkSpace = (props: WorkSpaceProps) => {
       reviewData1?.radio != ReviewResult.PASS ||
       reviewData2?.radio != ReviewResult.PASS
     ) {
-      setReviewOpinionBtn(true);
+      if (reviewData1?.check && reviewData2?.check) {
+        const rejectReasons: number[] = config.selectOptions.RejectReason.map(
+          (value) => parseInt(value.value.toString()),
+        );
+        console.log(
+          'look at me',
+          reviewData1.check.includes(rejectReasons[rejectReasons.length - 1]),
+        );
+        if (
+          reviewData1?.check.includes(
+            rejectReasons[rejectReasons.length - 1],
+          ) &&
+          !reviewData1.memo
+        ) {
+          setReviewOpinionBtn(false);
+        } else if (
+          reviewData2?.check.includes(
+            rejectReasons[rejectReasons.length - 1],
+          ) &&
+          !reviewData2.memo
+        ) {
+          setReviewOpinionBtn(false);
+        } else {
+          setReviewOpinionBtn(true);
+        }
+      } else {
+        setReviewOpinionBtn(false);
+      }
     } else {
       setReviewOpinionBtn(false);
     }
@@ -241,6 +328,27 @@ const WorkSpace = (props: WorkSpaceProps) => {
       wordCount1: wordCount1,
       wordCount2: wordCount2,
       origin: patternedText,
+      reviewData: reviewData,
+    };
+  };
+
+  const toHoldData = (): WorkData => {
+    let reviewData: ReviewData | undefined = undefined;
+    if (props.workType == 'review') {
+      reviewData = {
+        result1: ReviewResult.HOLD,
+        result2: ReviewResult.HOLD,
+      };
+    }
+
+    return {
+      textArea10: props.workData?.textArea10 || '',
+      textArea11: props.workData?.textArea11 || '',
+      textArea20: props.workData?.textArea20 || '',
+      textArea21: props.workData?.textArea21 || '',
+      wordCount1: props.workData?.wordCount1 || 0,
+      wordCount2: props.workData?.wordCount2 || 0,
+      origin: props.workData?.origin || ['', ''],
       reviewData: reviewData,
     };
   };
@@ -280,7 +388,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
         setCnt(count);
       })
       .catch((reason) => {
-        console.log(reason);
+        console.error('word counting fail:', reason);
         setCnt(0);
       });
   };
@@ -497,13 +605,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 disabled={!reviewHoldBtn}
                 onClick={() => {
                   if (reviewHoldBtn) {
-                    setReview1({
-                      radio: ReviewResult.HOLD,
-                    });
-                    setReview2({
-                      radio: ReviewResult.HOLD,
-                    });
-                    props.onSubmit(toWorkData());
+                    props.onSubmit(toHoldData());
                   }
                 }}
               >
@@ -543,12 +645,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
       ) : props.readOnly != true ? (
         <Row className="mt-xxl-5 mx-0">
           <Button
-            variant={
-              textArea10 && textArea20 && textArea11 && textArea21
-                ? 'warning'
-                : 'secondary'
-            }
-            disabled={!(textArea10 && textArea20 && textArea11 && textArea21)}
+            variant={requestBtn ? 'warning' : 'secondary'}
+            disabled={!requestBtn}
             onClick={() => props.onSubmit(toWorkData())}
           >
             검수 요청
@@ -558,5 +656,4 @@ const WorkSpace = (props: WorkSpaceProps) => {
     </Fragment>
   );
 };
-
 export default WorkSpace;

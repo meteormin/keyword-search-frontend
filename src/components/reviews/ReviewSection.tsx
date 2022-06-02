@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Col, FloatingLabel, Form } from 'react-bootstrap';
+import { Col, Form } from 'react-bootstrap';
 import ReactSelect from 'react-select';
 import CheckBoxOption from '../common/CheckBoxOption';
 import { config } from '../../helpers';

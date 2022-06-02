@@ -53,6 +53,7 @@ export enum ReviewStatus {
   REJECT2 = 'REJECT_2',
   PASS2 = 'PASS_2',
   TEMP = 'TEMP',
+  HOLD = 'HOLD_1',
 }
 
 export interface Review {
@@ -109,7 +110,7 @@ const reviewAction = {
   },
   getAssignList: (
     state: ReviewState,
-    action: PayloadAction<{ seq: number; page: number; limit: number }>,
+    action: PayloadAction<{ seq: number }>,
   ) => {
     state.seq = action.payload.seq;
     state.sentences = [];
@@ -136,7 +137,7 @@ const reviewAction = {
   },
   getReviewList: (
     state: ReviewState,
-    action: PayloadAction<{ seq: number; page: number; limit: number }>,
+    action: PayloadAction<{ seq: number }>,
   ) => {
     state.seq = action.payload.seq;
     state.reviews = [];

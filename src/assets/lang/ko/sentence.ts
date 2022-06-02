@@ -13,9 +13,17 @@ const sentence = {
     dictLink: 'https://opendict.korean.go.kr/main',
   },
   reviewState: {
-    common: { wait: '검수대기' },
-    review1: { pass: '1차 승인', fail: '1차 반려', wait: '검수 대기' },
-    review2: { pass: '2차 승인', fail: '2차 반려', wait: '검수 대기' },
+    common: { wait: '검수대기', hold: '보류' },
+    review1: {
+      pass: '1차 승인',
+      fail: '1차 반려',
+      wait: '검수 대기',
+    },
+    review2: {
+      pass: '2차 승인',
+      fail: '2차 반려',
+      wait: '검수 대기',
+    },
   },
   createState: {
     wait: '생성대기',

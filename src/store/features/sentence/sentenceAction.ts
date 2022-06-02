@@ -86,10 +86,7 @@ export const initialState: SentenceState = {
 };
 
 const sentenceAction = {
-  getSentenceList: (
-    state: SentenceState,
-    action: PayloadAction<{ limit: number; page: number }>,
-  ) => {
+  getSentenceList: (state: SentenceState) => {
     state.sentences = [];
   },
   setSentenceList: (

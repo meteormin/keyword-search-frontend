@@ -5,9 +5,11 @@ import taskModule from './';
 import { api, apiResponse, auth, date } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
-import { PayloadAction } from '@reduxjs/toolkit';
 import { Task } from './taskAction';
 import { UserType } from '../../../config/UserType';
+import { SearchParameter, SearchState } from '../search/searchAction';
+import searchModule from '../search';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 const apiClient = api({
   token: { token: auth.getToken(), tokenType: 'bearer' },
@@ -17,23 +19,25 @@ const taskApi = {
   assign: async () => {
     return await apiClient.post('api/v1/tasks/assign');
   },
-  getTaskList: async (limit: number, page: number) => {
+  getTaskList: async (search?: SearchParameter) => {
     const url = `api/v1/tasks/assigned`;
-    return await apiClient.get(url, { limit: limit, page: page });
+    return await apiClient.get(url, search);
+  },
+  getTask: async (taskId: number) => {
+    return await apiClient.get(`api/v1/tasks/${taskId}`);
   },
   getExpiredAt: async () => {
     return await apiClient.get('api/v1/tasks/assign/expiredAt');
   },
 };
 
-function* getTaskList(action: PayloadAction<{ limit: number; page: number }>) {
+function* getTaskList() {
   yield put(loaderModule.startLoading());
-
+  const search: SearchState = yield select(searchModule.getSearchState);
   try {
     const response: ApiResponse = yield call(
       taskApi.getTaskList,
-      action.payload.limit,
-      action.payload.page,
+      search.parameters || undefined,
     );
     const res = apiResponse(response);
     console.log(response);
@@ -70,7 +74,7 @@ function* assign() {
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {
-      yield put(taskModule.actions.getTaskList({ limit: 10, page: 1 }));
+      yield put(taskModule.actions.getTaskList());
       yield put(
         alertModalModule.showAlert({
           title: '할당 완료',
@@ -92,6 +96,29 @@ function* assign() {
         title: '할당 실패',
         message: '할당 실패',
         refresh: true,
+      }),
+    );
+  }
+}
+
+function* getTask(action: PayloadAction<number>) {
+  const taskId = action.payload;
+  try {
+    const response: ApiResponse = yield call(taskApi.getTask, taskId);
+    const res = apiResponse(response);
+    yield put(loaderModule.endLoading());
+    if (response.isSuccess) {
+      const workTask: Task = toCamel(res.data.task) as Task;
+      yield put(taskModule.actions.setWorkTask(workTask));
+    } else {
+      yield put(alertModalModule.errorAlert(res));
+    }
+  } catch (error) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '데이터 조회 실패',
+        message: error,
       }),
     );
   }
@@ -122,7 +149,7 @@ function* getTime() {
         );
       } else {
         console.log(res);
-        yield put(taskModule.actions.getTaskList({ page: 1, limit: 10 }));
+        yield put(taskModule.actions.getTaskList());
         yield put(
           alertModalModule.showAlert({
             title: '진행 가능 시간 초과',
@@ -146,6 +173,7 @@ function* getTime() {
 
 function* watchTaskSage() {
   yield takeLatest(taskModule.actions.getTaskList, getTaskList);
+  yield takeLatest(taskModule.actions.getWorkTask, getTask);
   yield takeLatest(taskModule.actions.assign, assign);
   yield takeLatest(taskModule.actions.getExpiredAt, getTime);
 }

@@ -1,6 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 
 export interface SearchParameter {
+  limit?: number;
+  page?: number;
   reviewStatus?: ReviewStatus;
   createdAtStart?: string;
   createdAtEnd?: string;
@@ -40,7 +42,11 @@ export const initialState: SearchState = {
 
 const searchAction = {
   search: (state: SearchState, action: PayloadAction<SearchParameter>) => {
-    state.parameters = action.payload;
+    if (state.parameters == null) {
+      state.parameters = action.payload;
+    } else {
+      state.parameters = Object.assign(state.parameters, action.payload);
+    }
   },
 };
 

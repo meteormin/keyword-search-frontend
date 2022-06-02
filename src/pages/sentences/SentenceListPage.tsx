@@ -11,6 +11,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import sentenceModule from '../../store/features/sentence';
 import { date, lang, str } from '../../helpers';
 import ReworkForm from '../../components/sentences/ReworkForm';
+import searchModule from '../../store/features/search';
+import CreateForm from '../../components/tasks/CreateForm';
+import { ReviewStatus } from '../../store/features/reviews/reviewAction';
 
 const SentenceListPage = () => {
   const dispatch = useDispatch();
@@ -86,8 +89,12 @@ const SentenceListPage = () => {
 
   useEffect(() => {
     dispatch(
-      sentenceModule.actions.getSentenceList({ limit: limit, page: page }),
+      searchModule.actions.search({
+        limit: limit,
+        page: page,
+      }),
     );
+    dispatch(sentenceModule.actions.getSentenceList());
   }, [page, limit]);
 
   useEffect(() => {
@@ -100,12 +107,7 @@ const SentenceListPage = () => {
         <Search
           stats={tempStats}
           onSearch={() => {
-            dispatch(
-              sentenceModule.actions.getSentenceList({
-                limit: limit,
-                page: page,
-              }),
-            );
+            dispatch(sentenceModule.actions.getSentenceList());
           }}
         />
       </Row>
@@ -153,9 +155,15 @@ const SentenceListPage = () => {
         </Col>
       </Row>
 
+      <CreateForm
+        show={!!editSentence && editSentence.status == ReviewStatus.TEMP}
+        onCreate={() => null}
+        time={'--:--:--'}
+        workType={'work'}
+      />
       <ReworkForm
         seq={formSeq}
-        show={!!editSentence}
+        show={!!editSentence && editSentence.status != ReviewStatus.TEMP}
         onCreate={() => null}
         time={'--:--:--'}
       />

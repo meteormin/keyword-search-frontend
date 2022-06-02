@@ -34,6 +34,21 @@ export interface Morphemes {
 class BaikalNlp {
   private client: ApiClient;
 
+  private readonly excludeTags = [
+    'SF',
+    'SP',
+    'SS',
+    'SE',
+    'SO',
+    'SW',
+    'SL',
+    'SH',
+    'SN',
+    'NA',
+    'NF',
+    'NV',
+  ];
+
   constructor(client: ApiClient) {
     this.client = client;
   }
@@ -67,7 +82,11 @@ class BaikalNlp {
     if (analyzeData) {
       analyzeData.sentences.forEach((item) => {
         item.tokens.forEach((t) => {
-          count += t.morphemes.length;
+          const token = t.morphemes.filter((token) => {
+            return !this.excludeTags.includes(token.tag);
+          });
+
+          count += token.length;
         });
       });
     }

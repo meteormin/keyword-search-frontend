@@ -11,6 +11,7 @@ import taskModule from '../../store/features/tasks';
 import { lang, str } from '../../helpers';
 import searchModule from '../../store/features/search';
 import { useNavigate } from 'react-router';
+import { TaskRecord } from './TaskListSchema';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ const AssignListPage = () => {
   };
 
   const taskRecords = () => {
-    return taskList.map((t, i) => {
+    return taskList.map((t, i): TaskRecord => {
       console.log('t', t.edges?.concepts);
       return {
         no: i + 1,
@@ -76,8 +77,8 @@ const AssignListPage = () => {
     });
   };
 
-  const handleClickRecord = (record: any) => {
-    dispatch(taskModule.actions.setWorkTask(record._origin));
+  const handleClickRecord = (record: TaskRecord) => {
+    dispatch(taskModule.actions.getWorkTask(record._origin.id));
   };
 
   useEffect(() => {
@@ -85,7 +86,13 @@ const AssignListPage = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(taskModule.actions.getTaskList({ limit: limit, page: page }));
+    dispatch(
+      searchModule.actions.search({
+        page: page,
+        limit: limit,
+      }),
+    );
+    dispatch(taskModule.actions.getTaskList());
   }, [page, limit]);
 
   useEffect(() => {
@@ -128,9 +135,7 @@ const AssignListPage = () => {
         <Col lg={12} className="mt-4">
           <DataSearch
             onSearch={() => {
-              dispatch(
-                taskModule.actions.getTaskList({ limit: limit, page: page }),
-              );
+              dispatch(taskModule.actions.getTaskList());
             }}
             onReset={() => null}
           />
@@ -182,9 +187,7 @@ const AssignListPage = () => {
         workType={'work'}
         show={!!workTask}
         time={time || '03:00:00'}
-        onCreate={() =>
-          taskModule.actions.getTaskList({ limit: limit, page: page })
-        }
+        onCreate={() => dispatch(taskModule.actions.getTaskList())}
       />
     </Container>
   );

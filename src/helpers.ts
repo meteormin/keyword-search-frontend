@@ -173,7 +173,7 @@ export function usePrev<T>(value: T): T {
 
   useEffect(() => {
     ref.current = value as any;
-  }, [value]);
+  });
 
   return ref.current as any;
 }

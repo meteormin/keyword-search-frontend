@@ -15,6 +15,7 @@ import {
   Review,
   ReviewStatus,
 } from '../../store/features/reviews/reviewAction';
+import searchModule from '../../store/features/search';
 
 export interface Record extends ReviewList {
   _origin: Review;
@@ -117,10 +118,14 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
 
   useEffect(() => {
     dispatch(
+      searchModule.actions.search({
+        page: page,
+        limit: limit,
+      }),
+    );
+    dispatch(
       reviewModule.actions.getReviewList({
         seq: seq,
-        limit: limit,
-        page: page,
       }),
     );
   }, [page, limit]);
@@ -139,8 +144,6 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
             dispatch(
               reviewModule.actions.getReviewList({
                 seq: seq,
-                limit: limit,
-                page: page,
               }),
             );
           }}

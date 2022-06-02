@@ -32,30 +32,14 @@ const reviewApi = {
   assign: async (seq: number) => {
     return await apiClient.post(`api/v1/reviews/${seq}/assign`);
   },
-  getAssignList: async (
-    seq: number,
-    limit: number,
-    page: number,
-    search?: SearchParameter,
-  ) => {
-    const parameters: any = { ...search };
-    parameters.limit = limit;
-    parameters.page = page;
-    return await apiClient.get(`api/v1/reviews/${seq}/assigned`, parameters);
+  getAssignList: async (seq: number, search?: SearchParameter) => {
+    return await apiClient.get(`api/v1/reviews/${seq}/assigned`, search);
   },
   getAssign: async (seq: number, assignId: number) => {
     return await apiClient.get(`api/v1/sentences/${assignId}`);
   },
-  getReviewList: async (
-    seq: number,
-    limit: number,
-    page: number,
-    search?: SearchParameter,
-  ) => {
-    const parameters: any = { ...search };
-    parameters.limit = limit;
-    parameters.page = page;
-    return await apiClient.get(`api/v1/reviews/${seq}`, parameters);
+  getReviewList: async (seq: number, search?: SearchParameter) => {
+    return await apiClient.get(`api/v1/reviews/${seq}`, search);
   },
   getReview: async (seq: number, id: number) => {
     return await apiClient.get(`api/v1/reviews/${seq}/${id}`);
@@ -100,18 +84,14 @@ function* assign(action: PayloadAction<number>) {
   }
 }
 
-function* getAssignList(
-  action: PayloadAction<{ seq: number; page: number; limit: number }>,
-) {
-  const { seq, page, limit } = action.payload;
+function* getAssignList(action: PayloadAction<{ seq: number }>) {
+  const { seq } = action.payload;
   const search: SearchState = yield select(searchModule.getSearchState);
   try {
     yield put(loaderModule.startLoading());
     const response: ApiResponse = yield call(
       reviewApi.getAssignList,
       seq,
-      limit,
-      page,
       search.parameters || undefined,
     );
 
@@ -180,18 +160,15 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
   }
 }
 
-function* getReviewList(
-  action: PayloadAction<{ seq: number; page: number; limit: number }>,
-) {
-  const { seq, page, limit } = action.payload;
+function* getReviewList(action: PayloadAction<{ seq: number }>) {
+  const { seq } = action.payload;
   const search: SearchState = yield select(searchModule.getSearchState);
   try {
     yield put(loaderModule.startLoading());
     const response: ApiResponse = yield call(
       reviewApi.getReviewList,
       seq,
-      limit,
-      page,
+
       search.parameters || undefined,
     );
 
@@ -280,11 +257,13 @@ function* createReview(
     const res = apiResponse(response);
     if (response.isSuccess) {
       console.log(res);
+      yield put(reviewModule.actions.getReviewList({ seq: seq }));
+      yield put(reviewModule.actions.setReview(null));
       yield put(
         alertModal.showAlert({
           title: '검수 완료',
           message: '검수 완료',
-          refresh: true,
+          refresh: false,
         }),
       );
     } else {
@@ -314,13 +293,13 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
     userType = UserType.REVIEWER2;
   }
 
-  const { reviews } = yield select(reviewModule.getReviewState);
-  if (reviews.length == 0) {
+  const { sentences } = yield select(reviewModule.getReviewState);
+  if (sentences.length == 0) {
     return;
   }
   try {
     const now = date();
-    console.log(auth.getJobTimeAt(userType));
+
     if (auth.getJobTimeAt(userType)) {
       const time = date
         .duration(auth.getJobTimeAt(userType)?.diff(now))
@@ -346,8 +325,6 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
         yield put(
           reviewModule.actions.getReviewList({
             seq: action.payload.seq,
-            limit: 10,
-            page: 1,
           }),
         );
         yield put(

@@ -77,10 +77,14 @@ const AssignListPage = ({ seq }: { seq: number }) => {
 
   useEffect(() => {
     dispatch(
+      searchModule.actions.search({
+        page: page,
+        limit: limit,
+      }),
+    );
+    dispatch(
       reviewModule.actions.getAssignList({
         seq: seq,
-        limit: limit,
-        page: page,
       }),
     );
   }, [page, limit]);
@@ -123,8 +127,6 @@ const AssignListPage = ({ seq }: { seq: number }) => {
               dispatch(
                 reviewModule.actions.getAssignList({
                   seq: seq,
-                  limit: limit,
-                  page: page,
                 }),
               );
             }}
@@ -182,8 +184,6 @@ const AssignListPage = ({ seq }: { seq: number }) => {
           dispatch(
             reviewModule.actions.getAssignList({
               seq: seq,
-              limit: limit,
-              page: page,
             }),
           )
         }
