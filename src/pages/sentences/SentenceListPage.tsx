@@ -157,14 +157,13 @@ const SentenceListPage = () => {
 
       <CreateForm
         show={!!editSentence && editSentence.status == ReviewStatus.TEMP}
-        onCreate={() => null}
+        onCreate={() => dispatch(sentenceModule.actions.getSentenceList())}
         time={'--:--:--'}
-        workType={'work'}
       />
       <ReworkForm
         seq={formSeq}
         show={!!editSentence && editSentence.status != ReviewStatus.TEMP}
-        onCreate={() => null}
+        onCreate={() => dispatch(sentenceModule.actions.getSentenceList())}
         time={'--:--:--'}
       />
     </Container>

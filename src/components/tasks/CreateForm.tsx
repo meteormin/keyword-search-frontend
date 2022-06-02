@@ -22,7 +22,6 @@ export interface CreateFormProps {
   readOnly?: boolean;
   onCreate: () => any;
   time: string;
-  workType: 'work' | 'rework';
 }
 
 const CreateForm = (props: CreateFormProps) => {
@@ -204,7 +203,7 @@ const CreateForm = (props: CreateFormProps) => {
               </Col>
               <Col lg={8}>
                 <WorkSpace
-                  workType={props.workType}
+                  workType={'work'}
                   readOnly={props.readOnly}
                   workData={toWorkData()}
                   onSubmit={(data) => {

@@ -50,7 +50,7 @@ const ReviewForm = (props: CreateFormProps) => {
     if (!validated.status) {
       dispatch(
         alertModal.showAlert({
-          title: '문장 생성하기',
+          title: '문장 검수하기',
           message: validated.messages.toString(),
         }),
       );
@@ -120,14 +120,14 @@ const ReviewForm = (props: CreateFormProps) => {
                   className="bg-light border h-100"
                   style={{ cursor: 'default' }}
                 >
-                  생성 가능 개념집합
+                  검수 가능 개념집합
                 </Button>
                 <Button
                   variant="light"
                   className="bg-light border h-100"
                   style={{ cursor: 'default' }}
                 >
-                  생성 완료 개념집합
+                  검수 완료 개념집합
                 </Button>
               </Col>
             </Row>

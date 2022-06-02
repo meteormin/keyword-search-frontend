@@ -197,7 +197,9 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         seq={seq}
         show={!!editReview}
         time={time?.toString() || '--:--:--'}
-        onCreate={() => null}
+        onCreate={() =>
+          dispatch(reviewModule.actions.getReviewList({ seq: seq }))
+        }
       />
     </Container>
   );

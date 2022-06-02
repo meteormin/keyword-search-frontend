@@ -191,7 +191,6 @@ const AssignListPage = () => {
         </Col>
       </Row>
       <CreateForm
-        workType={'work'}
         show={!!workTask}
         time={time || '03:00:00'}
         onCreate={() => dispatch(taskModule.actions.getTaskList())}

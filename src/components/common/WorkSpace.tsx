@@ -161,14 +161,14 @@ const WorkSpace = (props: WorkSpaceProps) => {
     if (valid == 1) {
       dispatch(
         alertModal.showAlert({
-          title: '문장 생성',
+          title: '잘못된 입력',
           message: '인용 부호를 제외한 영문과 특수문자는 입력할 수 없습니다.',
         }),
       );
     } else if (valid == 2) {
       dispatch(
         alertModal.showAlert({
-          title: '문장 생성',
+          title: '잘못된 입력',
           message: '마침표는 문장 마지막에만 사용 가능합니다.',
         }),
       );
@@ -395,9 +395,17 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
   return (
     <Fragment>
-      <Card header={lang.sentence.workSpace.subject}>
+      <Card
+        header={
+          props.workType == 'review'
+            ? lang.sentence.workSpace.review.subject
+            : lang.sentence.workSpace.sentence.subject
+        }
+      >
         <p style={{ whiteSpace: 'pre' }}>
-          {lang.sentence.workSpace.description}
+          {props.workType == 'review'
+            ? lang.sentence.workSpace.review.description
+            : lang.sentence.workSpace.sentence.description}
         </p>
       </Card>
       <Row>
