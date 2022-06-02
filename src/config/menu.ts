@@ -41,6 +41,11 @@ const menu: Menu = {
       name: '2차 문장 검수 내역',
       icon: 'fas fa-file-lines',
     },
+    {
+      url: '/question',
+      name: '문의 답변',
+      icon: 'fas fa-file-lines',
+    },
   ],
 };
 

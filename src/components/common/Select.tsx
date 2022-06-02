@@ -8,6 +8,7 @@ export interface SelectProps {
   selectedValue?: any;
   options: Option[];
   onChange?: (e: ChangeEvent<HTMLSelectElement>) => any;
+  readOnly?: boolean;
 }
 
 export interface Option {
@@ -66,8 +67,18 @@ class Select extends Component<SelectProps, SelectProps> {
   makeOptions() {
     if (this.state.options) {
       return this.state.options.map((option, key) => {
+        let selected = false;
+        if (this.state.selectedValue == option.value) {
+          selected = true;
+        }
+
         return (
-          <option key={key + option.name} value={option.value}>
+          <option
+            key={key + option.name}
+            value={option.value}
+            selected={selected}
+            disabled={this.props.readOnly}
+          >
             {option.name}
           </option>
         );
