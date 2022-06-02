@@ -1,5 +1,4 @@
 import React, { ChangeEvent, Component } from 'react';
-import { InputProp } from './Input';
 
 export interface SelectProps {
   id: string;
