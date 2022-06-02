@@ -5,10 +5,7 @@ import StateSearch from './StateSearch';
 import DateSearch from '../reviews/DateSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import searchModule from '../../store/features/search';
-import {
-  SearchParameter,
-  SearchState,
-} from '../../store/features/search/searchAction';
+import { SearchParameter } from '../../store/features/search/searchAction';
 import { date } from '../../helpers';
 
 export interface SearchStats {

@@ -134,7 +134,14 @@ const AssignListPage = () => {
       <Row className="ms-2">
         <Col lg={12} className="mt-4">
           <DataSearch
-            onSearch={() => {
+            onSearch={(state) => {
+              dispatch(
+                searchModule.actions.search({
+                  refID: state.refId,
+                  domain: state.domain,
+                  concept: state.concept,
+                }),
+              );
               dispatch(taskModule.actions.getTaskList());
             }}
             onReset={() => null}

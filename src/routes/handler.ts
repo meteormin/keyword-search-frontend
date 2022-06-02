@@ -76,7 +76,7 @@ export const handleMenuVisible = (menu: Menu): Menu => {
     ): NavItemProps | NavCollapsedProps => {
       if ('url' in item) {
         const perm = getPathRole(item.url);
-        item.disabled = !perm.role.includes(userType);
+        item.disabled = !perm?.role?.includes(userType);
         return item;
       } else if ('items' in item) {
         item.items = item.items.map((value) => {
@@ -84,7 +84,7 @@ export const handleMenuVisible = (menu: Menu): Menu => {
           return {
             url: value.url,
             name: value.name,
-            disabled: !perm.role.includes(userType),
+            disabled: !perm?.role?.includes(userType),
           };
         });
         return item;

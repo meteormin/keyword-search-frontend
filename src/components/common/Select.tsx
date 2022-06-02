@@ -66,16 +66,10 @@ class Select extends Component<SelectProps, SelectProps> {
   makeOptions() {
     if (this.state.options) {
       return this.state.options.map((option, key) => {
-        let selected = false;
-        if (this.state.selectedValue == option.value) {
-          selected = true;
-        }
-
         return (
           <option
             key={key + option.name}
             value={option.value}
-            selected={selected}
             disabled={this.props.readOnly}
           >
             {option.name}

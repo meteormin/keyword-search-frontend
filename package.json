@@ -81,5 +81,5 @@
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.6.2"
   },
-  "proxy": "http://localhost:5757"
+  "proxy": "https://nia15dev.aiworks.co.kr/baikalai"
 }

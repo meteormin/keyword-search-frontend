@@ -123,7 +123,14 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       <Row className="ms-2">
         <Col lg={12} className="mt-4">
           <DataSearch
-            onSearch={() => {
+            onSearch={(state) => {
+              dispatch(
+                searchModule.actions.search({
+                  concept: state.concept,
+                  refID: state.refId,
+                  domain: state.domain,
+                }),
+              );
               dispatch(
                 reviewModule.actions.getAssignList({
                   seq: seq,

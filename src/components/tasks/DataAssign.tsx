@@ -47,7 +47,7 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
       </Col>
       <Col md={4}>
         <Button variant="dark" onClick={() => onAssign(selectedName)}>
-          생성 데이터 할당 받기
+          데이터 할당 받기
         </Button>
       </Col>
       <Col md={4} className="">

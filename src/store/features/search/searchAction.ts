@@ -12,6 +12,7 @@ export interface SearchParameter {
   createStatus?: CreateStatus;
   refID?: number;
   domain?: string;
+  concept?: string;
   sentenceGroupName?: string;
   sentenceUserID?: string;
   review1UserID?: string;

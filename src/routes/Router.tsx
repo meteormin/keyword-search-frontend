@@ -14,8 +14,9 @@ import {
   ReviewListPage,
 } from '../pages/reviews';
 import { UserType } from '../config/UserType';
-import CreateForm from '../components/tasks/CreateForm';
-import { handlePerm, handleGoHome } from './handler';
+import { handleGoHome, handlePerm } from './handler';
+import QuestionForm from '../components/questions/QuestionForm';
+import { QuestionDiv } from '../store/features/questions/questionAction';
 
 const Router = () => {
   return (
@@ -24,11 +25,13 @@ const Router = () => {
         <Route
           path="/test"
           element={
-            <CreateForm
-              workType={'rework'}
+            <QuestionForm
+              isReply={false}
+              method={'create'}
+              div={QuestionDiv.CREATE}
               show={true}
-              time={'03:00:00'}
-              onCreate={() => console.log('hi')}
+              onHide={() => null}
+              onSubmit={() => null}
             />
           }
         />

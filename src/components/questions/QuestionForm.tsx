@@ -19,7 +19,7 @@ export interface QuestionFormData {
 export interface QuestionFormProps {
   isReply: boolean;
   method: 'create' | 'edit';
-  div: string;
+  div: QuestionDiv;
   show: boolean;
   onHide: () => any;
   onSubmit: (data: QuestionFormData) => any;
@@ -41,7 +41,7 @@ const QuestionForm = (props: QuestionFormProps) => {
   }, []);
 
   return (
-    <Modal show={show}>
+    <Modal show={show} dialogClassName={'modal-80w'}>
       <Modal.Header closeButton>
         <Modal.Title>
           문의 글{props.isReply ? '답변하기' : '작성하기'}
@@ -60,7 +60,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             setType(parseInt(option.value));
           }}
         />
-        <Form.Group>
+        <Form.Group className={'mt-2'}>
           <Form.Label>제목</Form.Label>
           <Form.Control
             type="text"
@@ -71,7 +71,7 @@ const QuestionForm = (props: QuestionFormProps) => {
             }}
           />
         </Form.Group>
-        <Form.Group>
+        <Form.Group className={'mt-2'}>
           <Form.Label>내용입력</Form.Label>
           <Form.Control
             as="textarea"
@@ -83,12 +83,11 @@ const QuestionForm = (props: QuestionFormProps) => {
             }}
           />
         </Form.Group>
-        <Form.Group>
+        <Form.Group className={'mt-2'}>
           <Form.Label>첨부파일</Form.Label>
           <Form.Control
             type="file"
             readOnly={props.method == 'edit'}
-            value={fileName}
             accept="image/gif,image/jpeg,image/png"
             onChange={(e) => {
               if ('files' in e.target) {
@@ -96,13 +95,14 @@ const QuestionForm = (props: QuestionFormProps) => {
                 if (files != null) {
                   const file = files[0];
                   setFile(file);
+                  setFileName(file.name);
                 }
               }
             }}
           />
         </Form.Group>
         {props.method == 'edit' ? (
-          <Form.Group>
+          <Form.Group className={'mt-2'}>
             <Form.Label>답변</Form.Label>
             <Form.Control
               type="file"
@@ -122,14 +122,19 @@ const QuestionForm = (props: QuestionFormProps) => {
           </Form.Group>
         ) : null}
         <Row>
-          <Col lg={6}>
-            <Button variant={'light'} onClick={() => props.onHide()}>
+          <Col lg={6} className={'mt-4'}>
+            <Button
+              className={'w-100'}
+              variant={'light'}
+              onClick={() => props.onHide()}
+            >
               취소
             </Button>
           </Col>
-          <Col lg={6}>
+          <Col lg={6} className={'mt-4'}>
             {props.method == 'create' ? (
               <Button
+                className={'w-100'}
                 variant={'dark'}
                 onClick={() =>
                   props.onSubmit({
@@ -147,6 +152,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               </Button>
             ) : props.method == 'edit' ? (
               <Button
+                className={'w-100'}
                 variant={'dark'}
                 onClick={() =>
                   props.onSubmit({

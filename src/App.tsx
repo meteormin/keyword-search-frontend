@@ -25,16 +25,22 @@ function App() {
   const menu = config.layouts.menu as Menu;
   let userType = auth.user()?.userType;
 
-  if (userType == UserType.ADMIN) {
-    userType = '최고 관리자';
-  } else if (userType == UserType.REVIEWER1) {
-    userType = '1차 검수자';
-  } else if (userType == UserType.WORKER) {
-    userType = '생성자';
-  } else if (userType == UserType.REVIEWER2) {
-    userType = '2차 검수자';
-  } else {
-    auth.logout();
+  switch (userType) {
+    case UserType.ADMIN:
+      userType = '최고 관리자';
+      break;
+    case UserType.REVIEWER1:
+      userType = '1차 검수자';
+      break;
+    case UserType.WORKER:
+      userType = '생성자';
+      break;
+    case UserType.REVIEWER2:
+      userType = '2차 검수자';
+      break;
+    default:
+      auth.logout();
+      break;
   }
 
   menu.header = userType as string;
