@@ -36,6 +36,10 @@ class Select extends Component<SelectProps, SelectProps> {
     if (prevProps.selectedValue !== this.props.selectedValue) {
       this.setState(this.props);
     }
+
+    if (prevProps.options !== this.props.options) {
+      this.setState(this.props);
+    }
   }
 
   onChange = (e: ChangeEvent<HTMLSelectElement>) => {

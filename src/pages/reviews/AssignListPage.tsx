@@ -113,7 +113,12 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       <Row className="ms-2 mt-2">
         <Col lg={12}>
           <DataAssign
-            onAssign={() => {
+            onAssign={(selectedName) => {
+              dispatch(
+                searchModule.actions.search({
+                  domain: selectedName,
+                }),
+              );
               dispatch(reviewModule.actions.assign(seq));
             }}
             time={time || '00:00:00'}

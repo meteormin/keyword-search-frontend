@@ -16,8 +16,8 @@ const apiClient = api({
 });
 
 const taskApi = {
-  assign: async () => {
-    return await apiClient.post('api/v1/tasks/assign');
+  assign: async (search?: SearchParameter) => {
+    return await apiClient.post('api/v1/tasks/assign', search);
   },
   getTaskList: async (search?: SearchParameter) => {
     const url = `api/v1/tasks/assigned`;
@@ -68,9 +68,14 @@ function* getTaskList() {
 }
 
 function* assign() {
+  const search: SearchState = yield select(searchModule.getSearchState);
   try {
     yield put(loaderModule.startLoading());
-    const response: ApiResponse = yield call(taskApi.assign);
+    const response: ApiResponse = yield call(
+      taskApi.assign,
+      search.parameters || undefined,
+    );
+
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {

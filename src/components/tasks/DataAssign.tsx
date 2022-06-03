@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select, { Option } from '../common/Select';
 import { Button, Col, Row } from 'react-bootstrap';
 import Timer from '../common/Timer';
+import { config } from '../../helpers';
 
 export interface DataAssignProps {
-  onAssign: (selectedName: string | number) => any;
+  onAssign: (selectedName: string) => any;
   time: string;
 }
 
@@ -22,6 +23,10 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
       value: '',
     },
   ]);
+
+  useEffect(() => {
+    setCondition(config.selectOptions.CreateConditions);
+  });
 
   return (
     <Row className="mx-2">

@@ -1,4 +1,4 @@
-import searchAction, { initialState } from './searchAction';
+import searchAction, { initialState, SearchState } from './searchAction';
 import { createSlice } from '@reduxjs/toolkit';
 
 const searchSlice = createSlice({
@@ -9,6 +9,6 @@ const searchSlice = createSlice({
 
 export const actions = searchSlice.actions;
 
-export const getSearchState = (state: any) => state.search;
+export const getSearchState = (state: any): SearchState => state.search;
 
 export default searchSlice.reducer;

@@ -18,7 +18,6 @@ const AssignListPage = () => {
   const navigate = useNavigate();
   const [searchValue, setValue] = useState<string>('');
   const [searchName, setName] = useState<string | number>('');
-  const [condition, setCondition] = useState<string | number>('');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -123,8 +122,12 @@ const AssignListPage = () => {
       <Row className="ms-2 mt-2">
         <Col lg={12}>
           <DataAssign
-            onAssign={(selectedName: string | number) => {
-              setCondition(selectedName);
+            onAssign={(selectedName: string) => {
+              dispatch(
+                searchModule.actions.search({
+                  domain: selectedName,
+                }),
+              );
               dispatch(taskModule.actions.assign());
             }}
             time={time || '00:00:00'}

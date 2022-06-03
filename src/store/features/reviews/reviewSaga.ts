@@ -29,8 +29,8 @@ const apiClient = api({
 });
 
 const reviewApi = {
-  assign: async (seq: number) => {
-    return await apiClient.post(`api/v1/reviews/${seq}/assign`);
+  assign: async (seq: number, search?: SearchParameter) => {
+    return await apiClient.post(`api/v1/reviews/${seq}/assign`, search);
   },
   getAssignList: async (seq: number, search?: SearchParameter) => {
     return await apiClient.get(`api/v1/reviews/${seq}/assigned`, search);
@@ -57,9 +57,14 @@ const reviewApi = {
 
 function* assign(action: PayloadAction<number>) {
   const seq = action.payload;
+  const search: SearchState = yield select(searchModule.getSearchState);
   try {
     yield put(loaderModule.startLoading());
-    const response: ApiResponse = yield call(reviewApi.assign, seq);
+    const response: ApiResponse = yield call(
+      reviewApi.assign,
+      seq,
+      search.parameters || undefined,
+    );
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {
@@ -126,6 +131,7 @@ function* getAssignList(action: PayloadAction<{ seq: number }>) {
 
 function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
   const { seq, assignId } = action.payload;
+
   try {
     yield put(loaderModule.startLoading());
     const response: ApiResponse = yield call(

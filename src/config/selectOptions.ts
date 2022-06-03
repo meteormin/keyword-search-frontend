@@ -131,12 +131,34 @@ const DataSearchNames = [
   },
 ];
 
+const CreateConditions: Option[] = [
+  { name: '검색어 선택', value: '' },
+  { name: '인간의 삶', value: '인간의 삶' },
+  { name: '사회', value: '사회' },
+  { name: '경제', value: '경제' },
+  { name: '정치와 행정', value: '정치와 행정' },
+  { name: '법과 보안', value: '법과 보안' },
+  { name: '건강', value: '건강' },
+  { name: '취미와 운동', value: '취미와 운동' },
+  { name: '종교 생활', value: '종교 생활' },
+  { name: '예술', value: '예술' },
+  { name: '역사', value: '역사' },
+  { name: '언어와 문학', value: '언어와 문학' },
+  { name: '철학 및 교육', value: '철학 및 교육' },
+  { name: '공학과 정보 통신', value: '공학과 정보 통신' },
+  { name: '자연 환경', value: '자연 환경' },
+  { name: '생물 과학', value: '생물 과학' },
+  { name: '순수 과학', value: '순수 과학' },
+  { name: '기타', value: '기타' },
+];
+
 const selectOptions = {
   RejectReason,
   ReviewState,
   CreateState,
   IdState,
   DataSearchNames,
+  CreateConditions,
 };
 
 export default selectOptions;
