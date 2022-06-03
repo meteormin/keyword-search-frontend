@@ -399,13 +399,13 @@ const WorkSpace = (props: WorkSpaceProps) => {
         header={
           props.workType == 'review'
             ? lang.sentence.workSpace.review.subject
-            : lang.sentence.workSpace.sentence.subject
+            : lang.sentence.workSpace.work.subject
         }
       >
         <p style={{ whiteSpace: 'pre' }}>
           {props.workType == 'review'
             ? lang.sentence.workSpace.review.description
-            : lang.sentence.workSpace.sentence.description}
+            : lang.sentence.workSpace.work.description}
         </p>
       </Card>
       <Row>

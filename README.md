@@ -6,13 +6,13 @@
 
 - [bootstrap-sb-admin](https://github.com/StartBootstrap/startbootstrap-sb-admin)
 - react 17.0.0
-    - @types/react 18.0.8
+  - @types/react 18.0.8
 - react-bootstrap 2.3.1
-    - @types/react-bootstrap 0.32.29
+  - @types/react-bootstrap 0.32.29
 - react-redux 8.01
-    - @types/react-redux 7.1.24
+  - @types/react-redux 7.1.24
 - redux 4.2.0
-    - @types/redux 3.6.0
+  - @types/redux 3.6.0
 
 ## Install
 
@@ -52,7 +52,7 @@ REACT_APP_NAME=NIA15
 REACT_APP_API_SERVER=http://nia15api.aiworks.co.kr
 # DEV
 # REACT_APP_API_SERVER=http://nia15dapi.aiworks.co.kr
- 
+
 # CORS 이슈 때문에 apache 프록시를 이용하여 같은 도메인으로 연결해야 한다.
 REACT_APP_BAIKAL_NLP_HOST=/baikalai
 REACT_APP_TMKOR_HOST=http://frame.tmkor.com
@@ -74,13 +74,13 @@ REACT_APP_TMKOR_TOKEN={auth_token}
         proxyPassReverse /baikalai http://localhost:5757/
 </VirtualHost>
 <VirtualHost *:80>
-       
+
         ServerName nia15api.aiworks.co.kr
-        ServerAdmin webmaster@localhost       
-     
+        ServerAdmin webmaster@localhost
+
         ErrorLog ${APACHE_LOG_DIR}/error_dev.log
         CustomLog ${APACHE_LOG_DIR}/access_dev.log combined
-   
+
         proxyPass / http://localhost:8080/
         proxyPassReverse / http://localhost:8080/
 </VirtualHost>
@@ -93,22 +93,22 @@ REACT_APP_TMKOR_TOKEN={auth_token}
         <VirtualHost _default_:443>
                 ServerAdmin webmaster@localhost
                 DocumentRoot /var/www/front
-           
+
                 ErrorLog ${APACHE_LOG_DIR}/error.log
                 CustomLog ${APACHE_LOG_DIR}/access.log combined
-             
-                SSLEngine on            
+
+                SSLEngine on
                 SSLCertificateFile      /etc/ssl/aiworks.crt
                 SSLCertificateKeyFile   /etc/ssl/aiworks.key
                 SSLCACertificateFile    /etc/ssl/aiworks_chain.pem
-               
+
                 <FilesMatch "\.(cgi|shtml|phtml|php)$">
                                 SSLOptions +StdEnvVars
                 </FilesMatch>
                 <Directory /usr/lib/cgi-bin>
                                 SSLOptions +StdEnvVars
                 </Directory>
-            
+
                 proxyPass /baikalai/ http://localhost:5757/
                 proxyPassReverse /baikalai/ http://localhost:5757/
         </VirtualHost>
