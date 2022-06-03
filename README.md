@@ -5,14 +5,31 @@
 <img alt="Bootstrap" src ="https://img.shields.io/badge/Bootstrap-7952B3.svg?&style=for-the-badge&logo=Bootstrap&logoColor=white"/>
 
 - [bootstrap-sb-admin](https://github.com/StartBootstrap/startbootstrap-sb-admin)
-- react-bootstrap
-- react-redux
-- redux-logger
-- redux-thunk
+- react 17.0.0
+    - @types/react 18.0.8
+- react-bootstrap 2.3.1
+    - @types/react-bootstrap 0.32.29
+- react-redux 8.01
+    - @types/react-redux 7.1.24
+- redux 4.2.0
+    - @types/redux 3.6.0
 
 ## Install
 
 ```shell
+
+## nvm 설치
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+
+source ~/.bashrc
+
+## v16.15.0 버전 node 설치
+nvm install v16.15.0
+
+## yarn 설치
+npm install -g yarn
+
+## git repository 다운
 git clone https://{your-github-username}@github.com/testworksPF/nia-15-front.git
 
 ## 배포 스크립트 실행
@@ -23,6 +40,8 @@ git clone https://{your-github-username}@github.com/testworksPF/nia-15-front.git
 
 ### Configuration
 
+- dotenv
+
 ```dotenv
 # .env
 
@@ -30,47 +49,80 @@ git clone https://{your-github-username}@github.com/testworksPF/nia-15-front.git
 REACT_APP_NAME=NIA15
 
 # api 도메인
-REACT_APP_API_SERVER=http://nia15dapi.aiworks.co.kr
-
- # CORS 이슈 때문에 apache 프록시를 이용하여 같은 도메인으로 연결해야 한다.
-REACT_APP_BAIKAL_NLP_HOST=http://localhost
+REACT_APP_API_SERVER=http://nia15api.aiworks.co.kr
+# DEV
+# REACT_APP_API_SERVER=http://nia15dapi.aiworks.co.kr
+ 
+# CORS 이슈 때문에 apache 프록시를 이용하여 같은 도메인으로 연결해야 한다.
+REACT_APP_BAIKAL_NLP_HOST=/baikalai
 REACT_APP_TMKOR_HOST=http://frame.tmkor.com
 REACT_APP_TMKOR_TOKEN={auth_token}
 ```
 
+- apache: http(000-default.conf)
+
 ```apacheconf
-# apache: sites-available
 <VirtualHost *:80>
-        # The ServerName directive sets the request scheme, hostname and port that
-        # the server uses to identify itself. This is used when creating
-        # redirection URLs. In the context of virtual hosts, the ServerName
-        # specifies what hostname must appear in the request's Host: header to
-        # match this virtual host. For the default virtual host (this file) this
-        # value is not decisive as it is used as a last resort host regardless.
-        # However, you must set it for any further virtual host explicitly.
-        #ServerName www.example.com
-        ServerName nia15dev.aiworks.co.kr
+        ServerName nia15.aiworks.co.kr
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/front
-
-        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
-        # error, crit, alert, emerg.
-        # It is also possible to configure the loglevel for particular
-        # modules, e.g.
-        #LogLevel info ssl:warn
 
         ErrorLog ${APACHE_LOG_DIR}/error_dev.log
         CustomLog ${APACHE_LOG_DIR}/access_dev.log combined
 
-        # For most configuration files from conf-available/, which are
-        # enabled or disabled at a global level, it is possible to
-        # include a line for only one particular virtual host. For example the
-        # following line enables the CGI configuration for this host only
-        # after it has been globally disabled with "a2disconf".
-        #Include conf-available/serve-cgi-bin.conf
-        proxyPass /baikalai http://localhost:5757
-        proxyPassReverse /baikalai http://localhost:5757
+        proxyPass /baikalai http://localhost:5757/
+        proxyPassReverse /baikalai http://localhost:5757/
 </VirtualHost>
+<VirtualHost *:80>
+       
+        ServerName nia15api.aiworks.co.kr
+        ServerAdmin webmaster@localhost       
+     
+        ErrorLog ${APACHE_LOG_DIR}/error_dev.log
+        CustomLog ${APACHE_LOG_DIR}/access_dev.log combined
+   
+        proxyPass / http://localhost:8080/
+        proxyPassReverse / http://localhost:8080/
+</VirtualHost>
+```
+
+- apache: ssl(default-ssl.conf)
+
+```apacheconf
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin webmaster@localhost
+                DocumentRoot /var/www/front
+           
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+             
+                SSLEngine on            
+                SSLCertificateFile      /etc/ssl/aiworks.crt
+                SSLCertificateKeyFile   /etc/ssl/aiworks.key
+                SSLCACertificateFile    /etc/ssl/aiworks_chain.pem
+               
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+            
+                proxyPass /baikalai/ http://localhost:5757/
+                proxyPassReverse /baikalai/ http://localhost:5757/
+        </VirtualHost>
+        <VirtualHost *:443>
+                ServerName nia15dapi.aiworks.co.kr
+                ErrorLog ${APACHE_LOG_DIR}/error_dev.log
+                CustomLog ${APACHE_LOG_DIR}/access_dev.log combined
+                proxyPass / http://localhost:8080/
+                proxyPassReverse / http://localhost:8080/
+                SSLCertificateFile      /etc/ssl/aiworks.crt
+                SSLCertificateKeyFile   /etc/ssl/aiworks.key
+                SSLCACertificateFile    /etc/ssl/aiworks_chain.pem
+        </VirtualHost>
+</IfModule>
 ```
 
 ## Structure
@@ -149,8 +201,8 @@ utils하위의 JS 함수들을 하나의 모듈로 생성하여 사용할 수 �
 
 ### React
 
-- React 컴포넌트 파일은 .jsx로 작성
-- React 컴포넌트가 없는(리엑트 설치 안해도 실행 가능한) 파일은 .js
+- React 컴포넌트 파일은 .tsx로 작성
+- React 컴포넌트가 없는(리엑트 설치 안해도 실행 가능한) 파일은 .ts
 
 ### Redux
 
