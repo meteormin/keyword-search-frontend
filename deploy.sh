@@ -51,8 +51,14 @@ else
 fi
 
 echo "copy ./build >> /var/www/front"
-rm -rf /var/www/front/*
-cp -r ./build/* /var/www/front && cp ./public/.htaccess /var/www/front 2>/dev/null || res=$?
+
+if [ ! -d "/var/www/front" ]; then
+  mkdir /var/www/front
+else
+  rm -rf /var/www/front/*
+fi
+
+cp ./public/.htaccess ./build && cp -r ./build/* /var/www/front 2>/dev/null || res=$?
 
 if [ "${res}" = 1 ]; then
   echo "failed copy build directory"
