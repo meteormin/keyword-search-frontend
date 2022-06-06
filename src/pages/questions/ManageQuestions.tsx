@@ -29,7 +29,7 @@ const filterOptions = [
   },
 ];
 
-const QuestionListPage = () => {
+const ManageQuestions = () => {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState<number>(-1);
   const [isReplied, setReplied] = useState<boolean | undefined>();
@@ -181,4 +181,4 @@ const QuestionListPage = () => {
   );
 };
 
-export default QuestionListPage;
+export default ManageQuestions;

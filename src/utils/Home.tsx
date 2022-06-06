@@ -14,9 +14,12 @@ const Home = (props: HomeProps) => {
     const rule = props.rules.filter((rule) => {
       return rule.role === props.role;
     })[0];
-    return <Navigate to={rule.home} />;
+
+    if (rule.home != '/') {
+      return <Navigate to={rule.home} />;
+    }
   }
-  return null;
+  return <Navigate to={'/error/503'} />;
 };
 
 export default Home;

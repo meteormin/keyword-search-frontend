@@ -70,8 +70,8 @@ REACT_APP_TMKOR_TOKEN={auth_token}
         ErrorLog ${APACHE_LOG_DIR}/error_dev.log
         CustomLog ${APACHE_LOG_DIR}/access_dev.log combined
 
-        proxyPass /baikalai http://localhost:5757/
-        proxyPassReverse /baikalai http://localhost:5757/
+        proxyPass /baikalai/ http://localhost:5757/
+        proxyPassReverse /baikalai/ http://localhost:5757/
 </VirtualHost>
 <VirtualHost *:80>
 

@@ -1,6 +1,13 @@
-version: '3.8'
+version: '3.9'
 
 services:
+  baikal-npl:
+    image: 'baikalai/baikal-nlp:v1.7.0'
+    ports:
+      - '5757:5757'
+      - '5656:5656'
+    networks:
+      - nia-15
   react-app:
     container_name: 'nia-15-front'
     build: .
@@ -11,10 +18,12 @@ services:
       - ../apache:/etc/apache2/sites-available
       - ../ssl:/etc/ssl
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
     networks:
       - nia-15
+    depends_on:
+      - baikal-npl
 networks:
   nia-15:
     driver: bridge

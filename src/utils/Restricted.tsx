@@ -5,24 +5,25 @@ import { Navigate } from 'react-router';
 export interface RestrictedProps {
   condition: boolean;
   children: ReactElementLike;
-  redirectPath?: string;
+  redirect?: string | ReactElementLike;
 }
 
 /**
- * 조건에 따라 컴포넌트 렌더링을 하거나 하지 않는다.
- * @param {boolean} condition true: 렌더링하지 않음, false: 렌더링
- * @param {JSX.Element} children
- * @param {string|null} redirectPath
- * @returns {*|JSX.Element}
+ * redirectPath와 render 속성이 모두 존재하느 경우 redirectPath를 우선 처리 되어 redirect 됩니다.
+ * @param {RestrictedProps} props
  * @constructor
  */
-const Restricted = ({ condition, children, redirectPath }: RestrictedProps) => {
-  if (!condition) {
-    return children;
+const Restricted = (props: RestrictedProps) => {
+  if (!props.condition) {
+    return props.children;
   }
 
-  if (redirectPath != null) {
-    return <Navigate to={redirectPath} />;
+  if (props.redirect) {
+    if (props.redirect instanceof String) {
+      return <Navigate to={props.redirect as string} />;
+    } else {
+      return props.redirect as JSX.Element;
+    }
   }
 
   return <Fragment></Fragment>;

@@ -17,6 +17,7 @@ import { UserType } from '../config/UserType';
 import { handleGoHome, handlePerm } from './handler';
 import QuestionForm from '../components/questions/QuestionForm';
 import { QuestionDiv } from '../store/features/questions/questionAction';
+import { QuestionsPage } from '../pages/questions';
 
 const Router = () => {
   return (
@@ -38,7 +39,7 @@ const Router = () => {
         <Route
           path="/"
           element={
-            <guard.Protected auth={auth.isLogin()} redirectPath={'/login'}>
+            <guard.Protected auth={auth.isLogin()} redirect={'/login'}>
               <Home role={auth.user()?.userType || ''} rules={handleGoHome()} />
             </guard.Protected>
           }
@@ -47,7 +48,7 @@ const Router = () => {
           <Route
             index
             element={
-              <guard.Restricted condition={auth.isLogin()} redirectPath={'/'}>
+              <guard.Restricted condition={auth.isLogin()} redirect={'/'}>
                 <LoginPage />
               </guard.Restricted>
             }
@@ -63,7 +64,7 @@ const Router = () => {
             element={
               <guard.Restricted
                 condition={handlePerm([UserType.ADMIN])}
-                redirectPath={'/error/403'}
+                redirect={<ForbiddenPage />}
               >
                 <UsersPage />
               </guard.Restricted>
@@ -76,7 +77,7 @@ const Router = () => {
             element={
               <guard.Restricted
                 condition={handlePerm([UserType.WORKER, UserType.ADMIN])}
-                redirectPath={'/error/403'}
+                redirect={<ForbiddenPage />}
               >
                 <AssignTask />
               </guard.Restricted>
@@ -89,7 +90,7 @@ const Router = () => {
             element={
               <guard.Restricted
                 condition={handlePerm([UserType.WORKER, UserType.ADMIN])}
-                redirectPath={'/error/403'}
+                redirect={<ForbiddenPage />}
               >
                 <SentenceListPage />
               </guard.Restricted>
@@ -103,7 +104,7 @@ const Router = () => {
               element={
                 <guard.Restricted
                   condition={handlePerm([UserType.REVIEWER1, UserType.ADMIN])}
-                  redirectPath={'/error/403'}
+                  redirect={<ForbiddenPage />}
                 >
                   <ReviewListPage seq={1} />
                 </guard.Restricted>
@@ -114,7 +115,7 @@ const Router = () => {
               element={
                 <guard.Restricted
                   condition={handlePerm([UserType.REVIEWER1, UserType.ADMIN])}
-                  redirectPath={'/error/403'}
+                  redirect={<ForbiddenPage />}
                 >
                   <AssignReview seq={1} />
                 </guard.Restricted>
@@ -127,7 +128,7 @@ const Router = () => {
               element={
                 <guard.Restricted
                   condition={handlePerm([UserType.REVIEWER2, UserType.ADMIN])}
-                  redirectPath={'/error/403'}
+                  redirect={<ForbiddenPage />}
                 >
                   <ReviewListPage seq={2} />
                 </guard.Restricted>
@@ -138,7 +139,7 @@ const Router = () => {
               element={
                 <guard.Restricted
                   condition={handlePerm([UserType.REVIEWER2, UserType.ADMIN])}
-                  redirectPath={'/error/403'}
+                  redirect={<ForbiddenPage />}
                 >
                   <AssignReview seq={2} />
                 </guard.Restricted>
@@ -146,8 +147,19 @@ const Router = () => {
             />
           </Route>
         </Route>
-        <Route path="error">
+
+        <Route path={'/questions'}>
+          <Route
+            index
+            element={
+              <QuestionsPage userType={auth.user()?.userType as UserType} />
+            }
+          />
+        </Route>
+
+        <Route path="errors">
           <Route path="403" element={<ForbiddenPage />} />
+          <Route path="404" element={<NotFoundPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
