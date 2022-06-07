@@ -23,7 +23,7 @@ class Select extends Component<SelectProps, SelectProps> {
       name: '',
       options: [],
       label: '',
-      selectedValue: 0,
+      selectedValue: undefined,
       onChange: (e: ChangeEvent<HTMLSelectElement>) => e,
     };
   }
