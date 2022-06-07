@@ -113,7 +113,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       <Row className="ms-2 mt-2">
         <Col lg={12}>
           <DataAssign
-            onAssign={(selectedName) => {
+            onAssign={(selectedName: string | undefined) => {
               dispatch(
                 searchModule.actions.search({
                   domain: selectedName,
