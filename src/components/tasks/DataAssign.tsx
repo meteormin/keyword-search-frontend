@@ -47,6 +47,8 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
                 const value = e.target.options[selectedIndex].value;
                 if (value) {
                   setSelectedName(value);
+                } else {
+                  setSelectedName(undefined);
                 }
               }}
             />
