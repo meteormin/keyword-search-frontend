@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   baikal-npl:
-    image: 'baikalai/baikal-nlp:v1.7.0'
+    image: 'baikalai/baikal-nlp:v1.7.2'
     ports:
       - '5757:5757'
       - '5656:5656'
