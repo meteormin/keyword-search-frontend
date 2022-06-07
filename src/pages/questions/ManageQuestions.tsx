@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Button, Col, Row, Container } from 'react-bootstrap';
-import Select from '../../components/common/Select';
 import { useState } from 'react';
 import Pagination from '../../components/common/Pagination';
 import DynamicTable from '../../components/common/DaynamicTable';
@@ -13,6 +12,7 @@ import QuestionForm, {
 } from '../../components/questions/QuestionForm';
 import { QuestionDiv } from '../../store/features/questions/questionAction';
 import LimitFilter from '../../components/common/LimitFilter';
+import Search from '../../components/questions/Search';
 
 const filterOptions = [
   {
@@ -52,13 +52,7 @@ const ManageQuestions = () => {
     if (filter != -1) {
       setReplied(!!filter);
     }
-    dispatch(
-      questionModule.actions.getList({
-        limit: limit,
-        page: page,
-        isReplied: isReplied,
-      }),
-    );
+    dispatch(questionModule.actions.getList());
   }, [limit, page, filter]);
 
   useEffect(() => {
@@ -126,35 +120,27 @@ const ManageQuestions = () => {
 
   return (
     <Container>
-      <Row>
+      <Row className={'mt-4'}>
+        <Search onSearch={(s) => console.log(s)} />
+      </Row>
+      <Row className={'mt-4'}>
         <Col lg={6}></Col>
         <Col lg={6}>
-          <Row className={'mt-4'}>
+          <Row>
+            <Col lg={6}></Col>
             <Col lg={6}>
-              <Select
-                options={filterOptions}
-                selectedValue={filter}
+              <LimitFilter
+                selectedValue={limit}
                 onChange={(e) => {
                   const option = e.target.options[e.target.selectedIndex];
-                  setFilter(parseInt(option.value));
+                  setLimit(parseInt(option.value));
                 }}
-                id="filter"
-                name="filter"
               />
-              <Col lg={6}>
-                <LimitFilter
-                  selectedValue={limit}
-                  onChange={(e) => {
-                    const option = e.target.options[e.target.selectedIndex];
-                    setLimit(parseInt(option.value));
-                  }}
-                />
-              </Col>
             </Col>
           </Row>
         </Col>
       </Row>
-      <Row>
+      <Row className={'mt-4'}>
         <DynamicTable
           schema={QuestionSchema}
           records={records}

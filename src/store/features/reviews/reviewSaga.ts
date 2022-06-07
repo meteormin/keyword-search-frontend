@@ -68,14 +68,14 @@ function* assign(action: PayloadAction<number>) {
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {
+      yield put(reviewModule.actions.getAssignList({ seq: seq }));
       yield put(
         alertModalModule.showAlert({
           title: '할당 완료',
           message: '할당 완료',
-          refresh: true,
+          refresh: false,
         }),
       );
-      yield put(reviewModule.actions.getAssignList);
     } else {
       yield put(alertModalModule.errorAlert({ res: res }));
     }

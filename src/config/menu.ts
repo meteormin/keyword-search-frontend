@@ -42,7 +42,7 @@ const menu: Menu = {
       icon: 'fas fa-file-lines',
     },
     {
-      url: '/question',
+      url: '/questions',
       name: '문의 답변',
       icon: 'fas fa-file-lines',
     },

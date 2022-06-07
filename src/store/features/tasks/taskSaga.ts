@@ -84,7 +84,7 @@ function* assign() {
         alertModalModule.showAlert({
           title: '할당 완료',
           message: '할당 완료',
-          refresh: true,
+          refresh: false,
         }),
       );
     } else {

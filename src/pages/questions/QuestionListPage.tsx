@@ -52,13 +52,7 @@ const QuestionListPage = () => {
     if (filter != -1) {
       setReplied(!!filter);
     }
-    dispatch(
-      questionModule.actions.getList({
-        limit: limit,
-        page: page,
-        isReplied: isReplied,
-      }),
-    );
+    dispatch(questionModule.actions.getList());
   }, [limit, page, filter]);
 
   useEffect(() => {
@@ -141,15 +135,15 @@ const QuestionListPage = () => {
                 id="filter"
                 name="filter"
               />
-              <Col lg={6}>
-                <LimitFilter
-                  selectedValue={limit}
-                  onChange={(e) => {
-                    const option = e.target.options[e.target.selectedIndex];
-                    setLimit(parseInt(option.value));
-                  }}
-                />
-              </Col>
+            </Col>
+            <Col lg={6}>
+              <LimitFilter
+                selectedValue={limit}
+                onChange={(e) => {
+                  const option = e.target.options[e.target.selectedIndex];
+                  setLimit(parseInt(option.value));
+                }}
+              />
             </Col>
           </Row>
         </Col>

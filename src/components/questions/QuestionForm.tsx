@@ -3,7 +3,7 @@ import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
 import { useState } from 'react';
 import { QuestionDiv } from '../../store/features/questions/questionAction';
 import Select from '../common/Select';
-import { QuestionTypeOptions } from './QuestionTypes';
+import { QuestionTypeOptions } from './QuestionOptions';
 
 export interface QuestionFormData {
   id?: number;

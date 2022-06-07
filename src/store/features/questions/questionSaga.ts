@@ -8,7 +8,7 @@ import questionModule from './index';
 import alertModal from '../common/alertModal';
 
 const apiClient = api({
-  prefix: 'api/v1/question',
+  prefix: 'api/v1/questions',
   token: { token: auth.getToken(), tokenType: 'bearer' },
 });
 
@@ -30,13 +30,14 @@ const questionApi = {
   },
 };
 
-function* getList(action: PayloadAction<QuestionSearch>) {
+function* getList() {
   yield put(loaderModule.startLoading());
+  const { search }: { search: QuestionSearch } = yield select(
+    questionModule.getQuestionState,
+  );
+
   try {
-    const response: ApiResponse = yield call(
-      questionApi.getList,
-      action.payload,
-    );
+    const response: ApiResponse = yield call(questionApi.getList, search);
 
     yield put(loaderModule.endLoading());
 
@@ -110,7 +111,7 @@ function* create(action: PayloadAction<CreateQuestion>) {
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      yield put(questionModule.actions.getList({ page: 1, limit: 10 }));
+      yield put(questionModule.actions.getList());
       yield put(
         alertModal.showAlert({
           title: '문의 요청',
@@ -151,7 +152,7 @@ function* reply(
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      yield put(questionModule.actions.getList({ page: 1, limit: 10 }));
+      yield put(questionModule.actions.getList());
       yield put(
         alertModal.showAlert({
           title: '문의 답변',

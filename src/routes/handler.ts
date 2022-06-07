@@ -59,6 +59,15 @@ const menuPerm = [
     path: '/reviews/2/assign',
     role: [UserType.REVIEWER2, UserType.ADMIN],
   },
+  {
+    path: '/questions',
+    role: [
+      UserType.WORKER,
+      UserType.REVIEWER2,
+      UserType.REVIEWER1,
+      UserType.ADMIN,
+    ],
+  },
 ];
 
 const getPathRole = (path: string) => {

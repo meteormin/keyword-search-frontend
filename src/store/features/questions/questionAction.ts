@@ -1,13 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 
-export interface SearchParameters {
-  type?: number;
-  userId?: string;
-  createdAtStart?: string;
-  createdAtEnd?: string;
-  isReplied?: boolean;
-}
-
 export enum QuestionDiv {
   CREATE = 'create',
   REVIEW = 'review',
@@ -88,16 +80,23 @@ export interface QuestionSearch {
   createdAtStart?: string;
   createdAtEnd?: string;
   isReplied?: boolean;
-  limit: number;
-  page: number;
+  limit?: number;
+  page?: number;
 }
 
 const questionAction = {
+  search: (state: QuestionState, action: PayloadAction<QuestionSearch>) => {
+    if (state.search == null) {
+      state.search = action.payload;
+    } else {
+      state.search = Object.assign(state.search, action.payload);
+    }
+  },
   setCount: (state: QuestionState, action: PayloadAction<number>) => {
     state.count = action.payload;
   },
-  getList: (state: QuestionState, action: PayloadAction<QuestionSearch>) => {
-    state.search = action.payload;
+  getList: (state: QuestionState) => {
+    state.list = [];
   },
   setList: (state: QuestionState, action: PayloadAction<Questions[]>) => {
     state.list = action.payload;
