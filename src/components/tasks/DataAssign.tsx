@@ -5,7 +5,7 @@ import Timer from '../common/Timer';
 import { config } from '../../helpers';
 
 export interface DataAssignProps {
-  onAssign: (selectedName: string) => any;
+  onAssign: (selectedName: string | undefined) => any;
   time: string;
 }
 
@@ -16,7 +16,7 @@ export interface DataAssignState {
 }
 
 const DataAssign = ({ onAssign, time }: DataAssignProps) => {
-  const [selectedName, setSelectedName] = useState<string>('검색어 선택');
+  const [selectedName, setSelectedName] = useState<string | undefined>();
   const [searchCondition, setCondition] = useState<Option[]>([
     {
       name: '검색어 선택',
@@ -44,7 +44,10 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
               options={searchCondition}
               onChange={(e) => {
                 const selectedIndex = e.target.selectedIndex;
-                setSelectedName(e.target.options[selectedIndex].value);
+                const value = e.target.options[selectedIndex].value;
+                if (value) {
+                  setSelectedName(value);
+                }
               }}
             />
           </Col>
