@@ -6,6 +6,8 @@ services:
     ports:
       - '5757:5757'
       - '5656:5656'
+    volumes:
+      - ./testworks-license.pem:/baikal-nlp/config/license.pem
     networks:
       - nia-15
   react-app:
