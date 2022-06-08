@@ -268,41 +268,35 @@ const WorkSpace = (props: WorkSpaceProps) => {
       setReviewPassBtn(false);
     }
 
-    if (
-      reviewData1?.radio != ReviewResult.PASS ||
-      reviewData2?.radio != ReviewResult.PASS
-    ) {
-      if (reviewData1?.check && reviewData2?.check) {
-        const rejectReasons: number[] = config.selectOptions.RejectReason.map(
-          (value) => parseInt(value.value.toString()),
-        );
-        console.log(
-          'look at me',
-          reviewData1.check.includes(rejectReasons[rejectReasons.length - 1]),
-        );
+    const validReject1 = validReject(reviewData1);
+    const validReject2 = validReject(reviewData2);
+
+    setReviewOpinionBtn(validReject1 && validReject2);
+  };
+
+  const validReject = (reviewResult: ReviewResultState | undefined) => {
+    const rejectReasons: number[] = config.selectOptions.RejectReason.map(
+      (value) => parseInt(value.value.toString()),
+    );
+    if (!reviewResult) {
+      return false;
+    }
+
+    if (reviewResult.radio == ReviewResult.FAIL) {
+      if (reviewResult.check) {
         if (
-          reviewData1?.check.includes(
-            rejectReasons[rejectReasons.length - 1],
-          ) &&
-          !reviewData1.memo
+          reviewResult.check.includes(rejectReasons[rejectReasons.length - 1])
         ) {
-          setReviewOpinionBtn(false);
-        } else if (
-          reviewData2?.check.includes(
-            rejectReasons[rejectReasons.length - 1],
-          ) &&
-          !reviewData2.memo
-        ) {
-          setReviewOpinionBtn(false);
+          return !!reviewResult.memo;
         } else {
-          setReviewOpinionBtn(true);
+          return true;
         }
       } else {
-        setReviewOpinionBtn(false);
+        return false;
       }
-    } else {
-      setReviewOpinionBtn(false);
     }
+
+    return true;
   };
 
   const toWorkData = (): WorkData => {
