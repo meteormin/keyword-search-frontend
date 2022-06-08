@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { ReactElementLike } from 'prop-types';
 import { Navigate } from 'react-router';
+import { str } from '../helpers';
 
 export interface RestrictedProps {
   condition: boolean;
@@ -19,7 +20,7 @@ const Restricted = (props: RestrictedProps) => {
   }
 
   if (props.redirect) {
-    if (props.redirect instanceof String) {
+    if (str.isString(props.redirect)) {
       return <Navigate to={props.redirect as string} />;
     } else {
       return props.redirect as JSX.Element;
