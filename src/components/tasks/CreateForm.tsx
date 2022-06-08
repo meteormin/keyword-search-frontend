@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import Prototype from '../common/Prototype';
 import WorkSpace, { WorkData } from '../common/WorkSpace';
-import { lang, makeSentencePattern } from '../../helpers';
+import { lang } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
 import sentenceModule from '../../store/features/sentence';
@@ -14,7 +14,6 @@ import { Task } from '../../store/features/tasks/taskAction';
 import { sentenceToWorkData } from '../../pages/sentences/sentenceDataMap';
 import { sentenceValidate } from '../../utils/validation/sentence';
 import alertModal from '../../store/features/common/alertModal';
-import { getFrameRequest } from '../../utils/tmkor/TmKor';
 import Timer from '../../components/common/Timer';
 
 export interface CreateFormProps {
@@ -205,6 +204,7 @@ const CreateForm = (props: CreateFormProps) => {
                 <WorkSpace
                   workType={'work'}
                   readOnly={props.readOnly}
+                  task={task as Task}
                   workData={toWorkData()}
                   onSubmit={(data) => {
                     if (task) {

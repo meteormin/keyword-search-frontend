@@ -1,11 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import Card from './Card';
-import { baikalNlp, config, lang, str } from '../../helpers';
+import {
+  baikalNlp,
+  config,
+  lang,
+  str,
+  makeSentencePattern,
+  checkDualFrame,
+} from '../../helpers';
 import ReviewSection, { ReviewResultState } from '../reviews/ReviewSection';
 import { useDispatch } from 'react-redux';
 import alertModal from '../../store/features/common/alertModal';
 import { usePrev } from '../../helpers';
+import { Concept, Task } from '../../store/features/tasks/taskAction';
+import { showAlert } from '../../store/features/common/alertModal/alertModalReducer';
 
 export enum ReviewResult {
   PASS = 'PASS',
@@ -35,6 +44,7 @@ export interface ReviewData {
 
 export interface WorkSpaceProps {
   seq?: number;
+  task: Task;
   workType: 'work' | 'rework' | 'review';
   workData?: WorkData;
   readOnly?: boolean;
@@ -44,7 +54,7 @@ export interface WorkSpaceProps {
 
 const WorkSpace = (props: WorkSpaceProps) => {
   const dispatch = useDispatch();
-  const [isMount, setMount] = useState<boolean>(false);
+  const [originSP, setOriginSP] = useState('');
   const [textArea10, setText10] = useState('');
   const [textArea20, setText20] = useState('');
   const [textArea11, setText11] = useState('');
@@ -90,6 +100,14 @@ const WorkSpace = (props: WorkSpaceProps) => {
     if (props.workType == 'rework' || props.workType == 'review') {
       setClickedMkSp([true, true]);
     }
+
+    if (props.task.sentence) {
+      makeSP(props.task.sentence).then((res) => {
+        if (res) {
+          setOriginSP(res);
+        }
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -100,9 +118,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
         textArea10 != props?.workData?.textArea10 &&
         textArea10 != prevTextArea10
       ) {
-        const prevMkSp = clickedMkSp;
-        prevMkSp[0] = false;
-        setClickedMkSp(prevMkSp);
+        setIsClickedMkSp(0, false);
       }
     }
 
@@ -112,9 +128,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
         textArea20 != props?.workData?.textArea20 &&
         textArea20 != prevTextArea20
       ) {
-        const prevMkSp = clickedMkSp;
-        prevMkSp[1] = false;
-        setClickedMkSp(prevMkSp);
+        setIsClickedMkSp(1, false);
       }
     }
 
@@ -138,6 +152,12 @@ const WorkSpace = (props: WorkSpaceProps) => {
       checkBtnActivate();
     }
   }, [patternedText]);
+
+  const setIsClickedMkSp = (offset: number, value: boolean) => {
+    const prevMkSp = clickedMkSp;
+    prevMkSp[offset] = value;
+    setClickedMkSp(prevMkSp);
+  };
 
   /**
    * return 0 = pass,
@@ -224,18 +244,14 @@ const WorkSpace = (props: WorkSpaceProps) => {
       newPatternedText[no] = patternedText[no] || textArea10;
       setPatText(newPatternedText);
       setText11(patternedText[no] || textArea10);
-      console.log('makeSPC');
-      const prevMkSp = clickedMkSp;
-      prevMkSp[no] = true;
-      setClickedMkSp(prevMkSp);
+      console.log('makeSPC1');
+      setIsClickedMkSp(no, true);
     } else if (no === 1) {
       newPatternedText[no] = patternedText[no] || textArea10;
       setPatText(newPatternedText);
       setText21(patternedText[no] || textArea20);
-      console.log('makeSPC');
-      const prevMkSp = clickedMkSp;
-      prevMkSp[no] = true;
-      setClickedMkSp(prevMkSp);
+      console.log('makeSPC2');
+      setIsClickedMkSp(no, true);
     }
   };
 
@@ -387,6 +403,98 @@ const WorkSpace = (props: WorkSpaceProps) => {
       });
   };
 
+  const makeSP = async (str: string) => {
+    return await makeSentencePattern(str);
+  };
+
+  const checkConcepts = async (concepts: Concept[], str: string) => {
+    return await baikalNlp.checkConcepts(concepts, str);
+  };
+
+  const checkDup = async (str1: string, str2: string) => {
+    return await checkDualFrame(str1, str2);
+  };
+
+  const handleMakeSP = (cntNo: number, str: string) => {
+    let setSentencePattern: React.Dispatch<React.SetStateAction<string>>;
+    let otherSentence: string;
+    if (cntNo == 1) {
+      setSentencePattern = setText11;
+      otherSentence = textArea11;
+    } else if (cntNo == 2) {
+      setSentencePattern = setText21;
+      otherSentence = textArea21;
+    } else {
+      return;
+    }
+
+    makeSP(str)
+      .then((res) => {
+        if (res) {
+          setSentencePattern(res);
+        }
+      })
+      .catch((reason) => {
+        console.error('make sentence pattern fail:', reason);
+        setSentencePattern(str);
+      });
+
+    checkDup(str, originSP).then((res) => {
+      if (res) {
+        if (res.duplicated) {
+          setIsClickedMkSp(cntNo - 1, false);
+          setSentencePattern('');
+          dispatch(
+            alertModal.showAlert({
+              title: '문형 만들기',
+              message: '기본 문장과 동일한 문형입니다.',
+            }),
+          );
+        } else {
+          checkDup(str, otherSentence).then((res) => {
+            if (res) {
+              if (res.duplicated) {
+                setIsClickedMkSp(cntNo - 1, false);
+                setSentencePattern('');
+                dispatch(
+                  alertModal.showAlert({
+                    title: '문형 만들기',
+                    message: '생성한 다른 문장과 동일한 문형입니다.',
+                  }),
+                );
+              }
+            }
+          });
+        }
+      }
+    });
+
+    checkConcepts(props.task.edges?.concepts || [], str)
+      .then((res) => {
+        if (!res) {
+          setIsClickedMkSp(cntNo - 1, false);
+          setSentencePattern('');
+          dispatch(
+            alertModal.showAlert({
+              title: '문형 만들기',
+              message: '개념 집합을 모두 사용해 주세요.',
+            }),
+          );
+        }
+      })
+      .catch((reason) => {
+        console.error('check concepts fail:', reason);
+        setIsClickedMkSp(cntNo - 1, false);
+        setSentencePattern('');
+        dispatch(
+          alertModal.showAlert({
+            title: '문형 만들기',
+            message: reason,
+          }),
+        );
+      });
+  };
+
   return (
     <Fragment>
       <Card
@@ -445,6 +553,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
               console.log('get api');
               handleMakeSPClick(0);
               handleWordCount(1, textArea10);
+              handleMakeSP(1, textArea10);
             }}
           >
             문형 만들기
@@ -542,6 +651,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
               console.log('get api');
               handleMakeSPClick(1);
               handleWordCount(2, textArea20);
+              handleMakeSP(2, textArea20);
             }}
           >
             문형 만들기

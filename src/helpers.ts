@@ -19,7 +19,12 @@ import * as Str from './utils/str';
 import BaikalNlp, { AnalyzeSentence } from './utils/BaikalNlp';
 import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
-import TmKor, { getFrameRequest } from './utils/tmkor/TmKor';
+import TmKor, {
+  CheckDualFrameRequest,
+  DualFrameText,
+  FrameText,
+  getFrameRequest,
+} from './utils/tmkor/TmKor';
 import { Task } from './store/features/tasks/taskAction';
 import { switchReviewStatus as switchRS } from './utils/common/status';
 
@@ -131,29 +136,18 @@ export const tmKor = new TmKor(
 );
 
 export const makeSentencePattern = async (
-  task: Task,
+  sentence: string,
 ): Promise<string | null> => {
   try {
-    const baikalRes = await baikalNlp.analyze(task.sentence);
+    const baikalRes = await baikalNlp.analyze(sentence);
     const req: getFrameRequest = {
-      sentence: task?.sentence,
-      concepts:
-        task?.edges?.concepts.map((c) => {
-          return {
-            stem: c.stem,
-            postag: c.posttag,
-          };
-        }) || [],
-      tagged: baikalRes?.sentences[0] as AnalyzeSentence,
-      posLength: task.posLength,
-      id: task.dataId,
-      refSrc: task.refSrc,
-      refId: task.refId,
-      domain: task.domain,
+      sentences: baikalRes?.sentences || [],
+      language: 'ko_KR',
     };
-    const tmKorRes = await tmKor.getFrame([req]);
+    const tmKorRes = await tmKor.getFrame(req);
     if (tmKorRes) {
-      return tmKorRes[0].frameText || null;
+      const data = tmKorRes.data[0] as FrameText;
+      return data.frameText || null;
     }
   } catch (e) {
     return null;
@@ -162,8 +156,33 @@ export const makeSentencePattern = async (
   return null;
 };
 
-export const checkSentencePattern = () => {
-  return;
+export const checkDualFrame = async (
+  str1: string,
+  str2: string,
+): Promise<DualFrameText | null> => {
+  try {
+    const baikalRes1 = await baikalNlp.analyze(str1);
+    const baikalRes2 = await baikalNlp.analyze(str2);
+    const req: CheckDualFrameRequest = {
+      tagged_text_1: {
+        sentences: baikalRes1?.sentences || [],
+        language: 'ko_KR',
+      },
+      tagged_text_2: {
+        sentences: baikalRes2?.sentences || [],
+        language: 'ko_KR',
+      },
+    };
+
+    const res = await tmKor.checkDualFrame(req);
+    if (res) {
+      return res.data[0] as DualFrameText;
+    }
+  } catch (e) {
+    return null;
+  }
+
+  return null;
 };
 
 export const switchReviewStatus = switchRS;

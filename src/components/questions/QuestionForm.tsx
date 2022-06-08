@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { Modal, Form, Row, Col, Button } from 'react-bootstrap';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
 import { QuestionDiv } from '../../store/features/questions/questionAction';
 import Select from '../common/Select';
 import { QuestionTypeOptions } from './QuestionOptions';
@@ -23,7 +22,7 @@ export interface QuestionFormProps {
   show: boolean;
   onHide: () => any;
   onSubmit: (data: QuestionFormData) => any;
-  defaultData?: QuestionFormData;
+  defaultData?: QuestionFormData | null;
 }
 
 const QuestionForm = (props: QuestionFormProps) => {
@@ -38,10 +37,20 @@ const QuestionForm = (props: QuestionFormProps) => {
 
   useEffect(() => {
     setShow(props.show);
-  }, []);
+    setFormData(props?.defaultData || null);
+  }, [props]);
+
+  const setFormData = (formData: QuestionFormData | null) => {
+    setType(formData?.type || 0);
+    setTitle(formData?.title || '');
+    setContent(formData?.content || '');
+    setReply(formData?.reply || '');
+    setDiv(formData?.div || QuestionDiv.CREATE);
+    setFileName(formData?.fileName || '');
+  };
 
   return (
-    <Modal show={show} dialogClassName={'modal-80w'}>
+    <Modal show={show} onHide={props.onHide} dialogClassName={'modal-80w'}>
       <Modal.Header closeButton>
         <Modal.Title>
           문의 글{props.isReply ? '답변하기' : '작성하기'}
@@ -52,7 +61,10 @@ const QuestionForm = (props: QuestionFormProps) => {
           id="q_type"
           name="q_type"
           label="문의 유형"
-          readOnly={props.method == 'edit'}
+          readOnly={
+            props.method == 'edit' ||
+            (props.method == 'create' && props.isReply)
+          }
           options={QuestionTypeOptions}
           selectedValue={type}
           onChange={(e) => {
@@ -64,7 +76,10 @@ const QuestionForm = (props: QuestionFormProps) => {
           <Form.Label>제목</Form.Label>
           <Form.Control
             type="text"
-            readOnly={props.method == 'edit'}
+            readOnly={
+              props.method == 'edit' ||
+              (props.method == 'create' && props.isReply)
+            }
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
@@ -75,7 +90,10 @@ const QuestionForm = (props: QuestionFormProps) => {
           <Form.Label>내용입력</Form.Label>
           <Form.Control
             as="textarea"
-            readOnly={props.method == 'edit'}
+            readOnly={
+              props.method == 'edit' ||
+              (props.method == 'create' && props.isReply)
+            }
             value={content}
             rows={5}
             onChange={(e) => {
@@ -87,8 +105,16 @@ const QuestionForm = (props: QuestionFormProps) => {
           <Form.Label>첨부파일</Form.Label>
           <Form.Control
             type="file"
-            readOnly={props.method == 'edit'}
+            readOnly={
+              props.method == 'edit' ||
+              (props.method == 'create' && props.isReply)
+            }
+            disabled={
+              props.method == 'edit' ||
+              (props.method == 'create' && props.isReply)
+            }
             accept="image/gif,image/jpeg,image/png"
+            placeholder="첨부파일"
             onChange={(e) => {
               if ('files' in e.target) {
                 const files = e.target?.files;
@@ -101,22 +127,17 @@ const QuestionForm = (props: QuestionFormProps) => {
             }}
           />
         </Form.Group>
-        {props.method == 'edit' ? (
+        {props.method == 'edit' ||
+        (props.method == 'create' && props.isReply) ? (
           <Form.Group className={'mt-2'}>
             <Form.Label>답변</Form.Label>
             <Form.Control
-              type="file"
-              readOnly
-              value={fileName}
-              accept="image/gif,image/jpeg,image/png"
+              as="textarea"
+              readOnly={!props.isReply}
+              value={reply}
+              rows={5}
               onChange={(e) => {
-                if ('files' in e.target) {
-                  const files = e.target?.files;
-                  if (files != null) {
-                    const file = files[0];
-                    setFile(file);
-                  }
-                }
+                setReply(e.target.value);
               }}
             />
           </Form.Group>
@@ -148,7 +169,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                   })
                 }
               >
-                문의 등록하기
+                {props.isReply ? '답변저장' : '문의 등록하기'}
               </Button>
             ) : props.method == 'edit' ? (
               <Button

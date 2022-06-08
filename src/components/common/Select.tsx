@@ -94,6 +94,7 @@ class Select extends Component<SelectProps, SelectProps> {
           id={this.state.id}
           onChange={this.onChange}
           value={this.state.selectedValue}
+          disabled={this.props.readOnly}
         >
           {this.makeOptions()}
         </select>

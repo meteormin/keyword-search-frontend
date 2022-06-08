@@ -6,6 +6,7 @@ export interface selectFilterProps {
   label: string;
   onChange: (selectedValue: any) => any;
   options: Option[];
+  value: any;
 }
 
 const SelectFilter = (props: selectFilterProps) => {
@@ -21,6 +22,7 @@ const SelectFilter = (props: selectFilterProps) => {
           id={'selectFilter'}
           name={'selectFilter'}
           options={props.options}
+          selectedValue={props.value}
           onChange={(e) => {
             const value = e.target.options[e.target.selectedIndex].value;
             props.onChange(value || '');

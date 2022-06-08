@@ -22,6 +22,11 @@ export interface ErrorResInterface {
   message: string;
 }
 
+export interface Attachment {
+  name: string;
+  file: File;
+}
+
 export class ErrorResponse implements ErrorResInterface {
   private readonly _name: string;
   private readonly _message: string;
@@ -45,6 +50,7 @@ export class ApiClient {
   protected _token: Token | null;
   protected _headers: AxiosRequestHeaders | null;
   protected _response: AxiosResponse | null;
+  protected _attachment: Attachment[];
   protected _error: any;
   protected _isSuccess: boolean;
 
@@ -58,6 +64,7 @@ export class ApiClient {
     this._token = null;
     this._error = null;
     this._isSuccess = false;
+    this._attachment = [];
   }
 
   /**
@@ -106,6 +113,14 @@ export class ApiClient {
 
     if (this._headers != null) {
       config.headers = this._headers;
+    }
+
+    if (this._attachment && this._attachment.length != 0) {
+      for (const attach of this._attachment) {
+        const data: { [key: string]: File } = {};
+        data[attach.name] = attach.file;
+        config.data = Object.assign(config.data || {}, data);
+      }
     }
 
     return this.setResponse(axios.request(config));
@@ -195,7 +210,19 @@ export class ApiClient {
    * @returns {ApiClient}
    */
   withHeader(headers: AxiosRequestHeaders): ApiClient {
-    this._headers = headers;
+    this._headers = Object.assign(this._headers || {}, headers);
+    return this;
+  }
+
+  attach(file: Attachment | Attachment[]) {
+    this._headers = Object.assign(this._headers || {}, {
+      'Content-Type': 'multipart/form-data',
+    });
+    if (Array.isArray(file)) {
+      this._attachment.concat(file);
+    } else {
+      this._attachment.push(file);
+    }
     return this;
   }
 
@@ -209,11 +236,7 @@ export class ApiClient {
     const config: AxiosRequestConfig = {};
     config.method = 'GET';
     config.url = this.makeUrl(path);
-    if (params.hasOwnProperty('data')) {
-      config.data = params.data;
-    } else {
-      config.params = params;
-    }
+    config.params = params;
 
     return this.request(config);
   }

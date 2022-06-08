@@ -59,6 +59,7 @@ export interface CreateQuestion {
 }
 
 export interface QuestionState {
+  isAdmin: boolean;
   count: number;
   list: Questions[];
   edit: Question | null;
@@ -67,6 +68,7 @@ export interface QuestionState {
 }
 
 export const initialState: QuestionState = {
+  isAdmin: false,
   count: 0,
   list: [],
   edit: null,
@@ -85,6 +87,9 @@ export interface QuestionSearch {
 }
 
 const questionAction = {
+  isAdmin: (state: QuestionState, action: PayloadAction<boolean>) => {
+    state.isAdmin = action.payload;
+  },
   search: (state: QuestionState, action: PayloadAction<QuestionSearch>) => {
     if (state.search == null) {
       state.search = action.payload;
