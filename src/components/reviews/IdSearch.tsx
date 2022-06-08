@@ -59,6 +59,7 @@ const IdSearch = (props: IdSearchProps) => {
       <Col md={4}>
         <SelectFilter
           label={'ID'}
+          value={selected}
           onChange={(selectedValue) => {
             setSelected(selectedValue as number);
           }}

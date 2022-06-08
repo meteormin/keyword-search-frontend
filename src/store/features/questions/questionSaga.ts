@@ -1,4 +1,9 @@
-import { CreateQuestion, Questions, QuestionSearch } from './questionAction';
+import {
+  CreateQuestion,
+  Question,
+  Questions,
+  QuestionSearch,
+} from './questionAction';
 import { api, apiResponse, auth } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { put, call, takeLatest, fork, select } from 'redux-saga/effects';
@@ -6,6 +11,7 @@ import loaderModule from '../common/loader';
 import { ApiResponse } from '../../../utils/ApiClient';
 import questionModule from './index';
 import alertModal from '../common/alertModal';
+import { toCamel } from 'snake-camel';
 
 const apiClient = api({
   prefix: 'api/v1/questions',
@@ -13,8 +19,14 @@ const apiClient = api({
 });
 
 const questionApi = {
-  getList: async (search: QuestionSearch) => {
-    return await apiClient.get('/', search);
+  getList: async (search: QuestionSearch, isAdmin: boolean) => {
+    let url: string;
+    if (isAdmin) {
+      url = '/';
+    } else {
+      url = '/my';
+    }
+    return await apiClient.get(url, search);
   },
   getById: async (id: number) => {
     return await apiClient.get(`${id}`);
@@ -23,7 +35,14 @@ const questionApi = {
     return await apiClient.get(`${id}/file`);
   },
   create: async (question: CreateQuestion) => {
-    return await apiClient.post('/', question);
+    return await apiClient
+      .attach({ name: 'document', file: question.document })
+      .post('/', {
+        title: question.title,
+        content: question.content,
+        type: question.type,
+        div: question.div,
+      });
   },
   reply: async (questionId: number, reply: string) => {
     return await apiClient.post(`${questionId}`, { content: reply });
@@ -32,19 +51,22 @@ const questionApi = {
 
 function* getList() {
   yield put(loaderModule.startLoading());
-  const { search }: { search: QuestionSearch } = yield select(
-    questionModule.getQuestionState,
-  );
+  const { search, isAdmin }: { search: QuestionSearch; isAdmin: boolean } =
+    yield select(questionModule.getQuestionState);
 
   try {
-    const response: ApiResponse = yield call(questionApi.getList, search);
+    const response: ApiResponse = yield call(
+      questionApi.getList,
+      search,
+      isAdmin,
+    );
 
     yield put(loaderModule.endLoading());
 
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      const questionList: Questions[] = res.data.questions;
+      const questionList: Questions[] = res.data.questions.map(toCamel);
       const count = res.data.count;
       yield put(questionModule.actions.setCount(count));
       yield put(questionModule.actions.setList(questionList));
@@ -79,7 +101,9 @@ function* getById(action: PayloadAction<number>) {
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      yield put(questionModule.actions.setEdit(res.data.question));
+      yield put(
+        questionModule.actions.setEdit(toCamel(res.data.question) as Question),
+      );
     } else {
       yield put(
         alertModal.showAlert({

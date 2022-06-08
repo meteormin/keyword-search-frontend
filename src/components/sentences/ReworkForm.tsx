@@ -15,6 +15,7 @@ import sentenceModule from '../../store/features/sentence';
 import taskModule from '../../store/features/tasks';
 import { reworkValidate } from '../../utils/validation/sentence';
 import Timer from '../../components/common/Timer';
+import { Task } from '../../store/features/tasks/taskAction';
 
 export interface CreateFormProps {
   show: boolean;
@@ -165,6 +166,7 @@ const ReviewForm = (props: CreateFormProps) => {
               <Col lg={8}>
                 <WorkSpace
                   seq={props.seq}
+                  task={review?.edges?.task as Task}
                   readOnly={props.readOnly}
                   workType="rework"
                   workData={sentenceToWorkData(props.seq, review)}

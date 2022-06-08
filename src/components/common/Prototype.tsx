@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Card from './Card';
-import { lang } from '../../helpers';
+import { lang, makeSentencePattern } from '../../helpers';
 import { Table } from 'react-bootstrap';
 
 export interface PrototypeProps {
@@ -23,8 +23,11 @@ const Prototype = (props: PrototypeProps) => {
     setConceptsTag(props.conceptsTag);
     setWordCount(props.wordCount);
     setBasic(props.basicSentence);
-    setPrototype(props.prototypeSentence);
-  }, [props]);
+
+    makeSentencePattern(props.basicSentence).then((res) => {
+      setPrototype(res || props.prototypeSentence);
+    });
+  }, []);
 
   return (
     <div>

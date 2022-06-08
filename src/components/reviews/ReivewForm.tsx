@@ -15,6 +15,7 @@ import alertModal from '../../store/features/common/alertModal';
 import { reviewValidate } from '../../utils/validation/review';
 import sentenceModule from '../../store/features/sentence';
 import Timer from '../../components/common/Timer';
+import { Task } from '../../store/features/tasks/taskAction';
 
 export interface CreateFormProps {
   show: boolean;
@@ -156,6 +157,7 @@ const ReviewForm = (props: CreateFormProps) => {
                 <WorkSpace
                   seq={props.seq}
                   readOnly={props.readOnly}
+                  task={review?.edges?.task as Task}
                   workType="review"
                   workData={sentenceToWorkData(props.seq, review)}
                   onSubmit={(data) => {

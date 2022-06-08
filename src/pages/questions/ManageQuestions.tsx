@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, Col, Row, Container } from 'react-bootstrap';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import Pagination from '../../components/common/Pagination';
 import DynamicTable from '../../components/common/DaynamicTable';
 import { QuestionRecord, QuestionSchema } from './QuestionSchema';
@@ -10,9 +9,13 @@ import QuestionForm, {
   QuestionFormData,
   QuestionFormProps,
 } from '../../components/questions/QuestionForm';
-import { QuestionDiv } from '../../store/features/questions/questionAction';
+import {
+  QuestionDiv,
+  QuestionSearch,
+} from '../../store/features/questions/questionAction';
 import LimitFilter from '../../components/common/LimitFilter';
 import Search from '../../components/questions/Search';
+import { date } from '../../helpers';
 
 const filterOptions = [
   {
@@ -40,7 +43,7 @@ const ManageQuestions = () => {
   const { edit, list, search } = useSelector(questionModule.getQuestionState);
   const [formData, setFormData] = useState<QuestionFormData | null>(null);
   const [formProps, setFormProps] = useState<QuestionFormProps>({
-    isReply: false,
+    isReply: true,
     method: 'create',
     div: QuestionDiv.CREATE,
     show: false,
@@ -49,9 +52,7 @@ const ManageQuestions = () => {
   });
 
   useEffect(() => {
-    if (filter != -1) {
-      setReplied(!!filter);
-    }
+    dispatch(questionModule.actions.isAdmin(true));
     dispatch(questionModule.actions.getList());
   }, [limit, page, filter]);
 
@@ -73,6 +74,17 @@ const ManageQuestions = () => {
 
       setFormData(data);
     }
+
+    setFormProps({
+      method: 'create',
+      isReply: true,
+      div: QuestionDiv.CREATE,
+      show: !!edit,
+      onHide: () => {
+        dispatch(questionModule.actions.setEdit(null));
+      },
+      onSubmit: (data) => null,
+    });
   }, [edit]);
 
   const recordList = () => {
@@ -82,9 +94,11 @@ const ManageQuestions = () => {
         div: q.div,
         type: q.type,
         subject: q.title,
-        createdAt: q.createdAt,
+        createdAt: date(q.createdAt).utc().format('yyyy-MM-DD'),
         creatorId: q.userLoginId,
-        repliedAt: q.repliedAt,
+        repliedAt: q.repliedAt
+          ? date(q.repliedAt).utc().format('yyyy-MM-DD')
+          : '미답변',
         replyLoginId: q.replyUserLoginId,
         _origin: q,
       };
@@ -95,33 +109,16 @@ const ManageQuestions = () => {
 
   const onClickRecord = (r: QuestionRecord) => {
     dispatch(questionModule.actions.getById(r._origin.id));
-    if (edit) {
-      setFormData({
-        id: edit.id,
-        type: edit.edges.questionType.id,
-        title: edit.title,
-        content: edit.content,
-        div: edit.div,
-        reply: edit.reply,
-        fileName: edit.fileName,
-      });
-      setFormProps({
-        method: 'edit',
-        isReply: false,
-        div: edit.div,
-        show: true,
-        onHide: () => {
-          dispatch(questionModule.actions.setEdit(null));
-        },
-        onSubmit: (data) => null,
-      });
-    }
+  };
+
+  const onSearch = (s: QuestionSearch | undefined) => {
+    dispatch(questionModule.actions.getList());
   };
 
   return (
     <Container>
-      <Row className={'mt-4'}>
-        <Search onSearch={(s) => console.log(s)} />
+      <Row>
+        <Search onSearch={onSearch} />
       </Row>
       <Row className={'mt-4'}>
         <Col lg={6}></Col>
@@ -162,7 +159,7 @@ const ManageQuestions = () => {
           </Button>
         </Col>
       </Row>
-      <QuestionForm {...formProps} />
+      <QuestionForm {...formProps} defaultData={formData} />
     </Container>
   );
 };
