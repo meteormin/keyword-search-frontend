@@ -51,3 +51,7 @@ export const makePath = (source: string, target: string): string => {
   const path = source + '/' + target;
   return path.replace('//', '/');
 };
+
+export const isString = (value: any) => {
+  return typeof value === 'string' || value instanceof String;
+};
