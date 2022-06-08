@@ -283,7 +283,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
     }
 
     if (reviewResult.radio == ReviewResult.FAIL) {
-      if (reviewResult.check) {
+      if (reviewResult.check && reviewResult.check.length != 0) {
         if (
           reviewResult.check.includes(rejectReasons[rejectReasons.length - 1])
         ) {
