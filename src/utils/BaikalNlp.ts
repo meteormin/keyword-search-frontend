@@ -1,6 +1,7 @@
 import { ApiClient, ApiResponse } from './ApiClient';
 import { apiResponse } from '../helpers';
 import { toCamel } from 'snake-camel';
+import { Concept } from './nia15/interfaces/tasks';
 
 export interface AnalyzeData {
   sentences: AnalyzeSentence[];
@@ -92,6 +93,35 @@ class BaikalNlp {
     }
 
     return count;
+  }
+
+  public async checkConcepts(concepts: Concept[], sentence: string) {
+    const analyzeData: AnalyzeData | null = await this.analyze(sentence);
+    let check = false;
+    if (analyzeData) {
+      let cnt = 0;
+      const conceptStem = concepts.map((c) => c.stem);
+      const conceptTags = concepts.map((c) => c.posttag);
+      analyzeData.sentences.forEach((item) => {
+        item.tokens.forEach((t) => {
+          cnt += t.morphemes.filter((token) => {
+            if (this.excludeTags.includes(token.tag)) {
+              return false;
+            }
+            console.log(conceptTags, token.tag);
+            console.log(conceptStem, token.text.content);
+            return (
+              conceptTags.includes(token.tag) &&
+              conceptStem.includes(token.text.content)
+            );
+          }).length;
+        });
+        console.log(cnt);
+        check = concepts.length == cnt;
+      });
+    }
+
+    return check;
   }
 }
 

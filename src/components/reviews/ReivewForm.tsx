@@ -5,16 +5,17 @@ import WorkSpace from '../common/WorkSpace';
 import { lang } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import reviewModule from '../../store/features/reviews';
-import { CreateReview } from '../../store/features/reviews/reviewAction';
+import { CreateReview } from '../../utils/nia15/interfaces/reviews';
 import {
   sentenceToWorkData,
   workDataToCreateReview,
 } from '../../pages/reviews/reviewDataMap';
-import { Sentence } from '../../store/features/sentence/sentenceAction';
+import { Sentence } from '../../utils/nia15/interfaces/sentences';
 import alertModal from '../../store/features/common/alertModal';
 import { reviewValidate } from '../../utils/validation/review';
 import sentenceModule from '../../store/features/sentence';
 import Timer from '../../components/common/Timer';
+import { Task } from '../../utils/nia15/interfaces/tasks';
 
 export interface CreateFormProps {
   show: boolean;
@@ -156,6 +157,7 @@ const ReviewForm = (props: CreateFormProps) => {
                 <WorkSpace
                   seq={props.seq}
                   readOnly={props.readOnly}
+                  task={review?.edges?.task as Task}
                   workType="review"
                   workData={sentenceToWorkData(props.seq, review)}
                   onSubmit={(data) => {

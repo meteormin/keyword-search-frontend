@@ -1,50 +1,39 @@
-import { CreateQuestion, Questions, QuestionSearch } from './questionAction';
-import { api, apiResponse, auth } from '../../../helpers';
+import {
+  CreateQuestion,
+  Question,
+  Questions,
+  QuestionSearch,
+} from '../../../utils/nia15/interfaces/questions';
+import { apiResponse } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { put, call, takeLatest, fork, select } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import { ApiResponse } from '../../../utils/ApiClient';
 import questionModule from './index';
 import alertModal from '../common/alertModal';
+import { toCamel } from 'snake-camel';
+import newClient, { Clients } from '../../../utils/nia15/api';
 
-const apiClient = api({
-  prefix: 'api/v1/questions',
-  token: { token: auth.getToken(), tokenType: 'bearer' },
-});
-
-const questionApi = {
-  getList: async (search: QuestionSearch) => {
-    return await apiClient.get('/', search);
-  },
-  getById: async (id: number) => {
-    return await apiClient.get(`${id}`);
-  },
-  getFile: async (id: number) => {
-    return await apiClient.get(`${id}/file`);
-  },
-  create: async (question: CreateQuestion) => {
-    return await apiClient.post('/', question);
-  },
-  reply: async (questionId: number, reply: string) => {
-    return await apiClient.post(`${questionId}`, { content: reply });
-  },
-};
+const questionApi = newClient(Clients.Questions);
 
 function* getList() {
   yield put(loaderModule.startLoading());
-  const { search }: { search: QuestionSearch } = yield select(
-    questionModule.getQuestionState,
-  );
+  const { search, isAdmin }: { search: QuestionSearch; isAdmin: boolean } =
+    yield select(questionModule.getQuestionState);
 
   try {
-    const response: ApiResponse = yield call(questionApi.getList, search);
+    const response: ApiResponse = yield call(
+      questionApi.getList,
+      search,
+      isAdmin,
+    );
 
     yield put(loaderModule.endLoading());
 
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      const questionList: Questions[] = res.data.questions;
+      const questionList: Questions[] = res.data.questions.map(toCamel);
       const count = res.data.count;
       yield put(questionModule.actions.setCount(count));
       yield put(questionModule.actions.setList(questionList));
@@ -79,7 +68,9 @@ function* getById(action: PayloadAction<number>) {
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      yield put(questionModule.actions.setEdit(res.data.question));
+      yield put(
+        questionModule.actions.setEdit(toCamel(res.data.question) as Question),
+      );
     } else {
       yield put(
         alertModal.showAlert({
@@ -153,6 +144,7 @@ function* reply(
 
     if (response.isSuccess) {
       yield put(questionModule.actions.getList());
+      yield put(questionModule.actions.setEdit(null));
       yield put(
         alertModal.showAlert({
           title: '문의 답변',

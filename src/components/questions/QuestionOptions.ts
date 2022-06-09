@@ -45,7 +45,7 @@ export const QuestionTypeOptions: Option[] = [
 export const IsRepliedOptions: Option[] = [
   {
     name: '답변 여부 선택',
-    value: '',
+    value: -1,
   },
   {
     name: '미답변',

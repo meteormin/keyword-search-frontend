@@ -13,7 +13,7 @@ import { date, lang, str } from '../../helpers';
 import ReworkForm from '../../components/sentences/ReworkForm';
 import searchModule from '../../store/features/search';
 import CreateForm from '../../components/tasks/CreateForm';
-import { ReviewStatus } from '../../store/features/reviews/reviewAction';
+import { ReviewStatus } from '../../utils/nia15/interfaces/reviews';
 
 const SentenceListPage = () => {
   const dispatch = useDispatch();

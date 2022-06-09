@@ -2,7 +2,7 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import usersModule from './';
-import { api, apiResponse, auth } from '../../../helpers';
+import { apiResponse } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -12,78 +12,15 @@ import {
   User,
   CreateGroup,
   CreateUser,
-} from './userAction';
+} from '../../../utils/nia15/interfaces/users';
+import newClient, { Clients } from '../../../utils/nia15/api';
 
-const apiClient = api({
-  token: { token: auth.getToken(), tokenType: 'bearer' },
-});
-
-const usersApi = {
-  group: {
-    getGroup: async (id?: number) => {
-      let url = `api/v1/groups`;
-      if (id) {
-        url += `/${id}`;
-      }
-
-      return await apiClient.get(url);
-    },
-    patchGroupPerm: async (permissions: UpdateGroupPerm) => {
-      return await apiClient.patch(`api/v1/groups/${permissions.id}`, {
-        permissions: permissions.permissions,
-      });
-    },
-    // getPermissions: async () => {
-    //   return await apiClient.get('api/v1/groups/permissions');
-    // },
-    createGroup: async (group: Group | CreateGroup) => {
-      return await apiClient.post('api/v1/groups', group);
-    },
-    updateGroup: async (group: Group) => {
-      return await apiClient.patch(`api/v1/groups`, group);
-    },
-  },
-  user: {
-    getUser: async (id?: number) => {
-      let url = `api/v1/users`;
-      if (id) {
-        url += `/${id}`;
-      }
-
-      return await apiClient.get(url);
-    },
-    resetPassword: async (id: number) => {
-      const url = `api/v1/users/${id}/password`;
-      return await apiClient.patch(url);
-    },
-    createUser: async (user: CreateUser) => {
-      const url = `api/v1/auth/signUp`;
-      return await apiClient.post(url, {
-        id: user.loginId,
-        name: user.name,
-        userType: user.userType,
-        group: user.groupId,
-      });
-    },
-    updateUser: async (user: User) => {
-      const url = `api/v1/users`;
-      return await apiClient.patch(url, user);
-    },
-    updatePassword: async (id: number, password: string) => {
-      const url = `api/v1/users/me/password`;
-      return await apiClient.patch(url, {
-        password: password,
-      });
-    },
-    me: async () => {
-      return await apiClient.get('api/v1/users/me');
-    },
-  },
-};
+const usersApi = newClient(Clients.Users);
+console.log(usersApi);
 
 function* getGroupsSaga() {
   yield put(loaderModule.startLoading());
-
+  console.log(usersApi);
   try {
     const response: ApiResponse = yield call(usersApi.group.getGroup);
 

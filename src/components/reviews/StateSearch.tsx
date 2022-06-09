@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import { ReviewStatus } from '../../store/features/search/searchAction';
+import { ReviewStatus } from '../../utils/nia15/interfaces/search';
 import { config } from '../../helpers';
 
 export interface StateSearchState {
@@ -30,6 +30,7 @@ const StateSearch = (props: StateSearchProps) => {
     <Row className="mx-2">
       <Col md={4}>
         <SelectFilter
+          value={review}
           label={'검수 상태'}
           onChange={(selectedValue) => {
             setReview(selectedValue);
@@ -39,6 +40,7 @@ const StateSearch = (props: StateSearchProps) => {
       </Col>
       <Col md={4}>
         <SelectFilter
+          value={reject}
           label={'반려 사유'}
           onChange={(selectedValue) => {
             setReject(selectedValue as number);

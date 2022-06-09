@@ -1,6 +1,5 @@
 import { Option } from '../components/common/Select';
-import { ReviewStatus } from '../store/features/search/searchAction';
-import { CreateStatus } from '../store/features/search/searchAction';
+import { ReviewStatus, CreateStatus } from '../utils/nia15/interfaces/search';
 import { IdStateEnum } from '../components/reviews/IdState';
 import { SearchNames } from '../components/tasks/DataSearch';
 

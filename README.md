@@ -6,15 +6,17 @@
 
 - [bootstrap-sb-admin](https://github.com/StartBootstrap/startbootstrap-sb-admin)
 - react 17.0.0
-  - @types/react 18.0.8
+    - @types/react 18.0.8
 - react-bootstrap 2.3.1
-  - @types/react-bootstrap 0.32.29
+    - @types/react-bootstrap 0.32.29
 - react-redux 8.01
-  - @types/react-redux 7.1.24
+    - @types/react-redux 7.1.24
 - redux 4.2.0
-  - @types/redux 3.6.0
+    - @types/redux 3.6.0
 
 ## Install
+
+- 일반 linux(ubuntu 기준) 설치
 
 ```shell
 
@@ -36,6 +38,29 @@ git clone https://{your-github-username}@github.com/testworksPF/nia-15-front.git
 ./deploy.sh
 ## or sh ./deploy.sh
 ## 배포 스크립트는 react build 후, /var/www/front 폴더로 copy
+```
+
+- Docker Compose
+
+```shell
+## nvm 설치
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+
+source ~/.bashrc
+
+## v16.15.0 버전 node 설치
+nvm install v16.15.0
+
+## yarn 설치
+npm install -g yarn
+
+## git repository 다운
+git clone https://{your-github-username}@github.com/testworksPF/nia-15-front.git
+
+cd ./docker
+
+docker-compose up -d
+../deploy.sh
 ```
 
 ### Configuration
@@ -208,3 +233,5 @@ utils하위의 JS 함수들을 하나의 모듈로 생성하여 사용할 수 �
 
 - Ducks 패턴 참조
 - saga로직은 분리
+
+## [Change Log](./CHANGELOG.md)

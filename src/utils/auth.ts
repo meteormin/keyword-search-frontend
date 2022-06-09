@@ -1,6 +1,6 @@
 import config from '../config';
 import jwtDecode from 'jwt-decode';
-import { auth, date } from '../helpers';
+import { date } from '../helpers';
 import { UserType } from '../config/UserType';
 
 const conf = config();

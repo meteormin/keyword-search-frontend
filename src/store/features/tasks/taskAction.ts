@@ -1,23 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-
-export interface Task {
-  id: number;
-  dataId: string;
-  sentence: string;
-  posLength: number;
-  tagged: string;
-  refSrc: string;
-  domain: string;
-  refId: string;
-  edges?: {
-    concepts: Concept[];
-  };
-}
-
-export interface Concept {
-  stem: string;
-  posttag: string;
-}
+import { Task } from '../../../utils/nia15/interfaces/tasks';
 
 export interface TaskState {
   time: string | null;

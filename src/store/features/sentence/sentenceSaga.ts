@@ -6,30 +6,16 @@ import { api, apiResponse, auth, switchReviewStatus } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { CreateSentence, Sentence, SentenceHistory } from './sentenceAction';
-import { SearchParameter, SearchState } from '../search/searchAction';
+import {
+  CreateSentence,
+  Sentence,
+  SentenceHistory,
+} from '../../../utils/nia15/interfaces/sentences';
+import { SearchState } from '../search/searchAction';
 import searchModule from '../search';
+import newClient, { Clients } from '../../../utils/nia15/api';
 
-const apiClient = api({
-  token: { token: auth.getToken(), tokenType: 'bearer' },
-});
-
-const sentenceApi = {
-  getSentenceList: async (search?: SearchParameter) => {
-    const url = `api/v1/sentences`;
-    return await apiClient.get(url, search);
-  },
-  getSentence: async (id: number) => {
-    return await apiClient.get(`api/v1/sentences/${id}`);
-  },
-  createSentence: async (sentence: CreateSentence) => {
-    const url = `api/v1/sentences`;
-    return await apiClient.post(url, sentence);
-  },
-  createTempSentence: async (sentence: CreateSentence) => {
-    return await apiClient.post('api/v1/sentences/temp', sentence);
-  },
-};
+const sentenceApi = newClient(Clients.Sentences);
 
 function* getSentenceList() {
   yield put(loaderModule.startLoading());

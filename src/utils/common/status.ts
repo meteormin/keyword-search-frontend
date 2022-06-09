@@ -1,4 +1,4 @@
-import { ReviewStatus } from '../../store/features/reviews/reviewAction';
+import { ReviewStatus } from '../nia15/interfaces/reviews';
 import { lang } from '../../helpers';
 
 export const switchReviewStatus = (

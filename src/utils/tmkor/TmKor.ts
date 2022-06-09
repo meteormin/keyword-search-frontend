@@ -1,25 +1,15 @@
 import { ApiClient, ApiResponse } from '../ApiClient';
-import { AnalyzeSentence } from '../BaikalNlp';
+import { AnalyzeData } from '../BaikalNlp';
 import { toCamel } from 'snake-camel';
 import { apiResponse } from '../../helpers';
 
-export interface getFrameRequest {
-  sentence: string;
-  concepts: { stem: string; postag: string }[];
-  tagged: AnalyzeSentence;
-  posLength: number;
-  existEC?: boolean;
-  id: string;
-  refSrc: string;
-  refId: string;
-  domain: string;
-  dropReason?: string;
-  drop?: boolean;
+export interface getFrameRequest extends AnalyzeData {
+  language: string;
 }
 
 export interface CheckDualFrameRequest {
-  taggedText1: getFrameRequest;
-  taggedText2: getFrameRequest;
+  tagged_text_1: getFrameRequest;
+  tagged_text_2: getFrameRequest;
 }
 
 export interface FrameText {
@@ -52,30 +42,30 @@ class TmKor {
   }
 
   public async getFrame(
-    request: getFrameRequest[],
-  ): Promise<FrameText[] | null> {
+    request: getFrameRequest,
+  ): Promise<TmKorResponse | null> {
     const response: ApiResponse = await this.client.post(
       'v1.0/get_frame',
       request,
     );
 
     if (response.isSuccess) {
-      return apiResponse(response).map(toCamel) as FrameText[];
+      return toCamel(apiResponse(response)) as TmKorResponse;
     } else {
       return null;
     }
   }
 
   public async checkDualFrame(
-    request: CheckDualFrameRequest[],
-  ): Promise<DualFrameText[] | null> {
+    request: CheckDualFrameRequest,
+  ): Promise<TmKorResponse | null> {
     const response: ApiResponse = await this.client.post(
       'v1.0/check_dual_frame',
       request,
     );
 
     if (response.isSuccess) {
-      return apiResponse(response).map(toCamel) as DualFrameText[];
+      return toCamel(apiResponse(response)) as TmKorResponse;
     } else {
       return null;
     }

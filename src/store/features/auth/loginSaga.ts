@@ -3,27 +3,13 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import loginModule from './index';
-import { api, apiResponse, auth } from '../../../helpers';
+import { apiResponse } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { LoginUser } from './loginAction';
 import { toCamel } from 'snake-camel';
+import newClient, { Clients } from '../../../utils/nia15/api';
 
-export const loginApi = {
-  // logic
-  login: async (id: string, password: string): Promise<ApiResponse> => {
-    const client = api();
-
-    return await client.post('api/v1/auth/login', {
-      id: id,
-      password: password,
-    });
-  },
-  me: async (token: string): Promise<ApiResponse> => {
-    const client = api();
-
-    return await client.withToken(token, 'bearer').get('api/v1/users/me');
-  },
-};
+const loginApi = newClient(Clients.Auth);
 
 function* loginApiSaga(action: { payload: { id: string; password: string } }) {
   yield put(loaderModule.startLoading());

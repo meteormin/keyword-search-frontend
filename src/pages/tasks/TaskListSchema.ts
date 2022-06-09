@@ -1,5 +1,5 @@
 import { DynamicSchema } from '../../components/common/DaynamicTable';
-import { Task } from '../../store/features/tasks/taskAction';
+import { Task } from '../../utils/nia15/interfaces/tasks';
 
 export const TaskListSchema: DynamicSchema = {
   no: {

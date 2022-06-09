@@ -16,7 +16,7 @@ import {
 import { UserType } from '../config/UserType';
 import { handleGoHome, handlePerm } from './handler';
 import QuestionForm from '../components/questions/QuestionForm';
-import { QuestionDiv } from '../store/features/questions/questionAction';
+import { QuestionDiv } from '../utils/nia15/interfaces/questions';
 import { QuestionsPage } from '../pages/questions';
 
 const Router = () => {
