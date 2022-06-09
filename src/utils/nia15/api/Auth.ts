@@ -8,16 +8,16 @@ class Auth extends BaseClient {
     super(client);
   }
 
-  async login(id: string, password: string): Promise<ApiResponse> {
+  login = async (id: string, password: string): Promise<ApiResponse> => {
     return await this._client.post('/auth/login', {
       id: id,
       password: password,
     });
-  }
+  };
 
-  async me(token: string): Promise<ApiResponse> {
+  me = async (token: string): Promise<ApiResponse> => {
     return await this._client.withToken(token, 'bearer').get('/users/me');
-  }
+  };
 }
 
 export default Auth;

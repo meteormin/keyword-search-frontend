@@ -10,21 +10,21 @@ class Sentences extends BaseClient {
     super(client);
   }
 
-  async getSentenceList(search?: SearchParameter) {
+  getSentenceList = async (search?: SearchParameter) => {
     return await this._client.get('/', search);
-  }
+  };
 
-  async getSentence(id: number) {
+  getSentence = async (id: number) => {
     return await this._client.get(`/${id}`);
-  }
+  };
 
-  async createSentence(sentence: CreateSentence) {
+  createSentence = async (sentence: CreateSentence) => {
     return await this._client.post('/', sentence);
-  }
+  };
 
-  async createTempSentence(sentence: CreateSentence) {
+  createTempSentence = async (sentence: CreateSentence) => {
     return await this._client.post('/temp', sentence);
-  }
+  };
 }
 
 export default Sentences;

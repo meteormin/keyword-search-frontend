@@ -10,37 +10,41 @@ class Reviews extends BaseClient {
     super(client);
   }
 
-  async assign(seq: number, search?: SearchParameter) {
+  assign = async (seq: number, search?: SearchParameter) => {
     return await this._client.post(`/reviews/${seq}/assign`, search);
-  }
+  };
 
-  async getAssignList(seq: number, search?: SearchParameter) {
+  getAssignList = async (seq: number, search?: SearchParameter) => {
     return await this._client.get(`/reviews/${seq}/assigned`, search);
-  }
+  };
 
-  async getAssign(seq: number, assignId: number) {
+  getAssign = async (seq: number, assignId: number) => {
     return await this._client.get(`/sentences/${assignId}`);
-  }
+  };
 
-  async getReviewList(seq: number, search?: SearchParameter) {
+  getReviewList = async (seq: number, search?: SearchParameter) => {
     return await this._client.get(`/reviews/${seq}`, search);
-  }
+  };
 
-  async getReview(seq: number, id: number) {
+  getReview = async (seq: number, id: number) => {
     return await this._client.get(`/reviews/${seq}/${id}`);
-  }
+  };
 
-  async createReview(seq: number, createReview: CreateReview) {
+  createReview = async (seq: number, createReview: CreateReview) => {
     return await this._client.post(`/reviews/${seq}`, createReview);
-  }
+  };
 
-  async updateReview(seq: number, id: number, updateReview: UpdateReview) {
+  updateReview = async (
+    seq: number,
+    id: number,
+    updateReview: UpdateReview,
+  ) => {
     return await this._client.patch(`/reviews/${seq}/${id}`, updateReview);
-  }
+  };
 
-  async getExpiredAt(seq: number) {
+  getExpiredAt = async (seq: number) => {
     return await this._client.get(`/reviews/${seq}/assign/expiredAt`);
-  }
+  };
 }
 
 export default Reviews;

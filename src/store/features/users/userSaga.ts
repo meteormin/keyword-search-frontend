@@ -16,10 +16,11 @@ import {
 import newClient, { Clients } from '../../../utils/nia15/api';
 
 const usersApi = newClient(Clients.Users);
+console.log(usersApi);
 
 function* getGroupsSaga() {
   yield put(loaderModule.startLoading());
-
+  console.log(usersApi);
   try {
     const response: ApiResponse = yield call(usersApi.group.getGroup);
 

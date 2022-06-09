@@ -9,21 +9,21 @@ class Tasks extends BaseClient {
     super(client);
   }
 
-  async assign(search?: SearchParameter) {
+  assign = async (search?: SearchParameter) => {
     return await this._client.post('/assign', search);
-  }
+  };
 
-  async getTaskList(search?: SearchParameter) {
+  getTaskList = async (search?: SearchParameter) => {
     return await this._client.get('/assigned', search);
-  }
+  };
 
-  async getTask(taskId: number) {
+  getTask = async (taskId: number) => {
     return await this._client.get(`/${taskId}`);
-  }
+  };
 
-  async getExpiredAt() {
+  getExpiredAt = async () => {
     return await this._client.get('/assign/expiredAt');
-  }
+  };
 }
 
 export default Tasks;

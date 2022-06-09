@@ -9,7 +9,7 @@ class Questions extends BaseClient {
     super(client);
   }
 
-  async getList(search: QuestionSearch, isAdmin: boolean) {
+  getList = async (search: QuestionSearch, isAdmin: boolean) => {
     let url: string;
     if (isAdmin) {
       url = '/';
@@ -17,17 +17,17 @@ class Questions extends BaseClient {
       url = '/my';
     }
     return await this._client.get(url, search);
-  }
+  };
 
-  async getById(id: number) {
+  getById = async (id: number) => {
     return await this._client.get(`/${id}`);
-  }
+  };
 
-  async getFile(id: number) {
+  getFile = async (id: number) => {
     return await this._client.get(`/${id}/file`);
-  }
+  };
 
-  async create(question: CreateQuestion) {
+  create = async (question: CreateQuestion) => {
     if (question.document) {
       this._client.attach({ name: 'document', file: question.document });
     }
@@ -38,11 +38,11 @@ class Questions extends BaseClient {
       type: question.type,
       div: question.div,
     });
-  }
+  };
 
-  async reply(questionId: number, reply: string) {
+  reply = async (questionId: number, reply: string) => {
     return await this._client.post(`/${questionId}/reply`, { content: reply });
-  }
+  };
 }
 
 export default Questions;

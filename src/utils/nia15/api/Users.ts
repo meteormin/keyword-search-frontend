@@ -15,35 +15,35 @@ class GroupClient extends BaseClient {
     super(client);
   }
 
-  async getGroup(id?: number) {
+  getGroup = async (id?: number) => {
     let url = GroupClient.prefix;
     if (id) {
       url += `/${id}`;
     }
 
     return await this._client.get(url);
-  }
+  };
 
-  async patchGroupPerm(permissions: UpdateGroupPerm) {
+  patchGroupPerm = async (permissions: UpdateGroupPerm) => {
     return await this._client.patch(
       `/${GroupClient.prefix}/${permissions.id}`,
       {
         permissions: permissions.permissions,
       },
     );
-  }
+  };
 
   // async getPermissions(){
   //   return await this._client.get('api/v1/groups/permissions');
   // }
 
-  async createGroup(group: Group | CreateGroup): Promise<ApiResponse> {
+  createGroup = async (group: Group | CreateGroup): Promise<ApiResponse> => {
     return await this._client.post(`/${GroupClient.prefix}/`, group);
-  }
+  };
 
-  async updateGroup(group: Group): Promise<ApiResponse> {
+  updateGroup = async (group: Group): Promise<ApiResponse> => {
     return await this._client.patch(`/${GroupClient.prefix}/`, group);
-  }
+  };
 }
 
 class UserClient extends BaseClient {
@@ -53,21 +53,21 @@ class UserClient extends BaseClient {
     super(client);
   }
 
-  async getUser(id?: number) {
+  getUser = async (id?: number) => {
     let url = UserClient.prefix;
     if (id) {
       url += `/${id}`;
     }
 
     return await this._client.get(url);
-  }
+  };
 
-  async resetPassword(id: number) {
+  resetPassword = async (id: number) => {
     const url = `/${UserClient.prefix}/${id}/password`;
     return await this._client.patch(url);
-  }
+  };
 
-  async createUser(user: CreateUser) {
+  createUser = async (user: CreateUser) => {
     const url = `/auth/signUp`;
     return await this._client.post(url, {
       id: user.loginId,
@@ -75,23 +75,23 @@ class UserClient extends BaseClient {
       userType: user.userType,
       group: user.groupId,
     });
-  }
+  };
 
-  async updateUser(user: User) {
+  updateUser = async (user: User) => {
     const url = `/${UserClient.prefix}`;
     return await this._client.patch(url, user);
-  }
+  };
 
-  async updatePassword(id: number, password: string) {
+  updatePassword = async (id: number, password: string) => {
     const url = `/${UserClient.prefix}/me/password`;
     return await this._client.patch(url, {
       password: password,
     });
-  }
+  };
 
-  async me() {
+  me = async () => {
     return await this._client.get(`/${UserClient.prefix}/me`);
-  }
+  };
 }
 
 class Users extends BaseClient {
