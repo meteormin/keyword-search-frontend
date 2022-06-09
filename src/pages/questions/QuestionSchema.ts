@@ -1,5 +1,5 @@
 import { DynamicSchema } from '../../components/common/DaynamicTable';
-import { Questions } from '../../store/features/questions/questionAction';
+import { Questions } from '../../utils/nia15/interfaces/questions';
 
 export const QuestionSchema: DynamicSchema = {
   no: {

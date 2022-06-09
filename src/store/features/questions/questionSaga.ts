@@ -3,8 +3,8 @@ import {
   Question,
   Questions,
   QuestionSearch,
-} from './questionAction';
-import { api, apiResponse, auth } from '../../../helpers';
+} from '../../../utils/nia15/interfaces/questions';
+import { apiResponse } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { put, call, takeLatest, fork, select } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
@@ -12,42 +12,9 @@ import { ApiResponse } from '../../../utils/ApiClient';
 import questionModule from './index';
 import alertModal from '../common/alertModal';
 import { toCamel } from 'snake-camel';
+import newClient, { Clients } from '../../../utils/nia15/api';
 
-const apiClient = api({
-  prefix: 'api/v1/questions',
-  token: { token: auth.getToken(), tokenType: 'bearer' },
-});
-
-const questionApi = {
-  getList: async (search: QuestionSearch, isAdmin: boolean) => {
-    let url: string;
-    if (isAdmin) {
-      url = '/';
-    } else {
-      url = '/my';
-    }
-    return await apiClient.get(url, search);
-  },
-  getById: async (id: number) => {
-    return await apiClient.get(`${id}`);
-  },
-  getFile: async (id: number) => {
-    return await apiClient.get(`${id}/file`);
-  },
-  create: async (question: CreateQuestion) => {
-    return await apiClient
-      .attach({ name: 'document', file: question.document })
-      .post('/', {
-        title: question.title,
-        content: question.content,
-        type: question.type,
-        div: question.div,
-      });
-  },
-  reply: async (questionId: number, reply: string) => {
-    return await apiClient.post(`${questionId}`, { content: reply });
-  },
-};
+const questionApi = newClient(Clients.Questions);
 
 function* getList() {
   yield put(loaderModule.startLoading());
@@ -177,6 +144,7 @@ function* reply(
 
     if (response.isSuccess) {
       yield put(questionModule.actions.getList());
+      yield put(questionModule.actions.setEdit(null));
       yield put(
         alertModal.showAlert({
           title: '문의 답변',

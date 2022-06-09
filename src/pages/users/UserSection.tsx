@@ -5,7 +5,7 @@ import { config, date } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { toCamel } from 'snake-camel';
-import { User } from '../../store/features/users/userAction';
+import { User } from '../../utils/nia15/interfaces/users';
 import { Method } from '../../components/users/formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
 

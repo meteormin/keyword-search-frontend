@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import questionModule from '../../store/features/questions';
-import { QuestionSearch } from '../../store/features/questions/questionAction';
+import { QuestionSearch } from '../../utils/nia15/interfaces/questions';
 import SelectFilter from '../common/SelectFilter';
 import { Row, Col, Button } from 'react-bootstrap';
 import {
@@ -11,7 +11,6 @@ import {
 } from './QuestionOptions';
 import Input from '../common/Input';
 import { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import DateFilter from '../common/DateFilter';
 import { date } from '../../helpers';
 
@@ -142,7 +141,7 @@ const Search = (props: SearchProps) => {
             onChange={(state) => {
               if (state) {
                 if (state.start) {
-                  const start = date(state.start).utc().format();
+                  const start = date(state.start).format();
                   setStart(start);
                   setSearchParameter({
                     createdAtStart: start,
@@ -150,7 +149,7 @@ const Search = (props: SearchProps) => {
                 }
 
                 if (state.end) {
-                  const end = date(state.end).utc().format();
+                  const end = date(state.end).add(1, 'days').format();
                   setEnd(end);
                   setSearchParameter({
                     createdAtEnd: end,

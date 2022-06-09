@@ -9,8 +9,8 @@ import sentenceModule from '../../store/features/sentence';
 import {
   CreateSentence,
   Sentence,
-} from '../../store/features/sentence/sentenceAction';
-import { Task } from '../../store/features/tasks/taskAction';
+} from '../../utils/nia15/interfaces/sentences';
+import { Task } from '../../utils/nia15/interfaces/tasks';
 import { sentenceToWorkData } from '../../pages/sentences/sentenceDataMap';
 import { sentenceValidate } from '../../utils/validation/sentence';
 import alertModal from '../../store/features/common/alertModal';

@@ -11,10 +11,7 @@ import Pagination from '../../components/common/Pagination';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import Search, { SearchStats } from '../../components/reviews/Search';
 import { ReviewList, ReviewListSchema } from './ReviewListSchema';
-import {
-  Review,
-  ReviewStatus,
-} from '../../store/features/reviews/reviewAction';
+import { Review, ReviewStatus } from '../../utils/nia15/interfaces/reviews';
 import searchModule from '../../store/features/search';
 
 export interface Record extends ReviewList {

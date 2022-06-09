@@ -13,8 +13,7 @@ import ReviewSection, { ReviewResultState } from '../reviews/ReviewSection';
 import { useDispatch } from 'react-redux';
 import alertModal from '../../store/features/common/alertModal';
 import { usePrev } from '../../helpers';
-import { Concept, Task } from '../../store/features/tasks/taskAction';
-import { showAlert } from '../../store/features/common/alertModal/alertModalReducer';
+import { Concept, Task } from '../../utils/nia15/interfaces/tasks';
 
 export enum ReviewResult {
   PASS = 'PASS',
@@ -472,14 +471,15 @@ const WorkSpace = (props: WorkSpaceProps) => {
     checkConcepts(props.task.edges?.concepts || [], str)
       .then((res) => {
         if (!res) {
-          setIsClickedMkSp(cntNo - 1, false);
-          setSentencePattern('');
-          dispatch(
-            alertModal.showAlert({
-              title: '문형 만들기',
-              message: '개념 집합을 모두 사용해 주세요.',
-            }),
-          );
+          // setIsClickedMkSp(cntNo - 1, false);
+          // setSentencePattern('');
+          // dispatch(
+          //   alertModal.showAlert({
+          //     title: '문형 만들기',
+          //     message: '개념 집합을 모두 사용해 주세요.',
+          //   }),
+          // );
+          console.log('failed check concepts:', res);
         }
       })
       .catch((reason) => {

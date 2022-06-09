@@ -1,5 +1,5 @@
 import { DynamicSchema } from '../../components/common/DaynamicTable';
-import { SentenceHistory } from '../../store/features/sentence/sentenceAction';
+import { SentenceHistory } from '../../utils/nia15/interfaces/sentences';
 
 export const SentenceListSchema: DynamicSchema = {
   no: {

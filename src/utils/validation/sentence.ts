@@ -1,8 +1,5 @@
-import {
-  CreateSentence,
-  Sentence,
-} from '../../store/features/sentence/sentenceAction';
-import { Task } from '../../store/features/tasks/taskAction';
+import { CreateSentence, Sentence } from '../nia15/interfaces/sentences';
+import { Task } from '../nia15/interfaces/tasks';
 import { Message, ValidateData, Validator } from './Validator';
 
 export const sentenceValidate = (

@@ -1,7 +1,7 @@
 import { sentenceValidate } from './sentence';
-import { CreateReview } from '../../store/features/reviews/reviewAction';
-import { Task } from '../../store/features/tasks/taskAction';
-import { Sentence } from '../../store/features/sentence/sentenceAction';
+import { CreateReview } from '../nia15/interfaces/reviews';
+import { Task } from '../nia15/interfaces/tasks';
+import { Sentence } from '../nia15/interfaces/sentences';
 import { Message, Validator } from './Validator';
 
 export const reviewValidate = (

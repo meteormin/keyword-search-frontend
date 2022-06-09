@@ -4,7 +4,7 @@ import Input from '../common/Input';
 import PermList, { Permission } from './PermList';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
-import { CreateGroup, Group } from '../../store/features/users/userAction';
+import { CreateGroup, Group } from '../../utils/nia15/interfaces/users';
 import { Method } from './formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
 

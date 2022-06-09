@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import { ReviewStatus } from '../../store/features/search/searchAction';
+import { ReviewStatus } from '../../utils/nia15/interfaces/search';
 import { config } from '../../helpers';
 
 export interface StateSearchState {

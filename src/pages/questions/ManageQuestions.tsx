@@ -12,10 +12,11 @@ import QuestionForm, {
 import {
   QuestionDiv,
   QuestionSearch,
-} from '../../store/features/questions/questionAction';
+} from '../../utils/nia15/interfaces/questions';
 import LimitFilter from '../../components/common/LimitFilter';
 import Search from '../../components/questions/Search';
 import { date } from '../../helpers';
+import alertModal from '../../store/features/common/alertModal';
 
 const filterOptions = [
   {
@@ -34,13 +35,13 @@ const filterOptions = [
 
 const ManageQuestions = () => {
   const dispatch = useDispatch();
-  const [filter, setFilter] = useState<number>(-1);
-  const [isReplied, setReplied] = useState<boolean | undefined>();
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [records, setRecords] = useState<QuestionRecord[]>([]);
-  const { edit, list, search } = useSelector(questionModule.getQuestionState);
+  const { edit, list, search, count } = useSelector(
+    questionModule.getQuestionState,
+  );
   const [formData, setFormData] = useState<QuestionFormData | null>(null);
   const [formProps, setFormProps] = useState<QuestionFormProps>({
     isReply: true,
@@ -53,8 +54,16 @@ const ManageQuestions = () => {
 
   useEffect(() => {
     dispatch(questionModule.actions.isAdmin(true));
+    dispatch(
+      questionModule.actions.search({
+        limit: limit,
+        page: page,
+      }),
+    );
     dispatch(questionModule.actions.getList());
-  }, [limit, page, filter]);
+
+    setTotalPage(Math.ceil(count / limit));
+  }, [limit, page]);
 
   useEffect(() => {
     setRecords(recordList());
@@ -76,16 +85,35 @@ const ManageQuestions = () => {
     }
 
     setFormProps({
-      method: 'create',
+      method: edit?.repliedAt ? 'edit' : 'create',
       isReply: true,
       div: QuestionDiv.CREATE,
       show: !!edit,
-      onHide: () => {
-        dispatch(questionModule.actions.setEdit(null));
-      },
-      onSubmit: (data) => null,
+      onHide: onHide,
+      onSubmit: onSubmit,
     });
   }, [edit]);
+
+  const onHide = () => dispatch(questionModule.actions.setEdit(null));
+
+  const onSubmit = (data: QuestionFormData) => {
+    console.log(data);
+    if (data.id && data.reply) {
+      dispatch(
+        questionModule.actions.reply({
+          questionId: data.id,
+          content: data.reply,
+        }),
+      );
+    } else {
+      dispatch(
+        alertModal.showAlert({
+          title: '답변 하기',
+          message: '답변내용이 없습니다.',
+        }),
+      );
+    }
+  };
 
   const recordList = () => {
     return list.map((q, i) => {

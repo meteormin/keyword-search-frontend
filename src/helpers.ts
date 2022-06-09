@@ -8,7 +8,6 @@ import {
   ApiClient,
   ApiResponse,
   ErrorResInterface,
-  ErrorResponse,
   Token,
 } from './utils/ApiClient';
 import moment from 'moment';
@@ -16,7 +15,7 @@ import 'moment/locale/ko';
 import Lang from './assets/lang';
 import { AxiosRequestHeaders } from 'axios';
 import * as Str from './utils/str';
-import BaikalNlp, { AnalyzeSentence } from './utils/BaikalNlp';
+import BaikalNlp from './utils/BaikalNlp';
 import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
 import TmKor, {
@@ -25,7 +24,6 @@ import TmKor, {
   FrameText,
   getFrameRequest,
 } from './utils/tmkor/TmKor';
-import { Task } from './store/features/tasks/taskAction';
 import { switchReviewStatus as switchRS } from './utils/common/status';
 
 export const config = Config();

@@ -1,12 +1,12 @@
 import {
   Sentence,
   SentenceReviewReject,
-} from '../../store/features/sentence/sentenceAction';
+} from '../../utils/nia15/interfaces/sentences';
 import { ReviewResult, WorkData } from '../../components/common/WorkSpace';
 import {
   CreateReview,
   ReviewStatus,
-} from '../../store/features/reviews/reviewAction';
+} from '../../utils/nia15/interfaces/reviews';
 
 const getEtcReason = (reasons: (SentenceReviewReject[] | undefined)[]) => {
   let reason1;

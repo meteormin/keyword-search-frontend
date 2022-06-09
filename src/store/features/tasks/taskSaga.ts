@@ -2,34 +2,17 @@ import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import taskModule from './';
-import { api, apiResponse, auth, date } from '../../../helpers';
+import { apiResponse, auth, date } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
-import { Task } from './taskAction';
+import { Task } from '../../../utils/nia15/interfaces/tasks';
 import { UserType } from '../../../config/UserType';
-import { SearchParameter, SearchState } from '../search/searchAction';
+import { SearchState } from '../search/searchAction';
 import searchModule from '../search';
 import { PayloadAction } from '@reduxjs/toolkit';
+import newClient, { Clients } from '../../../utils/nia15/api';
 
-const apiClient = api({
-  token: { token: auth.getToken(), tokenType: 'bearer' },
-});
-
-const taskApi = {
-  assign: async (search?: SearchParameter) => {
-    return await apiClient.post('api/v1/tasks/assign', search);
-  },
-  getTaskList: async (search?: SearchParameter) => {
-    const url = `api/v1/tasks/assigned`;
-    return await apiClient.get(url, search);
-  },
-  getTask: async (taskId: number) => {
-    return await apiClient.get(`api/v1/tasks/${taskId}`);
-  },
-  getExpiredAt: async () => {
-    return await apiClient.get('api/v1/tasks/assign/expiredAt');
-  },
-};
+const taskApi = newClient(Clients.Tasks);
 
 function* getTaskList() {
   yield put(loaderModule.startLoading());

@@ -4,7 +4,7 @@ import SelectFilter from '../common/SelectFilter';
 import {
   CreateStatus,
   ReviewStatus,
-} from '../../store/features/search/searchAction';
+} from '../../utils/nia15/interfaces/search';
 import { config } from '../../helpers';
 
 export interface StateSearchState {

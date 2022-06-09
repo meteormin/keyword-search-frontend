@@ -1,5 +1,5 @@
 import { WorkData } from '../../components/common/WorkSpace';
-import { Sentence } from '../../store/features/sentence/sentenceAction';
+import { Sentence } from '../../utils/nia15/interfaces/sentences';
 
 export const sentenceToWorkData = (sentence: Sentence): WorkData => {
   const child1 = sentence?.edges?.sentence1;

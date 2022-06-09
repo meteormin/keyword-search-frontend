@@ -9,13 +9,13 @@ import { sentenceToWorkData } from '../../pages/reviews/reviewDataMap';
 import {
   CreateSentence,
   Sentence,
-} from '../../store/features/sentence/sentenceAction';
+} from '../../utils/nia15/interfaces/sentences';
 import alertModal from '../../store/features/common/alertModal';
 import sentenceModule from '../../store/features/sentence';
 import taskModule from '../../store/features/tasks';
 import { reworkValidate } from '../../utils/validation/sentence';
 import Timer from '../../components/common/Timer';
-import { Task } from '../../store/features/tasks/taskAction';
+import { Task } from '../../utils/nia15/interfaces/tasks';
 
 export interface CreateFormProps {
   show: boolean;

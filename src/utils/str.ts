@@ -1,7 +1,7 @@
 export const filterKorean = (value: string): string | boolean => {
   const regExpEng = /^[^a-zA-Z]*$/;
   const regExpSp = /[\{\}\[\]\/?;:|\)*~`!^\-_+<>@\#$%&\\\=\(]/gi;
-  console.log(value);
+
   let check = false;
   if (value) {
     if (value.match(regExpEng)) {

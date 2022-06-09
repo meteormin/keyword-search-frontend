@@ -1,7 +1,7 @@
 import { ApiClient, ApiResponse } from './ApiClient';
 import { apiResponse } from '../helpers';
 import { toCamel } from 'snake-camel';
-import { Concept } from '../store/features/tasks/taskAction';
+import { Concept } from './nia15/interfaces/tasks';
 
 export interface AnalyzeData {
   sentences: AnalyzeSentence[];

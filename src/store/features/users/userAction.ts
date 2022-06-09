@@ -1,51 +1,13 @@
 import { SearchState } from '../../../pages/users/UsersPage';
 import { PayloadAction } from '@reduxjs/toolkit';
-
-export interface Group {
-  id: number;
-  code: string;
-  name: string;
-  edges?: {
-    users?: User[];
-    permissions?: Permission[];
-  };
-}
-
-export interface User {
-  id: number;
-  loginId: string;
-  name: string;
-  userType: string;
-  groupId: number;
-  groupCode: string;
-  groupName: string;
-  createAt: string;
-  edges?: object;
-}
-
-export interface Permission {
-  id: number;
-  code: string;
-  name: string;
-  edges?: object;
-}
-
-export interface CreateUser {
-  loginId: string;
-  name: string;
-  userType: string;
-  groupId: number;
-}
-
-export interface CreateGroup {
-  name: string;
-  permissions: number[];
-}
-
-export interface UpdateGroupPerm {
-  id?: number;
-  permissions: number[];
-}
+import {
+  Group,
+  Permission,
+  User,
+  CreateGroup,
+  CreateUser,
+  UpdateGroupPerm,
+} from '../../../utils/nia15/interfaces/users';
 
 export interface UsersState {
   method: string | null;

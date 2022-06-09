@@ -9,8 +9,7 @@ import {
   CreateReview,
   Review,
   SentenceReview,
-  UpdateReview,
-} from './reviewAction';
+} from '../../../utils/nia15/interfaces/reviews';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
@@ -19,41 +18,13 @@ import reviewModule from './index';
 import alertModal from '../common/alertModal';
 import alertModalModule from '../common/alertModal';
 import { toCamel } from 'snake-camel';
-import { SearchParameter, SearchState } from '../search/searchAction';
+import { SearchState } from '../search/searchAction';
 import searchModule from '../search';
-import { Sentence } from '../sentence/sentenceAction';
+import { Sentence } from '../../../utils/nia15/interfaces/sentences';
 import { UserType } from '../../../config/UserType';
+import newClient, { Clients } from '../../../utils/nia15/api';
 
-const apiClient = api({
-  token: { token: auth.getToken(), tokenType: 'bearer' },
-});
-
-const reviewApi = {
-  assign: async (seq: number, search?: SearchParameter) => {
-    return await apiClient.post(`api/v1/reviews/${seq}/assign`, search);
-  },
-  getAssignList: async (seq: number, search?: SearchParameter) => {
-    return await apiClient.get(`api/v1/reviews/${seq}/assigned`, search);
-  },
-  getAssign: async (seq: number, assignId: number) => {
-    return await apiClient.get(`api/v1/sentences/${assignId}`);
-  },
-  getReviewList: async (seq: number, search?: SearchParameter) => {
-    return await apiClient.get(`api/v1/reviews/${seq}`, search);
-  },
-  getReview: async (seq: number, id: number) => {
-    return await apiClient.get(`api/v1/reviews/${seq}/${id}`);
-  },
-  createReview: async (seq: number, createReview: CreateReview) => {
-    return await apiClient.post(`api/v1/reviews/${seq}`, createReview);
-  },
-  updateReview: async (seq: number, id: number, updateReview: UpdateReview) => {
-    return await apiClient.patch(`api/v1/reviews/${seq}/${id}`, updateReview);
-  },
-  getExpiredAt: async (seq: number) => {
-    return await apiClient.get(`api/v1/reviews/${seq}/assign/expiredAt`);
-  },
-};
+const reviewApi = newClient(Clients.Reviews);
 
 function* assign(action: PayloadAction<number>) {
   const seq = action.payload;
