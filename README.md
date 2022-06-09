@@ -68,7 +68,7 @@ docker-compose up -d
 - dotenv
 
 ```dotenv
-# .env
+# .env.development
 
  # Title에 반영됨
 REACT_APP_NAME=NIA15

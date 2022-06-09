@@ -414,59 +414,70 @@ const WorkSpace = (props: WorkSpaceProps) => {
     return await checkDualFrame(str1, str2);
   };
 
-  const handleMakeSP = (cntNo: number, str: string) => {
+  const showAlertForMakeSP = (cntNo: number, message: any) => {
+    dispatch(
+      alertModal.showAlert({
+        title: '문형 만들기',
+        message: message,
+      }),
+    );
+  };
+
+  const handleMakeSP = async (cntNo: number, str: string) => {
     let setSentencePattern: React.Dispatch<React.SetStateAction<string>>;
     let otherSentence: string;
     if (cntNo == 1) {
       setSentencePattern = setText11;
-      otherSentence = textArea11;
+      otherSentence = textArea20;
+      setIsClickedMkSp(cntNo - 1, false);
+      setSentencePattern('');
     } else if (cntNo == 2) {
       setSentencePattern = setText21;
-      otherSentence = textArea21;
+      otherSentence = textArea10;
+      setIsClickedMkSp(cntNo - 1, false);
+      setSentencePattern('');
     } else {
       return;
     }
-
-    makeSP(str)
-      .then((res) => {
-        if (res) {
-          setSentencePattern(res);
-        }
-      })
-      .catch((reason) => {
-        console.error('make sentence pattern fail:', reason);
-        setSentencePattern(str);
-      });
-
-    checkDup(str, originSP).then((res) => {
-      if (res) {
-        if (res.duplicated) {
-          setIsClickedMkSp(cntNo - 1, false);
-          setSentencePattern('');
-          dispatch(
-            alertModal.showAlert({
-              title: '문형 만들기',
-              message: '기본 문장과 동일한 문형입니다.',
-            }),
-          );
+    try {
+      const isCheckDup = await checkDup(str, originSP);
+      if (isCheckDup) {
+        if (isCheckDup.duplicated) {
+          showAlertForMakeSP(cntNo, '기본 문장과 동일한 문형입니다.');
         } else {
-          checkDup(str, otherSentence).then((res) => {
-            if (res) {
-              if (res.duplicated) {
-                setIsClickedMkSp(cntNo - 1, false);
-                setSentencePattern('');
-                dispatch(
-                  alertModal.showAlert({
-                    title: '문형 만들기',
-                    message: '생성한 다른 문장과 동일한 문형입니다.',
-                  }),
-                );
+          const isCheckDup2 = await checkDup(str, otherSentence);
+          if (isCheckDup2) {
+            if (isCheckDup2.duplicated) {
+              setIsClickedMkSp(cntNo - 1, false);
+              setSentencePattern('');
+              showAlertForMakeSP(
+                cntNo,
+                '생성한 다른 문장과 동일한 문형입니다.',
+              );
+            } else {
+              const madeSP = await makeSP(str);
+              if (madeSP) {
+                setSentencePattern(madeSP);
               }
             }
-          });
+          } else {
+            const madeSP = await makeSP(str);
+            if (madeSP) {
+              setSentencePattern(madeSP);
+            }
+          }
+        }
+      } else {
+        const madeSP = await makeSP(str);
+        if (madeSP) {
+          setSentencePattern(madeSP);
         }
       }
-    });
+    } catch (e) {
+      setIsClickedMkSp(cntNo - 1, false);
+      setSentencePattern('');
+      showAlertForMakeSP(cntNo, e);
+    }
 
     checkConcepts(props.task.edges?.concepts || [], str)
       .then((res) => {
