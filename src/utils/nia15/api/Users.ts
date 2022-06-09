@@ -11,6 +11,10 @@ import {
 class GroupClient extends BaseClient {
   static readonly prefix = 'groups';
 
+  constructor(client: ApiClient) {
+    super(client);
+  }
+
   async getGroup(id?: number) {
     let url = GroupClient.prefix;
     if (id) {
@@ -44,6 +48,10 @@ class GroupClient extends BaseClient {
 
 class UserClient extends BaseClient {
   static readonly prefix = 'users';
+
+  constructor(client: ApiClient) {
+    super(client);
+  }
 
   async getUser(id?: number) {
     let url = UserClient.prefix;
