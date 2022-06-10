@@ -14,6 +14,8 @@ import ReworkForm from '../../components/sentences/ReworkForm';
 import searchModule from '../../store/features/search';
 import CreateForm from '../../components/tasks/CreateForm';
 import { ReviewStatus } from '../../utils/nia15/interfaces/reviews';
+import SendQuestion from '../../components/questions/SendQuestion';
+import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 
 const SentenceListPage = () => {
   const dispatch = useDispatch();
@@ -149,9 +151,7 @@ const SentenceListPage = () => {
           }}
         />
         <Col lg={4} className="mt-5">
-          <Button variant="dark" className="float-end mt-1">
-            <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
-          </Button>
+          <SendQuestion isReply={false} div={QuestionDiv.CREATE} />
         </Col>
       </Row>
 

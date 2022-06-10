@@ -190,11 +190,7 @@ const AssignListPage = () => {
           }}
         />
         <Col lg={4} className="mt-5">
-          <SendQuestion
-            isReply={false}
-            div={QuestionDiv.CREATE}
-            onSubmit={(data) => console.log(data)}
-          />
+          <SendQuestion isReply={false} div={QuestionDiv.CREATE} />
         </Col>
       </Row>
       <CreateForm

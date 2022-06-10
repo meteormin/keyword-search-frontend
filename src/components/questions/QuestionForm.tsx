@@ -115,6 +115,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               props.method == 'edit' ||
               (props.method == 'create' && props.isReply)
             }
+            placeholder={'제목을 입력해 주세요.'}
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
@@ -130,6 +131,7 @@ const QuestionForm = (props: QuestionFormProps) => {
               (props.method == 'create' && props.isReply)
             }
             value={content}
+            placeholder={'내용을 입력해 주세요.'}
             rows={5}
             onChange={(e) => {
               setContent(e.target.value);
@@ -144,7 +146,6 @@ const QuestionForm = (props: QuestionFormProps) => {
               readOnly={props.method == 'create' && props.isReply}
               disabled={props.method == 'create' && props.isReply}
               accept="image/gif,image/jpeg,image/png"
-              placeholder="첨부파일"
               onChange={(e) => {
                 if ('files' in e.target) {
                   const files = e.target?.files;
