@@ -4,7 +4,7 @@ import DataSearch from '../../components/tasks/DataSearch';
 import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import CreateForm from '../../components/tasks/CreateForm';
 import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
@@ -12,6 +12,8 @@ import { lang, str } from '../../helpers';
 import searchModule from '../../store/features/search';
 import { useNavigate } from 'react-router';
 import { TaskRecord } from './TaskListSchema';
+import SendQuestion from '../../components/questions/SendQuestion';
+import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -188,9 +190,11 @@ const AssignListPage = () => {
           }}
         />
         <Col lg={4} className="mt-5">
-          <Button variant="dark" className="float-end mt-1">
-            <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
-          </Button>
+          <SendQuestion
+            isReply={false}
+            div={QuestionDiv.CREATE}
+            onSubmit={(data) => console.log(data)}
+          />
         </Col>
       </Row>
       <CreateForm

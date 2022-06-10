@@ -82,11 +82,20 @@ const ManageQuestions = () => {
       };
 
       setFormData(data);
+
+      setFormProps({
+        method: 'edit',
+        isReply: false,
+        div: edit.div,
+        show: !!edit,
+        onHide: onHide,
+        onSubmit: onSubmit,
+      });
     }
 
     setFormProps({
-      method: edit?.repliedAt ? 'edit' : 'create',
-      isReply: true,
+      method: 'edit',
+      isReply: false,
       div: QuestionDiv.CREATE,
       show: !!edit,
       onHide: onHide,
@@ -122,10 +131,10 @@ const ManageQuestions = () => {
         div: q.div,
         type: q.type,
         subject: q.title,
-        createdAt: date(q.createdAt).utc().format('yyyy-MM-DD'),
+        createdAt: date(q.createdAt).format('yyyy-MM-DD'),
         creatorId: q.userLoginId,
         repliedAt: q.repliedAt
-          ? date(q.repliedAt).utc().format('yyyy-MM-DD')
+          ? date(q.repliedAt).format('yyyy-MM-DD')
           : '미답변',
         replyLoginId: q.replyUserLoginId,
         _origin: q,

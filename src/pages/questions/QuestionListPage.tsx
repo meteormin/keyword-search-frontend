@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { Button, Col, Row, Container } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
 import Select from '../../components/common/Select';
-import { useState } from 'react';
 import Pagination from '../../components/common/Pagination';
 import DynamicTable from '../../components/common/DaynamicTable';
 import { QuestionRecord, QuestionSchema } from './QuestionSchema';
@@ -14,6 +13,9 @@ import QuestionForm, {
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import LimitFilter from '../../components/common/LimitFilter';
 import alertModal from '../../store/features/common/alertModal';
+import { auth, date } from '../../helpers';
+import SendQuestion from '../../components/questions/SendQuestion';
+import { UserType } from '../../config/UserType';
 
 const filterOptions = [
   {
@@ -49,6 +51,30 @@ const QuestionListPage = () => {
     onSubmit: () => null,
     onHide: () => null,
   });
+  const [div, setDiv] = useState<QuestionDiv>(QuestionDiv.CREATE);
+
+  useEffect(() => {
+    let userType: UserType | undefined;
+    if (auth) {
+      userType = auth.user()?.userType as UserType;
+    }
+
+    switch (userType) {
+      case UserType.WORKER:
+        setDiv(QuestionDiv.CREATE);
+        break;
+      case UserType.REVIEWER1:
+      case UserType.REVIEWER2:
+        setDiv(QuestionDiv.REVIEW);
+        break;
+      case UserType.SCORE:
+      case UserType.SCORE_REVIEWER:
+        setDiv(QuestionDiv.SCORE);
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   useEffect(() => {
     dispatch(questionModule.actions.isAdmin(false));
@@ -83,7 +109,25 @@ const QuestionListPage = () => {
       };
 
       setFormData(data);
+
+      setFormProps({
+        method: 'edit',
+        isReply: false,
+        div: edit.div,
+        show: !!edit,
+        onHide: onHide,
+        onSubmit: onSubmit,
+      });
     }
+
+    setFormProps({
+      method: 'edit',
+      isReply: false,
+      div: QuestionDiv.CREATE,
+      show: !!edit,
+      onHide: onHide,
+      onSubmit: onSubmit,
+    });
   }, [edit]);
 
   const recordList = () => {
@@ -93,9 +137,11 @@ const QuestionListPage = () => {
         div: q.div,
         type: q.type,
         subject: q.title,
-        createdAt: q.createdAt,
+        createdAt: date(q.createdAt).format('YYYY.MM.DD'),
         creatorId: q.userLoginId,
-        repliedAt: q.repliedAt,
+        repliedAt: q.repliedAt
+          ? date(q.repliedAt).format('YYYY.MM.DD')
+          : '미답변',
         replyLoginId: q.replyUserLoginId,
         _origin: q,
       };
@@ -106,25 +152,6 @@ const QuestionListPage = () => {
 
   const onClickRecord = (r: QuestionRecord) => {
     dispatch(questionModule.actions.getById(r._origin.id));
-    if (edit) {
-      setFormData({
-        id: edit.id,
-        type: edit.edges.questionType.id,
-        title: edit.title,
-        content: edit.content,
-        div: edit.div,
-        reply: edit.reply,
-        fileName: edit.fileName,
-      });
-      setFormProps({
-        method: 'edit',
-        isReply: false,
-        div: edit.div,
-        show: true,
-        onHide: onHide,
-        onSubmit: onSubmit,
-      });
-    }
   };
 
   const onHide = () => dispatch(questionModule.actions.setEdit(null));
@@ -198,12 +225,10 @@ const QuestionListPage = () => {
           }}
         />
         <Col lg={4} className="mt-5">
-          <Button variant="dark" className="float-end mt-1">
-            <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
-          </Button>
+          <SendQuestion div={div} onSubmit={() => null} isReply={false} />
         </Col>
       </Row>
-      <QuestionForm {...formProps} />
+      <QuestionForm {...formProps} defaultData={formData} />
     </Container>
   );
 };

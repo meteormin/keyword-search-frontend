@@ -116,11 +116,18 @@ export class ApiClient {
     }
 
     if (this._attachment && this._attachment.length != 0) {
-      for (const attach of this._attachment) {
-        const data: { [key: string]: File } = {};
-        data[attach.name] = attach.file;
-        config.data = Object.assign(config.data || {}, data);
+      this._headers = Object.assign(this._headers || {}, {
+        'Content-Type': 'multipart/form-data',
+      });
+      const data = new FormData();
+      for (const [key, value] of Object.entries(config.data)) {
+        data.append(key, value as string | Blob);
       }
+
+      for (const attach of this._attachment) {
+        data.append(attach.name, attach.file);
+      }
+      config.data = data;
     }
 
     return this.setResponse(axios.request(config));
@@ -215,9 +222,6 @@ export class ApiClient {
   }
 
   attach(file: Attachment | Attachment[]) {
-    this._headers = Object.assign(this._headers || {}, {
-      'Content-Type': 'multipart/form-data',
-    });
     if (Array.isArray(file)) {
       this._attachment.concat(file);
     } else {

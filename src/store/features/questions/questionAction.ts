@@ -13,6 +13,7 @@ export interface QuestionState {
   edit: Question | null;
   create: CreateQuestion | null;
   search?: QuestionSearch;
+  file?: any;
 }
 
 export const initialState: QuestionState = {
@@ -21,6 +22,7 @@ export const initialState: QuestionState = {
   list: [],
   edit: null,
   create: null,
+  file: null,
 };
 
 const questionAction = {
@@ -45,6 +47,12 @@ const questionAction = {
   },
   getById: (state: QuestionState, action: PayloadAction<number>) => {
     state.edit = null;
+  },
+  getFileById: (state: QuestionState, action: PayloadAction<number>) => {
+    state.file = null;
+  },
+  setFile: (state: QuestionState, action: PayloadAction<any>) => {
+    state.file = action.payload;
   },
   setEdit: (state: QuestionState, action: PayloadAction<Question | null>) => {
     state.edit = action.payload;
