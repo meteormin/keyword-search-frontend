@@ -131,6 +131,9 @@ function* reply(
   action: PayloadAction<{ questionId: number; content: string }>,
 ) {
   yield put(loaderModule.startLoading());
+
+  const { search, isAdmin }: { search: QuestionSearch; isAdmin: boolean } =
+    yield select(questionModule.getQuestionState);
   try {
     const response: ApiResponse = yield call(
       questionApi.reply,
@@ -143,7 +146,9 @@ function* reply(
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      yield put(questionModule.actions.getList());
+      if (search || isAdmin) {
+        yield put(questionModule.actions.getList());
+      }
       yield put(questionModule.actions.setEdit(null));
       yield put(
         alertModal.showAlert({
@@ -169,9 +174,40 @@ function* reply(
   }
 }
 
+function* getFileById(action: PayloadAction<number>) {
+  yield put(loaderModule.startLoading());
+  try {
+    const response: ApiResponse = yield call(
+      questionApi.getFile,
+      action.payload,
+    );
+    yield put(loaderModule.endLoading());
+
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      yield put(questionModule.actions.setFile(res));
+    } else {
+      yield put(
+        alertModal.showAlert({
+          title: '파일 다운로드',
+          message: '파일 다운르도 실패',
+        }),
+      );
+    }
+  } catch (e) {
+    yield put(
+      alertModal.showAlert({
+        title: '파일 다운로드',
+        message: '파일 다운르도 실패',
+      }),
+    );
+  }
+}
+
 function* watchQuestionSaga() {
   yield takeLatest(questionModule.actions.getList, getList);
   yield takeLatest(questionModule.actions.getById, getById);
+  yield takeLatest(questionModule.actions.getFileById, getFileById);
   yield takeLatest(questionModule.actions.create, create);
   yield takeLatest(questionModule.actions.reply, reply);
 }

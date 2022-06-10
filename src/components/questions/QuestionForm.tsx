@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Modal, Row } from 'react-bootstrap';
+import { Button, Col, Form, InputGroup, Modal, Row } from 'react-bootstrap';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import Select from '../common/Select';
 import { QuestionTypeOptions } from './QuestionOptions';
+import { useDispatch, useSelector } from 'react-redux';
+import questionModule from '../../store/features/questions';
+import fileDownload from 'js-file-download';
 
 export interface QuestionFormData {
   id?: number;
@@ -26,27 +29,52 @@ export interface QuestionFormProps {
 }
 
 const QuestionForm = (props: QuestionFormProps) => {
+  const dispatch = useDispatch();
   const [show, setShow] = useState<boolean>(false);
-  const [type, setType] = useState<number>(0);
+  const [type, setType] = useState<number>(1);
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [reply, setReply] = useState<string>('');
-  const [file, setFile] = useState<File | null>(null);
+  const [fileState, setFile] = useState<File | null>(null);
   const [div, setDiv] = useState<QuestionDiv>(QuestionDiv.CREATE);
   const [fileName, setFileName] = useState<string>('');
+  const { file } = useSelector(questionModule.getQuestionState);
 
   useEffect(() => {
     setShow(props.show);
-    setFormData(props?.defaultData || null);
+    if (props.defaultData) {
+      setFormData(props?.defaultData);
+    }
+
+    if (!props.show) {
+      setFormData(null);
+    }
   }, [props]);
 
+  useEffect(() => {
+    if (file) {
+      const split = fileName.split('.');
+      const ext = split[split.length - 1];
+
+      fileDownload(file, fileName, 'image/' + ext);
+    }
+  }, [file]);
+
   const setFormData = (formData: QuestionFormData | null) => {
-    setType(formData?.type || 0);
+    setType(formData?.type || 1);
     setTitle(formData?.title || '');
     setContent(formData?.content || '');
     setReply(formData?.reply || '');
     setDiv(formData?.div || QuestionDiv.CREATE);
     setFileName(formData?.fileName || '');
+  };
+
+  const handleDownload = () => {
+    if (props.defaultData) {
+      if (props.defaultData.id) {
+        dispatch(questionModule.actions.getFileById(props.defaultData.id));
+      }
+    }
   };
 
   return (
@@ -110,29 +138,32 @@ const QuestionForm = (props: QuestionFormProps) => {
         </Form.Group>
         <Form.Group className={'mt-2'}>
           <Form.Label>첨부파일</Form.Label>
-          <Form.Control
-            type="file"
-            readOnly={
-              props.method == 'edit' ||
-              (props.method == 'create' && props.isReply)
-            }
-            disabled={
-              props.method == 'edit' ||
-              (props.method == 'create' && props.isReply)
-            }
-            accept="image/gif,image/jpeg,image/png"
-            placeholder="첨부파일"
-            onChange={(e) => {
-              if ('files' in e.target) {
-                const files = e.target?.files;
-                if (files != null) {
-                  const file = files[0];
-                  setFile(file);
-                  setFileName(file.name);
+          {props.method == 'create' ? (
+            <Form.Control
+              type="file"
+              readOnly={props.method == 'create' && props.isReply}
+              disabled={props.method == 'create' && props.isReply}
+              accept="image/gif,image/jpeg,image/png"
+              placeholder="첨부파일"
+              onChange={(e) => {
+                if ('files' in e.target) {
+                  const files = e.target?.files;
+                  if (files != null) {
+                    const file = files[0];
+                    setFile(file);
+                    setFileName(file.name);
+                  }
                 }
-              }
-            }}
-          />
+              }}
+            />
+          ) : (
+            <InputGroup>
+              <Form.Control type={'text'} readOnly={true} value={fileName} />
+              <Button variant={'dark'} onClick={handleDownload}>
+                내려받기
+              </Button>
+            </InputGroup>
+          )}
         </Form.Group>
         {props.method == 'edit' ||
         (props.method == 'create' && props.isReply) ? (
@@ -172,7 +203,7 @@ const QuestionForm = (props: QuestionFormProps) => {
                     content: content,
                     div: div,
                     reply: reply,
-                    file: file,
+                    file: fileState,
                     fileName: fileName,
                   })
                 }

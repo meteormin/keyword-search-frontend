@@ -1,5 +1,12 @@
 # NIA15-front: CHANGELOG
 
+## v1.1.3 - 2022.06.10
+feat
+- 문의하기 기능 완료
+
+fix
+- docker-compose 볼륨 경로 변경
+
 ## v1.1.2 - 2022.06.09
 feat
 - api 요청&로직 saga에서 분리

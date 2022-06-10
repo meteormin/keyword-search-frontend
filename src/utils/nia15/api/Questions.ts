@@ -24,13 +24,18 @@ class Questions extends BaseClient {
   };
 
   getFile = async (id: number) => {
-    return await this._client.get(`/${id}/file`);
+    return await this._client.request({
+      url: this._client.makeUrl(`/${id}/file`),
+      method: 'GET',
+      responseType: 'blob',
+    });
   };
 
   create = async (question: CreateQuestion) => {
     if (question.document) {
       this._client.attach({ name: 'document', file: question.document });
     }
+    this._client.withHeader({ 'Content-Type': 'multipart/form-data' });
 
     return await this._client.post('/', {
       title: question.title,
