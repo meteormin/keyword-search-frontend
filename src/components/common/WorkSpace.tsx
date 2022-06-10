@@ -412,6 +412,16 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
   const checkDup = async (str1: string, str2: string) => {
     return await checkDualFrame(str1, str2);
+    // if (checked) {
+    //   if (checked.duplicated) {
+    //     return checked;
+    //   } else {
+    //     checked.duplicated =
+    //       checked.frame1.frameText != checked.frame2.frameText;
+    //
+    //     return checked;
+    //   }
+    // }
   };
 
   const showAlertForMakeSP = (cntNo: number, message: any) => {
@@ -440,7 +450,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       return;
     }
     try {
-      const isCheckDup = await checkDup(str, originSP);
+      const isCheckDup = await checkDup(str, props.task.sentence);
       if (isCheckDup) {
         if (isCheckDup.duplicated) {
           showAlertForMakeSP(cntNo, '기본 문장과 동일한 문형입니다.');
@@ -457,12 +467,14 @@ const WorkSpace = (props: WorkSpaceProps) => {
             } else {
               const madeSP = await makeSP(str);
               if (madeSP) {
+                setIsClickedMkSp(cntNo - 1, true);
                 setSentencePattern(madeSP);
               }
             }
           } else {
             const madeSP = await makeSP(str);
             if (madeSP) {
+              setIsClickedMkSp(cntNo - 1, true);
               setSentencePattern(madeSP);
             }
           }
