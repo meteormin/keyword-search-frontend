@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 
 export interface TimerProps {
   time: string;
+  className?: string;
 }
 
 const Timer = (props: TimerProps) => {
@@ -17,12 +18,12 @@ const Timer = (props: TimerProps) => {
       {time ? (
         <Button
           variant={'light'}
-          className="btn bg-light border float-end w-50 align-middle"
+          className={'btn bg-light border align-middle ' + props.className}
           style={{ cursor: 'default' }}
         >
           진행 가능 시간
           <br />
-          {time}
+          <span style={{ color: 'red' }}>{time}</span>
         </Button>
       ) : null}
     </Fragment>

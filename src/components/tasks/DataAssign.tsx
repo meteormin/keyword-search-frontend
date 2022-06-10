@@ -60,8 +60,8 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
           데이터 할당 받기
         </Button>
       </Col>
-      <Col md={4} className="">
-        <Timer time={time} />
+      <Col md={4}>
+        <Timer time={time} className="float-end w-50" />
       </Col>
     </Row>
   );

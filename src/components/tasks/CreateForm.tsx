@@ -47,8 +47,8 @@ const CreateForm = (props: CreateFormProps) => {
   const [sentence, setSentence] = useState<Sentence | null>(null);
 
   const [method, setMethod] = useState<'create' | 'edit'>('create');
-  const { workTask } = useSelector(taskModule.getTaskState);
-  const { editSentence, createSentence } = useSelector(
+  const { workTask, totalCount } = useSelector(taskModule.getTaskState);
+  const { editSentence, createSentence, createdCount } = useSelector(
     sentenceModule.getSentenceState,
   );
 
@@ -172,6 +172,8 @@ const CreateForm = (props: CreateFormProps) => {
                   style={{ cursor: 'default' }}
                 >
                   생성 가능 개념집합
+                  <br />
+                  {totalCount}건
                 </Button>
                 <Button
                   variant="light"
@@ -179,6 +181,8 @@ const CreateForm = (props: CreateFormProps) => {
                   style={{ cursor: 'default' }}
                 >
                   생성 완료 개념집합
+                  <br />
+                  {createdCount}건
                 </Button>
               </Col>
             </Row>

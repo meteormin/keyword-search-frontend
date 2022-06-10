@@ -11,8 +11,11 @@ import { SearchState } from '../search/searchAction';
 import searchModule from '../search';
 import { PayloadAction } from '@reduxjs/toolkit';
 import newClient, { Clients } from '../../../utils/nia15/api';
+import sentences from '../../../utils/nia15/api/Sentences';
+import sentenceModule from '../sentence';
 
 const taskApi = newClient(Clients.Tasks);
+const sentenceApi = newClient(Clients.Sentences);
 
 function* getTaskList() {
   yield put(loaderModule.startLoading());
@@ -93,6 +96,12 @@ function* getTask(action: PayloadAction<number>) {
   const taskId = action.payload;
   try {
     const response: ApiResponse = yield call(taskApi.getTask, taskId);
+    const createdCount: ApiResponse = yield call(sentenceApi.createdCount);
+    yield put(
+      sentenceModule.actions.setCreatedCount(
+        apiResponse(createdCount).data.count as number,
+      ),
+    );
     const res = apiResponse(response);
     yield put(loaderModule.endLoading());
     if (response.isSuccess) {

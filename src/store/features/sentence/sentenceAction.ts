@@ -7,6 +7,7 @@ import {
 
 export interface SentenceState {
   totalCount: number;
+  createdCount: number;
   sentences: Sentence[];
   sentenceHistory: SentenceHistory[];
   createSentence: CreateSentence | null;
@@ -15,6 +16,7 @@ export interface SentenceState {
 
 export const initialState: SentenceState = {
   totalCount: 0,
+  createdCount: 0,
   sentences: [],
   sentenceHistory: [],
   createSentence: null,
@@ -72,6 +74,9 @@ const sentenceAction = {
   },
   setCount: (state: SentenceState, action: PayloadAction<number>) => {
     state.totalCount = action.payload;
+  },
+  setCreatedCount: (state: SentenceState, action: PayloadAction<number>) => {
+    state.createdCount = action.payload;
   },
 };
 

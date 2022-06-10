@@ -25,6 +25,10 @@ class Sentences extends BaseClient {
   createTempSentence = async (sentence: CreateSentence) => {
     return await this._client.post('/temp', sentence);
   };
+
+  createdCount = async () => {
+    return await this._client.get('/created/count');
+  };
 }
 
 export default Sentences;
