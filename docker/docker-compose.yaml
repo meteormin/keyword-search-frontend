@@ -16,7 +16,7 @@ services:
     restart: always
     stdin_open: true
     volumes:
-      - ../build:/var/www/front
+      - /var/www/front:/var/www/front
       - ../apache:/etc/apache2/sites-available
       - ../ssl:/etc/ssl
     ports:
