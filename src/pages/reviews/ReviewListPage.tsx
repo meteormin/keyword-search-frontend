@@ -13,6 +13,8 @@ import Search, { SearchStats } from '../../components/reviews/Search';
 import { ReviewList, ReviewListSchema } from './ReviewListSchema';
 import { Review, ReviewStatus } from '../../utils/nia15/interfaces/reviews';
 import searchModule from '../../store/features/search';
+import SendQuestion from '../../components/questions/SendQuestion';
+import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 
 export interface Record extends ReviewList {
   _origin: Review;
@@ -184,9 +186,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
           }}
         />
         <Col lg={4} className="mt-5">
-          <Button variant="dark" className="float-end mt-1">
-            <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
-          </Button>
+          <SendQuestion isReply={false} div={QuestionDiv.REVIEW} />
         </Col>
       </Row>
       <ReviewForm

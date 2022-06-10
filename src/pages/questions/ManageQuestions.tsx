@@ -17,6 +17,7 @@ import LimitFilter from '../../components/common/LimitFilter';
 import Search from '../../components/questions/Search';
 import { date } from '../../helpers';
 import alertModal from '../../store/features/common/alertModal';
+import { toFormData, toRecord } from './utils';
 
 const filterOptions = [
   {
@@ -61,27 +62,16 @@ const ManageQuestions = () => {
       }),
     );
     dispatch(questionModule.actions.getList());
-
-    setTotalPage(Math.ceil(count / limit));
   }, [limit, page]);
 
   useEffect(() => {
     setRecords(recordList());
+    setTotalPage(Math.ceil(count / limit));
   }, [list]);
 
   useEffect(() => {
     if (edit != null) {
-      const data: QuestionFormData = {
-        id: edit.id,
-        type: edit.edges.questionType.id,
-        title: edit.title,
-        content: edit.content,
-        div: edit.div,
-        reply: edit.reply,
-        fileName: edit.fileName,
-      };
-
-      setFormData(data);
+      setFormData(toFormData(edit));
 
       setFormProps({
         method: 'edit',
@@ -106,7 +96,6 @@ const ManageQuestions = () => {
   const onHide = () => dispatch(questionModule.actions.setEdit(null));
 
   const onSubmit = (data: QuestionFormData) => {
-    console.log(data);
     if (data.id && data.reply) {
       dispatch(
         questionModule.actions.reply({
@@ -125,23 +114,7 @@ const ManageQuestions = () => {
   };
 
   const recordList = () => {
-    return list.map((q, i) => {
-      const r: QuestionRecord = {
-        no: i + 1,
-        div: q.div,
-        type: q.type,
-        subject: q.title,
-        createdAt: date(q.createdAt).format('yyyy-MM-DD'),
-        creatorId: q.userLoginId,
-        repliedAt: q.repliedAt
-          ? date(q.repliedAt).format('yyyy-MM-DD')
-          : '미답변',
-        replyLoginId: q.replyUserLoginId,
-        _origin: q,
-      };
-
-      return r;
-    });
+    return list.map(toRecord);
   };
 
   const onClickRecord = (r: QuestionRecord) => {
@@ -190,11 +163,7 @@ const ManageQuestions = () => {
             setPage(page);
           }}
         />
-        <Col lg={4} className="mt-5">
-          <Button variant="dark" className="float-end mt-1">
-            <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
-          </Button>
-        </Col>
+        <Col lg={4} className="mt-5"></Col>
       </Row>
       <QuestionForm {...formProps} defaultData={formData} />
     </Container>

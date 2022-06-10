@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import DataAssign from '../../components/tasks/DataAssign';
 import { useDispatch, useSelector } from 'react-redux';
 import DataSearch from '../../components/tasks/DataSearch';
@@ -11,6 +11,8 @@ import { date, lang, str } from '../../helpers';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import reviewModule from '../../store/features/reviews';
 import searchModule from '../../store/features/search';
+import SendQuestion from '../../components/questions/SendQuestion';
+import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 
 const AssignListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
@@ -183,9 +185,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
           }}
         />
         <Col lg={4} className="mt-5">
-          <Button variant="dark" className="float-end mt-1">
-            <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
-          </Button>
+          <SendQuestion isReply={false} div={QuestionDiv.REVIEW} />
         </Col>
       </Row>
       <ReviewForm

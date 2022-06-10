@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import questionModule from '../../store/features/questions';
 
 export interface SendQuestionProps {
-  isReply: boolean;
+  isReply?: boolean;
   div: QuestionDiv;
-  onSubmit: (data: QuestionFormData) => any;
+  onSubmit?: (data: QuestionFormData) => any;
 }
 
 const SendQuestion = (props: SendQuestionProps) => {
@@ -25,7 +25,7 @@ const SendQuestion = (props: SendQuestionProps) => {
         <i className="fa-solid fa-paper-plane"></i>&nbsp; 문의사항 보내기
       </Button>
       <QuestionForm
-        isReply={props.isReply}
+        isReply={props.isReply || false}
         method={'create'}
         div={props.div}
         show={show}
@@ -39,7 +39,10 @@ const SendQuestion = (props: SendQuestionProps) => {
               document: data.file,
             }),
           );
-          props.onSubmit(data);
+
+          if (props.onSubmit) {
+            props.onSubmit(data);
+          }
           setShow(false);
         }}
         onHide={() => setShow(false)}

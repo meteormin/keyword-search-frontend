@@ -13,9 +13,8 @@ import QuestionForm, {
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import LimitFilter from '../../components/common/LimitFilter';
 import alertModal from '../../store/features/common/alertModal';
-import { auth, date } from '../../helpers';
 import SendQuestion from '../../components/questions/SendQuestion';
-import { UserType } from '../../config/UserType';
+import { getQuestionDiv, toFormData, toRecord } from './utils';
 
 const filterOptions = [
   {
@@ -54,25 +53,9 @@ const QuestionListPage = () => {
   const [div, setDiv] = useState<QuestionDiv>(QuestionDiv.CREATE);
 
   useEffect(() => {
-    let userType: UserType | undefined;
-    if (auth) {
-      userType = auth.user()?.userType as UserType;
-    }
-
-    switch (userType) {
-      case UserType.WORKER:
-        setDiv(QuestionDiv.CREATE);
-        break;
-      case UserType.REVIEWER1:
-      case UserType.REVIEWER2:
-        setDiv(QuestionDiv.REVIEW);
-        break;
-      case UserType.SCORE:
-      case UserType.SCORE_REVIEWER:
-        setDiv(QuestionDiv.SCORE);
-        break;
-      default:
-        break;
+    const getDiv = getQuestionDiv();
+    if (getDiv) {
+      setDiv(getDiv);
     }
   }, []);
 
@@ -88,27 +71,16 @@ const QuestionListPage = () => {
       );
     }
     dispatch(questionModule.actions.getList());
-
-    setTotalPage(Math.ceil(count / limit));
   }, [limit, page, filter]);
 
   useEffect(() => {
     setRecords(recordList());
+    setTotalPage(Math.ceil(count / limit));
   }, [list]);
 
   useEffect(() => {
     if (edit != null) {
-      const data: QuestionFormData = {
-        id: edit.id,
-        type: edit.edges.questionType.id,
-        title: edit.title,
-        content: edit.content,
-        div: edit.div,
-        reply: edit.reply,
-        fileName: edit.fileName,
-      };
-
-      setFormData(data);
+      setFormData(toFormData(edit));
 
       setFormProps({
         method: 'edit',
@@ -131,23 +103,7 @@ const QuestionListPage = () => {
   }, [edit]);
 
   const recordList = () => {
-    return list.map((q, i) => {
-      const r: QuestionRecord = {
-        no: i + 1,
-        div: q.div,
-        type: q.type,
-        subject: q.title,
-        createdAt: date(q.createdAt).format('YYYY.MM.DD'),
-        creatorId: q.userLoginId,
-        repliedAt: q.repliedAt
-          ? date(q.repliedAt).format('YYYY.MM.DD')
-          : '미답변',
-        replyLoginId: q.replyUserLoginId,
-        _origin: q,
-      };
-
-      return r;
-    });
+    return list.map(toRecord);
   };
 
   const onClickRecord = (r: QuestionRecord) => {
@@ -157,7 +113,6 @@ const QuestionListPage = () => {
   const onHide = () => dispatch(questionModule.actions.setEdit(null));
 
   const onSubmit = (data: QuestionFormData) => {
-    console.log(data);
     if (data.id && data.reply) {
       dispatch(
         questionModule.actions.create({
@@ -208,7 +163,7 @@ const QuestionListPage = () => {
           </Row>
         </Col>
       </Row>
-      <Row>
+      <Row className={'mt-4'}>
         <DynamicTable
           schema={QuestionSchema}
           records={records}
@@ -225,7 +180,7 @@ const QuestionListPage = () => {
           }}
         />
         <Col lg={4} className="mt-5">
-          <SendQuestion div={div} onSubmit={() => null} isReply={false} />
+          <SendQuestion div={div} isReply={false} />
         </Col>
       </Row>
       <QuestionForm {...formProps} defaultData={formData} />
