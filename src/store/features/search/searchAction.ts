@@ -10,8 +10,11 @@ export const initialState: SearchState = {
 };
 
 const searchAction = {
-  search: (state: SearchState, action: PayloadAction<SearchParameter>) => {
-    if (state.parameters == null) {
+  search: (
+    state: SearchState,
+    action: PayloadAction<SearchParameter | null>,
+  ) => {
+    if (state.parameters == null || action.payload == null) {
       state.parameters = action.payload;
     } else {
       state.parameters = Object.assign(state.parameters, action.payload);

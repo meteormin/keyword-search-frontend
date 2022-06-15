@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import ko from 'date-fns/locale/ko';
 import { registerLocale } from 'react-datepicker';
@@ -15,6 +15,8 @@ export interface DateSearchState {
 }
 
 export interface DateSearchProps {
+  createAtFilter: boolean;
+  reviewAtFilter: boolean;
   onChange: (state: DateSearchState) => any;
 }
 
@@ -33,31 +35,48 @@ const DateSearch = (props: DateSearchProps) => {
     });
   }, [startCreatedAt, endCreatedAt, startReviewAt, endReviewAt]);
 
+  const createAtFilter = () => {
+    return (
+      <Fragment>
+        <Col md={props.reviewAtFilter ? '5' : 'auto'}>
+          <DateFilter
+            label="생성 일자"
+            onChange={(state) => {
+              if (state.start && state.end) {
+                setStartCreatedAt(state.start);
+                setEndCreatedAt(state.end);
+              }
+            }}
+          />
+        </Col>
+        <Col md={1}></Col>
+      </Fragment>
+    );
+  };
+
+  const reviewAtFilter = () => {
+    return (
+      <Fragment>
+        <Col md={props.createAtFilter ? '5' : 'auto'}>
+          <DateFilter
+            label="검수일자"
+            onChange={(state) => {
+              if (state.start && state.end) {
+                setStartReviewAt(state.start);
+                setEndReviewAt(state.end);
+              }
+            }}
+          />
+        </Col>
+        <Col md={1}></Col>
+      </Fragment>
+    );
+  };
+
   return (
     <Row className="mx-2">
-      <Col md={5}>
-        <DateFilter
-          label="생성 일자"
-          onChange={(state) => {
-            if (state.start && state.end) {
-              setStartCreatedAt(state.start);
-              setEndCreatedAt(state.end);
-            }
-          }}
-        />
-      </Col>
-      <Col md={1}></Col>
-      <Col md={5}>
-        <DateFilter
-          label="검수일자"
-          onChange={(state) => {
-            if (state.start && state.end) {
-              setStartReviewAt(state.start);
-              setEndReviewAt(state.end);
-            }
-          }}
-        />
-      </Col>
+      {props.createAtFilter ? createAtFilter() : null}
+      {props.reviewAtFilter ? reviewAtFilter() : null}
     </Row>
   );
 };

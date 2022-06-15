@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import DataSearch from '../tasks/DataSearch';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 import StateSearch from './StateSearch';
 import DateSearch from '../reviews/DateSearch';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,22 +8,12 @@ import searchModule from '../../store/features/search';
 import { SearchParameter } from '../../utils/nia15/interfaces/search';
 import { date } from '../../helpers';
 
-export interface SearchStats {
-  all: number;
-  wait: number;
-  first: number;
-  second: number;
-  rejectFirst: number;
-  rejectSecond: number;
-}
-
 export interface SearchProps {
-  stats: SearchStats;
   onSearch?: () => any;
   onReset?: () => any;
 }
 
-const Search = ({ stats, onSearch, onReset }: SearchProps) => {
+const Search = ({ onSearch, onReset }: SearchProps) => {
   const dispatch = useDispatch();
   const { parameters } = useSelector(searchModule.getSearchState);
 
@@ -36,20 +26,21 @@ const Search = ({ stats, onSearch, onReset }: SearchProps) => {
     <Fragment>
       <Row>
         <DataSearch
-          onSearch={(state) => {
+          onChange={(state) => {
             console.log(state);
             setSearchParameter({
               refID: state.refId,
               domain: state.domain,
+              concept: state.concept,
             });
             if (onSearch) {
               onSearch();
             }
           }}
-          onReset={() => {
-            if (onReset) {
-              onReset();
-            }
+          defaultState={{
+            refId: parameters?.refID,
+            domain: parameters?.domain,
+            concept: parameters?.concept,
           }}
         />
       </Row>
@@ -89,75 +80,9 @@ const Search = ({ stats, onSearch, onReset }: SearchProps) => {
 
             setSearchParameter(dateParameters);
           }}
+          createAtFilter={true}
+          reviewAtFilter={true}
         />
-      </Row>
-      <Row className="mt-4">
-        <Col lg={2}>
-          <Button
-            style={{ cursor: 'default' }}
-            variant="light"
-            className="w-100"
-          >
-            전체 목록
-            <br />
-            {stats.all}건
-          </Button>
-        </Col>
-        <Col lg={2}>
-          <Button
-            style={{ cursor: 'default' }}
-            variant="light"
-            className="w-100"
-          >
-            검수 대기
-            <br />
-            {stats.wait}건
-          </Button>
-        </Col>
-        <Col lg={2}>
-          <Button
-            style={{ cursor: 'default' }}
-            variant="light"
-            className="w-100"
-          >
-            1차 승인
-            <br />
-            {stats.first}건
-          </Button>
-        </Col>
-        <Col lg={2}>
-          <Button
-            style={{ cursor: 'default' }}
-            variant="light"
-            className="w-100"
-          >
-            1차 반려
-            <br />
-            {stats.rejectFirst}건
-          </Button>
-        </Col>
-        <Col lg={2}>
-          <Button
-            style={{ cursor: 'default' }}
-            variant="light"
-            className="w-100"
-          >
-            2차 승인
-            <br />
-            {stats.second}건
-          </Button>
-        </Col>
-        <Col lg={2}>
-          <Button
-            style={{ cursor: 'default' }}
-            variant="light"
-            className="w-100"
-          >
-            2차 반려
-            <br />
-            {stats.rejectSecond}건
-          </Button>
-        </Col>
       </Row>
     </Fragment>
   );

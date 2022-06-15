@@ -4,7 +4,7 @@ import DynamicTable, {
 } from '../../components/common/DaynamicTable';
 import { SentenceListSchema, SentenceRecord } from './SentenceListSchema';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import Search, { SearchStats } from '../../components/sentences/Search';
+import Search from '../../components/sentences/Search';
 import Pagination from '../../components/common/Pagination';
 import Select from '../../components/common/Select';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import CreateForm from '../../components/tasks/CreateForm';
 import { ReviewStatus } from '../../utils/nia15/interfaces/reviews';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import StatusCount from '../../components/sentences/StatusCount';
 
 const SentenceListPage = () => {
   const dispatch = useDispatch();
@@ -43,14 +44,6 @@ const SentenceListPage = () => {
   ];
 
   const schema: DynamicSchema = SentenceListSchema;
-  const tempStats: SearchStats = {
-    all: 100,
-    wait: 100,
-    first: 100,
-    second: 100,
-    rejectFirst: 100,
-    rejectSecond: 100,
-  };
 
   const records = (): SentenceRecord[] => {
     return sentenceHistory.map((s, i) => {
@@ -107,10 +100,17 @@ const SentenceListPage = () => {
     <Container>
       <Row className="mx-1 mt-4">
         <Search
-          stats={tempStats}
           onSearch={() => {
             dispatch(sentenceModule.actions.getSentenceList());
           }}
+        />
+        <StatusCount
+          all={100}
+          wait={100}
+          first={100}
+          second={100}
+          rejectFirst={100}
+          rejectSecond={100}
         />
       </Row>
       <Row className="mt-4">

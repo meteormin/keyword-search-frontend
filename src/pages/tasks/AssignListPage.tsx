@@ -14,18 +14,17 @@ import { useNavigate } from 'react-router';
 import { TaskRecord } from './TaskListSchema';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import Timer from '../../components/common/Timer';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [searchValue, setValue] = useState<string>('');
-  const [searchName, setName] = useState<string | number>('');
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const { taskList, time, workTask, totalCount } = useSelector(
     taskModule.getTaskState,
   );
+  const { parameters } = useSelector(searchModule.getSearchState);
 
   const limitOptions = [
     {
@@ -122,7 +121,7 @@ const AssignListPage = () => {
         </Col>
       </Row>
       <Row className="ms-2 mt-2">
-        <Col lg={12}>
+        <Col lg={8}>
           <DataAssign
             onAssign={(selectedName: string | undefined) => {
               dispatch(
@@ -132,14 +131,16 @@ const AssignListPage = () => {
               );
               dispatch(taskModule.actions.assign());
             }}
-            time={time || '00:00:00'}
           />
+        </Col>
+        <Col lg={4}>
+          <Timer time={time || '00:00:00'} />
         </Col>
       </Row>
       <Row className="ms-2">
-        <Col lg={12} className="mt-4">
+        <Col lg={8} className="mt-4">
           <DataSearch
-            onSearch={(state) => {
+            onChange={(state) => {
               dispatch(
                 searchModule.actions.search({
                   refID: state.refId,
@@ -149,7 +150,11 @@ const AssignListPage = () => {
               );
               dispatch(taskModule.actions.getTaskList());
             }}
-            onReset={() => null}
+            defaultState={{
+              refId: parameters?.refID,
+              domain: parameters?.domain,
+              concept: parameters?.concept,
+            }}
           />
         </Col>
       </Row>

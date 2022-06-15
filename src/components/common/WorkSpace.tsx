@@ -8,12 +8,18 @@ import {
   str,
   makeSentencePattern,
   checkDualFrame,
+  checkTripleFrame,
 } from '../../helpers';
 import ReviewSection, { ReviewResultState } from '../reviews/ReviewSection';
 import { useDispatch } from 'react-redux';
 import alertModal from '../../store/features/common/alertModal';
 import { usePrev } from '../../helpers';
 import { Concept, Task } from '../../utils/nia15/interfaces/tasks';
+import {
+  DualFrameText,
+  FrameText,
+  TripleFrameText,
+} from '../../utils/tmkor/TmKor';
 
 export enum ReviewResult {
   PASS = 'PASS',
@@ -410,8 +416,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
     return await baikalNlp.checkConcepts(concepts, str);
   };
 
-  const checkDup = async (str1: string, str2: string) => {
-    return await checkDualFrame(str1, str2);
+  const checkDup = async (sentences: { text1: string; text2: string }) => {
+    return await checkDualFrame(sentences);
     // if (checked) {
     //   if (checked.duplicated) {
     //     return checked;
@@ -424,6 +430,14 @@ const WorkSpace = (props: WorkSpaceProps) => {
     // }
   };
 
+  const checkTriple = async (sentences: {
+    defaultText: string;
+    text1: string;
+    text2: string;
+  }) => {
+    return await checkTripleFrame(sentences);
+  };
+
   const showAlertForMakeSP = (cntNo: number, message: any) => {
     dispatch(
       alertModal.showAlert({
@@ -434,8 +448,10 @@ const WorkSpace = (props: WorkSpaceProps) => {
   };
 
   const handleMakeSP = async (cntNo: number, str: string) => {
+    const basicSentence = props.task.sentence;
     let setSentencePattern: React.Dispatch<React.SetStateAction<string>>;
     let otherSentence: string;
+    let frame: FrameText | DualFrameText | TripleFrameText | null;
     if (cntNo == 1) {
       setSentencePattern = setText11;
       otherSentence = textArea20;
@@ -450,33 +466,27 @@ const WorkSpace = (props: WorkSpaceProps) => {
       return;
     }
     try {
-      const isCheckDup = await checkDup(str, props.task.sentence);
-      if (isCheckDup) {
-        if (isCheckDup.duplicated) {
-          showAlertForMakeSP(cntNo, '기본 문장과 동일한 문형입니다.');
+      if (otherSentence) {
+        frame = await checkTriple({
+          defaultText: basicSentence,
+          text1: str,
+          text2: otherSentence,
+        });
+      } else {
+        frame = await checkDup({
+          text1: str,
+          text2: basicSentence,
+        });
+      }
+
+      if (frame) {
+        if (frame.duplicated) {
+          showAlertForMakeSP(cntNo, '기본 문장/다른 문장과 동일한 문형입니다.');
         } else {
-          const isCheckDup2 = await checkDup(str, otherSentence);
-          if (isCheckDup2) {
-            if (isCheckDup2.duplicated) {
-              setIsClickedMkSp(cntNo - 1, false);
-              setSentencePattern('');
-              showAlertForMakeSP(
-                cntNo,
-                '생성한 다른 문장과 동일한 문형입니다.',
-              );
-            } else {
-              const madeSP = await makeSP(str);
-              if (madeSP) {
-                setIsClickedMkSp(cntNo - 1, true);
-                setSentencePattern(madeSP);
-              }
-            }
-          } else {
-            const madeSP = await makeSP(str);
-            if (madeSP) {
-              setIsClickedMkSp(cntNo - 1, true);
-              setSentencePattern(madeSP);
-            }
+          const madeSP = frame.frame1.frameText;
+          if (madeSP) {
+            setIsClickedMkSp(cntNo - 1, true);
+            setSentencePattern(madeSP);
           }
         }
       } else {

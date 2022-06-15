@@ -20,9 +20,11 @@ import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
 import TmKor, {
   CheckDualFrameRequest,
+  CheckTripleFrameRequest,
   DualFrameText,
   FrameText,
   getFrameRequest,
+  TripleFrameText,
 } from './utils/tmkor/TmKor';
 import { switchReviewStatus as switchRS } from './utils/common/status';
 
@@ -154,13 +156,13 @@ export const makeSentencePattern = async (
   return null;
 };
 
-export const checkDualFrame = async (
-  str1: string,
-  str2: string,
-): Promise<DualFrameText | null> => {
+export const checkDualFrame = async (sentences: {
+  text1: string;
+  text2: string;
+}): Promise<DualFrameText | null> => {
   try {
-    const baikalRes1 = await baikalNlp.analyze(str1);
-    const baikalRes2 = await baikalNlp.analyze(str2);
+    const baikalRes1 = await baikalNlp.analyze(sentences.text1);
+    const baikalRes2 = await baikalNlp.analyze(sentences.text2);
     const req: CheckDualFrameRequest = {
       tagged_text_1: {
         sentences: baikalRes1?.sentences || [],
@@ -175,6 +177,41 @@ export const checkDualFrame = async (
     const res = await tmKor.checkDualFrame(req);
     if (res) {
       return res.data[0] as DualFrameText;
+    }
+  } catch (e) {
+    return null;
+  }
+
+  return null;
+};
+
+export const checkTripleFrame = async (sentences: {
+  defaultText: string;
+  text1: string;
+  text2: string;
+}) => {
+  try {
+    const baikalBasic = await baikalNlp.analyze(sentences.defaultText);
+    const baikalStr1 = await baikalNlp.analyze(sentences.text1);
+    const baikalStr2 = await baikalNlp.analyze(sentences.text2);
+    const req: CheckTripleFrameRequest = {
+      tagged_text_default: {
+        sentences: baikalBasic?.sentences || [],
+        language: 'ko_KR',
+      },
+      tagged_text_1: {
+        sentences: baikalStr1?.sentences || [],
+        language: 'ko_KR',
+      },
+      tagged_text_2: {
+        sentences: baikalStr2?.sentences || [],
+        language: 'ko_KR',
+      },
+    };
+
+    const res = await tmKor.checkTripleFrame(req);
+    if (res) {
+      return res.data[0] as TripleFrameText;
     }
   } catch (e) {
     return null;

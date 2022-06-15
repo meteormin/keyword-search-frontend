@@ -15,6 +15,7 @@ import { Review, ReviewStatus } from '../../utils/nia15/interfaces/reviews';
 import searchModule from '../../store/features/search';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import StatusCount from '../../components/reviews/StatusCount';
 
 export interface Record extends ReviewList {
   _origin: Review;
@@ -47,12 +48,6 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   ];
 
   const schema: DynamicSchema = ReviewListSchema;
-  const tempStats: SearchStats = {
-    all: 100,
-    pass: 100,
-    reject: 100,
-    totalReject: 100,
-  };
 
   const records = (): Record[] => {
     return reviews.map((r, i): Record => {
@@ -137,8 +132,6 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
     <Container>
       <Row className="mt-2 ms-2">
         <Search
-          seq={seq}
-          stats={tempStats}
           onSearch={() => {
             dispatch(
               reviewModule.actions.getReviewList({
@@ -146,6 +139,13 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
               }),
             );
           }}
+        />
+        <StatusCount
+          seq={seq}
+          all={100}
+          pass={100}
+          reject={100}
+          totalReject={100}
         />
       </Row>
       <Row className="mt-4">
