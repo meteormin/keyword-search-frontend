@@ -56,7 +56,7 @@ const IdSearch = (props: IdSearchProps) => {
 
   return (
     <Row className="mx-2">
-      <Col md={4}>
+      <Col md={5}>
         <SelectFilter
           label={'ID'}
           value={selected}
@@ -79,7 +79,6 @@ const IdSearch = (props: IdSearchProps) => {
           onBlur={onChange}
         />
       </Col>
-      <Col md={4}></Col>
     </Row>
   );
 };

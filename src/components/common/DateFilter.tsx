@@ -34,28 +34,32 @@ const DateFilter = (props: DateFilterProps) => {
           <strong>{props.label}</strong>
         </label>
       </Col>
-      <Col md={4}>
-        <DatePicker
-          className="form-control w-100"
-          locale="ko"
-          id="startC"
-          selected={start}
-          dateFormat="yyyy.MM.dd"
-          onChange={(date: Date) => setStart(date)}
-        />
-      </Col>
-      <Col md={1} className="text-center">
-        <span className="text-center">~</span>
-      </Col>
-      <Col md={4}>
-        <DatePicker
-          className="form-control w-100"
-          locale="ko"
-          id="endC"
-          selected={end}
-          dateFormat="yyyy.MM.dd"
-          onChange={(date: Date) => setEnd(date)}
-        />
+      <Col md={8} className={'mx-2'}>
+        <Row>
+          <Col md={5}>
+            <DatePicker
+              className="form-control w-100"
+              locale="ko"
+              id="startC"
+              selected={start}
+              dateFormat="yyyy.MM.dd"
+              onChange={(date: Date) => setStart(date)}
+            />
+          </Col>
+          <Col md={1}>
+            <span>~</span>
+          </Col>
+          <Col md={5}>
+            <DatePicker
+              className="form-control w-100"
+              locale="ko"
+              id="endC"
+              selected={end}
+              dateFormat="yyyy.MM.dd"
+              onChange={(date: Date) => setEnd(date)}
+            />
+          </Col>
+        </Row>
       </Col>
     </Row>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import DataAssign from '../../components/tasks/DataAssign';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,12 @@ import reviewModule from '../../store/features/reviews';
 import searchModule from '../../store/features/search';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import IdSearch from '../../components/reviews/IdSearch';
+import StateSearch from '../../components/reviews/StateSearch';
+import DateSearch from '../../components/reviews/DateSearch';
+import { SearchParameter } from '../../utils/nia15/interfaces/search';
+import SearchAndReset from '../../components/common/SearchAndReset';
+import Timer from '../../components/common/Timer';
 
 const AssignListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
@@ -70,6 +76,92 @@ const AssignListPage = ({ seq }: { seq: number }) => {
     );
   };
 
+  const setSearchParameter = (state: SearchParameter) => {
+    const newParameter = { ...parameters, ...state };
+    dispatch(searchModule.actions.search(newParameter));
+  };
+
+  const resetSearchData = () => {
+    dispatch(searchModule.actions.search(null));
+  };
+
+  const makeSearchs = () => {
+    return (
+      <Fragment>
+        <Row>
+          <Col md={8}>
+            <DataSearch
+              onChange={(state) => {
+                setSearchParameter({
+                  refID: state.refId,
+                  domain: state.domain,
+                });
+              }}
+              defaultState={{
+                refId: parameters?.refID,
+                domain: parameters?.domain,
+                concept: parameters?.concept,
+              }}
+            />
+          </Col>
+        </Row>
+        <Row className="mt-4">
+          <Col md={8}>
+            <IdSearch
+              onChange={(state) => {
+                console.log('Id search', state);
+                setSearchParameter(state);
+              }}
+            />
+          </Col>
+        </Row>
+
+        <Row className="mt-4">
+          <Col md={8}>
+            <DateSearch
+              createAtFilter={true}
+              reviewAtFilter={false}
+              onChange={(state) => {
+                const dateParameters: SearchParameter = {};
+                if (state.startCreatedAt && state.endCreatedAt) {
+                  dateParameters.createdAtStart = date(
+                    state.startCreatedAt,
+                  ).format();
+                  dateParameters.createdAtEnd = date(state.endCreatedAt)
+                    .add(1, 'days')
+                    .format();
+                }
+
+                if (state.startReviewAt && state.endReviewAt) {
+                  dateParameters.reviewedAtStart = date(
+                    state.startReviewAt,
+                  ).format();
+                  dateParameters.reviewedAtEnd = date(state.endReviewAt)
+                    .add(1, 'days')
+                    .format();
+                }
+
+                setSearchParameter(dateParameters);
+              }}
+            />
+          </Col>
+          <Col md={4}>
+            <SearchAndReset
+              onSearch={() =>
+                dispatch(
+                  reviewModule.actions.getAssignList({
+                    seq: seq,
+                  }),
+                )
+              }
+              onReset={() => resetSearchData()}
+            />
+          </Col>
+        </Row>
+      </Fragment>
+    );
+  };
+
   useEffect(() => {
     setInterval(
       () => dispatch(reviewModule.actions.getExpiredAt({ seq: seq })),
@@ -113,7 +205,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         </Col>
       </Row>
       <Row className="ms-2 mt-2">
-        <Col lg={12}>
+        <Col lg={8}>
           <DataAssign
             onAssign={(selectedName: string | undefined) => {
               dispatch(
@@ -123,29 +215,15 @@ const AssignListPage = ({ seq }: { seq: number }) => {
               );
               dispatch(reviewModule.actions.assign(seq));
             }}
-            time={time || '00:00:00'}
           />
+        </Col>
+        <Col md={4}>
+          <Timer time={time || '00:00:00'} className="float-end w-50" />
         </Col>
       </Row>
       <Row className="ms-2">
         <Col lg={12} className="mt-4">
-          <DataSearch
-            onSearch={(state) => {
-              dispatch(
-                searchModule.actions.search({
-                  concept: state.concept,
-                  refID: state.refId,
-                  domain: state.domain,
-                }),
-              );
-              dispatch(
-                reviewModule.actions.getAssignList({
-                  seq: seq,
-                }),
-              );
-            }}
-            onReset={() => null}
-          />
+          {makeSearchs()}
         </Col>
       </Row>
       <Row className="mt-2">

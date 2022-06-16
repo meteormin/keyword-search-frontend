@@ -44,6 +44,13 @@ const LoginPage = () => {
                 type="password"
                 placeholder="비밀번호를 입력해주세요"
                 onChange={onChangePass}
+                onKeyDown={(e) => {
+                  if (e.key == 'Enter') {
+                    if (id && password) {
+                      onSubmit();
+                    }
+                  }
+                }}
               />
               <label htmlFor="inputPassword">비밀번호</label>
             </div>

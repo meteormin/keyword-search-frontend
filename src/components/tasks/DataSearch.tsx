@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Button, Col, Row } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import Select from '../common/Select';
 import { config } from '../../helpers';
 
 export interface DataSearchProps {
-  onSearch: (state: SearchName) => any;
-  onReset: () => any;
+  onChange: (state: SearchName) => any;
+  defaultState: SearchName;
 }
 
 export interface SearchName {
@@ -21,22 +21,72 @@ export enum SearchNames {
   DOMAIN,
 }
 
-const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
+const DataSearch = (props: DataSearchProps) => {
   const [selectedName, setSelectedName] = useState<SearchNames | undefined>();
   const [searchValue, setSearchValue] = useState<string | undefined>();
 
   const searchNames = config.selectOptions.DataSearchNames;
 
+  const getState = () => {
+    const state: SearchName = {
+      concept: undefined,
+      refId: undefined,
+      domain: undefined,
+    };
+
+    switch (selectedName) {
+      case SearchNames.CONCEPT:
+        state.concept = searchValue;
+        break;
+      case SearchNames.REF_ID:
+        if (searchValue) {
+          state.refId = parseInt(searchValue);
+        }
+        break;
+      case SearchNames.DOMAIN:
+        state.domain = searchValue;
+        break;
+      case SearchNames.NONE:
+      default:
+        break;
+    }
+
+    return state;
+  };
+
+  useEffect(() => {
+    const state = props.defaultState;
+
+    if (state.domain) {
+      setSelectedName(SearchNames.DOMAIN);
+      setSearchValue(state.domain);
+    }
+
+    if (state.refId) {
+      setSelectedName(SearchNames.REF_ID);
+      setSearchValue(state.refId.toString());
+    }
+
+    if (state.concept) {
+      setSelectedName(SearchNames.CONCEPT);
+      setSearchValue(state.concept);
+    }
+  }, []);
+
+  useEffect(() => {
+    props.onChange(getState());
+  }, [searchValue]);
+
   return (
     <Row className="mx-2">
       <Col md={4}>
         <Row>
-          <Col md={4}>
+          <Col md={5}>
             <label className="form-label mt-2">
               <strong>데이터</strong>
             </label>
           </Col>
-          <Col md={8}>
+          <Col md={7}>
             <Select
               id={'searchData'}
               name={'searchData'}
@@ -64,46 +114,6 @@ const DataSearch = ({ onSearch, onReset }: DataSearchProps) => {
           }}
           placeholder="검색어를 입력해 주세요."
         />
-      </Col>
-      <Col md={4}>
-        <Button
-          variant="dark"
-          style={{ height: '100%', width: '50%' }}
-          onClick={() => {
-            const state: SearchName = {
-              concept: undefined,
-              refId: undefined,
-              domain: undefined,
-            };
-
-            if (searchValue) {
-              switch (selectedName) {
-                case SearchNames.CONCEPT:
-                  state.concept = searchValue;
-                  break;
-                case SearchNames.REF_ID:
-                  state.refId = parseInt(searchValue as string);
-                  break;
-                case SearchNames.DOMAIN:
-                  state.domain = searchValue;
-                  break;
-                default:
-                  break;
-              }
-            }
-            onSearch(state);
-          }}
-        >
-          검색
-        </Button>
-        <Button
-          variant="light"
-          className="border"
-          style={{ height: '100%', width: '50%' }}
-          onClick={onReset}
-        >
-          초기화
-        </Button>
       </Col>
     </Row>
   );

@@ -12,11 +12,15 @@ export interface CheckDualFrameRequest {
   tagged_text_2: getFrameRequest;
 }
 
+export interface CheckTripleFrameRequest extends CheckDualFrameRequest {
+  tagged_text_default: getFrameRequest;
+}
+
 export interface FrameText {
   frameText: string;
-  sourceId: string;
-  refSrc: string;
-  refId: string;
+  sourceId?: string;
+  refSrc?: string;
+  refId?: string;
 }
 
 export interface DualFrameText {
@@ -25,12 +29,16 @@ export interface DualFrameText {
   frame2: FrameText;
 }
 
+export interface TripleFrameText extends DualFrameText {
+  frame_default: FrameText;
+}
+
 export interface TmKorResponse {
   type: string;
   title: string;
   detail: string;
   status: string;
-  data: FrameText[] | DualFrameText[];
+  data: FrameText[] | DualFrameText[] | TripleFrameText[];
   msg: string;
 }
 
@@ -61,6 +69,21 @@ class TmKor {
   ): Promise<TmKorResponse | null> {
     const response: ApiResponse = await this.client.post(
       'v1.0/check_dual_frame',
+      request,
+    );
+
+    if (response.isSuccess) {
+      return toCamel(apiResponse(response)) as TmKorResponse;
+    } else {
+      return null;
+    }
+  }
+
+  public async checkTripleFrame(
+    request: CheckTripleFrameRequest,
+  ): Promise<TmKorResponse | null> {
+    const response: ApiResponse = await this.client.post(
+      'v1.0/check_triple_frame',
       request,
     );
 

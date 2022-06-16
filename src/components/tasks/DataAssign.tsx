@@ -6,7 +6,6 @@ import { config } from '../../helpers';
 
 export interface DataAssignProps {
   onAssign: (selectedName: string | undefined) => any;
-  time: string;
 }
 
 export interface DataAssignState {
@@ -15,7 +14,7 @@ export interface DataAssignState {
   _selectedName: string | number;
 }
 
-const DataAssign = ({ onAssign, time }: DataAssignProps) => {
+const DataAssign = ({ onAssign }: DataAssignProps) => {
   const [selectedName, setSelectedName] = useState<string | undefined>();
   const [searchCondition, setCondition] = useState<Option[]>([
     {
@@ -32,12 +31,12 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
     <Row className="mx-2">
       <Col md={4}>
         <Row>
-          <Col md={4}>
+          <Col md={5}>
             <label className="form-label mt-2">
               <strong>생성 조건</strong>
             </label>
           </Col>
-          <Col md={8}>
+          <Col md={7}>
             <Select
               id={'searchData'}
               name={'searchData'}
@@ -59,9 +58,6 @@ const DataAssign = ({ onAssign, time }: DataAssignProps) => {
         <Button variant="dark" onClick={() => onAssign(selectedName)}>
           데이터 할당 받기
         </Button>
-      </Col>
-      <Col md={4}>
-        <Timer time={time} className="float-end w-50" />
       </Col>
     </Row>
   );
