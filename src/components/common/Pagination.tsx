@@ -3,27 +3,45 @@ import { Pagination as Pages } from 'react-bootstrap';
 
 export interface PaginationProps {
   currentPage: number;
-  totalPage: number;
+  totalCount: number;
+  limit: number;
   onClick: (page: number) => any;
 }
 
 const Pagination = (props: PaginationProps) => {
   const [page, setPage] = useState(props.currentPage);
+  const [limit, setLimit] = useState(props.limit);
+  const [totalCount, setTotalCount] = useState(props.totalCount);
+  const [totalPage, setTotalPage] = useState<number>(1);
+  const [items, setItems] = useState<JSX.Element[]>([]);
+
+  useEffect(() => {
+    setPage(props.currentPage);
+    setLimit(props.limit);
+    setTotalCount(props.totalCount);
+    setTotalPage(Math.ceil(props.totalCount / props.limit) || 1);
+    setItems(makeItems());
+  }, [props]);
+
   useEffect(() => {
     console.log(page);
-  }, [page]);
+    console.log('3939::', totalCount);
+    setTotalPage(Math.ceil(totalCount / limit) || 1);
+    setItems(makeItems());
+  }, [page, limit, totalCount]);
 
-  const items = () => {
-    const items = [];
-    for (let i = 1; i <= props.totalPage; i++) {
-      if (i === props.currentPage) {
-        items.push(
+  const makeItems = () => {
+    const pageItems = [];
+
+    for (let i = 1; i <= totalPage; i++) {
+      if (i === page) {
+        pageItems.push(
           <Pages.Item key={`page_${i}`} active onClick={() => onClick(i)}>
             {i}
           </Pages.Item>,
         );
       } else {
-        items.push(
+        pageItems.push(
           <Pages.Item key={`page_${i}`} onClick={() => onClick(i)}>
             {i}
           </Pages.Item>,
@@ -31,7 +49,7 @@ const Pagination = (props: PaginationProps) => {
       }
     }
 
-    return items;
+    return pageItems;
   };
 
   const onClick = (pageNum: number) => {
@@ -54,16 +72,16 @@ const Pagination = (props: PaginationProps) => {
                 onClick(props.currentPage - 1);
               }}
             />
-            {items()}
+            {items}
             <Pages.Next className="text-dark" />
             <Pages.Last
               className="text-dark"
               onClick={() => {
-                if (props.totalPage <= props.currentPage) {
+                if (totalPage <= props.currentPage) {
                   return;
                 }
 
-                onClick(props.totalPage);
+                onClick(totalPage);
               }}
             />
           </Pages>

@@ -140,7 +140,7 @@ const QuestionForm = (props: QuestionFormProps) => {
         </Form.Group>
         <Form.Group className={'mt-2'}>
           <Form.Label>첨부파일</Form.Label>
-          {props.method == 'create' ? (
+          {props.method == 'create' && !props.isReply ? (
             <Form.Control
               type="file"
               readOnly={props.method == 'create' && props.isReply}
@@ -159,7 +159,11 @@ const QuestionForm = (props: QuestionFormProps) => {
             />
           ) : (
             <InputGroup>
-              <Form.Control type={'text'} readOnly={true} value={fileName} />
+              <Form.Control
+                type={'text'}
+                readOnly={true}
+                value={fileName || '첨부된 파일이 없습니다.'}
+              />
               <Button variant={'dark'} onClick={handleDownload}>
                 내려받기
               </Button>

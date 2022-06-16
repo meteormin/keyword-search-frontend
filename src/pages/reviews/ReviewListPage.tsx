@@ -9,13 +9,14 @@ import DynamicTable, {
 } from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import ReviewForm from '../../components/reviews/ReivewForm';
-import Search, { SearchStats } from '../../components/reviews/Search';
+import Search from '../../components/reviews/Search';
 import { ReviewList, ReviewListSchema } from './ReviewListSchema';
 import { Review, ReviewStatus } from '../../utils/nia15/interfaces/reviews';
 import searchModule from '../../store/features/search';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import StatusCount from '../../components/reviews/StatusCount';
+import LimitFilter from '../../components/common/LimitFilter';
 
 export interface Record extends ReviewList {
   _origin: Review;
@@ -26,8 +27,6 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   const [time, setTime] = useState('');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [reviewStatus, setReviewStatus] = useState<string>('ALL');
-  const [totalPage, setTotalPage] = useState(1);
   const { reviews, editReview, totalCount } = useSelector(
     reviewModule.getReviewState,
   );
@@ -124,10 +123,6 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
     );
   }, [page, limit]);
 
-  useEffect(() => {
-    setTotalPage(Math.ceil(totalCount / limit));
-  }, [totalCount]);
-
   return (
     <Container>
       <Row className="mt-2 ms-2">
@@ -140,32 +135,26 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
             );
           }}
         />
-        <StatusCount
-          seq={seq}
-          all={100}
-          pass={100}
-          reject={100}
-          totalReject={100}
-        />
+        <StatusCount seq={seq} all={0} pass={0} reject={0} totalReject={0} />
       </Row>
       <Row className="mt-4">
         <Col md={6} className="mt-2"></Col>
         <Col md={6}>
-          <div className="float-end mb-2">
-            <Select
-              id="limit"
-              name="limit"
-              options={limitOptions}
-              onChange={(e) => {
-                setLimit(
-                  parseInt(e.target.options[e.target.selectedIndex].value),
-                );
-              }}
-            />
-          </div>
+          <Row>
+            <Col lg={6}></Col>
+            <Col lg={6}>
+              <LimitFilter
+                selectedValue={limit}
+                onChange={(e) => {
+                  const option = e.target.options[e.target.selectedIndex];
+                  setLimit(parseInt(option.value));
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
-      <Row>
+      <Row className={'mt-4'}>
         <DynamicTable
           schema={schema}
           records={records()}
@@ -180,7 +169,8 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         </Col>
         <Pagination
           currentPage={page}
-          totalPage={totalPage}
+          totalCount={totalCount}
+          limit={limit}
           onClick={(page) => {
             setPage(page);
           }}

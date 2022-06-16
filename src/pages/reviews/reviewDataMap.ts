@@ -62,11 +62,11 @@ export const sentenceToWorkData = (
       sentence?.status == ReviewStatus.WAITING
     ) {
       result1 = sentence?.edges?.sentence1.edges?.sentenceReviewReject
-        ? ReviewResult.PASS
-        : ReviewResult.FAIL;
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
       result2 = sentence?.edges?.sentence2.edges?.sentenceReviewReject
-        ? ReviewResult.PASS
-        : ReviewResult.FAIL;
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
 
       rejectReason1 = sentence?.edges?.sentence1?.edges?.sentenceReviewReject;
       rejectReason2 = sentence?.edges?.sentence2?.edges?.sentenceReviewReject;
@@ -87,11 +87,11 @@ export const sentenceToWorkData = (
       sentence?.status == ReviewStatus.PASS1
     ) {
       result1 = sentence?.edges?.sentence1.edges?.sentenceReviewReject
-        ? ReviewResult.PASS
-        : ReviewResult.FAIL;
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
       result2 = sentence?.edges?.sentence2.edges?.sentenceReviewReject
-        ? ReviewResult.PASS
-        : ReviewResult.FAIL;
+        ? ReviewResult.FAIL
+        : ReviewResult.PASS;
 
       rejectReason1 = sentence?.edges?.sentence1?.edges?.sentenceReviewReject;
 

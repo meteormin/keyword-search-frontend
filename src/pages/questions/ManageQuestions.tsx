@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import Pagination from '../../components/common/Pagination';
 import DynamicTable from '../../components/common/DaynamicTable';
 import { QuestionRecord, QuestionSchema } from './QuestionSchema';
@@ -38,7 +38,6 @@ const ManageQuestions = () => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(0);
   const [records, setRecords] = useState<QuestionRecord[]>([]);
   const { edit, list, search, count } = useSelector(
     questionModule.getQuestionState,
@@ -66,7 +65,6 @@ const ManageQuestions = () => {
 
   useEffect(() => {
     setRecords(recordList());
-    setTotalPage(Math.ceil(count / limit));
   }, [list]);
 
   useEffect(() => {
@@ -84,8 +82,8 @@ const ManageQuestions = () => {
     }
 
     setFormProps({
-      method: 'edit',
-      isReply: false,
+      method: !!edit?.reply ? 'edit' : 'create',
+      isReply: !edit?.reply,
       div: QuestionDiv.CREATE,
       show: !!edit,
       onHide: onHide,
@@ -158,7 +156,8 @@ const ManageQuestions = () => {
         <Col lg={4}></Col>
         <Pagination
           currentPage={page}
-          totalPage={totalPage}
+          totalCount={count}
+          limit={limit}
           onClick={(page) => {
             setPage(page);
           }}

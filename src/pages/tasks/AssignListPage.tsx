@@ -10,56 +10,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import taskModule from '../../store/features/tasks';
 import { lang, str } from '../../helpers';
 import searchModule from '../../store/features/search';
-import { useNavigate } from 'react-router';
-import { TaskRecord } from './TaskListSchema';
+import { TaskListSchema, TaskRecord } from './TaskListSchema';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import Timer from '../../components/common/Timer';
+import LimitFilter from '../../components/common/LimitFilter';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
   const { taskList, time, workTask, totalCount } = useSelector(
     taskModule.getTaskState,
   );
   const { parameters } = useSelector(searchModule.getSearchState);
 
-  const limitOptions = [
-    {
-      name: '10개씩 보기',
-      value: 10,
-    },
-    {
-      name: '50개씩 보기',
-      value: 50,
-    },
-    {
-      name: '100개씩 보기',
-      value: 100,
-    },
-  ];
-
-  const taskSchema = {
-    no: {
-      name: 'NO',
-    },
-    id: {
-      name: '고유번호',
-    },
-    conceptSet: {
-      name: '개념집합',
-    },
-    wordCount: {
-      name: (
-        <span>
-          기본 문장 <br />
-          단어수
-        </span>
-      ),
-    },
-  };
+  const taskSchema = TaskListSchema;
 
   const taskRecords = () => {
     return taskList.map((t, i): TaskRecord => {
@@ -96,10 +62,6 @@ const AssignListPage = () => {
   }, [page, limit]);
 
   useEffect(() => {
-    setTotalPage(Math.ceil(totalCount / limit));
-  }, [totalCount]);
-
-  useEffect(() => {
     taskRecords();
   }, [taskList]);
 
@@ -134,7 +96,7 @@ const AssignListPage = () => {
           />
         </Col>
         <Col lg={4}>
-          <Timer time={time || '00:00:00'} />
+          <Timer time={time || '00:00:00'} className="float-end w-50" />
         </Col>
       </Row>
       <Row className="ms-2">
@@ -164,21 +126,21 @@ const AssignListPage = () => {
       <Row className="mt-4">
         <Col md={6} className="mt-2"></Col>
         <Col md={6}>
-          <div className="float-end mb-2">
-            <Select
-              id="limit"
-              name="limit"
-              options={limitOptions}
-              onChange={(e) => {
-                setLimit(
-                  parseInt(e.target.options[e.target.selectedIndex].value),
-                );
-              }}
-            />
-          </div>
+          <Row>
+            <Col lg={6}></Col>
+            <Col lg={6}>
+              <LimitFilter
+                selectedValue={limit}
+                onChange={(e) => {
+                  const option = e.target.options[e.target.selectedIndex];
+                  setLimit(parseInt(option.value));
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
-      <Row>
+      <Row className={'mt-4'}>
         <DynamicTable
           schema={taskSchema}
           records={taskRecords()}
@@ -189,7 +151,8 @@ const AssignListPage = () => {
         <Col lg={4}></Col>
         <Pagination
           currentPage={page}
-          totalPage={totalPage}
+          totalCount={totalCount}
+          limit={limit}
           onClick={(page) => {
             setPage(page);
           }}
@@ -206,5 +169,4 @@ const AssignListPage = () => {
     </Container>
   );
 };
-
 export default AssignListPage;

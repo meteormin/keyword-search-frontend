@@ -36,7 +36,6 @@ const QuestionListPage = () => {
   const [filter, setFilter] = useState<number>(-1);
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
-  const [totalPage, setTotalPage] = useState<number>(0);
   const [records, setRecords] = useState<QuestionRecord[]>([]);
   const { edit, list, search, count } = useSelector(
     questionModule.getQuestionState,
@@ -75,7 +74,6 @@ const QuestionListPage = () => {
 
   useEffect(() => {
     setRecords(recordList());
-    setTotalPage(Math.ceil(count / limit));
   }, [list]);
 
   useEffect(() => {
@@ -152,13 +150,18 @@ const QuestionListPage = () => {
               />
             </Col>
             <Col lg={6}>
-              <LimitFilter
-                selectedValue={limit}
-                onChange={(e) => {
-                  const option = e.target.options[e.target.selectedIndex];
-                  setLimit(parseInt(option.value));
-                }}
-              />
+              <Row>
+                <Col lg={6}></Col>
+                <Col lg={6}>
+                  <LimitFilter
+                    selectedValue={limit}
+                    onChange={(e) => {
+                      const option = e.target.options[e.target.selectedIndex];
+                      setLimit(parseInt(option.value));
+                    }}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Col>
@@ -174,7 +177,8 @@ const QuestionListPage = () => {
         <Col lg={4}></Col>
         <Pagination
           currentPage={page}
-          totalPage={totalPage}
+          totalCount={count}
+          limit={limit}
           onClick={(page) => {
             setPage(page);
           }}
