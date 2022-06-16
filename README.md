@@ -6,13 +6,13 @@
 
 - [bootstrap-sb-admin](https://github.com/StartBootstrap/startbootstrap-sb-admin)
 - react 17.0.0
-    - @types/react 18.0.8
+  - @types/react 18.0.8
 - react-bootstrap 2.3.1
-    - @types/react-bootstrap 0.32.29
+  - @types/react-bootstrap 0.32.29
 - react-redux 8.01
-    - @types/react-redux 7.1.24
+  - @types/react-redux 7.1.24
 - redux 4.2.0
-    - @types/redux 3.6.0
+  - @types/redux 3.6.0
 
 ## Install
 

@@ -17,31 +17,16 @@ import { ReviewStatus } from '../../utils/nia15/interfaces/reviews';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import StatusCount from '../../components/sentences/StatusCount';
+import LimitFilter from '../../components/common/LimitFilter';
 
 const SentenceListPage = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(100);
   const [formSeq, setFormSeq] = useState<number>(1);
   const { sentenceHistory, editSentence, totalCount } = useSelector(
     sentenceModule.getSentenceState,
   );
-
-  const limitOptions = [
-    {
-      name: '10개씩 보기',
-      value: 10,
-    },
-    {
-      name: '50개씩 보기',
-      value: 50,
-    },
-    {
-      name: '100개씩 보기',
-      value: 100,
-    },
-  ];
 
   const schema: DynamicSchema = SentenceListSchema;
 
@@ -92,10 +77,6 @@ const SentenceListPage = () => {
     dispatch(sentenceModule.actions.getSentenceList());
   }, [page, limit]);
 
-  useEffect(() => {
-    setTotalPage(Math.ceil(totalCount / limit));
-  }, [totalCount]);
-
   return (
     <Container>
       <Row className="mx-1 mt-4">
@@ -105,32 +86,32 @@ const SentenceListPage = () => {
           }}
         />
         <StatusCount
-          all={100}
-          wait={100}
-          first={100}
-          second={100}
-          rejectFirst={100}
-          rejectSecond={100}
+          all={0}
+          wait={0}
+          first={0}
+          second={0}
+          rejectFirst={0}
+          rejectSecond={0}
         />
       </Row>
       <Row className="mt-4">
         <Col md={6} className="mt-2"></Col>
         <Col md={6}>
-          <div className="float-end mb-2">
-            <Select
-              id="limit"
-              name="limit"
-              options={limitOptions}
-              onChange={(e) => {
-                setLimit(
-                  parseInt(e.target.options[e.target.selectedIndex].value),
-                );
-              }}
-            />
-          </div>
+          <Row>
+            <Col lg={6}></Col>
+            <Col lg={6}>
+              <LimitFilter
+                selectedValue={limit}
+                onChange={(e) => {
+                  const option = e.target.options[e.target.selectedIndex];
+                  setLimit(parseInt(option.value));
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
-      <Row className="mt-2">
+      <Row className={'mt-4'}>
         <DynamicTable
           schema={schema}
           records={records()}
@@ -145,7 +126,8 @@ const SentenceListPage = () => {
         </Col>
         <Pagination
           currentPage={page}
-          totalPage={totalPage}
+          totalCount={totalCount}
+          limit={limit}
           onClick={(page) => {
             setPage(page);
           }}

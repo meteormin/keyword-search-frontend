@@ -14,37 +14,21 @@ import searchModule from '../../store/features/search';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import IdSearch from '../../components/reviews/IdSearch';
-import StateSearch from '../../components/reviews/StateSearch';
 import DateSearch from '../../components/reviews/DateSearch';
 import { SearchParameter } from '../../utils/nia15/interfaces/search';
 import SearchAndReset from '../../components/common/SearchAndReset';
 import Timer from '../../components/common/Timer';
+import LimitFilter from '../../components/common/LimitFilter';
 
 const AssignListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
   const { sentences, totalCount, time, assignSentence } = useSelector(
     reviewModule.getReviewState,
   );
 
   const { parameters } = useSelector(searchModule.getSearchState);
-
-  const limitOptions = [
-    {
-      name: '10개씩 보기',
-      value: 10,
-    },
-    {
-      name: '50개씩 보기',
-      value: 50,
-    },
-    {
-      name: '100개씩 보기',
-      value: 100,
-    },
-  ];
 
   const sentenceRecord = () => {
     return sentences.map((s, i) => {
@@ -85,7 +69,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
     dispatch(searchModule.actions.search(null));
   };
 
-  const makeSearchs = () => {
+  const makeSearch = () => {
     return (
       <Fragment>
         <Row>
@@ -183,10 +167,6 @@ const AssignListPage = ({ seq }: { seq: number }) => {
     );
   }, [page, limit]);
 
-  useEffect(() => {
-    setTotalPage(Math.ceil(totalCount / limit));
-  }, [totalCount]);
-
   return (
     <Container>
       <Row className="mt-2 ms-2">
@@ -223,7 +203,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       </Row>
       <Row className="ms-2">
         <Col lg={12} className="mt-4">
-          {makeSearchs()}
+          {makeSearch()}
         </Col>
       </Row>
       <Row className="mt-2">
@@ -232,21 +212,21 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       <Row className="mt-4">
         <Col md={6} className="mt-2"></Col>
         <Col md={6}>
-          <div className="float-end mb-2">
-            <Select
-              id="limit"
-              name="limit"
-              options={limitOptions}
-              onChange={(e) => {
-                setLimit(
-                  parseInt(e.target.options[e.target.selectedIndex].value),
-                );
-              }}
-            />
-          </div>
+          <Row>
+            <Col lg={6}></Col>
+            <Col lg={6}>
+              <LimitFilter
+                selectedValue={limit}
+                onChange={(e) => {
+                  const option = e.target.options[e.target.selectedIndex];
+                  setLimit(parseInt(option.value));
+                }}
+              />
+            </Col>
+          </Row>
         </Col>
       </Row>
-      <Row>
+      <Row className={'mt-4'}>
         <DynamicTable
           schema={assignListSchema}
           records={sentenceRecord()}
@@ -257,7 +237,8 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         <Col lg={4}></Col>
         <Pagination
           currentPage={page}
-          totalPage={totalPage}
+          totalCount={totalCount}
+          limit={limit}
           onClick={(page) => {
             setPage(page);
           }}

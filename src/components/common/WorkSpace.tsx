@@ -412,9 +412,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
     return await makeSentencePattern(str);
   };
 
-  const checkConcepts = async (concepts: Concept[], str: string) => {
-    return await baikalNlp.checkConcepts(concepts, str);
-  };
+  // const checkConcepts = async (concepts: Concept[], str: string) => {
+  //   return await baikalNlp.checkConcepts(concepts, str);
+  // };
 
   const checkDup = async (sentences: { text1: string; text2: string }) => {
     return await checkDualFrame(sentences);
@@ -447,7 +447,10 @@ const WorkSpace = (props: WorkSpaceProps) => {
     );
   };
 
-  const handleMakeSP = async (cntNo: number, str: string) => {
+  const handleMakeSP = async (
+    cntNo: number,
+    str: string,
+  ): Promise<{ status: boolean; message: string }> => {
     const basicSentence = props.task.sentence;
     let setSentencePattern: React.Dispatch<React.SetStateAction<string>>;
     let otherSentence: string;
@@ -463,8 +466,12 @@ const WorkSpace = (props: WorkSpaceProps) => {
       setIsClickedMkSp(cntNo - 1, false);
       setSentencePattern('');
     } else {
-      return;
+      return {
+        status: false,
+        message: '잘못된 파라미터 입니다.',
+      };
     }
+
     try {
       if (otherSentence) {
         frame = await checkTriple({
@@ -482,50 +489,45 @@ const WorkSpace = (props: WorkSpaceProps) => {
       if (frame) {
         if (frame.duplicated) {
           showAlertForMakeSP(cntNo, '기본 문장/다른 문장과 동일한 문형입니다.');
+          return {
+            status: false,
+            message: '기본 문장/다른 문장과 동일한 문형입니다.',
+          };
         } else {
           const madeSP = frame.frame1.frameText;
           if (madeSP) {
             setIsClickedMkSp(cntNo - 1, true);
             setSentencePattern(madeSP);
+            return {
+              status: true,
+              message: '',
+            };
           }
         }
       } else {
         const madeSP = await makeSP(str);
         if (madeSP) {
           setSentencePattern(madeSP);
+          return {
+            status: true,
+            message: '',
+          };
         }
       }
     } catch (e) {
       setIsClickedMkSp(cntNo - 1, false);
       setSentencePattern('');
       showAlertForMakeSP(cntNo, e);
+      return {
+        status: false,
+        message: e as string,
+      };
     }
 
-    checkConcepts(props.task.edges?.concepts || [], str)
-      .then((res) => {
-        if (!res) {
-          // setIsClickedMkSp(cntNo - 1, false);
-          // setSentencePattern('');
-          // dispatch(
-          //   alertModal.showAlert({
-          //     title: '문형 만들기',
-          //     message: '개념 집합을 모두 사용해 주세요.',
-          //   }),
-          // );
-          console.log('failed check concepts:', res);
-        }
-      })
-      .catch((reason) => {
-        console.error('check concepts fail:', reason);
-        setIsClickedMkSp(cntNo - 1, false);
-        setSentencePattern('');
-        dispatch(
-          alertModal.showAlert({
-            title: '문형 만들기',
-            message: reason,
-          }),
-        );
-      });
+    return {
+      status: false,
+      message: '',
+    };
   };
 
   return (
@@ -583,10 +585,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
             className="mt-4"
             disabled={props?.readOnly || false ? true : !textArea10}
             onClick={() => {
-              console.log('get api');
               handleMakeSPClick(0);
               handleWordCount(1, textArea10);
-              handleMakeSP(1, textArea10);
+              handleMakeSP(1, textArea10).then((result) => console.log(result));
             }}
           >
             문형 만들기
@@ -681,10 +682,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
             style={{ fontSize: '0.85em' }}
             disabled={props?.readOnly || false ? true : !textArea20}
             onClick={() => {
-              console.log('get api');
               handleMakeSPClick(1);
               handleWordCount(2, textArea20);
-              handleMakeSP(2, textArea20);
+              handleMakeSP(2, textArea20).then((result) => console.log(result));
             }}
           >
             문형 만들기
