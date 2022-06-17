@@ -32,18 +32,35 @@ const Pagination = (props: PaginationProps) => {
 
   const makeItems = () => {
     const pageItems = [];
+    let currentIndex = page % 10;
 
-    for (let i = 1; i <= totalPage; i++) {
-      if (i === page) {
+    if (currentIndex == 0) {
+      currentIndex = 10;
+    }
+
+    for (let i = 1; i <= 10; i++) {
+      if (i === currentIndex) {
         pageItems.push(
-          <Pages.Item key={`page_${i}`} active onClick={() => onClick(i)}>
-            {i}
+          <Pages.Item key={`page_${i}`} active onClick={() => onClick(page)}>
+            {page}
           </Pages.Item>,
         );
-      } else {
+      } else if (i > currentIndex) {
         pageItems.push(
-          <Pages.Item key={`page_${i}`} onClick={() => onClick(i)}>
-            {i}
+          <Pages.Item
+            key={`page_${i}`}
+            onClick={() => onClick(page + (i - currentIndex))}
+          >
+            {page + (i - currentIndex)}
+          </Pages.Item>,
+        );
+      } else if (i < currentIndex) {
+        pageItems.push(
+          <Pages.Item
+            key={`page_${i}`}
+            onClick={() => onClick(page - (currentIndex - i))}
+          >
+            {page - (currentIndex - i)}
           </Pages.Item>,
         );
       }
@@ -73,14 +90,18 @@ const Pagination = (props: PaginationProps) => {
               }}
             />
             {items}
-            <Pages.Next className="text-dark" />
-            <Pages.Last
+            <Pages.Next
               className="text-dark"
               onClick={() => {
                 if (totalPage <= props.currentPage) {
                   return;
                 }
-
+                onClick(props.currentPage + 1);
+              }}
+            />
+            <Pages.Last
+              className="text-dark"
+              onClick={() => {
                 onClick(totalPage);
               }}
             />

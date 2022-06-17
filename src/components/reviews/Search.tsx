@@ -25,10 +25,12 @@ export interface SearchProps {
 const Search = ({ onSearch }: SearchProps) => {
   const dispatch = useDispatch();
   const { parameters } = useSelector(searchModule.getSearchState);
+
   const setSearchParameter = (state: SearchParameter) => {
     const newParameter = { ...parameters, ...state };
     dispatch(searchModule.actions.search(newParameter));
   };
+
   const resetSearchData = () => {
     dispatch(searchModule.actions.search(null));
   };

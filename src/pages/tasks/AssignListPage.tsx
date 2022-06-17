@@ -15,6 +15,7 @@ import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import Timer from '../../components/common/Timer';
 import LimitFilter from '../../components/common/LimitFilter';
+import SearchAndReset from '../../components/common/SearchAndReset';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
@@ -65,6 +66,14 @@ const AssignListPage = () => {
     taskRecords();
   }, [taskList]);
 
+  const onSearch = () => {
+    dispatch(taskModule.actions.getTaskList());
+  };
+
+  const resetSearchData = () => {
+    dispatch(searchModule.actions.search(null));
+  };
+
   return (
     <Container>
       <Row className="mt-2 ms-2">
@@ -110,7 +119,6 @@ const AssignListPage = () => {
                   concept: state.concept,
                 }),
               );
-              dispatch(taskModule.actions.getTaskList());
             }}
             defaultState={{
               refId: parameters?.refID,
@@ -118,6 +126,9 @@ const AssignListPage = () => {
               concept: parameters?.concept,
             }}
           />
+        </Col>
+        <Col className="mt-4">
+          <SearchAndReset onSearch={onSearch} onReset={resetSearchData} />
         </Col>
       </Row>
       <Row className="mt-2">

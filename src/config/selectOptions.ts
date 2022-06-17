@@ -151,6 +151,22 @@ const CreateConditions: Option[] = [
   { name: '기타', value: '기타' },
 ];
 
+const DataStatsSearchOptions: Option[] = [
+  { name: '생성자 ID', value: 'creatorID' },
+  { name: '생성자명', value: 'creatorName' },
+  { name: '검수자 ID', value: 'reviewerID' },
+  { name: '검수자명', value: 'reviewerName' },
+  { name: '주제', value: 'domain' },
+  { name: '개념집합', value: 'concept' },
+  { name: '고유코드', value: 'refID' },
+];
+
+const AssignStatusOptions: Option[] = [
+  { name: '생성 할당', value: '' },
+  { name: '1차 검수', value: '' },
+  { name: '2차 검수', value: '' },
+];
+
 const selectOptions = {
   RejectReason,
   ReviewState,
@@ -158,6 +174,7 @@ const selectOptions = {
   IdState,
   DataSearchNames,
   CreateConditions,
+  DataStatsSearchOptions,
 };
 
 export default selectOptions;

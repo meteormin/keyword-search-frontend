@@ -9,7 +9,7 @@ import usersReducer from './users/userReducer';
 import usersSaga from './users/userSaga';
 import sentenceSage from './sentence/sentenceSaga';
 import sentenceReducer from './sentence/sentenceReducer';
-import taskSage from './tasks/taskSaga';
+import taskSaga from './tasks/taskSaga';
 import taskReducer from './tasks/taskReducer';
 import reviewReducer from './reviews/reviewReducer';
 import reviewSage from './reviews/reviewSaga';
@@ -17,6 +17,8 @@ import searchReducer from './search/searchReducer';
 import searchSaga from './search/searchSaga';
 import questionReducer from './questions/questionReducer';
 import questionSaga from './questions/questionSaga';
+import statsReducer from './statistics/statsReducer';
+import statsSaga from './statistics/statsSaga';
 
 export const rootReducer = combineReducers({
   // reducers
@@ -29,16 +31,18 @@ export const rootReducer = combineReducers({
   review: reviewReducer,
   search: searchReducer,
   question: questionReducer,
+  statistics: statsReducer,
 });
 
 export const rootSaga = function* rootSaga() {
   yield all([
     call(loginSaga),
     call(usersSaga),
-    call(taskSage),
+    call(taskSaga),
     call(sentenceSage),
     call(reviewSage),
     call(searchSaga),
     call(questionSaga),
+    call(statsSaga),
   ]);
 };

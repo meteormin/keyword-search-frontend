@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Input from './Input';
 
 export interface InputFilter {
   label: string;
+  placeholder: string;
+  value?: string;
   onChange: (value: string) => any;
 }
 
 const InputFilter = (props: InputFilter) => {
   const [value, setValue] = useState('');
+
+  useEffect(() => {
+    setValue(props?.value || '');
+  }, []);
+
   return (
     <Row>
       <Col md={4}>
@@ -26,6 +33,7 @@ const InputFilter = (props: InputFilter) => {
           }}
           type="text"
           value={value}
+          placeholder={props.placeholder}
         />
       </Col>
     </Row>
