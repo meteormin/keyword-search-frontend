@@ -7,6 +7,7 @@ import Reviews from './Reviews';
 import Sentences from './Sentences';
 import Users from './Users';
 import Tasks from './Tasks';
+import Statics from './Statics';
 
 export const Clients = {
   Auth,
@@ -15,6 +16,7 @@ export const Clients = {
   Tasks,
   Sentences,
   Users,
+  Statics,
 };
 
 interface ClientType<T> {

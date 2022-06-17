@@ -182,7 +182,7 @@ function* getFileById(action: PayloadAction<number>) {
       action.payload,
     );
     yield put(loaderModule.endLoading());
-
+    
     const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(questionModule.actions.setFile(res));

@@ -168,13 +168,13 @@ function* getTime() {
   }
 }
 
-function* watchTaskSage() {
+function* watchTaskSaga() {
   yield takeLatest(taskModule.actions.getTaskList, getTaskList);
   yield takeLatest(taskModule.actions.getWorkTask, getTask);
   yield takeLatest(taskModule.actions.assign, assign);
   yield takeLatest(taskModule.actions.getExpiredAt, getTime);
 }
 
-export default function* taskSage() {
-  yield fork(watchTaskSage);
+export default function* taskSaga() {
+  yield fork(watchTaskSaga);
 }

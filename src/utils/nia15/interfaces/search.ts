@@ -30,3 +30,13 @@ export interface SearchParameter {
   review1UserID?: string;
   review2UserID?: string;
 }
+
+export interface StatsSearchParameter extends SearchParameter {
+  creatorID?: string;
+  creatorName?: string;
+  reviewerID?: string;
+  reviewerName?: string;
+  groupName?: string;
+  assignStatus?: string;
+  taskID?: number[];
+}

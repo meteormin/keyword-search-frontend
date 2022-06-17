@@ -46,6 +46,11 @@ const menu: Menu = {
       name: '문의 답변',
       icon: 'fas fa-file-lines',
     },
+    {
+      url: '/statistics',
+      name: '전체 데이터 목록',
+      icon: 'fas fa-file-lines',
+    },
   ],
 };
 

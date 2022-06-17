@@ -24,27 +24,11 @@ export interface Record extends ReviewList {
 
 const ReviewListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
-  const [time, setTime] = useState('');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(100);
   const { reviews, editReview, totalCount } = useSelector(
     reviewModule.getReviewState,
   );
-
-  const limitOptions = [
-    {
-      name: '10개씩 보기',
-      value: 10,
-    },
-    {
-      name: '50개씩 보기',
-      value: 50,
-    },
-    {
-      name: '100개씩 보기',
-      value: 100,
-    },
-  ];
 
   const schema: DynamicSchema = ReviewListSchema;
 
@@ -183,7 +167,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         readOnly={checkReadOnly(editReview?.status || ReviewStatus.WAITING)}
         seq={seq}
         show={!!editReview}
-        time={time?.toString() || '--:--:--'}
+        time={'--:--:--'}
         onCreate={() =>
           dispatch(reviewModule.actions.getReviewList({ seq: seq }))
         }

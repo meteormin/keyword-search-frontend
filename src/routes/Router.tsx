@@ -18,6 +18,7 @@ import { handleGoHome, handlePerm } from './handler';
 import QuestionForm from '../components/questions/QuestionForm';
 import { QuestionDiv } from '../utils/nia15/interfaces/questions';
 import { QuestionsPage } from '../pages/questions';
+import { DataStatList } from '../pages/statistics';
 
 const Router = () => {
   return (
@@ -155,6 +156,11 @@ const Router = () => {
               <QuestionsPage userType={auth.user()?.userType as UserType} />
             }
           />
+        </Route>
+
+        <Route path={'/statistics'}>
+          <Route index element={<DataStatList />} />
+          <Route path={'task'} element={<DataStatList />} />
         </Route>
 
         <Route path="errors">
