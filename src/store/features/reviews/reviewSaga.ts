@@ -299,11 +299,13 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
         );
       } else {
         console.log(res);
+        // auth.s(userType, '');
         yield put(
-          reviewModule.actions.getReviewList({
+          reviewModule.actions.getAssignList({
             seq: action.payload.seq,
           }),
         );
+
         yield put(
           alertModalModule.showAlert({
             title: '진행 가능 시간 초과',

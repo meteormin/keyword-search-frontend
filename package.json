@@ -78,5 +78,5 @@
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.6.2"
   },
-  "proxy": "https://nia15dev.aiworks.co.kr/baikalai"
+  "proxy": "https://nia15.aiworks.co.kr/baikalai"
 }

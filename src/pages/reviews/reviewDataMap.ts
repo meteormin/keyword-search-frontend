@@ -7,6 +7,7 @@ import {
   CreateReview,
   ReviewStatus,
 } from '../../utils/nia15/interfaces/reviews';
+import { MRData } from '../../components/reviews/MultipleReview';
 
 const getEtcReason = (reasons: (SentenceReviewReject[] | undefined)[]) => {
   let reason1;
@@ -123,6 +124,33 @@ export const sentenceToWorkData = (
       memo1: memo1,
       memo2: memo2,
     },
+  };
+};
+
+export const sentenceToCreateReview = (
+  s: Sentence,
+  reviewResult: MRData,
+): CreateReview => {
+  return {
+    sentenceId: s.id,
+    sentence1: s?.edges?.sentence1.sentence || '',
+    sentence2: s?.edges?.sentence2.sentence || '',
+    sentence1Patterned: s?.edges?.sentence1.sentencePatterned || '',
+    sentence2Patterned: s?.edges?.sentence2.sentencePatterned || '',
+    sentence1PatternedModified:
+      s?.edges?.sentence1.sentencePatternedModified || '',
+    sentence2PatternedModified:
+      s?.edges?.sentence2.sentencePatternedModified || '',
+    sentence1Count: s?.edges?.sentence1?.sentenceCount || 0,
+    sentence2Count: s?.edges?.sentence2?.sentenceCount || 0,
+    sentence1Result:
+      reviewResult.action == 'pass' ? ReviewResult.PASS : ReviewResult.FAIL,
+    sentence2Result:
+      reviewResult.action == 'pass' ? ReviewResult.PASS : ReviewResult.FAIL,
+    sentence1ResultReason: reviewResult.reasons,
+    sentence2ResultReason: reviewResult.reasons,
+    memo1: reviewResult.memo,
+    memo2: reviewResult.memo,
   };
 };
 

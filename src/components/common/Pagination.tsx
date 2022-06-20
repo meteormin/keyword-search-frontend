@@ -24,21 +24,28 @@ const Pagination = (props: PaginationProps) => {
   }, [props]);
 
   useEffect(() => {
-    console.log(page);
-    console.log('3939::', totalCount);
     setTotalPage(Math.ceil(totalCount / limit) || 1);
-    setItems(makeItems());
   }, [page, limit, totalCount]);
+
+  useEffect(() => {
+    setItems(makeItems());
+  }, [totalPage]);
 
   const makeItems = () => {
     const pageItems = [];
+
+    let count = 10;
+    if (totalPage < 10) {
+      count = totalPage;
+    }
+
     let currentIndex = page % 10;
 
     if (currentIndex == 0) {
       currentIndex = 10;
     }
 
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= count; i++) {
       if (i === currentIndex) {
         pageItems.push(
           <Pages.Item key={`page_${i}`} active onClick={() => onClick(page)}>

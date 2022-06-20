@@ -68,7 +68,7 @@ class DynamicTable extends Component<DynamicTableProps> {
               style={this.addCursor(column)}
               onClick={() => {
                 if (column.onClick) {
-                  column.onClick(this.props.records);
+                  column.onClick(row);
                 }
               }}
             >
@@ -76,7 +76,18 @@ class DynamicTable extends Component<DynamicTableProps> {
             </th>,
           );
         } else if (row.hasOwnProperty(key)) {
-          rowsElement.push(<td key={key}>{row[key]}</td>);
+          rowsElement.push(
+            <td
+              key={key}
+              onClick={() => {
+                if (column.onClick) {
+                  column.onClick(row);
+                }
+              }}
+            >
+              {row[key]}
+            </td>,
+          );
         }
       }
       records.push(
