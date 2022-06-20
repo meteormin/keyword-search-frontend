@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { date, str } from '../../helpers';
+import React, { Fragment, useEffect, useState } from 'react';
+import { arr, date, str } from '../../helpers';
 import reviewModule from '../../store/features/reviews';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Col, Container, Row } from 'react-bootstrap';
-import Select from '../../components/common/Select';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import DynamicTable, {
   DynamicSchema,
 } from '../../components/common/DaynamicTable';
@@ -29,43 +28,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
   const { reviews, editReview, totalCount } = useSelector(
     reviewModule.getReviewState,
   );
-
-  const schema: DynamicSchema = ReviewListSchema;
-
-  const records = (): Record[] => {
-    return reviews.map((r, i): Record => {
-      let reviewReason = '';
-      if (r.reviewReasons) {
-        reviewReason = r.reviewReasons
-          .map((reason) => reason.toString())
-          .join(', ');
-      }
-      let review1At = '';
-      if (r.review1At) {
-        review1At = date(r.review1At).format('YYYY.MM.DD');
-      }
-      let review2At = '';
-      if (r.review2At) {
-        review2At = date(r.review2At).format('YYYY.MM.DD');
-      }
-      return {
-        no: i + 1,
-        refId: r.refId,
-        concepts: str.limitArray(r.concepts.map((c) => c.stem) || [''], 6),
-        posLength: r.posLength,
-        sentenceCount: r.created1Length + '/' + r.created2Length,
-        creatorId: r.creatorId,
-        createdAt: date(r.createdAt).format('YYYY.MM.DD'),
-        reviewState: r.reviewRsTxt || '',
-        reviewReason: reviewReason,
-        review1At: review1At,
-        review1Id: r.reviewer1Id,
-        review2At: review2At,
-        review2Id: r.reviewer2Id,
-        _origin: r,
-      };
-    });
-  };
+  const [selectIds, setSelectIds] = useState<number[]>([]);
 
   const handleClickRecord = (record: Record) => {
     let reviewId = 0;
@@ -83,6 +46,97 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         id: reviewId,
       }),
     );
+  };
+
+  const checkboxSchema = () => {
+    let schema: DynamicSchema = ReviewListSchema;
+
+    for (const [key, value] of Object.entries(schema)) {
+      schema[key] = Object.assign({ onClick: handleClickRecord }, value);
+    }
+
+    if (seq == 2) {
+      schema = Object.assign(
+        {
+          check: {
+            name: (
+              <Fragment>
+                <span>전체</span>
+                <Form.Check
+                  type="checkbox"
+                  onChange={(e) => {
+                    // 전체 선택
+                    if (e.target.checked) {
+                      setSelectIds(reviews.map((r) => r.id));
+                    }
+                  }}
+                />
+              </Fragment>
+            ),
+          },
+        },
+        ReviewListSchema,
+      );
+    }
+
+    return schema;
+  };
+
+  const records = (): Record[] => {
+    return reviews.map((r, i): Record => {
+      let reviewReason = '';
+      if (r.reviewReasons) {
+        reviewReason = r.reviewReasons
+          .map((reason) => reason.toString())
+          .join(', ');
+      }
+      let review1At = '';
+      if (r.review1At) {
+        review1At = date(r.review1At).format('YYYY.MM.DD');
+      }
+      let review2At = '';
+      if (r.review2At) {
+        review2At = date(r.review2At).format('YYYY.MM.DD');
+      }
+
+      let checkbox = {};
+      if (seq == 2) {
+        checkbox = (
+          <Form.Check
+            type="checkbox"
+            onChange={(e) => {
+              if (e.target.checked) {
+                const oldIds = selectIds;
+                const newIds = selectIds;
+                newIds.push(r.id);
+                setSelectIds(arr.merge(oldIds, newIds, true));
+              } else {
+                setSelectIds(arr.remove(selectIds, r.id));
+              }
+            }}
+          />
+        );
+      }
+
+      const rs = {
+        no: i + 1,
+        refId: r.refId,
+        concepts: str.limitArray(r.concepts.map((c) => c.stem) || [''], 6),
+        posLength: r.posLength,
+        sentenceCount: r.created1Length + '/' + r.created2Length,
+        creatorId: r.creatorId,
+        createdAt: date(r.createdAt).format('YYYY.MM.DD'),
+        reviewState: r.reviewRsTxt || '',
+        reviewReason: reviewReason,
+        review1At: review1At,
+        review1Id: r.reviewer1Id,
+        review2At: review2At,
+        review2Id: r.reviewer2Id,
+        _origin: r,
+      };
+
+      return Object.assign({ check: checkbox }, rs);
+    });
   };
 
   const checkReadOnly = (status?: ReviewStatus) => {
@@ -140,9 +194,9 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       </Row>
       <Row className={'mt-4'}>
         <DynamicTable
-          schema={schema}
+          schema={checkboxSchema()}
           records={records()}
-          onClick={handleClickRecord}
+          // onClick={handleClickRecord}
         />
       </Row>
       <Row className="mt-5 align-content-center">

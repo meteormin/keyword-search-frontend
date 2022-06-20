@@ -292,7 +292,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
     const validReject1 = validReject(reviewData1);
     const validReject2 = validReject(reviewData2);
 
-    setReviewOpinionBtn(validReject1 && validReject2);
+    setReviewOpinionBtn(validReject1 || validReject2);
   };
 
   const validReject = (reviewResult: ReviewResultState | undefined) => {
@@ -302,6 +302,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
     if (!reviewResult) {
       return false;
     }
+
+    console.log('validReject', reviewResult);
 
     if (reviewResult.radio == ReviewResult.FAIL) {
       if (reviewResult.check && reviewResult.check.length != 0) {
@@ -317,7 +319,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       }
     }
 
-    return true;
+    return false;
   };
 
   const toWorkData = (): WorkData => {

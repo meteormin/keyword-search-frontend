@@ -1,13 +1,15 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import DataAssign from '../../components/tasks/DataAssign';
 import { useDispatch, useSelector } from 'react-redux';
 import DataSearch from '../../components/tasks/DataSearch';
 import Select from '../../components/common/Select';
-import DynamicTable from '../../components/common/DaynamicTable';
+import DynamicTable, {
+  DynamicSchema,
+} from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import assignListSchema from './AssignListSchema';
-import { date, lang, str } from '../../helpers';
+import { arr, date, lang, str } from '../../helpers';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import reviewModule from '../../store/features/reviews';
 import searchModule from '../../store/features/search';
@@ -19,11 +21,19 @@ import { SearchParameter } from '../../utils/nia15/interfaces/search';
 import SearchAndReset from '../../components/common/SearchAndReset';
 import Timer from '../../components/common/Timer';
 import LimitFilter from '../../components/common/LimitFilter';
+import MultipleReview from '../../components/reviews/MultipleReview';
+import alertModal from '../../store/features/common/alertModal';
+import { Sentence } from '../../utils/nia15/interfaces/sentences';
+import { sentenceToCreateReview } from './reviewDataMap';
 
 const AssignListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(1);
+  const [showMR, setShowMR] = useState<boolean>(false);
+  const [actionMR, setActionMR] = useState<'pass' | 'reject'>('reject');
+  const [checks, setChecks] = useState<Sentence[]>([]);
+
   const { sentences, totalCount, time, assignSentence } = useSelector(
     reviewModule.getReviewState,
   );
@@ -32,7 +42,26 @@ const AssignListPage = ({ seq }: { seq: number }) => {
 
   const sentenceRecord = () => {
     return sentences.map((s, i) => {
-      return {
+      let checkbox = {};
+      if (seq == 2) {
+        checkbox = (
+          <Form.Check
+            type="checkbox"
+            onChange={(e) => {
+              if (e.target.checked) {
+                const oldCh = checks;
+                const newCh = checks;
+                newCh.push(s);
+                setChecks(arr.merge(oldCh, newCh, true));
+              } else {
+                setChecks(arr.remove(checks, s));
+              }
+            }}
+          />
+        );
+      }
+
+      const rs = {
         no: i + 1,
         refId: s.edges?.task.refId,
         concepts: str.limitArray(
@@ -48,7 +77,43 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         createdAt: date(s.createAt).format('YYYY.MM.DD'),
         _origin: s,
       };
+
+      return Object.assign({ check: checkbox }, rs);
     });
+  };
+
+  const checkboxSchema = () => {
+    let schema: DynamicSchema = assignListSchema;
+
+    for (const [key, value] of Object.entries(schema)) {
+      schema[key] = Object.assign({ onClick: handleClickRecord }, value);
+    }
+
+    if (seq == 2) {
+      schema = Object.assign(
+        {
+          check: {
+            name: (
+              <Fragment>
+                <span>전체</span>
+                <Form.Check
+                  type="checkbox"
+                  onChange={(e) => {
+                    // 전체 선택
+                    if (e.target.checked) {
+                      setChecks(sentences);
+                    }
+                  }}
+                />
+              </Fragment>
+            ),
+          },
+        },
+        assignListSchema,
+      );
+    }
+
+    return schema;
   };
 
   const handleClickRecord = (record: any) => {
@@ -228,13 +293,57 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       </Row>
       <Row className={'mt-4'}>
         <DynamicTable
-          schema={assignListSchema}
+          schema={checkboxSchema()}
           records={sentenceRecord()}
-          onClick={handleClickRecord}
+          // onClick={handleClickRecord}
         />
       </Row>
       <Row className="mt-5 align-content-center">
-        <Col lg={4}></Col>
+        <Col lg={4} className="mt-5">
+          <Row>
+            <Col lg={4}>
+              <Button
+                variant={'dark'}
+                className="float-end"
+                onClick={() => {
+                  if (checks.length != 0) {
+                    setActionMR('reject');
+                    setShowMR(true);
+                  } else {
+                    dispatch(
+                      alertModal.showAlert({
+                        title: '선택 반려',
+                        message: '선택된 문장이 없습니다.',
+                      }),
+                    );
+                  }
+                }}
+              >
+                선택반려
+              </Button>
+            </Col>
+            <Col lg={8}>
+              <Button
+                variant={'dark'}
+                onClick={() => {
+                  if (checks.length != 0) {
+                    setActionMR('pass');
+                    setShowMR(true);
+                  } else {
+                    dispatch(
+                      alertModal.showAlert({
+                        title: '선택 승인',
+                        message: '선택된 문장이 없습니다.',
+                      }),
+                    );
+                  }
+                }}
+              >
+                선택승인
+              </Button>
+            </Col>
+          </Row>
+        </Col>
         <Pagination
           currentPage={page}
           totalCount={totalCount}
@@ -259,6 +368,26 @@ const AssignListPage = ({ seq }: { seq: number }) => {
           )
         }
       />
+      {seq == 2 ? (
+        <MultipleReview
+          action={actionMR}
+          show={showMR}
+          onHide={() => setShowMR(false)}
+          onSubmit={(data) => {
+            console.log(checks, data);
+            checks.forEach((s) => {
+              dispatch(
+                reviewModule.actions.createReview({
+                  seq: seq,
+                  review: sentenceToCreateReview(s, data),
+                }),
+              );
+            });
+            setShowMR(false);
+            dispatch(reviewModule.actions.getAssignList({ seq: seq }));
+          }}
+        />
+      ) : null}
     </Container>
   );
 };

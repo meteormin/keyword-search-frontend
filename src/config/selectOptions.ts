@@ -64,8 +64,16 @@ const RejectReason: Option[] = [
     value: 8,
   },
   {
-    name: '9. 기타',
-    value: 9,
+    name: '9. 동일한 문장',
+    value: 10,
+  },
+  {
+    name: '10. 문장의 이질성',
+    value: 11,
+  },
+  {
+    name: '11. 기타',
+    value: 9, // 기타 9 고정
   },
 ];
 

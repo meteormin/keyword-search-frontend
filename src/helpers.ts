@@ -15,6 +15,7 @@ import 'moment/locale/ko';
 import Lang from './assets/lang';
 import { AxiosRequestHeaders } from 'axios';
 import * as Str from './utils/str';
+import * as Arr from './utils/arr';
 import BaikalNlp from './utils/BaikalNlp';
 import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
@@ -121,6 +122,8 @@ export const date = moment;
 export const lang = Lang();
 
 export const str = Str;
+
+export const arr = Arr;
 
 export const baikalNlp = new BaikalNlp(
   api({ host: config.api.baikalNlp.host }),
