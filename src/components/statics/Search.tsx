@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import { date } from '../../helpers';
+import { config, date } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import searchModule from '../../store/features/search';
 import { StatsSearchParameter } from '../../utils/nia15/interfaces/search';
@@ -22,6 +22,8 @@ const Search = ({
   const [selectName, setName] = useState<string | undefined>();
   const [searchValue, setValue] = useState<string | undefined>();
   const [groupName, setGroupName] = useState<string | undefined>();
+  const [assignStatus, setAssignStatus] = useState();
+  const [sentenceStatus, setSentenceStatus] = useState();
   const [createdAtStart, setCreatedAtStart] = useState<string | undefined>();
   const [createdAtEnd, setCreatedAtEnd] = useState<string | undefined>();
   const [reviewAtStart, setReviewAtStart] = useState<string | undefined>();
@@ -111,8 +113,16 @@ const Search = ({
           <SelectFilter
             label={'할당현황'}
             onChange={() => null}
-            options={[]}
+            options={config.selectOptions.AssignStatusOptions}
             value={'할당현황'}
+          />
+        </Col>
+        <Col md={4}>
+          <SelectFilter
+            label={'현재상태'}
+            onChange={() => null}
+            options={config.selectOptions.AssignStatusOptions}
+            value={'현재상태 선택'}
           />
         </Col>
       </Row>
