@@ -6,7 +6,6 @@ import DateSearch from '../reviews/DateSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import searchModule from '../../store/features/search';
 import { SearchParameter } from '../../utils/nia15/interfaces/search';
-import { date } from '../../helpers';
 import SearchAndReset from '../common/SearchAndReset';
 
 export interface SearchProps {
@@ -66,25 +65,13 @@ const Search = ({ onSearch, onReset }: SearchProps) => {
       </Row>
       <Row className="mt-4">
         <DateSearch
-          onChange={(state) => {
+          onChange={(params) => {
             const dateParameters: SearchParameter = {};
-            if (state.startCreatedAt && state.endCreatedAt) {
-              dateParameters.createdAtStart = date(
-                state.startCreatedAt,
-              ).format();
-              dateParameters.createdAtEnd = date(state.endCreatedAt)
-                .add(1, 'days')
-                .format();
-            }
+            dateParameters.createdAtStart = params.createAt.start;
+            dateParameters.createdAtEnd = params.createAt.end;
 
-            if (state.startReviewAt && state.endReviewAt) {
-              dateParameters.reviewedAtStart = date(
-                state.startReviewAt,
-              ).format();
-              dateParameters.reviewedAtEnd = date(state.endReviewAt)
-                .add(1, 'days')
-                .format();
-            }
+            dateParameters.reviewedAtStart = params.reviewAt.start;
+            dateParameters.reviewedAtEnd = params.reviewAt.end;
 
             setSearchParameter(dateParameters);
           }}

@@ -7,16 +7,8 @@ import IdSearch from './IdSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import searchModule from '../../store/features/search';
 import { SearchParameter } from '../../utils/nia15/interfaces/search';
-import { date } from '../../helpers';
+import { date, str } from '../../helpers';
 import SearchAndReset from '../common/SearchAndReset';
-import reviewModule from '../../store/features/reviews';
-
-export interface SearchStats {
-  all: number;
-  pass: number;
-  reject: number;
-  totalReject: number;
-}
 
 export interface SearchProps {
   onSearch: () => any;
@@ -83,25 +75,13 @@ const Search = ({ onSearch }: SearchProps) => {
       <Row className="mt-4">
         <Col md={12}>
           <DateSearch
-            onChange={(state) => {
+            onChange={(params) => {
               const dateParameters: SearchParameter = {};
-              if (state.startCreatedAt && state.endCreatedAt) {
-                dateParameters.createdAtStart = date(
-                  state.startCreatedAt,
-                ).format();
-                dateParameters.createdAtEnd = date(state.endCreatedAt)
-                  .add(1, 'days')
-                  .format();
-              }
+              dateParameters.createdAtStart = params.createAt.start;
+              dateParameters.createdAtEnd = params.createAt.end;
 
-              if (state.startReviewAt && state.endReviewAt) {
-                dateParameters.reviewedAtStart = date(
-                  state.startReviewAt,
-                ).format();
-                dateParameters.reviewedAtEnd = date(state.endReviewAt)
-                  .add(1, 'days')
-                  .format();
-              }
+              dateParameters.reviewedAtStart = params.reviewAt.start;
+              dateParameters.reviewedAtEnd = params.reviewAt.end;
 
               setSearchParameter(dateParameters);
             }}
@@ -109,12 +89,6 @@ const Search = ({ onSearch }: SearchProps) => {
             reviewAtFilter={true}
           />
         </Col>
-        {/*<Col md={4}>*/}
-        {/*  <SearchAndReset*/}
-        {/*    onSearch={() => onSearch()}*/}
-        {/*    onReset={() => resetSearchData()}*/}
-        {/*  />*/}
-        {/*</Col>*/}
       </Row>
     </Fragment>
   );

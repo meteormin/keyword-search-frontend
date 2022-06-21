@@ -1,3 +1,5 @@
+import { forSearchFormat } from './common/dateFormat';
+
 export const filterKorean = (value: string): string | boolean => {
   const regExpEng = /^[^a-zA-Z]*$/;
   const regExpSp = /[\{\}\[\]\/?;:|\)*~`!^\-_+<>@\#$%&\\\=\(]/gi;
@@ -55,3 +57,5 @@ export const makePath = (source: string, target: string): string => {
 export const isString = (value: any) => {
   return typeof value === 'string' || value instanceof String;
 };
+
+export const searchFormat = forSearchFormat;

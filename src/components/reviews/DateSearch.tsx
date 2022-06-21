@@ -4,6 +4,7 @@ import ko from 'date-fns/locale/ko';
 import { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import DateFilter from '../common/DateFilter';
+import { date, str } from '../../helpers';
 
 registerLocale('ko', ko);
 
@@ -14,10 +15,21 @@ export interface DateSearchState {
   endReviewAt: Date | null;
 }
 
+export interface DateSearchParameters {
+  createAt: {
+    start?: string;
+    end?: string;
+  };
+  reviewAt: {
+    start?: string;
+    end?: string;
+  };
+}
+
 export interface DateSearchProps {
   createAtFilter: boolean;
   reviewAtFilter: boolean;
-  onChange: (state: DateSearchState) => any;
+  onChange: (state: DateSearchParameters) => any;
 }
 
 const DateSearch = (props: DateSearchProps) => {
@@ -26,13 +38,45 @@ const DateSearch = (props: DateSearchProps) => {
   const [startReviewAt, setStartReviewAt] = useState<Date | null>(null);
   const [endReviewAt, setEndReviewAt] = useState<Date | null>(null);
 
+  const format = (state: DateSearchState) => {
+    let createAt: { start?: string; end?: string } = {
+      start: undefined,
+      end: undefined,
+    };
+    let reviewAt: { start?: string; end?: string } = {
+      start: undefined,
+      end: undefined,
+    };
+
+    if (state.startCreatedAt && state.endCreatedAt) {
+      createAt = str.searchFormat(
+        date(state.startCreatedAt),
+        date(state.endCreatedAt),
+      );
+    }
+
+    if (state.startReviewAt && state.endReviewAt) {
+      reviewAt = str.searchFormat(
+        date(state.startReviewAt),
+        date(state.endReviewAt),
+      );
+    }
+
+    return {
+      createAt,
+      reviewAt,
+    };
+  };
+
   useEffect(() => {
-    props.onChange({
-      startCreatedAt,
-      endCreatedAt,
-      startReviewAt,
-      endReviewAt,
-    });
+    props.onChange(
+      format({
+        startCreatedAt,
+        endCreatedAt,
+        startReviewAt,
+        endReviewAt,
+      }),
+    );
   }, [startCreatedAt, endCreatedAt, startReviewAt, endReviewAt]);
 
   const createAtFilter = () => {

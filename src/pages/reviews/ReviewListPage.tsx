@@ -163,7 +163,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
 
   return (
     <Container>
-      <Row className="mt-2 ms-2">
+      <Row className="mt-4 mx-1">
         <Search
           onSearch={() => {
             dispatch(

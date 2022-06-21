@@ -3,7 +3,6 @@ import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import DataAssign from '../../components/tasks/DataAssign';
 import { useDispatch, useSelector } from 'react-redux';
 import DataSearch from '../../components/tasks/DataSearch';
-import Select from '../../components/common/Select';
 import DynamicTable, {
   DynamicSchema,
 } from '../../components/common/DaynamicTable';
@@ -170,25 +169,11 @@ const AssignListPage = ({ seq }: { seq: number }) => {
             <DateSearch
               createAtFilter={true}
               reviewAtFilter={false}
-              onChange={(state) => {
+              onChange={(params) => {
                 const dateParameters: SearchParameter = {};
-                if (state.startCreatedAt && state.endCreatedAt) {
-                  dateParameters.createdAtStart = date(
-                    state.startCreatedAt,
-                  ).format();
-                  dateParameters.createdAtEnd = date(state.endCreatedAt)
-                    .add(1, 'days')
-                    .format();
-                }
 
-                if (state.startReviewAt && state.endReviewAt) {
-                  dateParameters.reviewedAtStart = date(
-                    state.startReviewAt,
-                  ).format();
-                  dateParameters.reviewedAtEnd = date(state.endReviewAt)
-                    .add(1, 'days')
-                    .format();
-                }
+                dateParameters.createdAtStart = params.createAt.start;
+                dateParameters.createdAtEnd = params.createAt.end;
 
                 setSearchParameter(dateParameters);
               }}
