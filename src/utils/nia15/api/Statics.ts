@@ -50,7 +50,7 @@ class User extends BaseClient {
   download = async (searchParams?: StatsSearchParameter) => {
     return this._client.request({
       method: 'GET',
-      url: this._client.makeUrl(User.prefix),
+      url: this._client.makeUrl(`${User.prefix}/download`),
       params: searchParams,
       responseType: 'blob',
     });
