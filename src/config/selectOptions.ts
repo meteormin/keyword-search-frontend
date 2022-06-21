@@ -176,6 +176,12 @@ const AssignStatusOptions: Option[] = [
   { name: '2차 검수', value: '' },
 ];
 
+const SentenceStatusOptions: Option[] = [
+  { name: '검수대기', value: '' },
+  { name: '재검수대기', value: '' },
+  { name: '검수보류', value: '' },
+];
+
 // 생성자 통계 관련
 const CreatorSearchOptions: Option[] = [
   { name: '생성자명', value: 'creatorName' },
@@ -191,6 +197,8 @@ const selectOptions = {
   CreateConditions,
   DataStatsSearchOptions,
   CreatorSearchOptions,
+  AssignStatusOptions,
+  SentenceStatusOptions,
 };
 
 export default selectOptions;

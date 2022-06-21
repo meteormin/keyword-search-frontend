@@ -37,14 +37,14 @@ class Task extends BaseClient {
 }
 
 class User extends BaseClient {
-  static readonly prefix = 'user';
+  static readonly prefix = 'user/creator';
 
   constructor(client: ApiClient) {
     super(client);
   }
 
   getCreatorStats = async (searchParams?: StatsSearchParameter) => {
-    return await this._client.get(`${User.prefix}/creator`, searchParams);
+    return await this._client.get(User.prefix, searchParams);
   };
 
   download = async (searchParams?: StatsSearchParameter) => {
