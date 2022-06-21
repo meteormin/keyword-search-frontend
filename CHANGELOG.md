@@ -6,7 +6,8 @@ fix
 - 일자 검색 컴포넌트 자주 사용하는 로직 컴포넌트에 함수 추가 
 - 1,2차 검수 작업 후, 리스트 리프레쉬 안됨(해결)
   - https://github.com/testworksPF/nia-15-front/issues/22
-  
+- 생성자 통계 엑셀 다운로드 오류 수정
+  - api 요청 url 잘못됨
 feat: 통계 화면
 - 생성자 통계
 
