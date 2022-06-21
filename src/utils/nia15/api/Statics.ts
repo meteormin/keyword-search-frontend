@@ -6,10 +6,12 @@ class Statics extends BaseClient {
   static readonly prefix = 'api/v1/statistic';
 
   public readonly task: Task;
+  public readonly user: User;
 
   constructor(client: ApiClient) {
     super(client);
     this.task = new Task(client);
+    this.user = new User(client);
   }
 }
 
@@ -28,6 +30,27 @@ class Task extends BaseClient {
     return this._client.request({
       method: 'GET',
       url: this._client.makeUrl(`${Task.prefix}/download`),
+      params: searchParams,
+      responseType: 'blob',
+    });
+  };
+}
+
+class User extends BaseClient {
+  static readonly prefix = 'user';
+
+  constructor(client: ApiClient) {
+    super(client);
+  }
+
+  getCreatorStats = async (searchParams?: StatsSearchParameter) => {
+    return await this._client.get(`${User.prefix}/creator`, searchParams);
+  };
+
+  download = async (searchParams?: StatsSearchParameter) => {
+    return this._client.request({
+      method: 'GET',
+      url: this._client.makeUrl(`${User.prefix}/download`),
       params: searchParams,
       responseType: 'blob',
     });

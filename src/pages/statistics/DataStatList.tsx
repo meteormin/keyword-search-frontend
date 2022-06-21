@@ -9,6 +9,7 @@ import Search from '../../components/statics/Search';
 import searchModule from '../../store/features/search';
 import Pagination from '../../components/common/Pagination';
 import fileDownload from 'js-file-download';
+import { config } from '../../helpers';
 
 const DataStatList = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,10 @@ const DataStatList = () => {
   return (
     <Fragment>
       <Row className="mx-2">
-        <Search onSearch={() => dispatch(statsModule.actions.getTaskStats())} />
+        <Search
+          onSearch={() => dispatch(statsModule.actions.getTaskStats())}
+          selectOptions={config.selectOptions.DataStatsSearchOptions}
+        />
       </Row>
       <Row className="mx-2 mt-4">
         <hr />

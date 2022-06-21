@@ -11,7 +11,6 @@ import { SearchState } from '../search/searchAction';
 import searchModule from '../search';
 import { PayloadAction } from '@reduxjs/toolkit';
 import newClient, { Clients } from '../../../utils/nia15/api';
-import sentences from '../../../utils/nia15/api/Sentences';
 import sentenceModule from '../sentence';
 
 const taskApi = newClient(Clients.Tasks);

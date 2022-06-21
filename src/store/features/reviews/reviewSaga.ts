@@ -145,7 +145,6 @@ function* getReviewList(action: PayloadAction<{ seq: number }>) {
     const response: ApiResponse = yield call(
       reviewApi.getReviewList,
       seq,
-
       search.parameters || undefined,
     );
 
@@ -234,7 +233,6 @@ function* createReview(
     const res = apiResponse(response);
     if (response.isSuccess) {
       console.log(res);
-      yield put(reviewModule.actions.getReviewList({ seq: seq }));
       yield put(reviewModule.actions.setReview(null));
       yield put(
         alertModal.showAlert({

@@ -1,5 +1,15 @@
 # NIA15-front: CHANGELOG
 
+## v1.1.8 - 2022.06.21
+
+fix 
+- 일자 검색 컴포넌트 자주 사용하는 로직 컴포넌트에 함수 추가 
+- 1,2차 검수 작업 후, 리스트 리프레쉬 안됨(해결)
+  - https://github.com/testworksPF/nia-15-front/issues/22
+  
+feat: 통계 화면
+- 생성자 통계
+
 ## v1.1.7 - 2022.06.20
 
 fix: 기타 오류 및 버그 수정

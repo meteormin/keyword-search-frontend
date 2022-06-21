@@ -2,7 +2,7 @@ import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import sentenceModule from './';
-import { api, apiResponse, auth, switchReviewStatus } from '../../../helpers';
+import { apiResponse, switchReviewStatus } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -110,7 +110,6 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(loaderModule.endLoading());
-      yield put(sentenceModule.actions.getSentenceList());
       yield put(sentenceModule.actions.setSentence(null));
       yield put(
         alertModalModule.showAlert({

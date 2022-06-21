@@ -1,29 +1,26 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import DataSearch from '../tasks/DataSearch';
 import SelectFilter from '../common/SelectFilter';
-import { config, date } from '../../helpers';
+import { date } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import searchModule from '../../store/features/search';
 import { StatsSearchParameter } from '../../utils/nia15/interfaces/search';
 import Input from '../common/Input';
 import SearchAndReset from '../common/SearchAndReset';
 import InputFilter from '../common/InputFilter';
-import statsModule from '../../store/features/statistics';
-import LimitFilter from '../common/LimitFilter';
-import DynamicTable from '../common/DaynamicTable';
-import {
-  DataStatsRecord,
-  DataStatsSchema,
-  toRecord,
-} from '../../pages/statistics/DataStatsSchema';
 import DateFilter from '../common/DateFilter';
+import { Option } from '../common/Select';
 
-const Search = ({ onSearch }: { onSearch: () => any }) => {
+const Search = ({
+  onSearch,
+  selectOptions,
+}: {
+  onSearch: () => any;
+  selectOptions: Option[];
+}) => {
   const dispatch = useDispatch();
   const [selectName, setName] = useState<string | undefined>();
   const [searchValue, setValue] = useState<string | undefined>();
-  const [assignStatus, setAssignStatus] = useState<string | undefined>();
   const [groupName, setGroupName] = useState<string | undefined>();
   const [createdAtStart, setCreatedAtStart] = useState<string | undefined>();
   const [createdAtEnd, setCreatedAtEnd] = useState<string | undefined>();
@@ -51,7 +48,7 @@ const Search = ({ onSearch }: { onSearch: () => any }) => {
                 setName(selectedValue);
               }
             }}
-            options={config.selectOptions.DataStatsSearchOptions}
+            options={selectOptions}
             value={selectName}
           />
         </Col>
