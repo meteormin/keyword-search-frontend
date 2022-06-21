@@ -179,7 +179,7 @@ export class ApiClient {
             errorResponse.message = messages.join(', ');
           } else {
             const message = error.response?.data.msg || '';
-            errorResponse.message = message.split(':')[1];
+            errorResponse.message = message.split(':').shift().join(':');
           }
         }
       }
