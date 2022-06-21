@@ -1,8 +1,12 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { StatsTask } from '../../../utils/nia15/interfaces/statics';
+import {
+  StatsTask,
+  StatsCreator,
+} from '../../../utils/nia15/interfaces/statics';
 
 export interface StatsState {
   statsTask: StatsTask;
+  statsCreator: StatsCreator;
   excelFile: any | null;
 }
 
@@ -10,6 +14,10 @@ export const initialState: StatsState = {
   statsTask: {
     count: 0,
     task: [],
+  },
+  statsCreator: {
+    count: 0,
+    statistic: [],
   },
   excelFile: null,
 };
@@ -29,6 +37,18 @@ const statsAction = {
   },
   setExcelFile: (state: StatsState, action: PayloadAction<any>) => {
     state.excelFile = action.payload;
+  },
+  setCreatorStats: (state: StatsState, action: PayloadAction<StatsCreator>) => {
+    state.statsCreator = action.payload;
+  },
+  getCreatorStats: (state: StatsState) => {
+    state.statsCreator = {
+      count: 0,
+      statistic: [],
+    };
+  },
+  downloadCreator: (state: StatsState) => {
+    state.excelFile = null;
   },
 };
 export default statsAction;

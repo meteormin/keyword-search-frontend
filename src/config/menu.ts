@@ -51,6 +51,11 @@ const menu: Menu = {
       name: '전체 데이터 목록',
       icon: 'fas fa-file-lines',
     },
+    {
+      url: '/statistics/creator',
+      name: '생성자 통계',
+      icon: 'fas fa-file-lines',
+    },
   ],
 };
 

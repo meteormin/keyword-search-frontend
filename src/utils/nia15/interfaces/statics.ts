@@ -1,10 +1,19 @@
 import { ReviewStatus } from './reviews';
-import { Concept } from './tasks';
 
 export interface StatsTask {
   count: number;
   task: Task[];
 }
+
+export interface StatsCreator {
+  count: number;
+  statistic: Creator[];
+}
+
+// TODO: 1차 검수, 2차 검수 API 나오면 ㄱㄱ
+// export interface StatsReviewer1 {}
+//
+// export interface StatsReviewer2 {}
 
 export interface Task {
   id: number;
@@ -25,4 +34,20 @@ export interface Task {
   createAssignId: string | null;
   review1AssignId: string | null;
   review2AssignID: string | null;
+}
+
+export interface Creator {
+  id: number;
+  loginId: string;
+  name: string;
+  temp: number;
+  waiting: number;
+  waitingR: number;
+  hold1: number;
+  reject1: number;
+  reject2: number;
+  pass1: number;
+  pass2: number;
+  reject1Acc: number;
+  reject2Acc: number;
 }

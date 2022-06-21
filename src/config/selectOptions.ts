@@ -159,6 +159,7 @@ const CreateConditions: Option[] = [
   { name: '기타', value: '기타' },
 ];
 
+// 전체 톨계 관련
 const DataStatsSearchOptions: Option[] = [
   { name: '생성자 ID', value: 'creatorID' },
   { name: '생성자명', value: 'creatorName' },
@@ -175,6 +176,12 @@ const AssignStatusOptions: Option[] = [
   { name: '2차 검수', value: '' },
 ];
 
+// 생성자 통계 관련
+const CreatorSearchOptions: Option[] = [
+  { name: '생성자명', value: 'creatorName' },
+  { name: '생성자 ID', value: 'creatorID' },
+];
+
 const selectOptions = {
   RejectReason,
   ReviewState,
@@ -183,6 +190,7 @@ const selectOptions = {
   DataSearchNames,
   CreateConditions,
   DataStatsSearchOptions,
+  CreatorSearchOptions,
 };
 
 export default selectOptions;

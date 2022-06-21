@@ -72,6 +72,10 @@ const menuPerm = [
     path: '/statistics',
     role: [UserType.ADMIN],
   },
+  {
+    path: '/statistics/creator',
+    role: [UserType.ADMIN],
+  },
 ];
 
 const getPathRole = (path: string) => {
