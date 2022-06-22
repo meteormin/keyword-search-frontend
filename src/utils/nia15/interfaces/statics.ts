@@ -11,7 +11,12 @@ export interface StatsCreator {
 }
 
 // TODO: 1차 검수, 2차 검수 API 나오면 ㄱㄱ
-// export interface StatsReviewer1 {}
+export interface StatsReviewer1 {
+  count: number;
+
+  statistic: any[];
+}
+
 //
 // export interface StatsReviewer2 {}
 

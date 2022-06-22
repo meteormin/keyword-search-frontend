@@ -2,11 +2,13 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import {
   StatsTask,
   StatsCreator,
+  StatsReviewer1,
 } from '../../../utils/nia15/interfaces/statics';
 
 export interface StatsState {
   statsTask: StatsTask;
   statsCreator: StatsCreator;
+  statsReviewer: StatsReviewer1;
   excelFile: any | null;
 }
 
@@ -16,6 +18,10 @@ export const initialState: StatsState = {
     task: [],
   },
   statsCreator: {
+    count: 0,
+    statistic: [],
+  },
+  statsReviewer: {
     count: 0,
     statistic: [],
   },
@@ -48,6 +54,21 @@ const statsAction = {
     };
   },
   downloadCreator: (state: StatsState) => {
+    state.excelFile = null;
+  },
+  getReviewerStats: (state: StatsState) => {
+    state.statsReviewer = {
+      count: 0,
+      statistic: [],
+    };
+  },
+  setReviewerStats: (
+    state: StatsState,
+    action: PayloadAction<StatsReviewer1>,
+  ) => {
+    state.statsReviewer = action.payload;
+  },
+  downloadReviewer: (state: StatsState) => {
     state.excelFile = null;
   },
 };

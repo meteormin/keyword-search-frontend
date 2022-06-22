@@ -39,7 +39,7 @@ const Header = ({ appName, dropDownMenu, isLogin, userName }: HeaderProps) => {
           <i className="fas fa-bars"></i>
         </button>
       </guard.Protected>
-      {/*Navbar Search*/}
+      {/*Navbar DataSearch*/}
       <form className="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         <div className="input-group"></div>
       </form>

@@ -70,7 +70,7 @@ docker-compose up -d
 ```dotenv
 # .env.development
 
- # Title에 반영됨
+# Title에 반영됨
 REACT_APP_NAME=NIA15
 
 # api 도메인

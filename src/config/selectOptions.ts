@@ -188,6 +188,11 @@ const CreatorSearchOptions: Option[] = [
   { name: '생성자 ID', value: 'creatorID' },
 ];
 
+const ReviewerSearchOptions: Option[] = [
+  { name: '생성자명', value: 'creatorName' },
+  { name: '생성자 ID', value: 'creatorID' },
+];
+
 const selectOptions = {
   RejectReason,
   ReviewState,
@@ -199,6 +204,7 @@ const selectOptions = {
   CreatorSearchOptions,
   AssignStatusOptions,
   SentenceStatusOptions,
+  ReviewerSearchOptions,
 };
 
 export default selectOptions;
