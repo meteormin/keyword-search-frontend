@@ -2,7 +2,7 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import usersModule from './';
-import { apiResponse } from '../../../helpers';
+import { apiResponse, auth } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -368,6 +368,43 @@ function* saveUser(action: PayloadAction<User | CreateUser>) {
       }),
     );
   }
+}
+
+function* updatePassword(action: PayloadAction<string>) {
+  yield put(loaderModule.startLoading());
+  try {
+    if (auth.user()?.id) {
+      const response: ApiResponse = yield call(
+        usersApi.user.updatePassword,
+        auth.user()?.id as number,
+        action.payload,
+      );
+
+      const res = apiResponse(response);
+      if (response.isSuccess) {
+        yield put(
+          alertModalModule.showAlert({
+            title: '비밀번호 변경',
+            message: '비밀번호 변경 완료',
+          }),
+        );
+      } else {
+        yield put(
+          alertModalModule.errorAlert({
+            res: res,
+            refresh: true,
+          }),
+        );
+      }
+    } else {
+      yield put(
+        alertModalModule.showAlert({
+          title: '로그인 에러',
+          message: '로그인 정보가 없습니다.',
+        }),
+      );
+    }
+  } catch (e) {}
 }
 
 function* watchUsersSaga() {

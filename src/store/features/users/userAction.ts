@@ -109,6 +109,9 @@ const userAction = {
   resetPassword: (state: UsersState, action: PayloadAction<number>) => {
     state.method = 'resetPassword';
   },
+  updatePassword: (state: UsersState, action: PayloadAction<string>) => {
+    state.method = 'updatePassword';
+  },
 };
 
 export default userAction;
