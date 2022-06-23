@@ -70,8 +70,16 @@ const statsAction = {
   ) => {
     state.statsReviewer = action.payload;
   },
-  downloadReviewer: (state: StatsState) => {
-    state.excelFile = null;
+  downloadReviewer: (state: StatsState, action: PayloadAction<number>) => {
+    if (state.statsReviewer.seq == action.payload) {
+      state.excelFile = null;
+    } else {
+      state.statsReviewer = {
+        seq: action.payload,
+        statistic: [],
+        count: 0,
+      };
+    }
   },
 };
 export default statsAction;

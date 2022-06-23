@@ -10,11 +10,10 @@ export interface StatsCreator {
   statistic: Creator[];
 }
 
-// TODO: 1차 검수, 2차 검수 API 나오면 ㄱㄱ
 export interface StatsReviewer {
   seq: number;
   count: number;
-  statistic: Reviewer1[];
+  statistic: Reviewer1[] | Reviewer2[];
 }
 
 export interface Reviewer1 {
@@ -28,6 +27,10 @@ export interface Reviewer1 {
   pass2: number;
   reject1Acc: number;
   reject2Acc: number;
+}
+
+export interface Reviewer2 extends Reviewer1 {
+  reviewer2ReviewHoldAcc: number;
 }
 
 export interface Task {

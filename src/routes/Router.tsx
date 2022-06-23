@@ -169,6 +169,7 @@ const Router = () => {
           <Route path={'creator'} element={<CreatorStatList />} />
           <Route path={'review'}>
             <Route path={'1'} element={<ReviewStatsList seq={1} />} />
+            <Route path={'2'} element={<ReviewStatsList seq={2} />} />
           </Route>
         </Route>
 

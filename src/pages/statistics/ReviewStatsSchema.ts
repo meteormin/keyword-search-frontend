@@ -1,5 +1,5 @@
 import { DynamicSchema } from '../../components/common/DaynamicTable';
-import { Reviewer1 } from '../../utils/nia15/interfaces/statics';
+import { Reviewer1, Reviewer2 } from '../../utils/nia15/interfaces/statics';
 
 export const Review1StatsSchema: DynamicSchema = {
   no: {
@@ -45,7 +45,7 @@ export interface Review1StatsRecord {
 
 export const toRecord1 = (item: Reviewer1, i: number): Review1StatsRecord => {
   const totalReviewed =
-    item.hold1 + item.pass1 + item.reject1Acc + item.reject2Acc + item.pass2; // TODO: 검수보류 + 1차승인 + 1차 반려 누적 + 2차 반려 누적 + 2차 승인
+    item.hold1 + item.pass1 + item.reject1Acc + item.reject2Acc + item.pass2;
 
   return {
     no: i + 1,
@@ -80,6 +80,79 @@ export const setFirstRow1 = (
     firstRow.review1Hold += item.review1Hold;
     firstRow.review1Pass += item.review1Pass;
     firstRow.review1RejectAcc += item.review1RejectAcc;
+    firstRow.review2RejectAcc += item.review2RejectAcc;
+    firstRow.review2Pass += item.review2Pass;
+  });
+  records.unshift(firstRow);
+
+  return records;
+};
+
+export const Review2StatsSchema: DynamicSchema = {
+  no: {
+    name: 'NO',
+  },
+  reviewerId: {
+    name: '담당자 ID',
+  },
+  reviewerName: {
+    name: '담당자',
+  },
+  review2ReviewHoldAcc: {
+    name: '1차 검수 보류 검수',
+  },
+  totalReviewed: {
+    name: '총 검수 문장 셋 수',
+  },
+  review2RejectAcc: {
+    name: '2차 반려 (누적)',
+  },
+  review2Pass: {
+    name: '최종 승인',
+  },
+};
+
+export interface Review2StatsRecord {
+  no: number | string;
+  reviewerId: string;
+  reviewerName: string;
+  totalReviewed: number;
+  review2ReviewHoldAcc: number;
+  review2RejectAcc: number;
+  review2Pass: number;
+}
+
+export const toRecord2 = (item: Reviewer2, i: number): Review2StatsRecord => {
+  const totalReviewed =
+    item.reviewer2ReviewHoldAcc + item.reject2Acc + item.pass2; // TODO: 검수보류 + 1차승인 + 1차 반려 누적 + 2차 반려 누적 + 2차 승인
+
+  return {
+    no: i + 1,
+    reviewerId: item.loginId,
+    reviewerName: item.name,
+    review2ReviewHoldAcc: item.reviewer2ReviewHoldAcc,
+    totalReviewed: totalReviewed,
+    review2RejectAcc: item.reject2Acc,
+    review2Pass: item.pass2,
+  };
+};
+
+export const setFirstRow2 = (
+  records: Review2StatsRecord[],
+): Review2StatsRecord[] => {
+  const firstRow: Review2StatsRecord = {
+    no: '',
+    reviewerId: '전체',
+    reviewerName: '전체',
+    review2ReviewHoldAcc: 0,
+    totalReviewed: 0,
+    review2RejectAcc: 0,
+    review2Pass: 0,
+  };
+
+  records.forEach((item) => {
+    firstRow.totalReviewed += item.totalReviewed;
+    firstRow.review2ReviewHoldAcc += item.review2ReviewHoldAcc;
     firstRow.review2RejectAcc += item.review2RejectAcc;
     firstRow.review2Pass += item.review2Pass;
   });

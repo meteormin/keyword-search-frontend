@@ -186,12 +186,57 @@ function* getReviewerStats(action: PayloadAction<number>) {
   }
 }
 
+function* downloadReviewerStats(action: PayloadAction<number>) {
+  yield put(loaderModule.startLoading());
+  const search: SearchState = yield select(searchModule.getSearchState);
+  const statsState: StatsState = yield select(statsModule.getStatsState);
+
+  try {
+    if (action.payload == statsState.statsReviewer.seq) {
+      const response: ApiResponse = yield call(
+        statsApi.user.downloadReviewerStats,
+        action.payload,
+        search.statsParameter || undefined,
+      );
+
+      yield put(loaderModule.endLoading());
+
+      const res = apiResponse(response);
+      if (response.isSuccess) {
+        yield put(statsModule.actions.setExcelFile(res));
+      } else {
+        yield put(
+          alertModalModule.errorAlert({
+            res: res,
+          }),
+        );
+      }
+    } else {
+      yield put(
+        alertModalModule.showAlert({
+          title: '요청 에러',
+          message: '잘못된 요청입니다.',
+        }),
+      );
+    }
+  } catch (err) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '다운로드 실패',
+        message: err,
+      }),
+    );
+  }
+}
+
 function* watchStatsSaga() {
   yield takeLatest(statsModule.actions.getTaskStats, getTaskStats);
   yield takeLatest(statsModule.actions.downloadTask, downloadTask);
   yield takeLatest(statsModule.actions.getCreatorStats, getCreatorStats);
   yield takeLatest(statsModule.actions.downloadCreator, downloadCreator);
   yield takeLatest(statsModule.actions.getReviewerStats, getReviewerStats);
+  yield takeLatest(statsModule.actions.downloadReviewer, downloadReviewerStats);
 }
 
 export default function* statsSaga() {

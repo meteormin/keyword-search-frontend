@@ -7,20 +7,27 @@ import { config } from '../../helpers';
 import {
   Review1StatsSchema,
   Review1StatsRecord,
+  Review2StatsRecord,
   toRecord1,
   setFirstRow1,
+  toRecord2,
+  setFirstRow2,
+  Review2StatsSchema,
 } from './ReviewStatsSchema';
 import searchModule from '../../store/features/search';
 import fileDownload from 'js-file-download';
 import LimitFilter from '../../components/common/LimitFilter';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
+import { Reviewer2 } from '../../utils/nia15/interfaces/statics';
 
 const ReviewStatList = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState<number>(100);
   const [page, setPage] = useState<number>(1);
-  const [records, setRecords] = useState<Review1StatsRecord[]>([]);
+  const [records, setRecords] = useState<
+    Review1StatsRecord[] | Review2StatsRecord[]
+  >([]);
   const { statsReviewer, excelFile } = useSelector(statsModule.getStatsState);
   const { statsParameter } = useSelector(searchModule.getSearchState);
 
@@ -29,6 +36,13 @@ const ReviewStatList = ({ seq }: { seq: number }) => {
       const data = statsReviewer.statistic.map(toRecord1);
 
       setRecords(setFirstRow1(data));
+    }
+
+    if (seq == 2) {
+      const data = statsReviewer.statistic.map((value, index) =>
+        toRecord2(value as Reviewer2, index),
+      );
+      setRecords(setFirstRow2(data));
     }
   }, [statsReviewer]);
 
@@ -78,14 +92,17 @@ const ReviewStatList = ({ seq }: { seq: number }) => {
         </Col>
       </Row>
       <Row className={'mt-4'}>
-        <DynamicTable schema={Review1StatsSchema} records={records} />
+        <DynamicTable
+          schema={seq == 1 ? Review1StatsSchema : Review2StatsSchema}
+          records={records}
+        />
       </Row>
       <Row className={'mt-2 mx-2'}>
         <Col md={4} className={'mt-5'}>
           <Button
             variant={'dark'}
             onClick={() => {
-              dispatch(statsModule.actions.downloadReviewer());
+              dispatch(statsModule.actions.downloadReviewer(seq));
             }}
           >
             엑셀 다운로드
