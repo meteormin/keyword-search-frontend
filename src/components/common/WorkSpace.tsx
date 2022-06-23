@@ -141,7 +141,6 @@ const WorkSpace = (props: WorkSpaceProps) => {
     setRequestBtn(false);
     setReviewPassBtn(false);
     setReviewOpinionBtn(false);
-
   }, [textArea10, textArea20]);
 
   useEffect(() => {
