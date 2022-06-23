@@ -267,7 +267,6 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
       response = yield call(usersApi.group.createGroup, action.payload);
     }
 
-    const res = apiResponse(response);
     yield put(loaderModule.endLoading());
     if (response.isSuccess) {
       yield put(usersModule.actions.getGroups());
