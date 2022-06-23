@@ -9,6 +9,8 @@ feat
     - 검색 redux action 호출 문제 수정
     - component의 props를 이용하여 1차 검수, 2차 검수 구분할 수 있게 작성
 
+- 패스워드 변경 페이지 추가
+
 fix
 
 - 생성자 통계
