@@ -84,7 +84,7 @@ const RejectReason: Option[] = [
     value: 14,
   },
   {
-    name: '13. 기타',
+    name: '14. 기타',
     value: 9, // 기타 9 고정
   },
 ];
