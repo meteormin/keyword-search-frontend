@@ -27,7 +27,6 @@ const Search = ({ onSearch, onReset }: SearchProps) => {
         <Col md={8}>
           <DataSearch
             onChange={(state) => {
-              console.log(state);
               setSearchParameter({
                 refID: state.refId,
                 domain: state.domain,
@@ -54,7 +53,6 @@ const Search = ({ onSearch, onReset }: SearchProps) => {
       <Row className="mt-4">
         <StateSearch
           onChange={(state) => {
-            console.log(state);
             setSearchParameter({
               createStatus: state.create,
               reviewStatus: state.review,

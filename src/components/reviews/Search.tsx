@@ -53,7 +53,6 @@ const Search = ({ onSearch }: SearchProps) => {
         <Col md={8}>
           <IdSearch
             onChange={(state) => {
-              console.log('Id search', state);
               setSearchParameter(state);
             }}
           />
@@ -63,7 +62,6 @@ const Search = ({ onSearch }: SearchProps) => {
         <Col md={12}>
           <StateSearch
             onChange={(state) => {
-              console.log('state search', state);
               setSearchParameter({
                 reviewStatus: state.review,
                 rejectReason: state.reject,

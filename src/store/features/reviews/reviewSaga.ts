@@ -1,10 +1,4 @@
-import {
-  api,
-  apiResponse,
-  auth,
-  date,
-  switchReviewStatus,
-} from '../../../helpers';
+import { apiResponse, auth, date, switchReviewStatus } from '../../../helpers';
 import {
   CreateReview,
   Review,
@@ -90,7 +84,6 @@ function* getAssignList(action: PayloadAction<{ seq: number }>) {
     }
   } catch (e) {
     yield put(loaderModule.endLoading());
-    console.log(e);
     yield put(
       alertModal.showAlert({
         title: '데이터 조회 실패',
@@ -119,7 +112,6 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
         ),
       );
     } else {
-      console.log(res);
       yield put(
         alertModal.errorAlert({
           res: res,
@@ -127,7 +119,6 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
       );
     }
   } catch (e) {
-    console.log(e);
     yield put(
       alertModal.showAlert({
         title: '데이터 조회 실패',
@@ -167,7 +158,6 @@ function* getReviewList(action: PayloadAction<{ seq: number }>) {
 
       yield put(reviewModule.actions.setReviewList(reviews));
     } else {
-      console.log(res);
       yield put(
         alertModal.errorAlert({
           res: res,
@@ -176,7 +166,6 @@ function* getReviewList(action: PayloadAction<{ seq: number }>) {
     }
   } catch (e) {
     yield put(loaderModule.endLoading());
-    console.log(e);
     yield put(
       alertModal.showAlert({
         title: '데이터 조회 실패',
@@ -232,7 +221,6 @@ function* createReview(
 
     const res = apiResponse(response);
     if (response.isSuccess) {
-      console.log(res);
       yield put(reviewModule.actions.setReview(null));
       yield put(
         alertModal.showAlert({
@@ -242,8 +230,6 @@ function* createReview(
         }),
       );
     } else {
-      console.log(res);
-
       yield put(
         alertModal.errorAlert({
           res: res,
@@ -252,7 +238,6 @@ function* createReview(
     }
   } catch (e) {
     yield put(loaderModule.endLoading());
-    console.log(e);
     yield put(
       alertModal.showAlert({
         title: '검수 실패',
@@ -296,8 +281,6 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
           reviewModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
         );
       } else {
-        console.log(res);
-        // auth.s(userType, '');
         yield put(
           reviewModule.actions.getAssignList({
             seq: action.payload.seq,
@@ -314,7 +297,6 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
       }
     }
   } catch (e) {
-    console.log(e);
     yield put(
       alertModalModule.showAlert({
         title: '진행 불가능',

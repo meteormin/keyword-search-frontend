@@ -60,7 +60,7 @@ const Router = () => {
           />
         </Route>
         <Route path="/password">
-          <Route path="find" element={<FindPassPage />} />
+          <Route path="reset" element={<FindPassPage />} />
         </Route>
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/users">
@@ -164,12 +164,62 @@ const Router = () => {
 
         {/**통계**/}
         <Route path={'/statistics'}>
-          <Route index element={<DataStatList />} />
-          <Route path={'task'} element={<DataStatList />} />
-          <Route path={'creator'} element={<CreatorStatList />} />
+          <Route
+            index
+            element={
+              <guard.Restricted
+                condition={handlePerm([UserType.ADMIN])}
+                redirect={<ForbiddenPage />}
+              >
+                <DataStatList />
+              </guard.Restricted>
+            }
+          />
+          <Route
+            path={'task'}
+            element={
+              <guard.Restricted
+                condition={handlePerm([UserType.ADMIN])}
+                redirect={<ForbiddenPage />}
+              >
+                <DataStatList />
+              </guard.Restricted>
+            }
+          />
+          <Route
+            path={'creator'}
+            element={
+              <guard.Restricted
+                condition={handlePerm([UserType.ADMIN])}
+                redirect={<ForbiddenPage />}
+              >
+                <CreatorStatList />
+              </guard.Restricted>
+            }
+          />
           <Route path={'review'}>
-            <Route path={'1'} element={<ReviewStatsList seq={1} />} />
-            <Route path={'2'} element={<ReviewStatsList seq={2} />} />
+            <Route
+              path={'1'}
+              element={
+                <guard.Restricted
+                  condition={handlePerm([UserType.ADMIN])}
+                  redirect={<ForbiddenPage />}
+                >
+                  <ReviewStatsList seq={1} />
+                </guard.Restricted>
+              }
+            />
+            <Route
+              path={'2'}
+              element={
+                <guard.Restricted
+                  condition={handlePerm([UserType.ADMIN])}
+                  redirect={<ForbiddenPage />}
+                >
+                  <ReviewStatsList seq={2} />
+                </guard.Restricted>
+              }
+            />
           </Route>
         </Route>
 

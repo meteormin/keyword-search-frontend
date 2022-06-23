@@ -12,7 +12,6 @@ export const filterKorean = (value: string): string | boolean => {
 
     if (regExpSp.test(value)) {
       check = false;
-      console.log('??');
     }
 
     return check;

@@ -59,9 +59,7 @@ const UserSection = () => {
   };
 
   useEffect(() => {
-    console.log('grp:', currentGroup);
     if (currentGroup.id) {
-      console.log('get Users');
       dispatch(
         usersModule.actions.setUsers(
           (currentGroup.edges?.users?.map(toCamel) as User[]) || [],
@@ -97,7 +95,6 @@ const UserSection = () => {
         onSave={() => null}
         onResetPass={() => {
           if (editUser?.id) {
-            console.log('press resetPassword');
             dispatch(usersModule.actions.resetPassword(editUser?.id));
           }
         }}

@@ -25,7 +25,6 @@ function* getTaskList() {
       search.parameters || undefined,
     );
     const res = apiResponse(response);
-    console.log(response);
     if (response.isSuccess) {
       const count: number = res.data.count;
       const tasks: Task[] = res.data.tasks.map(toCamel);
@@ -127,7 +126,6 @@ function* getTime() {
   }
   try {
     const now = date();
-    console.log(auth.getJobTimeAt(UserType.WORKER));
     if (auth.getJobTimeAt(UserType.WORKER)) {
       const time = date
         .duration(auth.getJobTimeAt(UserType.WORKER)?.diff(now))
@@ -144,7 +142,6 @@ function* getTime() {
           taskModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
         );
       } else {
-        console.log(res);
         yield put(taskModule.actions.getTaskList());
         yield put(
           alertModalModule.showAlert({
@@ -156,7 +153,6 @@ function* getTime() {
       }
     }
   } catch (e) {
-    console.log(e);
     yield put(
       alertModalModule.showAlert({
         title: '진행 불가능',

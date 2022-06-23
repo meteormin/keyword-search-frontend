@@ -30,7 +30,6 @@ const AssignListPage = () => {
 
   const taskRecords = () => {
     return taskList.map((t, i): TaskRecord => {
-      console.log('t', t.edges?.concepts);
       return {
         no: i + 1,
         id: t.refId,

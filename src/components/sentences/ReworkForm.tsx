@@ -207,7 +207,7 @@ const ReviewForm = (props: CreateFormProps) => {
                         sentence1Count: data.wordCount1,
                         sentence2Count: data.wordCount2,
                       };
-                      console.log(createSentence);
+
                       dispatch(
                         sentenceModule.actions.setCreateSentence(
                           createSentence,

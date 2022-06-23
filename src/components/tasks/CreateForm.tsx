@@ -27,26 +27,8 @@ const CreateForm = (props: CreateFormProps) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState('03:00:00');
-
-  // 원본
-  const [sentence1, setSentence1] = useState('');
-  const [sentence2, setSentence2] = useState('');
-  // API 결과
-  const [sentence1Pat, setSentence1Pat] = useState('');
-  const [sentence2Pat, setSentence2Pat] = useState('');
-
-  // 사용자 수정 결과
-  const [sentence1Mod, setSentence1Mod] = useState('');
-  const [sentence2Mod, setSentence2Mod] = useState('');
-
-  // 단어 수
-  const [sentence1Count, setCount1] = useState(0);
-  const [sentence2Count, setCount2] = useState(0);
-
   const [task, setTask] = useState<Task | null>(null);
   const [sentence, setSentence] = useState<Sentence | null>(null);
-
-  const [method, setMethod] = useState<'create' | 'edit'>('create');
   const { workTask, totalCount } = useSelector(taskModule.getTaskState);
   const { editSentence, createSentence, createdCount } = useSelector(
     sentenceModule.getSentenceState,
@@ -61,7 +43,6 @@ const CreateForm = (props: CreateFormProps) => {
     }
 
     if (editSentence) {
-      setMethod('edit');
       setSentence(editSentence);
       setTask(editSentence.edges?.task || null);
     }
@@ -247,7 +228,7 @@ const CreateForm = (props: CreateFormProps) => {
                         sentence1Count: data.wordCount1,
                         sentence2Count: data.wordCount2,
                       };
-                      console.log(createSentence);
+
                       dispatch(
                         sentenceModule.actions.setCreateSentence(
                           createSentence,

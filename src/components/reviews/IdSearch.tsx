@@ -28,13 +28,11 @@ const IdSearch = (props: IdSearchProps) => {
       review2UserID: undefined,
     };
     if (selected && value) {
-      console.log(parseInt(selected.toString()));
       switch (parseInt(selected.toString())) {
         case IdStateEnum.GROUP_NAME:
           idSearchState.sentenceGroupName = value;
           break;
         case IdStateEnum.CREATOR_ID:
-          console.log('is??');
           idSearchState.sentenceUserID = value;
           break;
         case IdStateEnum.REVIEWER1_ID:

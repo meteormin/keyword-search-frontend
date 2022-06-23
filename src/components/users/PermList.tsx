@@ -1,19 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import DynamicTable from '../common/DaynamicTable';
-import { bool } from 'prop-types';
 
 export interface Permission {
   name: string;
   id: number;
-}
-
-export interface PermRecord {
-  name: string;
-  check: any;
-}
-
-export interface PermListState {
-  values: string[] | number[];
 }
 
 export interface PermListProps {
@@ -37,7 +27,6 @@ const PermList = ({ permissions, activeValues, onChange }: PermListProps) => {
   };
 
   const onChangeCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log('??', activeValues);
     const tempSet = new Set(values);
 
     if (e.target.checked) {
@@ -53,10 +42,9 @@ const PermList = ({ permissions, activeValues, onChange }: PermListProps) => {
 
   useEffect(() => {
     setValues(new Set(activeValues));
-    console.log(activeValues);
 
     setIsChecked(new Set(activeValues));
-    console.log(isChecked);
+
     mappingRecords();
   }, [activeValues]);
 
@@ -71,7 +59,7 @@ const PermList = ({ permissions, activeValues, onChange }: PermListProps) => {
   const getIsChecked = (value: number): boolean => {
     if (isChecked) {
       const check = [...isChecked].filter((item) => item == value)[0];
-      console.log(value, check);
+
       return !!check;
     }
     return false;

@@ -31,7 +31,6 @@ function* getTaskStats() {
     const res = apiResponse(response);
     if (response.isSuccess) {
       const taskStats = toCamel(res.data) as StatsTask;
-      console.log(res.data);
 
       yield put(statsModule.actions.setTaskStats(taskStats));
     } else {
@@ -97,7 +96,6 @@ function* getCreatorStats() {
     const res = apiResponse(response);
     if (response.isSuccess) {
       const creatorStats = toCamel(res.data) as StatsCreator;
-      console.log(res.data);
 
       yield put(statsModule.actions.setCreatorStats(creatorStats));
     } else {
@@ -165,8 +163,7 @@ function* getReviewerStats(action: PayloadAction<number>) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       const reviewerStats = toCamel(res.data) as StatsReviewer;
-      console.log(res.data);
-
+      reviewerStats.seq = action.payload;
       yield put(statsModule.actions.setReviewerStats(reviewerStats));
     } else {
       yield put(

@@ -68,10 +68,6 @@ const GroupSection = () => {
     getPermList();
   }, []);
 
-  useEffect(() => {
-    console.log('change edit group');
-  }, [editGroup]);
-
   return (
     <Fragment>
       <Row className="g-2">

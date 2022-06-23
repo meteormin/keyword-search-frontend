@@ -57,7 +57,6 @@ export const sentenceToWorkData = (
 
   if (seq == 1) {
     const review1 = sentence?.edges?.sentenceReviews1;
-    console.log('hi', sentence);
     if (
       sentence?.status === ReviewStatus.REJECT1 ||
       sentence?.status == ReviewStatus.WAITING

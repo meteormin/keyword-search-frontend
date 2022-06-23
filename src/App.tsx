@@ -20,8 +20,6 @@ function App() {
     }
   });
 
-  console.log(baikalNlp);
-
   const menu = config.layouts.menu as Menu;
   let userType = auth.user()?.userType;
 
