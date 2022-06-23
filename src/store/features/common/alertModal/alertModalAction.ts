@@ -43,7 +43,7 @@ export default {
       state.message = res.message;
     } else {
       console.log(res);
-      state.title = '에러';
+      state.title = '알 수 없는 에러';
       state.message = '관리자에게 문의해주세요.';
     }
   },

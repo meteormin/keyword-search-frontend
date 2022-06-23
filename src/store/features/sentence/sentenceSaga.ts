@@ -27,7 +27,6 @@ function* getSentenceList() {
       search.parameters || undefined,
     );
     const res = apiResponse(response);
-    console.log(response);
     if (response.isSuccess) {
       const sentences: SentenceHistory[] = res.data.sentences.map(toCamel);
       yield put(loaderModule.endLoading());
@@ -120,7 +119,6 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
       );
     } else {
       yield put(loaderModule.endLoading());
-      console.log(res);
       yield put(
         alertModalModule.errorAlert({
           res: res,
@@ -129,7 +127,6 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
       );
     }
   } catch (e) {
-    console.log(e);
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({
@@ -162,7 +159,6 @@ function* createTemp(action: PayloadAction<CreateSentence>) {
       );
     } else {
       yield put(loaderModule.endLoading());
-      console.log(res);
       yield put(
         alertModalModule.errorAlert({
           res: res,
@@ -171,7 +167,6 @@ function* createTemp(action: PayloadAction<CreateSentence>) {
       );
     }
   } catch (e) {
-    console.log(e);
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({

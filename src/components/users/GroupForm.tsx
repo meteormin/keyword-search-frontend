@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import FormModal from './FormModal';
 import Input from '../common/Input';
-import PermList, { Permission } from './PermList';
+import { Permission } from './PermList';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { CreateGroup, Group } from '../../utils/nia15/interfaces/users';
@@ -29,24 +29,16 @@ const GroupForm = ({
   onDelete?: () => any;
 }) => {
   const dispatch = useDispatch();
-  const { postGroup, currentGroup } = useSelector(usersModule.getUsersState);
   const [_editGroup, setEditGroup] = useState<Group | null>(editGroup);
   const [permList, setPermList] = useState<number[]>([]);
-  const [initPermList, setInitPermList] = useState<number[]>([]);
   const [groupName, setGroupName] = useState<string>(editGroup?.name || '');
   const [_show, setShow] = useState<boolean>(show);
 
   useEffect(() => {
-    console.log('edit:', editGroup);
     setShow(show);
     if (show && formInfo.method == Method.UPDATE) {
       if (editGroup?.edges?.permissions) {
         setPermList(
-          editGroup?.edges?.permissions.map((permission): number => {
-            return permission.id;
-          }),
-        );
-        setInitPermList(
           editGroup?.edges?.permissions.map((permission): number => {
             return permission.id;
           }),
@@ -58,14 +50,8 @@ const GroupForm = ({
       setGroupName('');
       setEditGroup(null);
       setPermList([]);
-      setInitPermList([]);
     }
   }, [editGroup, _editGroup, show]);
-
-  const changePermCheck = (values: number[]) => {
-    setPermList(values);
-    console.log(permList);
-  };
 
   const createGroup = (group: CreateGroup) => {
     dispatch(usersModule.actions.saveGroup(group));

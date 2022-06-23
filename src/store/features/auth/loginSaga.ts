@@ -22,9 +22,7 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       const token = res.token;
-      console.log(token);
       const userRes: ApiResponse = yield call(loginApi.me, token.Access);
-      console.log(userRes);
       const resUser = apiResponse(userRes).data.user;
       const user: LoginUser = toCamel(resUser) as LoginUser;
 
@@ -32,7 +30,6 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
       yield put(loginModule.login({ token, user }));
       yield call(() => (location.href = '/'));
     } else {
-      console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
         alertModalModule.showAlert({
@@ -42,7 +39,6 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
       );
     }
   } catch (error) {
-    console.log(error);
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({ title: '로그인 실패', message: error }),

@@ -157,7 +157,6 @@ const AssignListPage = ({ seq }: { seq: number }) => {
           <Col md={8}>
             <IdSearch
               onChange={(state) => {
-                console.log('Id search', state);
                 setSearchParameter(state);
               }}
             />
@@ -359,7 +358,6 @@ const AssignListPage = ({ seq }: { seq: number }) => {
           show={showMR}
           onHide={() => setShowMR(false)}
           onSubmit={(data) => {
-            console.log(checks, data);
             checks.forEach((s) => {
               dispatch(
                 reviewModule.actions.createReview({

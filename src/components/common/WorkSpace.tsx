@@ -142,11 +142,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
     setReviewPassBtn(false);
     setReviewOpinionBtn(false);
 
-    console.log('change text');
   }, [textArea10, textArea20]);
 
   useEffect(() => {
-    console.log('prevPatText', prevPatText);
     if (prevPatText && patternedText[0] != prevPatText[0]) {
       setText11(patternedText[0] || textArea10);
       checkBtnActivate();
@@ -249,13 +247,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
       newPatternedText[no] = patternedText[no] || textArea10;
       setPatText(newPatternedText);
       setText11(patternedText[no] || textArea10);
-      console.log('makeSPC1');
       setIsClickedMkSp(no, true);
     } else if (no === 1) {
       newPatternedText[no] = patternedText[no] || textArea10;
       setPatText(newPatternedText);
       setText21(patternedText[no] || textArea20);
-      console.log('makeSPC2');
       setIsClickedMkSp(no, true);
     }
   };
@@ -265,7 +261,6 @@ const WorkSpace = (props: WorkSpaceProps) => {
   };
 
   const checkBtnActivate = () => {
-    console.log('checkBtnActivate');
     if (textArea10 && textArea20 && textArea11 && textArea21) {
       if (isClickedMkSp()) {
         setRequestBtn(true);
@@ -303,8 +298,6 @@ const WorkSpace = (props: WorkSpaceProps) => {
       return false;
     }
 
-    console.log('validReject', reviewResult);
-
     if (reviewResult.radio == ReviewResult.FAIL) {
       if (reviewResult.check && reviewResult.check.length != 0) {
         if (
@@ -325,8 +318,6 @@ const WorkSpace = (props: WorkSpaceProps) => {
   const toWorkData = (): WorkData => {
     let reviewData: ReviewData | undefined = undefined;
     if (props.workType == 'review') {
-      console.log('ch radio', reviewData1?.radio);
-      console.log('ch radio', reviewData2?.radio);
       reviewData = {
         result1: reviewData1?.radio as ReviewResult,
         result2: reviewData2?.radio as ReviewResult,

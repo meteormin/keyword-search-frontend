@@ -30,14 +30,6 @@ const ReviewForm = (props: CreateFormProps) => {
   const [show, setShow] = useState(false);
   const [time, setTime] = useState('03:00:00');
 
-  // API 결과
-  const [sentence1Pat, setSentence1Pat] = useState('');
-  const [sentence2Pat, setSentence2Pat] = useState('');
-
-  // 단어 수
-  const [sentence1Count, setCount1] = useState(0);
-  const [sentence2Count, setCount2] = useState(0);
-
   const { assignSentence, editReview } = useSelector(
     reviewModule.getReviewState,
   );
@@ -162,13 +154,10 @@ const ReviewForm = (props: CreateFormProps) => {
                   workData={sentenceToWorkData(props.seq, review)}
                   onSubmit={(data) => {
                     if (review) {
-                      console.log('create review data', data);
-
                       const createReview: CreateReview = workDataToCreateReview(
                         review.id,
                         data,
                       );
-                      console.log('create review req', createReview);
                       if (validate(createReview)) {
                         dispatch(
                           reviewModule.actions.createReview({
@@ -182,16 +171,7 @@ const ReviewForm = (props: CreateFormProps) => {
                       }
                     }
                   }}
-                  onChange={(data) => {
-                    console.log('on ch data', data);
-                    if (review) {
-                      const createReview: CreateReview = workDataToCreateReview(
-                        review.id,
-                        data,
-                      );
-                      console.log('on ch cr', createReview);
-                    }
-                  }}
+                  onChange={() => null}
                 />
               </Col>
             </Row>

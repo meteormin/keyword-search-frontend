@@ -16,11 +16,9 @@ import {
 import newClient, { Clients } from '../../../utils/nia15/api';
 
 const usersApi = newClient(Clients.Users);
-console.log(usersApi);
 
 function* getGroupsSaga() {
   yield put(loaderModule.startLoading());
-  console.log(usersApi);
   try {
     const response: ApiResponse = yield call(usersApi.group.getGroup);
 
@@ -31,7 +29,6 @@ function* getGroupsSaga() {
       yield put(usersModule.actions.setGroups(groups));
       yield put(loaderModule.endLoading());
     } else {
-      console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
         alertModalModule.showAlert({
@@ -41,7 +38,6 @@ function* getGroupsSaga() {
       );
     }
   } catch (error) {
-    console.log(error);
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({
@@ -68,7 +64,6 @@ function* getGroupSaga(action: PayloadAction<number>) {
       yield put(usersModule.actions.setGroup(group));
       yield put(loaderModule.endLoading());
     } else {
-      console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
         alertModalModule.errorAlert({
@@ -77,7 +72,6 @@ function* getGroupSaga(action: PayloadAction<number>) {
       );
     }
   } catch (error) {
-    console.log(error);
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({
@@ -104,7 +98,6 @@ function* getEditGroupSaga(action: PayloadAction<number>) {
       yield put(usersModule.actions.setEditGroup(group));
       yield put(loaderModule.endLoading());
     } else {
-      console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
         alertModalModule.errorAlert({
@@ -113,7 +106,6 @@ function* getEditGroupSaga(action: PayloadAction<number>) {
       );
     }
   } catch (error) {
-    console.log(error);
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({
@@ -204,7 +196,6 @@ function* saveGroupPermSage(action: PayloadAction<UpdateGroupPerm>) {
       yield put(loaderModule.endLoading());
       yield put(usersModule.actions.getGroups());
     } else {
-      console.log(res);
       yield put(loaderModule.endLoading());
       yield put(
         alertModalModule.errorAlert({
@@ -213,7 +204,6 @@ function* saveGroupPermSage(action: PayloadAction<UpdateGroupPerm>) {
       );
     }
   } catch (error) {
-    console.log(error);
     yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({

@@ -108,15 +108,12 @@ class BaikalNlp {
             if (this.excludeTags.includes(token.tag)) {
               return false;
             }
-            console.log(conceptTags, token.tag);
-            console.log(conceptStem, token.text.content);
             return (
               conceptTags.includes(token.tag) &&
               conceptStem.includes(token.text.content)
             );
           }).length;
         });
-        console.log(cnt);
         check = concepts.length == cnt;
       });
     }

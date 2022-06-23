@@ -107,7 +107,6 @@ const ReviewSection = (props: ReviewResultProps) => {
                   getSelectOptionByValue(i),
               )}
               onChange={(e) => {
-                console.log(e);
                 const multiCheck: number[] = e.map((v: any): number => v.value);
                 setCheck(multiCheck);
               }}
