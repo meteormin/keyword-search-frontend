@@ -72,7 +72,19 @@ const RejectReason: Option[] = [
     value: 11,
   },
   {
-    name: '11. 기타',
+    name: '11. 단어수 과잉',
+    value: 12,
+  },
+  {
+    name: '12. 동일한 문형 사용',
+    value: 13,
+  },
+  {
+    name: '13. 문형 처리 오류',
+    value: 14,
+  },
+  {
+    name: '13. 기타',
     value: 9, // 기타 9 고정
   },
 ];
