@@ -1,3 +1,3 @@
-import FindPassPage from './FindPassPage';
+import ResetPassPage from './ResetPassPage';
 
-export { FindPassPage };
+export { ResetPassPage };

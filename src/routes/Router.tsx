@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { auth, guard } from '../helpers';
 import { ForbiddenPage, NotFoundPage } from '../pages/error';
 import { LoginPage, LogoutPage } from '../pages/login';
-import { FindPassPage } from '../pages/password';
+import { ResetPassPage } from '../pages/password';
 import { UsersPage } from '../pages/users';
 import { AssignListPage as AssignTask } from '../pages/tasks';
 import { SentenceListPage } from '../pages/sentences';
@@ -60,7 +60,14 @@ const Router = () => {
           />
         </Route>
         <Route path="/password">
-          <Route path="reset" element={<FindPassPage />} />
+          <Route
+            path="reset"
+            element={
+              <guard.Protected auth={auth.isLogin()} redirect={'/login'}>
+                <ResetPassPage />
+              </guard.Protected>
+            }
+          />
         </Route>
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/users">
