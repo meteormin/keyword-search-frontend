@@ -37,20 +37,39 @@ class Task extends BaseClient {
 }
 
 class User extends BaseClient {
-  static readonly prefix = 'user/creator';
+  static readonly prefix = 'user';
 
   constructor(client: ApiClient) {
     super(client);
   }
 
   getCreatorStats = async (searchParams?: StatsSearchParameter) => {
-    return await this._client.get(User.prefix, searchParams);
+    return await this._client.get(`${User.prefix}/creator`, searchParams);
   };
 
   download = async (searchParams?: StatsSearchParameter) => {
     return this._client.request({
       method: 'GET',
-      url: this._client.makeUrl(`${User.prefix}/download`),
+      url: this._client.makeUrl(`${User.prefix}/creator/download`),
+      params: searchParams,
+      responseType: 'blob',
+    });
+  };
+
+  getReviewerStats = async (
+    seq: number,
+    searchParams?: StatsSearchParameter,
+  ) => {
+    return this._client.get(`${User.prefix}/reviewer${seq}`, searchParams);
+  };
+
+  downloadReviewerStats = async (
+    seq: number,
+    searchParams?: StatsSearchParameter,
+  ) => {
+    return this._client.request({
+      method: 'GET',
+      url: this._client.makeUrl(`${User.prefix}/reviewer${seq}/download`),
       params: searchParams,
       responseType: 'blob',
     });

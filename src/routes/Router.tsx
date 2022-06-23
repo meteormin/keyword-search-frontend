@@ -18,7 +18,11 @@ import { handleGoHome, handlePerm } from './handler';
 import QuestionForm from '../components/questions/QuestionForm';
 import { QuestionDiv } from '../utils/nia15/interfaces/questions';
 import { QuestionsPage } from '../pages/questions';
-import { CreatorStatList, DataStatList } from '../pages/statistics';
+import {
+  CreatorStatList,
+  DataStatList,
+  ReviewStatsList,
+} from '../pages/statistics';
 
 const Router = () => {
   return (
@@ -163,6 +167,10 @@ const Router = () => {
           <Route index element={<DataStatList />} />
           <Route path={'task'} element={<DataStatList />} />
           <Route path={'creator'} element={<CreatorStatList />} />
+          <Route path={'review'}>
+            <Route path={'1'} element={<ReviewStatsList seq={1} />} />
+            <Route path={'2'} element={<ReviewStatsList seq={2} />} />
+          </Route>
         </Route>
 
         <Route path="errors">

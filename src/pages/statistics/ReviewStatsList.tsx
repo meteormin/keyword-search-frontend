@@ -1,27 +1,50 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
+import Search from '../../components/statics/Search';
+import statsModule from '../../store/features/statistics';
+import { useDispatch, useSelector } from 'react-redux';
+import { config } from '../../helpers';
+import {
+  Review1StatsSchema,
+  Review1StatsRecord,
+  Review2StatsRecord,
+  toRecord1,
+  setFirstRow1,
+  toRecord2,
+  setFirstRow2,
+  Review2StatsSchema,
+} from './ReviewStatsSchema';
+import searchModule from '../../store/features/search';
+import fileDownload from 'js-file-download';
 import LimitFilter from '../../components/common/LimitFilter';
 import DynamicTable from '../../components/common/DaynamicTable';
-import { DataStatsRecord, DataStatsSchema, toRecord } from './DataStatsSchema';
-import { useDispatch, useSelector } from 'react-redux';
-import statsModule from '../../store/features/statistics';
-import DataSearch from '../../components/statics/DataSearch';
-import searchModule from '../../store/features/search';
 import Pagination from '../../components/common/Pagination';
-import fileDownload from 'js-file-download';
-import { config } from '../../helpers';
+import { Reviewer2 } from '../../utils/nia15/interfaces/statics';
 
-const DataStatList = () => {
+const ReviewStatList = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState<number>(100);
   const [page, setPage] = useState<number>(1);
-  const [records, setRecords] = useState<DataStatsRecord[]>([]);
-  const { statsTask, excelFile } = useSelector(statsModule.getStatsState);
+  const [records, setRecords] = useState<
+    Review1StatsRecord[] | Review2StatsRecord[]
+  >([]);
+  const { statsReviewer, excelFile } = useSelector(statsModule.getStatsState);
   const { statsParameter } = useSelector(searchModule.getSearchState);
 
   useEffect(() => {
-    setRecords(statsTask.task.map(toRecord));
-  }, [statsTask]);
+    if (seq == 1) {
+      const data = statsReviewer.statistic.map(toRecord1);
+
+      setRecords(setFirstRow1(data));
+    }
+
+    if (seq == 2) {
+      const data = statsReviewer.statistic.map((value, index) =>
+        toRecord2(value as Reviewer2, index),
+      );
+      setRecords(setFirstRow2(data));
+    }
+  }, [statsReviewer]);
 
   useEffect(() => {
     dispatch(
@@ -30,21 +53,21 @@ const DataStatList = () => {
         limit: limit,
       }),
     );
-    dispatch(statsModule.actions.getTaskStats());
+    dispatch(statsModule.actions.getReviewerStats(seq));
   }, [page, limit]);
 
   useEffect(() => {
     if (excelFile) {
-      fileDownload(excelFile, 'task_statistics.xlsx');
+      fileDownload(excelFile, 'reviewer_statistics.xlsx');
     }
   }, [excelFile]);
 
   return (
     <Fragment>
       <Row className="mx-2">
-        <DataSearch
-          onSearch={() => dispatch(statsModule.actions.getTaskStats())}
-          selectOptions={config.selectOptions.DataStatsSearchOptions}
+        <Search
+          onSearch={() => dispatch(statsModule.actions.getReviewerStats(seq))}
+          selectOptions={config.selectOptions.ReviewerSearchOptions}
         />
       </Row>
       <Row className="mx-2 mt-4">
@@ -69,14 +92,17 @@ const DataStatList = () => {
         </Col>
       </Row>
       <Row className={'mt-4'}>
-        <DynamicTable schema={DataStatsSchema} records={records} />
+        <DynamicTable
+          schema={seq == 1 ? Review1StatsSchema : Review2StatsSchema}
+          records={records}
+        />
       </Row>
       <Row className={'mt-2 mx-2'}>
         <Col md={4} className={'mt-5'}>
           <Button
             variant={'dark'}
             onClick={() => {
-              dispatch(statsModule.actions.downloadTask());
+              dispatch(statsModule.actions.downloadReviewer(seq));
             }}
           >
             엑셀 다운로드
@@ -84,7 +110,7 @@ const DataStatList = () => {
         </Col>
         <Pagination
           currentPage={page}
-          totalCount={statsTask.count}
+          totalCount={statsReviewer.count}
           limit={limit}
           onClick={(page) => {
             setPage(page);
@@ -95,5 +121,4 @@ const DataStatList = () => {
     </Fragment>
   );
 };
-
-export default DataStatList;
+export default ReviewStatList;

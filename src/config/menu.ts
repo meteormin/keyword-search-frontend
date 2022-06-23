@@ -56,6 +56,16 @@ const menu: Menu = {
       name: '생성자 통계',
       icon: 'fas fa-file-lines',
     },
+    {
+      url: '/statistics/review/1',
+      name: '검수자 통계',
+      icon: 'fas fa-file-lines',
+    },
+    {
+      url: '/statistics/review/2',
+      name: '검수 관리자 통계',
+      icon: 'fas fa-file-lines',
+    },
   ],
 };
 

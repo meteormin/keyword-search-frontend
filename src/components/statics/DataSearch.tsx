@@ -11,7 +11,7 @@ import InputFilter from '../common/InputFilter';
 import DateFilter from '../common/DateFilter';
 import { Option } from '../common/Select';
 
-const Search = ({
+const DataSearch = ({
   onSearch,
   selectOptions,
 }: {
@@ -22,10 +22,13 @@ const Search = ({
   const [selectName, setName] = useState<string | undefined>();
   const [searchValue, setValue] = useState<string | undefined>();
   const [groupName, setGroupName] = useState<string | undefined>();
+  const [assignStatus, setAssignStatus] = useState();
+  const [sentenceStatus, setSentenceStatus] = useState();
   const { statsParameter } = useSelector(searchModule.getSearchState);
 
   const setSearchParameters = (params: StatsSearchParameter) => {
-    dispatch(searchModule.actions.searchForStats(params));
+    const newParameter = { ...statsParameter, ...params };
+    dispatch(searchModule.actions.searchForStats(newParameter));
   };
 
   const onReset = () => {
@@ -106,6 +109,31 @@ const Search = ({
           />
         </Col>
         <Col md={4}>
+          <SelectFilter
+            label={'할당현황'}
+            onChange={(selectedValue) => {
+              setAssignStatus(selectedValue);
+              // setSearchParameters({
+              // });
+            }}
+            options={config.selectOptions.AssignStatusOptions}
+            value={assignStatus}
+          />
+        </Col>
+        <Col md={4}>
+          <SelectFilter
+            label={'현재상태'}
+            onChange={(selectedValue) => {
+              setSentenceStatus(selectedValue);
+              // setSearchParameters({});
+            }}
+            options={config.selectOptions.AssignStatusOptions}
+            value={sentenceStatus}
+          />
+        </Col>
+      </Row>
+      <Row className="mx-2 mt-4">
+        <Col md={6}>
           <DateFilter
             label={'제출일자별 조회'}
             onChange={(state) => {
@@ -118,10 +146,22 @@ const Search = ({
             }}
           />
         </Col>
-        <Col md={4}></Col>
+        <Col md={6}>
+          <DateFilter
+            label={'검수일자별 조회'}
+            onChange={(state) => {
+              if (state.start && state.end) {
+                setSearchParameters({
+                  reviewedAtStart: date(state.start).format(),
+                  reviewedAtEnd: date(state.end).format(),
+                });
+              }
+            }}
+          />
+        </Col>
       </Row>
     </Fragment>
   );
 };
 
-export default Search;
+export default DataSearch;

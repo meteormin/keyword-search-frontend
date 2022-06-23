@@ -2,7 +2,7 @@ import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import statsModule from './index';
-import { apiResponse, auth, date } from '../../../helpers';
+import { apiResponse } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
 import { toCamel } from 'snake-camel';
 import { SearchState } from '../search/searchAction';
@@ -11,6 +11,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import newClient, { Clients } from '../../../utils/nia15/api';
 import {
   StatsCreator,
+  StatsReviewer,
   StatsTask,
 } from '../../../utils/nia15/interfaces/statics';
 import { StatsState } from './statsAction';
@@ -149,11 +150,93 @@ function* downloadCreator() {
   }
 }
 
+function* getReviewerStats(action: PayloadAction<number>) {
+  yield put(loaderModule.startLoading());
+  const search: SearchState = yield select(searchModule.getSearchState);
+  try {
+    const response: ApiResponse = yield call(
+      statsApi.user.getReviewerStats,
+      action.payload,
+      search.statsParameter || undefined,
+    );
+
+    yield put(loaderModule.endLoading());
+
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      const reviewerStats = toCamel(res.data) as StatsReviewer;
+      console.log(res.data);
+
+      yield put(statsModule.actions.setReviewerStats(reviewerStats));
+    } else {
+      yield put(
+        alertModalModule.errorAlert({
+          res: res,
+        }),
+      );
+    }
+  } catch (err) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '데이터 조회 실패',
+        message: err,
+      }),
+    );
+  }
+}
+
+function* downloadReviewerStats(action: PayloadAction<number>) {
+  yield put(loaderModule.startLoading());
+  const search: SearchState = yield select(searchModule.getSearchState);
+  const statsState: StatsState = yield select(statsModule.getStatsState);
+
+  try {
+    if (action.payload == statsState.statsReviewer.seq) {
+      const response: ApiResponse = yield call(
+        statsApi.user.downloadReviewerStats,
+        action.payload,
+        search.statsParameter || undefined,
+      );
+
+      yield put(loaderModule.endLoading());
+
+      const res = apiResponse(response);
+      if (response.isSuccess) {
+        yield put(statsModule.actions.setExcelFile(res));
+      } else {
+        yield put(
+          alertModalModule.errorAlert({
+            res: res,
+          }),
+        );
+      }
+    } else {
+      yield put(
+        alertModalModule.showAlert({
+          title: '요청 에러',
+          message: '잘못된 요청입니다.',
+        }),
+      );
+    }
+  } catch (err) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '다운로드 실패',
+        message: err,
+      }),
+    );
+  }
+}
+
 function* watchStatsSaga() {
   yield takeLatest(statsModule.actions.getTaskStats, getTaskStats);
   yield takeLatest(statsModule.actions.downloadTask, downloadTask);
   yield takeLatest(statsModule.actions.getCreatorStats, getCreatorStats);
   yield takeLatest(statsModule.actions.downloadCreator, downloadCreator);
+  yield takeLatest(statsModule.actions.getReviewerStats, getReviewerStats);
+  yield takeLatest(statsModule.actions.downloadReviewer, downloadReviewerStats);
 }
 
 export default function* statsSaga() {
