@@ -7,15 +7,16 @@ import { config } from '../../helpers';
 import {
   Review1StatsSchema,
   Review1StatsRecord,
-  toRecord,
-} from './Review1StatsSchema';
+  toRecord1,
+  setFirstRow1,
+} from './ReviewStatsSchema';
 import searchModule from '../../store/features/search';
 import fileDownload from 'js-file-download';
 import LimitFilter from '../../components/common/LimitFilter';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 
-const Review1StatList = () => {
+const ReviewStatList = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState<number>(100);
   const [page, setPage] = useState<number>(1);
@@ -24,30 +25,11 @@ const Review1StatList = () => {
   const { statsParameter } = useSelector(searchModule.getSearchState);
 
   useEffect(() => {
-    const data = statsReviewer.statistic.map(toRecord);
-    const firstRow: Review1StatsRecord = {
-      no: '',
-      reviewerId: '전체',
-      reviewerName: '전체',
-      totalReviewed: 0,
-      review1Hold: 0,
-      review1Pass: 0,
-      review1RejectAcc: 0,
-      review2RejectAcc: 0,
-      review2Pass: 0,
-    };
+    if (seq == 1) {
+      const data = statsReviewer.statistic.map(toRecord1);
 
-    data.forEach((item) => {
-      firstRow.totalReviewed += item.totalReviewed;
-      firstRow.review1Hold += item.review1Hold;
-      firstRow.review1Pass += item.review1Pass;
-      firstRow.review1RejectAcc += item.review1RejectAcc;
-      firstRow.review2RejectAcc += item.review2RejectAcc;
-      firstRow.review2Pass += item.review2Pass;
-    });
-
-    data.unshift(firstRow);
-    setRecords(data);
+      setRecords(setFirstRow1(data));
+    }
   }, [statsReviewer]);
 
   useEffect(() => {
@@ -57,7 +39,7 @@ const Review1StatList = () => {
         limit: limit,
       }),
     );
-    dispatch(statsModule.actions.getReviewerStats());
+    dispatch(statsModule.actions.getReviewerStats(seq));
   }, [page, limit]);
 
   useEffect(() => {
@@ -70,7 +52,7 @@ const Review1StatList = () => {
     <Fragment>
       <Row className="mx-2">
         <Search
-          onSearch={() => dispatch(statsModule.actions.getReviewerStats())}
+          onSearch={() => dispatch(statsModule.actions.getReviewerStats(seq))}
           selectOptions={config.selectOptions.ReviewerSearchOptions}
         />
       </Row>
@@ -122,4 +104,4 @@ const Review1StatList = () => {
     </Fragment>
   );
 };
-export default Review1StatList;
+export default ReviewStatList;

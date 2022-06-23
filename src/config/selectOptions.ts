@@ -189,8 +189,8 @@ const CreatorSearchOptions: Option[] = [
 ];
 
 const ReviewerSearchOptions: Option[] = [
-  { name: '생성자명', value: 'creatorName' },
-  { name: '생성자 ID', value: 'creatorID' },
+  { name: '검수자명', value: 'reviewerName' },
+  { name: '검수자 ID', value: 'reviewerID' },
 ];
 
 const selectOptions = {

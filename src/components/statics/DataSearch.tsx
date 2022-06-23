@@ -28,7 +28,7 @@ const DataSearch = ({
 
   const setSearchParameters = (params: StatsSearchParameter) => {
     const newParameter = { ...statsParameter, ...params };
-    dispatch(searchModule.actions.search(newParameter));
+    dispatch(searchModule.actions.searchForStats(newParameter));
   };
 
   const onReset = () => {

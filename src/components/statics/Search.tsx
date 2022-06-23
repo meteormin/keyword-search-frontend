@@ -22,12 +22,10 @@ const Search = ({
   const [selectName, setName] = useState<string | undefined>();
   const [searchValue, setValue] = useState<string | undefined>();
   const [groupName, setGroupName] = useState<string | undefined>();
-  const [sentenceStatus, setSentenceStatus] = useState();
   const { statsParameter } = useSelector(searchModule.getSearchState);
 
   const setSearchParameters = (params: StatsSearchParameter) => {
-    const newParameter = { ...statsParameter, ...params };
-    dispatch(searchModule.actions.search(newParameter));
+    dispatch(searchModule.actions.searchForStats(params));
   };
 
   const onReset = () => {

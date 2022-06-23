@@ -21,7 +21,7 @@ import { QuestionsPage } from '../pages/questions';
 import {
   CreatorStatList,
   DataStatList,
-  Review1StatsList,
+  ReviewStatsList,
 } from '../pages/statistics';
 
 const Router = () => {
@@ -168,7 +168,7 @@ const Router = () => {
           <Route path={'task'} element={<DataStatList />} />
           <Route path={'creator'} element={<CreatorStatList />} />
           <Route path={'review'}>
-            <Route path={'1'} element={<Review1StatsList />} />
+            <Route path={'1'} element={<ReviewStatsList seq={1} />} />
           </Route>
         </Route>
 

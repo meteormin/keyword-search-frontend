@@ -1,5 +1,5 @@
 import DataStatList from './DataStatList';
 import CreatorStatList from './CreatorStatList';
-import Review1StatsList from './Review1StatsList';
+import ReviewStatsList from './ReviewStatsList';
 
-export { DataStatList, CreatorStatList, Review1StatsList };
+export { DataStatList, CreatorStatList, ReviewStatsList };
