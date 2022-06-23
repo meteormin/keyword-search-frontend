@@ -9,8 +9,8 @@ const layouts = {
         url: '#',
       },
       {
-        name: 'myInfo',
-        url: '#',
+        name: 'reset password',
+        url: '/password/reset',
       },
     ],
   },

@@ -3,7 +3,7 @@ import LoginForm from '../../components/login/LoginForm';
 import { useDispatch } from 'react-redux';
 import usersModule from '../../store/features/users';
 
-const FindPassPage = () => {
+const ResetPassPage = () => {
   const dispatch = useDispatch();
   const [myPassword, setMyPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
@@ -59,7 +59,7 @@ const FindPassPage = () => {
               </a>
               <a
                 className="btn btn-primary"
-                onClick={(e) => {
+                onClick={() => {
                   dispatch(usersModule.actions.updatePassword(newPassword));
                 }}
               >
@@ -78,4 +78,4 @@ const FindPassPage = () => {
   );
 };
 
-export default FindPassPage;
+export default ResetPassPage;
