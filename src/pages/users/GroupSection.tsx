@@ -107,7 +107,7 @@ const GroupSection = () => {
         editGroup={editGroup || null}
         show={groupModal}
         onHide={() => showGroupModal(false)}
-        onSave={() => null}
+        onSave={() => dispatch(usersModule.actions.getGroups())}
       />
     </Fragment>
   );

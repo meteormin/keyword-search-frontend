@@ -17,6 +17,7 @@ import searchModule from '../search';
 import { Sentence } from '../../../utils/nia15/interfaces/sentences';
 import { UserType } from '../../../config/UserType';
 import newClient, { Clients } from '../../../utils/nia15/api';
+import { useDispatch } from 'react-redux';
 
 const reviewApi = newClient(Clients.Reviews);
 
@@ -45,6 +46,7 @@ function* assign(action: PayloadAction<number>) {
       yield put(alertModalModule.errorAlert({ res: res }));
     }
   } catch (e) {
+    yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({
         title: '할당 실패',
@@ -226,9 +228,61 @@ function* createReview(
         alertModal.showAlert({
           title: '검수 완료',
           message: '검수 완료',
+          // callback: () => {
+          //   const dispatch = useDispatch();
+          //   dispatch(reviewModule.actions.getReviewList({ seq: seq }));
+          // },
           refresh: false,
         }),
       );
+      yield put(reviewModule.actions.getAssignList({ seq: seq }));
+    } else {
+      yield put(
+        alertModal.errorAlert({
+          res: res,
+        }),
+      );
+    }
+  } catch (e) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModal.showAlert({
+        title: '검수 실패',
+        message: '검수 결과 저장 실패',
+      }),
+    );
+  }
+}
+
+function* updateReview(
+  action: PayloadAction<{ seq: number; review: CreateReview }>,
+) {
+  const { seq, review } = action.payload;
+
+  try {
+    yield put(loaderModule.startLoading());
+    const response: ApiResponse = yield call(
+      reviewApi.createReview,
+      seq,
+      review,
+    );
+    yield put(loaderModule.endLoading());
+
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      yield put(reviewModule.actions.setReview(null));
+      yield put(
+        alertModal.showAlert({
+          title: '검수 완료',
+          message: '검수 완료',
+          // callback: () => {
+          //   const dispatch = useDispatch();
+          //   dispatch(reviewModule.actions.getReviewList({ seq: seq }));
+          // },
+          refresh: false,
+        }),
+      );
+      yield put(reviewModule.actions.getReviewList({ seq: seq }));
     } else {
       yield put(
         alertModal.errorAlert({
@@ -282,12 +336,6 @@ function* getTime(action: PayloadAction<{ seq: number }>) {
         );
       } else {
         yield put(
-          reviewModule.actions.getAssignList({
-            seq: action.payload.seq,
-          }),
-        );
-
-        yield put(
           alertModalModule.showAlert({
             title: '진행 가능 시간 초과',
             message: '진행 가능 시간이 초과 되었습니다.',
@@ -311,6 +359,7 @@ function* watchReviewSage() {
   yield takeLatest(reviewModule.actions.assign, assign);
   yield takeLatest(reviewModule.actions.getReviewList, getReviewList);
   yield takeLatest(reviewModule.actions.createReview, createReview);
+  yield takeLatest(reviewModule.actions.updateReview, updateReview);
   yield takeLatest(reviewModule.actions.getReview, getReview);
   yield takeLatest(reviewModule.actions.getAssignList, getAssignList);
   yield takeLatest(reviewModule.actions.getAssign, getAssign);

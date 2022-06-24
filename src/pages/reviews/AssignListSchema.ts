@@ -1,6 +1,8 @@
 import { DynamicSchema } from '../../components/common/DaynamicTable';
+import { date, str } from '../../helpers';
+import { Sentence } from '../../utils/nia15/interfaces/sentences';
 
-const AssignListSchema: DynamicSchema = {
+export const AssignListSchema: DynamicSchema = {
   no: {
     name: 'NO',
   },
@@ -24,4 +26,14 @@ const AssignListSchema: DynamicSchema = {
   },
 };
 
-export default AssignListSchema;
+export interface AssignSentence {
+  check?: any;
+  no: number;
+  refId: string;
+  concepts: string;
+  posLength: number;
+  sentenceCount: string;
+  createdBy: string;
+  createdAt: string;
+  _origin: Sentence;
+}

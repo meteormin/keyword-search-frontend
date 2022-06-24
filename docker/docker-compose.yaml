@@ -16,12 +16,12 @@ services:
     restart: always
     stdin_open: true
     volumes:
-      - /var/www/front:/var/www/front
+      - ../build_prd:/var/www/front
       - ../apache:/etc/apache2/sites-available
       - ../ssl:/etc/ssl
     ports:
-      - '10080:80'
-      - '10443:443'
+      - '3080:80'
+      - '3433:443'
     networks:
       - nia-15
     depends_on:

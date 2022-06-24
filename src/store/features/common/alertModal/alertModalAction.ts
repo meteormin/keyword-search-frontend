@@ -27,13 +27,13 @@ export default {
   },
   closeAlert: (state: AlertModalState) => {
     state.show = false;
-    if (state.refresh) {
-      window.location.reload();
-    }
   },
   errorAlert: (
     state: AlertModalState,
-    action: PayloadAction<{ res: any; refresh?: boolean }>,
+    action: PayloadAction<{
+      res: any;
+      refresh?: boolean;
+    }>,
   ) => {
     const { res, refresh } = action.payload;
     state.show = true;

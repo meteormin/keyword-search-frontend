@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import Search from '../../components/statics/Search';
+import Search from '../../components/statistics/Search';
 import statsModule from '../../store/features/statistics';
 import { useDispatch, useSelector } from 'react-redux';
 import { config } from '../../helpers';
@@ -21,43 +21,44 @@ const CreatorStatList = () => {
   const [page, setPage] = useState<number>(1);
   const [records, setRecords] = useState<CreatorStatsRecord[]>([]);
   const { statsCreator, excelFile } = useSelector(statsModule.getStatsState);
-  const { statsParameter } = useSelector(searchModule.getSearchState);
 
   useEffect(() => {
-    const data = statsCreator.statistic.map(toRecord);
-    const firstRow: CreatorStatsRecord = {
-      no: '',
-      creatorId: '전체',
-      creatorName: '전체',
-      totalCreated: 0,
-      temp: 0,
-      wait: 0,
-      reWait: 0,
-      hold1: 0,
-      review1Pass: 0,
-      review1Reject: 0,
-      review2Reject: 0,
-      review1RejectAcc: 0,
-      review2RejectAcc: 0,
-      review2Pass: 0,
-    };
+    if (statsCreator.statistic) {
+      const data = statsCreator.statistic.map(toRecord);
+      const firstRow: CreatorStatsRecord = {
+        no: '',
+        creatorId: '전체',
+        creatorName: '전체',
+        totalCreated: 0,
+        temp: 0,
+        wait: 0,
+        reWait: 0,
+        hold1: 0,
+        review1Pass: 0,
+        review1Reject: 0,
+        review2Reject: 0,
+        review1RejectAcc: 0,
+        review2RejectAcc: 0,
+        review2Pass: 0,
+      };
 
-    data.forEach((item) => {
-      firstRow.totalCreated += item.totalCreated;
-      firstRow.temp += item.temp;
-      firstRow.wait += item.wait;
-      firstRow.reWait += item.reWait;
-      firstRow.hold1 += item.hold1;
-      firstRow.review1Pass += item.review1Pass;
-      firstRow.review1Reject += item.review1Reject;
-      firstRow.review2Reject += item.review2Reject;
-      firstRow.review1RejectAcc += item.review1RejectAcc;
-      firstRow.review2RejectAcc += item.review2RejectAcc;
-      firstRow.review2Pass += item.review2Pass;
-    });
+      data.forEach((item) => {
+        firstRow.totalCreated += item.totalCreated;
+        firstRow.temp += item.temp;
+        firstRow.wait += item.wait;
+        firstRow.reWait += item.reWait;
+        firstRow.hold1 += item.hold1;
+        firstRow.review1Pass += item.review1Pass;
+        firstRow.review1Reject += item.review1Reject;
+        firstRow.review2Reject += item.review2Reject;
+        firstRow.review1RejectAcc += item.review1RejectAcc;
+        firstRow.review2RejectAcc += item.review2RejectAcc;
+        firstRow.review2Pass += item.review2Pass;
+      });
 
-    data.unshift(firstRow);
-    setRecords(data);
+      data.unshift(firstRow);
+      setRecords(data);
+    }
   }, [statsCreator]);
 
   useEffect(() => {

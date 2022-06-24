@@ -30,7 +30,7 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
   };
 
   const onClickButton = () => {
-    onSubmit(id, name, permission);
+    onSubmit(_id, _name, _permission);
   };
 
   return (

@@ -9,6 +9,7 @@
 /coverage
 
 # production
+/build_prd
 /build
 /build_back
 

@@ -97,6 +97,7 @@ const DataSearch = (props: DataSearchProps) => {
                 if (value) {
                   setSelectedName(parseInt(value) as SearchNames);
                 }
+                setSearchValue('');
               }}
             />
           </Col>
@@ -108,7 +109,7 @@ const DataSearch = (props: DataSearchProps) => {
           className="form-control w-100"
           id={'searchValue'}
           name={'searchValue'}
-          value={searchValue}
+          value={searchValue || ''}
           onChange={(e) => {
             setSearchValue(e.target.value);
           }}

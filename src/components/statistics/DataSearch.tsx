@@ -24,11 +24,9 @@ const DataSearch = ({
   const [groupName, setGroupName] = useState<string | undefined>();
   const [assignStatus, setAssignStatus] = useState();
   const [sentenceStatus, setSentenceStatus] = useState();
-  const { statsParameter } = useSelector(searchModule.getSearchState);
 
   const setSearchParameters = (params: StatsSearchParameter) => {
-    const newParameter = { ...statsParameter, ...params };
-    dispatch(searchModule.actions.searchForStats(newParameter));
+    dispatch(searchModule.actions.searchForStats(params));
   };
 
   const onReset = () => {
@@ -45,9 +43,10 @@ const DataSearch = ({
               if (selectedValue) {
                 setName(selectedValue);
               }
+              setValue('');
             }}
             options={selectOptions}
-            value={selectName}
+            value={selectName || ''}
           />
         </Col>
         <Col md={4}>
@@ -55,7 +54,7 @@ const DataSearch = ({
             type={'text'}
             id={'searchValue'}
             name={'searchValue'}
-            value={searchValue}
+            value={searchValue || ''}
             onChange={(e) => {
               if (e.target.value) {
                 const value = e.target.value;
@@ -64,16 +63,16 @@ const DataSearch = ({
                   const param: StatsSearchParameter = {};
                   switch (selectName) {
                     case 'creatorID':
-                      param.userID = value;
+                      param.creatorID = value;
                       break;
                     case 'creatorName':
-                      param.name = value;
+                      param.creatorName = value;
                       break;
                     case 'reviewerID':
-                      param.userID = value;
+                      param.reviewerID = value;
                       break;
                     case 'reviewerName':
-                      param.name = value;
+                      param.reviewerName = value;
                       break;
                     case 'domain':
                       param.domain = value;

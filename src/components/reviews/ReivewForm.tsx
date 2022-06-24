@@ -22,7 +22,7 @@ export interface CreateFormProps {
   time: string;
   seq: number;
   readOnly?: boolean;
-  onCreate: () => any;
+  onCreate: (review: CreateReview) => any;
 }
 
 const ReviewForm = (props: CreateFormProps) => {
@@ -159,15 +159,9 @@ const ReviewForm = (props: CreateFormProps) => {
                         data,
                       );
                       if (validate(createReview)) {
-                        dispatch(
-                          reviewModule.actions.createReview({
-                            seq: props.seq,
-                            review: createReview,
-                          }),
-                        );
                         dispatch(reviewModule.actions.setAssign(null));
                         setShow(false);
-                        props.onCreate();
+                        props.onCreate(createReview);
                       }
                     }
                   }}

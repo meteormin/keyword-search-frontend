@@ -14,7 +14,7 @@ import ReviewSection, { ReviewResultState } from '../reviews/ReviewSection';
 import { useDispatch } from 'react-redux';
 import alertModal from '../../store/features/common/alertModal';
 import { usePrev } from '../../helpers';
-import { Concept, Task } from '../../utils/nia15/interfaces/tasks';
+import { Task } from '../../utils/nia15/interfaces/tasks';
 import {
   DualFrameText,
   FrameText,
@@ -556,7 +556,12 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 className="h-auto"
                 rows={5}
                 value={textArea10}
-                readOnly={props?.readOnly || false}
+                readOnly={
+                  props?.readOnly ||
+                  false ||
+                  (props.workData?.reviewData?.result1 == 'PASS' &&
+                    props.workType == 'rework')
+                }
                 onChange={(e) => {
                   handleChange(10, e.target.value);
                 }}
@@ -653,7 +658,12 @@ const WorkSpace = (props: WorkSpaceProps) => {
                 className="h-auto"
                 rows={5}
                 value={textArea20}
-                readOnly={props?.readOnly || false}
+                readOnly={
+                  props?.readOnly ||
+                  false ||
+                  (props.workData?.reviewData?.result2 == 'PASS' &&
+                    props.workType == 'rework')
+                }
                 onChange={(e) => {
                   handleChange(20, e.target.value);
                 }}

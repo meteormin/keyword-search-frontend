@@ -63,7 +63,6 @@ function* assign() {
     yield put(loaderModule.endLoading());
     const res = apiResponse(response);
     if (response.isSuccess) {
-      yield put(taskModule.actions.getTaskList());
       yield put(
         alertModalModule.showAlert({
           title: '할당 완료',
@@ -71,6 +70,7 @@ function* assign() {
           refresh: false,
         }),
       );
+      yield put(taskModule.actions.getTaskList());
     } else {
       yield put(
         alertModalModule.errorAlert({
@@ -80,6 +80,7 @@ function* assign() {
       );
     }
   } catch (e) {
+    yield put(loaderModule.endLoading());
     yield put(
       alertModalModule.showAlert({
         title: '할당 실패',

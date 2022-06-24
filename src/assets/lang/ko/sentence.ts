@@ -19,7 +19,7 @@ const sentence = {
         '생성된 2개의 문장은 동일해서는 안되고, 기본 문장과도 동일해서는 안됩니다. \n' +
         '문장은 평서형 ‘-다 종결 어미와 마침표로 종결되어야 합니다.',
     },
-    dictLink: 'https://opendict.korean.go.kr/main',
+    dictLink: 'https://opendict.korean.go.kr/small/main',
   },
   reviewState: {
     common: { wait: '검수대기', hold: '보류' },
