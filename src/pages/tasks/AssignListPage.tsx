@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import DataAssign from '../../components/tasks/DataAssign';
 import DataSearch from '../../components/tasks/DataSearch';
-import Select from '../../components/common/Select';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import { Col, Container, Row } from 'react-bootstrap';
@@ -16,11 +15,14 @@ import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import Timer from '../../components/common/Timer';
 import LimitFilter from '../../components/common/LimitFilter';
 import SearchAndReset from '../../components/common/SearchAndReset';
+import sentenceModule from '../../store/features/sentence';
+import { CreateSentence } from '../../utils/nia15/interfaces/sentences';
 
 const AssignListPage = () => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(1);
+  const [records, setRecords] = useState<TaskRecord[]>([]);
   const { taskList, time, workTask, totalCount } = useSelector(
     taskModule.getTaskState,
   );
@@ -62,8 +64,8 @@ const AssignListPage = () => {
   }, [page, limit]);
 
   useEffect(() => {
-    taskRecords();
-  }, [taskList]);
+    setRecords(taskRecords());
+  }, [taskList.length]);
 
   const onSearch = () => {
     dispatch(taskModule.actions.getTaskList());
@@ -71,6 +73,10 @@ const AssignListPage = () => {
 
   const resetSearchData = () => {
     dispatch(searchModule.actions.search(null));
+  };
+
+  const create = (sentence: CreateSentence) => {
+    dispatch(sentenceModule.actions.createSentence(sentence));
   };
 
   return (
@@ -153,7 +159,7 @@ const AssignListPage = () => {
       <Row className={'mt-4'}>
         <DynamicTable
           schema={taskSchema}
-          records={taskRecords()}
+          records={records}
           onClick={handleClickRecord}
         />
       </Row>
@@ -174,7 +180,7 @@ const AssignListPage = () => {
       <CreateForm
         show={!!workTask}
         time={time || '03:00:00'}
-        onCreate={() => dispatch(taskModule.actions.getTaskList())}
+        onCreate={create}
       />
     </Container>
   );

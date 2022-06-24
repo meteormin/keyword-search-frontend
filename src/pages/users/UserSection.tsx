@@ -92,7 +92,9 @@ const UserSection = () => {
           method: modalMethod,
           userTypes: config.auth.userTypes,
         }}
-        onSave={() => null}
+        onSave={() =>
+          dispatch(usersModule.actions.getUsersByGroup(currentGroup))
+        }
         onResetPass={() => {
           if (editUser?.id) {
             dispatch(usersModule.actions.resetPassword(editUser?.id));

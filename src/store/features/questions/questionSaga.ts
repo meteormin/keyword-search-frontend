@@ -80,6 +80,7 @@ function* getById(action: PayloadAction<number>) {
       );
     }
   } catch (e) {
+    yield put(loaderModule.endLoading());
     yield put(
       alertModal.showAlert({
         title: '데이터 조회 실패',
@@ -102,13 +103,17 @@ function* create(action: PayloadAction<CreateQuestion>) {
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      yield put(questionModule.actions.getList());
       yield put(
         alertModal.showAlert({
           title: '문의 요청',
           message: '정상적으로 요청 되었습니다.',
         }),
       );
+
+      const { search, isAdmin } = yield select(questionModule.getQuestionState);
+      if (search || isAdmin) {
+        yield put(questionModule.actions.getList());
+      }
     } else {
       yield put(
         alertModal.showAlert({
@@ -118,6 +123,7 @@ function* create(action: PayloadAction<CreateQuestion>) {
       );
     }
   } catch (e) {
+    yield put(loaderModule.endLoading());
     yield put(
       alertModal.showAlert({
         title: '문의 요청',
@@ -132,8 +138,6 @@ function* reply(
 ) {
   yield put(loaderModule.startLoading());
 
-  const { search, isAdmin }: { search: QuestionSearch; isAdmin: boolean } =
-    yield select(questionModule.getQuestionState);
   try {
     const response: ApiResponse = yield call(
       questionApi.reply,
@@ -146,9 +150,6 @@ function* reply(
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      if (search || isAdmin) {
-        yield put(questionModule.actions.getList());
-      }
       yield put(questionModule.actions.setEdit(null));
       yield put(
         alertModal.showAlert({
@@ -156,6 +157,7 @@ function* reply(
           message: '답변 완료',
         }),
       );
+      yield put(questionModule.actions.getList());
     } else {
       yield put(
         alertModal.showAlert({
@@ -165,6 +167,7 @@ function* reply(
       );
     }
   } catch (e) {
+    yield put(loaderModule.endLoading());
     yield put(
       alertModal.showAlert({
         title: '문의 답변',

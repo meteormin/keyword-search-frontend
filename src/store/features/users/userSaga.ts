@@ -1,4 +1,4 @@
-import { call, fork, put, takeLatest } from 'redux-saga/effects';
+import { call, fork, put, select, takeLatest } from 'redux-saga/effects';
 import loaderModule from '../common/loader';
 import alertModalModule from '../common/alertModal';
 import usersModule from './';
@@ -14,6 +14,7 @@ import {
   CreateUser,
 } from '../../../utils/nia15/interfaces/users';
 import newClient, { Clients } from '../../../utils/nia15/api';
+import { UsersState } from './userAction';
 
 const usersApi = newClient(Clients.Users);
 
@@ -268,8 +269,8 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
     }
 
     yield put(loaderModule.endLoading());
+
     if (response.isSuccess) {
-      yield put(usersModule.actions.getGroups());
       // if ('permissions' in action.payload) {
       //   const updateGroup: UpdateGroupPerm = {
       //     id: res.groups.id,
@@ -318,7 +319,9 @@ function* saveUser(action: PayloadAction<User | CreateUser>) {
   try {
     let response: ApiResponse;
     let message: string;
-
+    const { currentGroup }: UsersState = yield select(
+      usersModule.getUsersState,
+    );
     if (action.payload.hasOwnProperty('id')) {
       message = '사용자 수정';
       response = yield call(usersApi.user.updateUser, action.payload as User);
@@ -333,13 +336,13 @@ function* saveUser(action: PayloadAction<User | CreateUser>) {
     const res: ApiResponse = apiResponse(response);
     yield put(loaderModule.endLoading());
     if (response.isSuccess) {
-      yield put(usersModule.actions.getGroup(action.payload.groupId));
       yield put(
         alertModalModule.showAlert({
           title: message + ' 성공',
           message: message + ' 성공',
         }),
       );
+      yield put(usersModule.actions.getGroup(currentGroup.id));
     } else {
       yield put(
         alertModalModule.showAlert({

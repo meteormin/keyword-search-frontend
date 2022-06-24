@@ -50,15 +50,16 @@ else
   echo "success, build"
 fi
 
-echo "copy ./build >> /var/www/front"
+echo "copy ./build >> ./build_prd"
 
-if [ ! -d "/var/www/front" ]; then
-  mkdir /var/www/front
+if [ ! -d "./build_prd" ]; then
+  mkdir ./build_prd
 else
-  rm -rf /var/www/front/*
+  rm -rf ./build_prd/*
 fi
 
-cp ./public/.htaccess ./build && cp -r ./build/* /var/www/front 2>/dev/null || res=$?
+cp ./public/.htaccess ./build && cp -r ./build/* ./build_prd 2>/dev/null || res=$?
+cp ./public/.htaccess ./build_prd
 
 if [ "${res}" = 1 ]; then
   echo "failed copy build directory"

@@ -14,6 +14,7 @@ import {
 import { SearchState } from '../search/searchAction';
 import searchModule from '../search';
 import newClient, { Clients } from '../../../utils/nia15/api';
+import taskModule from '../tasks';
 
 const sentenceApi = newClient(Clients.Sentences);
 
@@ -32,7 +33,6 @@ function* getSentenceList() {
       yield put(loaderModule.endLoading());
 
       yield put(sentenceModule.actions.setCount(res.data.count || 0));
-      // yield put(sentenceModule.actions.setSentenceList(sentences));
       const sentenceHistory: SentenceHistory[] = sentences.map((s) => {
         const sh: SentenceHistory = s;
 
@@ -114,9 +114,59 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
         alertModalModule.showAlert({
           title: '검수 요청',
           message: '검수 요청 완료',
+          // callback: () => {
+          //   const dispatch = useDispatch();
+          //   dispatch(sentenceModule.actions.getSentenceList());
+          // },
           refresh: false,
         }),
       );
+      yield put(taskModule.actions.getTaskList());
+    } else {
+      yield put(loaderModule.endLoading());
+      yield put(
+        alertModalModule.errorAlert({
+          res: res,
+          refresh: true,
+        }),
+      );
+    }
+  } catch (e) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '검수 요청',
+        message: '검수 요청 실패',
+        refresh: true,
+      }),
+    );
+  }
+}
+
+function* updateSentence(action: PayloadAction<CreateSentence>) {
+  yield put(loaderModule.startLoading());
+
+  try {
+    const response: ApiResponse = yield call(
+      sentenceApi.createSentence,
+      action.payload,
+    );
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      yield put(loaderModule.endLoading());
+      yield put(sentenceModule.actions.setSentence(null));
+      yield put(
+        alertModalModule.showAlert({
+          title: '검수 요청',
+          message: '검수 요청 완료',
+          // callback: () => {
+          //   const dispatch = useDispatch();
+          //   dispatch(sentenceModule.actions.getSentenceList());
+          // },
+          refresh: false,
+        }),
+      );
+      yield put(sentenceModule.actions.getSentenceList());
     } else {
       yield put(loaderModule.endLoading());
       yield put(
@@ -149,7 +199,6 @@ function* createTemp(action: PayloadAction<CreateSentence>) {
     const res = apiResponse(response);
     if (response.isSuccess) {
       yield put(loaderModule.endLoading());
-      yield put(sentenceModule.actions.getSentenceList());
       yield put(
         alertModalModule.showAlert({
           title: '임시 저장',
@@ -157,6 +206,47 @@ function* createTemp(action: PayloadAction<CreateSentence>) {
           refresh: false,
         }),
       );
+      yield put(taskModule.actions.getTaskList());
+    } else {
+      yield put(loaderModule.endLoading());
+      yield put(
+        alertModalModule.errorAlert({
+          res: res,
+          refresh: true,
+        }),
+      );
+    }
+  } catch (e) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '임시 저장',
+        message: '임시 저장 실패',
+        refresh: true,
+      }),
+    );
+  }
+}
+
+function* updateTemp(action: PayloadAction<CreateSentence>) {
+  yield put(loaderModule.startLoading());
+
+  try {
+    const response: ApiResponse = yield call(
+      sentenceApi.createTempSentence,
+      action.payload,
+    );
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      yield put(loaderModule.endLoading());
+      yield put(
+        alertModalModule.showAlert({
+          title: '임시 저장',
+          message: '임시 저장 완료',
+          refresh: false,
+        }),
+      );
+      yield put(sentenceModule.actions.getSentenceList());
     } else {
       yield put(loaderModule.endLoading());
       yield put(
@@ -182,7 +272,9 @@ function* watchSentenceSage() {
   yield takeLatest(sentenceModule.actions.getSentenceList, getSentenceList);
   yield takeLatest(sentenceModule.actions.getSentence, getSentence);
   yield takeLatest(sentenceModule.actions.createSentence, createSentence);
+  yield takeLatest(sentenceModule.actions.updateSentence, updateSentence);
   yield takeLatest(sentenceModule.actions.createTempSentence, createTemp);
+  yield takeLatest(sentenceModule.actions.updateTempSentence, updateTemp);
 }
 
 export default function* sentenceSage() {

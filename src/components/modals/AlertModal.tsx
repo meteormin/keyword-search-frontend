@@ -4,9 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import alertModalModule from '../../store/features/common/alertModal';
 
 const AlertModal = () => {
-  const { title, message, show } = useSelector(alertModalModule.getAlertState);
+  const { title, message, show, refresh } = useSelector(
+    alertModalModule.getAlertState,
+  );
   const dispatch = useDispatch();
-  const handleClose = () => dispatch(alertModalModule.closeAlert());
+  const handleClose = () => {
+    dispatch(alertModalModule.closeAlert());
+    if (refresh) {
+      window.location.reload();
+    }
+  };
 
   return (
     <Fragment>

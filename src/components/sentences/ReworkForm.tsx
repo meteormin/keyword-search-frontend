@@ -4,7 +4,6 @@ import Prototype from '../common/Prototype';
 import WorkSpace from '../common/WorkSpace';
 import { lang } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
-import reviewModule from '../../store/features/reviews';
 import { sentenceToWorkData } from '../../pages/reviews/reviewDataMap';
 import {
   CreateSentence,
@@ -22,21 +21,13 @@ export interface CreateFormProps {
   time: string;
   seq: number;
   readOnly?: boolean;
-  onCreate: () => any;
+  onCreate: (sentence: CreateSentence) => any;
 }
 
 const ReviewForm = (props: CreateFormProps) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [time, setTime] = useState('03:00:00');
-
-  // API 결과
-  const [sentence1Pat, setSentence1Pat] = useState('');
-  const [sentence2Pat, setSentence2Pat] = useState('');
-
-  // 단어 수
-  const [sentence1Count, setCount1] = useState(0);
-  const [sentence2Count, setCount2] = useState(0);
 
   const { editSentence, createSentence } = useSelector(
     sentenceModule.getSentenceState,
@@ -185,12 +176,9 @@ const ReviewForm = (props: CreateFormProps) => {
                       };
 
                       if (validate(createSentence)) {
-                        dispatch(
-                          sentenceModule.actions.createSentence(createSentence),
-                        );
                         dispatch(taskModule.actions.setWorkTask(null));
                         setShow(false);
-                        props.onCreate();
+                        props.onCreate(createSentence);
                       }
                     }
                   }}

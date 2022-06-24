@@ -5,7 +5,7 @@ import { SearchNames } from '../components/tasks/DataSearch';
 
 const ReviewState: Option[] = [
   {
-    name: ' 검수 상태 선택',
+    name: '검수 상태 선택',
     value: ReviewStatus.NONE,
   },
   {
@@ -91,7 +91,7 @@ const RejectReason: Option[] = [
 
 const CreateState: Option[] = [
   {
-    name: '선택',
+    name: '검색어 선택',
     value: '',
   },
   {
@@ -100,7 +100,7 @@ const CreateState: Option[] = [
   },
   {
     name: '생성중',
-    value: 'ing',
+    value: CreateStatus.TEMP,
   },
   {
     name: '생성완료',
@@ -110,7 +110,7 @@ const CreateState: Option[] = [
 
 const IdState: Option[] = [
   {
-    name: '선택',
+    name: '검색어 선택',
     value: IdStateEnum.NONE,
   },
   {
@@ -133,7 +133,7 @@ const IdState: Option[] = [
 
 const DataSearchNames = [
   {
-    name: '선택',
+    name: '검색어 선택',
     value: SearchNames.NONE,
   },
   {
@@ -173,6 +173,7 @@ const CreateConditions: Option[] = [
 
 // 전체 톨계 관련
 const DataStatsSearchOptions: Option[] = [
+  { name: '검색어 선택', value: '' },
   { name: '생성자 ID', value: 'creatorID' },
   { name: '생성자명', value: 'creatorName' },
   { name: '검수자 ID', value: 'reviewerID' },
@@ -183,12 +184,14 @@ const DataStatsSearchOptions: Option[] = [
 ];
 
 const AssignStatusOptions: Option[] = [
+  { name: '검색어 선택', value: '' },
   { name: '생성 할당', value: '' },
   { name: '1차 검수', value: '' },
   { name: '2차 검수', value: '' },
 ];
 
 const SentenceStatusOptions: Option[] = [
+  { name: '선택', value: '' },
   { name: '검수대기', value: '' },
   { name: '재검수대기', value: '' },
   { name: '검수보류', value: '' },
@@ -196,11 +199,13 @@ const SentenceStatusOptions: Option[] = [
 
 // 생성자 통계 관련
 const CreatorSearchOptions: Option[] = [
+  { name: '검색어 선택', value: '' },
   { name: '생성자명', value: 'creatorName' },
   { name: '생성자 ID', value: 'creatorID' },
 ];
 
 const ReviewerSearchOptions: Option[] = [
+  { name: '검색어 선택', value: '' },
   { name: '검수자명', value: 'reviewerName' },
   { name: '검수자 ID', value: 'reviewerID' },
 ];

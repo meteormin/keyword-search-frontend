@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
-import Search from '../../components/statics/Search';
+import Search from '../../components/statistics/Search';
 import statsModule from '../../store/features/statistics';
 import { useDispatch, useSelector } from 'react-redux';
 import { config } from '../../helpers';
@@ -19,7 +19,7 @@ import fileDownload from 'js-file-download';
 import LimitFilter from '../../components/common/LimitFilter';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
-import { Reviewer2 } from '../../utils/nia15/interfaces/statics';
+import { Reviewer1, Reviewer2 } from '../../utils/nia15/interfaces/statics';
 
 const ReviewStatList = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
@@ -29,20 +29,24 @@ const ReviewStatList = ({ seq }: { seq: number }) => {
     Review1StatsRecord[] | Review2StatsRecord[]
   >([]);
   const { statsReviewer, excelFile } = useSelector(statsModule.getStatsState);
-  const { statsParameter } = useSelector(searchModule.getSearchState);
 
   useEffect(() => {
     if (seq == 1) {
-      const data = statsReviewer.statistic.map(toRecord1);
-
-      setRecords(setFirstRow1(data));
+      if (statsReviewer.statistic) {
+        const data = statsReviewer.statistic.map((value, index) =>
+          toRecord1(value as Reviewer1, index),
+        );
+        setRecords(setFirstRow1(data));
+      }
     }
 
     if (seq == 2) {
-      const data = statsReviewer.statistic.map((value, index) =>
-        toRecord2(value as Reviewer2, index),
-      );
-      setRecords(setFirstRow2(data));
+      if (statsReviewer.statistic) {
+        const data = statsReviewer.statistic.map((value, index) =>
+          toRecord2(value as Reviewer2, index),
+        );
+        setRecords(setFirstRow2(data));
+      }
     }
   }, [statsReviewer]);
 

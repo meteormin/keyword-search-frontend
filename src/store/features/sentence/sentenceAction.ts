@@ -26,6 +26,7 @@ export const initialState: SentenceState = {
 const sentenceAction = {
   getSentenceList: (state: SentenceState) => {
     state.sentences = [];
+    state.sentenceHistory = [];
   },
   setSentenceList: (
     state: SentenceState,
@@ -66,11 +67,23 @@ const sentenceAction = {
   ) => {
     state.createSentence = action.payload;
   },
-  updateSentence: (state: SentenceState, action: PayloadAction<Sentence>) => {
-    state.editSentence = action.payload;
+  updateSentence: (
+    state: SentenceState,
+    action: PayloadAction<CreateSentence>,
+  ) => {
+    state.createSentence = action.payload;
   },
-  tempSentence: (state: SentenceState, action: PayloadAction<Sentence>) => {
-    state.editSentence = action.payload;
+  tempSentence: (
+    state: SentenceState,
+    action: PayloadAction<CreateSentence>,
+  ) => {
+    state.createSentence = action.payload;
+  },
+  updateTempSentence: (
+    state: SentenceState,
+    action: PayloadAction<CreateSentence>,
+  ) => {
+    state.createSentence = action.payload;
   },
   setCount: (state: SentenceState, action: PayloadAction<number>) => {
     state.totalCount = action.payload;

@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import DynamicTable, {
-  DynamicSchema,
-} from '../../components/common/DaynamicTable';
+import React, { Fragment, useEffect, useState } from 'react';
+import DynamicTable from '../../components/common/DaynamicTable';
 import { SentenceListSchema, SentenceRecord } from './SentenceListSchema';
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import Search from '../../components/sentences/Search';
 import Pagination from '../../components/common/Pagination';
-import Select from '../../components/common/Select';
 import { useDispatch, useSelector } from 'react-redux';
 import sentenceModule from '../../store/features/sentence';
-import { date, lang, str } from '../../helpers';
+import { arr, date, lang, str } from '../../helpers';
 import ReworkForm from '../../components/sentences/ReworkForm';
 import searchModule from '../../store/features/search';
 import CreateForm from '../../components/tasks/CreateForm';
@@ -18,17 +15,42 @@ import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import StatusCount from '../../components/sentences/StatusCount';
 import LimitFilter from '../../components/common/LimitFilter';
+import { CreateSentence } from '../../utils/nia15/interfaces/sentences';
 
 const SentenceListPage = () => {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(100);
   const [formSeq, setFormSeq] = useState<number>(1);
+  const [selectIds, setSelectIds] = useState<number[]>([]);
+  const [record, setRecord] = useState<SentenceRecord[]>([]);
   const { sentenceHistory, editSentence, totalCount } = useSelector(
     sentenceModule.getSentenceState,
   );
 
-  const schema: DynamicSchema = SentenceListSchema;
+  const checkboxSchema = () => {
+    return Object.assign(
+      {
+        check: {
+          name: (
+            <Fragment>
+              <span>전체</span>
+              <Form.Check
+                type="checkbox"
+                onChange={(e) => {
+                  // 전체 선택
+                  if (e.target.checked) {
+                    setSelectIds(sentenceHistory.map((r) => r.id));
+                  }
+                }}
+              />
+            </Fragment>
+          ),
+        },
+      },
+      SentenceListSchema,
+    );
+  };
 
   const records = (): SentenceRecord[] => {
     return sentenceHistory.map((s, i) => {
@@ -36,7 +58,25 @@ const SentenceListPage = () => {
       if (reviewAt) {
         reviewAt = date(reviewAt).format('YYYY.MM.DD');
       }
+
+      const checkbox = (
+        <Form.Check
+          type="checkbox"
+          onChange={(e) => {
+            if (e.target.checked) {
+              const oldIds = selectIds;
+              const newIds = selectIds;
+              newIds.push(s.id);
+              setSelectIds(arr.merge(oldIds, newIds, true));
+            } else {
+              setSelectIds(arr.remove(selectIds, s.id));
+            }
+          }}
+        />
+      );
+
       return {
+        check: checkbox,
         no: i + 1,
         refId: s.refId,
         concepts: str.limitArray(s.concepts?.map((c) => c.stem) || [''], 6),
@@ -67,6 +107,10 @@ const SentenceListPage = () => {
     }
   };
 
+  const update = (sentence: CreateSentence) => {
+    dispatch(sentenceModule.actions.updateSentence(sentence));
+  };
+
   useEffect(() => {
     dispatch(
       searchModule.actions.search({
@@ -75,7 +119,12 @@ const SentenceListPage = () => {
       }),
     );
     dispatch(sentenceModule.actions.getSentenceList());
+    setRecord(records());
   }, [page, limit]);
+
+  useEffect(() => {
+    setRecord(records());
+  }, [sentenceHistory.length]);
 
   return (
     <Container>
@@ -113,8 +162,8 @@ const SentenceListPage = () => {
       </Row>
       <Row className={'mt-4'}>
         <DynamicTable
-          schema={schema}
-          records={records()}
+          schema={checkboxSchema()}
+          records={record}
           onClick={handleClickRecord}
         />
       </Row>
@@ -139,13 +188,13 @@ const SentenceListPage = () => {
 
       <CreateForm
         show={!!editSentence && editSentence.status == ReviewStatus.TEMP}
-        onCreate={() => dispatch(sentenceModule.actions.getSentenceList())}
+        onCreate={update}
         time={'--:--:--'}
       />
       <ReworkForm
         seq={formSeq}
         show={!!editSentence && editSentence.status != ReviewStatus.TEMP}
-        onCreate={() => dispatch(sentenceModule.actions.getSentenceList())}
+        onCreate={update}
         time={'--:--:--'}
       />
     </Container>

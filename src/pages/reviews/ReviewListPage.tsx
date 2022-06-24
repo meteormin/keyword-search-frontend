@@ -10,7 +10,11 @@ import Pagination from '../../components/common/Pagination';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import Search from '../../components/reviews/Search';
 import { ReviewList, ReviewListSchema } from './ReviewListSchema';
-import { Review, ReviewStatus } from '../../utils/nia15/interfaces/reviews';
+import {
+  CreateReview,
+  Review,
+  ReviewStatus,
+} from '../../utils/nia15/interfaces/reviews';
 import searchModule from '../../store/features/search';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
@@ -29,6 +33,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
     reviewModule.getReviewState,
   );
   const [selectIds, setSelectIds] = useState<number[]>([]);
+  const [record, setRecord] = useState<Record[]>([]);
 
   const handleClickRecord = (record: Record) => {
     let reviewId = 0;
@@ -55,29 +60,27 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       schema[key] = Object.assign({ onClick: handleClickRecord }, value);
     }
 
-    if (seq == 2) {
-      schema = Object.assign(
-        {
-          check: {
-            name: (
-              <Fragment>
-                <span>전체</span>
-                <Form.Check
-                  type="checkbox"
-                  onChange={(e) => {
-                    // 전체 선택
-                    if (e.target.checked) {
-                      setSelectIds(reviews.map((r) => r.id));
-                    }
-                  }}
-                />
-              </Fragment>
-            ),
-          },
+    schema = Object.assign(
+      {
+        check: {
+          name: (
+            <Fragment>
+              <span>전체</span>
+              <Form.Check
+                type="checkbox"
+                onChange={(e) => {
+                  // 전체 선택
+                  if (e.target.checked) {
+                    setSelectIds(reviews.map((r) => r.id));
+                  }
+                }}
+              />
+            </Fragment>
+          ),
         },
-        ReviewListSchema,
-      );
-    }
+      },
+      ReviewListSchema,
+    );
 
     return schema;
   };
@@ -100,23 +103,22 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       }
 
       let checkbox = {};
-      if (seq == 2) {
-        checkbox = (
-          <Form.Check
-            type="checkbox"
-            onChange={(e) => {
-              if (e.target.checked) {
-                const oldIds = selectIds;
-                const newIds = selectIds;
-                newIds.push(r.id);
-                setSelectIds(arr.merge(oldIds, newIds, true));
-              } else {
-                setSelectIds(arr.remove(selectIds, r.id));
-              }
-            }}
-          />
-        );
-      }
+
+      checkbox = (
+        <Form.Check
+          type="checkbox"
+          onChange={(e) => {
+            if (e.target.checked) {
+              const oldIds = selectIds;
+              const newIds = selectIds;
+              newIds.push(r.id);
+              setSelectIds(arr.merge(oldIds, newIds, true));
+            } else {
+              setSelectIds(arr.remove(selectIds, r.id));
+            }
+          }}
+        />
+      );
 
       const rs = {
         no: i + 1,
@@ -147,6 +149,14 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
     return status != 'WAITING';
   };
 
+  const getList = () => {
+    dispatch(reviewModule.actions.getReviewList({ seq: seq }));
+  };
+
+  const update = (review: CreateReview) => {
+    dispatch(reviewModule.actions.updateReview({ seq: seq, review: review }));
+  };
+
   useEffect(() => {
     dispatch(
       searchModule.actions.search({
@@ -161,16 +171,16 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
     );
   }, [page, limit]);
 
+  useEffect(() => {
+    setRecord(records());
+  }, [reviews.length]);
+
   return (
     <Container>
       <Row className="mt-4 mx-1">
         <Search
           onSearch={() => {
-            dispatch(
-              reviewModule.actions.getReviewList({
-                seq: seq,
-              }),
-            );
+            getList();
           }}
         />
         <StatusCount seq={seq} all={0} pass={0} reject={0} totalReject={0} />
@@ -195,7 +205,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
       <Row className={'mt-4'}>
         <DynamicTable
           schema={checkboxSchema()}
-          records={records()}
+          records={record}
           // onClick={handleClickRecord}
         />
       </Row>
@@ -222,9 +232,7 @@ const ReviewListPage = ({ seq }: { seq: number }) => {
         seq={seq}
         show={!!editReview}
         time={'--:--:--'}
-        onCreate={() =>
-          dispatch(reviewModule.actions.getReviewList({ seq: seq }))
-        }
+        onCreate={update}
       />
     </Container>
   );

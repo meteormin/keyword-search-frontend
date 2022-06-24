@@ -94,5 +94,12 @@ const reviewAction = {
     state.seq = action.payload.seq;
     state.createReview = action.payload.review;
   },
+  updateReview: (
+    state: ReviewState,
+    action: PayloadAction<{ seq: number; review: CreateReview }>,
+  ) => {
+    state.seq = action.payload.seq;
+    state.createReview = action.payload.review;
+  },
 };
 export default reviewAction;

@@ -7,7 +7,7 @@ import DynamicTable, {
   DynamicSchema,
 } from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
-import assignListSchema from './AssignListSchema';
+import { AssignSentence, AssignListSchema } from './AssignListSchema';
 import { arr, date, lang, str } from '../../helpers';
 import ReviewForm from '../../components/reviews/ReivewForm';
 import reviewModule from '../../store/features/reviews';
@@ -24,6 +24,7 @@ import MultipleReview from '../../components/reviews/MultipleReview';
 import alertModal from '../../store/features/common/alertModal';
 import { Sentence } from '../../utils/nia15/interfaces/sentences';
 import { sentenceToCreateReview } from './reviewDataMap';
+import { CreateReview } from '../../utils/nia15/interfaces/reviews';
 
 const AssignListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
   const [showMR, setShowMR] = useState<boolean>(false);
   const [actionMR, setActionMR] = useState<'pass' | 'reject'>('reject');
   const [checks, setChecks] = useState<Sentence[]>([]);
+  const [records, setRecords] = useState<AssignSentence[]>([]);
 
   const { sentences, totalCount, time, assignSentence } = useSelector(
     reviewModule.getReviewState,
@@ -39,9 +41,9 @@ const AssignListPage = ({ seq }: { seq: number }) => {
 
   const { parameters } = useSelector(searchModule.getSearchState);
 
-  const sentenceRecord = () => {
-    return sentences.map((s, i) => {
-      let checkbox = {};
+  const sentenceRecord = (): AssignSentence[] => {
+    return sentences.map((s, i): AssignSentence => {
+      let checkbox;
       if (seq == 2) {
         checkbox = (
           <Form.Check
@@ -60,62 +62,37 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         );
       }
 
-      const rs = {
+      return {
+        check: checkbox,
         no: i + 1,
-        refId: s.edges?.task.refId,
+        refId: s.edges?.task.refId || '0',
         concepts: str.limitArray(
           s.edges?.task?.edges?.concepts?.map((c): string => c.stem) || [''],
           6,
         ),
-        posLength: s.edges?.task.posLength,
+        posLength: s.edges?.task.posLength || 0,
         sentenceCount:
           s.edges?.sentence1.sentenceCount +
           '/' +
           s.edges?.sentence2.sentenceCount,
-        createdBy: s.edges?.user.loginId,
+        createdBy: s.edges?.user.loginId || '',
         createdAt: date(s.createAt).format('YYYY.MM.DD'),
         _origin: s,
       };
-
-      return Object.assign({ check: checkbox }, rs);
     });
   };
 
-  const checkboxSchema = () => {
-    let schema: DynamicSchema = assignListSchema;
+  const schema = () => {
+    const assignSchema: DynamicSchema = AssignListSchema;
 
-    for (const [key, value] of Object.entries(schema)) {
-      schema[key] = Object.assign({ onClick: handleClickRecord }, value);
+    for (const [key, value] of Object.entries(assignSchema)) {
+      assignSchema[key] = Object.assign({ onClick: handleClickRecord }, value);
     }
 
-    if (seq == 2) {
-      schema = Object.assign(
-        {
-          check: {
-            name: (
-              <Fragment>
-                <span>전체</span>
-                <Form.Check
-                  type="checkbox"
-                  onChange={(e) => {
-                    // 전체 선택
-                    if (e.target.checked) {
-                      setChecks(sentences);
-                    }
-                  }}
-                />
-              </Fragment>
-            ),
-          },
-        },
-        assignListSchema,
-      );
-    }
-
-    return schema;
+    return assignSchema;
   };
 
-  const handleClickRecord = (record: any) => {
+  const handleClickRecord = (record: AssignSentence) => {
     dispatch(
       reviewModule.actions.getAssign({
         seq: seq,
@@ -125,12 +102,19 @@ const AssignListPage = ({ seq }: { seq: number }) => {
   };
 
   const setSearchParameter = (state: SearchParameter) => {
-    const newParameter = { ...parameters, ...state };
-    dispatch(searchModule.actions.search(newParameter));
+    dispatch(searchModule.actions.search(state));
   };
 
   const resetSearchData = () => {
     dispatch(searchModule.actions.search(null));
+  };
+
+  const getList = () => {
+    dispatch(reviewModule.actions.getAssignList({ seq: seq }));
+  };
+
+  const create = (review: CreateReview) => {
+    dispatch(reviewModule.actions.createReview({ seq: seq, review: review }));
   };
 
   const makeSearch = () => {
@@ -179,16 +163,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
             />
           </Col>
           <Col md={4}>
-            <SearchAndReset
-              onSearch={() =>
-                dispatch(
-                  reviewModule.actions.getAssignList({
-                    seq: seq,
-                  }),
-                )
-              }
-              onReset={() => resetSearchData()}
-            />
+            <SearchAndReset onSearch={getList} onReset={resetSearchData} />
           </Col>
         </Row>
       </Fragment>
@@ -203,18 +178,17 @@ const AssignListPage = ({ seq }: { seq: number }) => {
   }, []);
 
   useEffect(() => {
-    dispatch(
-      searchModule.actions.search({
-        page: page,
-        limit: limit,
-      }),
-    );
-    dispatch(
-      reviewModule.actions.getAssignList({
-        seq: seq,
-      }),
-    );
+    setSearchParameter({
+      page: page,
+      limit: limit,
+    });
+
+    getList();
   }, [page, limit]);
+
+  useEffect(() => {
+    setRecords(sentenceRecord());
+  }, [sentences.length]);
 
   return (
     <Container>
@@ -277,8 +251,8 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       </Row>
       <Row className={'mt-4'}>
         <DynamicTable
-          schema={checkboxSchema()}
-          records={sentenceRecord()}
+          schema={schema()}
+          records={records}
           // onClick={handleClickRecord}
         />
       </Row>
@@ -344,13 +318,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         seq={seq}
         show={!!assignSentence}
         time={time?.toString() || '03:00:00'}
-        onCreate={() =>
-          dispatch(
-            reviewModule.actions.getAssignList({
-              seq: seq,
-            }),
-          )
-        }
+        onCreate={create}
       />
       {seq == 2 ? (
         <MultipleReview
@@ -359,15 +327,9 @@ const AssignListPage = ({ seq }: { seq: number }) => {
           onHide={() => setShowMR(false)}
           onSubmit={(data) => {
             checks.forEach((s) => {
-              dispatch(
-                reviewModule.actions.createReview({
-                  seq: seq,
-                  review: sentenceToCreateReview(s, data),
-                }),
-              );
+              create(sentenceToCreateReview(s, data));
             });
             setShowMR(false);
-            dispatch(reviewModule.actions.getAssignList({ seq: seq }));
           }}
         />
       ) : null}

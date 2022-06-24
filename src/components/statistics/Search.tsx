@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
-import { config, date } from '../../helpers';
-import { useDispatch, useSelector } from 'react-redux';
+import { date } from '../../helpers';
+import { useDispatch } from 'react-redux';
 import searchModule from '../../store/features/search';
 import { StatsSearchParameter } from '../../utils/nia15/interfaces/search';
 import Input from '../common/Input';
@@ -22,7 +22,6 @@ const Search = ({
   const [selectName, setName] = useState<string | undefined>();
   const [searchValue, setValue] = useState<string | undefined>();
   const [groupName, setGroupName] = useState<string | undefined>();
-  const { statsParameter } = useSelector(searchModule.getSearchState);
 
   const setSearchParameters = (params: StatsSearchParameter) => {
     dispatch(searchModule.actions.searchForStats(params));
@@ -42,9 +41,10 @@ const Search = ({
               if (selectedValue) {
                 setName(selectedValue);
               }
+              setValue('');
             }}
             options={selectOptions}
-            value={selectName}
+            value={selectName || ''}
           />
         </Col>
         <Col md={4}>
@@ -52,7 +52,7 @@ const Search = ({
             type={'text'}
             id={'searchValue'}
             name={'searchValue'}
-            value={searchValue}
+            value={searchValue || ''}
             onChange={(e) => {
               if (e.target.value) {
                 const value = e.target.value;
@@ -101,7 +101,7 @@ const Search = ({
               setGroupName(value);
               setSearchParameters({ groupName: value });
             }}
-            value={groupName}
+            value={groupName || ''}
             placeholder="검색어를 입력해주세요."
           />
         </Col>

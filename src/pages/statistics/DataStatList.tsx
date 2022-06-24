@@ -5,7 +5,7 @@ import DynamicTable from '../../components/common/DaynamicTable';
 import { DataStatsRecord, DataStatsSchema, toRecord } from './DataStatsSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import statsModule from '../../store/features/statistics';
-import DataSearch from '../../components/statics/DataSearch';
+import DataSearch from '../../components/statistics/DataSearch';
 import searchModule from '../../store/features/search';
 import Pagination from '../../components/common/Pagination';
 import fileDownload from 'js-file-download';
@@ -17,10 +17,11 @@ const DataStatList = () => {
   const [page, setPage] = useState<number>(1);
   const [records, setRecords] = useState<DataStatsRecord[]>([]);
   const { statsTask, excelFile } = useSelector(statsModule.getStatsState);
-  const { statsParameter } = useSelector(searchModule.getSearchState);
 
   useEffect(() => {
-    setRecords(statsTask.task.map(toRecord));
+    if (statsTask.task) {
+      setRecords(statsTask.task.map(toRecord));
+    }
   }, [statsTask]);
 
   useEffect(() => {

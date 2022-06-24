@@ -19,7 +19,7 @@ import Timer from '../../components/common/Timer';
 export interface CreateFormProps {
   show: boolean;
   readOnly?: boolean;
-  onCreate: () => any;
+  onCreate: (sentence: CreateSentence) => any;
   time: string;
 }
 
@@ -206,12 +206,9 @@ const CreateForm = (props: CreateFormProps) => {
                       };
 
                       if (validate(createSentence)) {
-                        dispatch(
-                          sentenceModule.actions.createSentence(createSentence),
-                        );
                         dispatch(taskModule.actions.setWorkTask(null));
                         setShow(false);
-                        props.onCreate();
+                        props.onCreate(createSentence);
                       }
                     }
                   }}
