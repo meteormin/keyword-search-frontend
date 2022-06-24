@@ -10,6 +10,7 @@ import SearchAndReset from '../common/SearchAndReset';
 import InputFilter from '../common/InputFilter';
 import DateFilter from '../common/DateFilter';
 import { Option } from '../common/Select';
+import { forSearchFormat } from '../../utils/common/dateFormat';
 
 const DataSearch = ({
   onSearch,
@@ -137,9 +138,13 @@ const DataSearch = ({
             label={'제출일자별 조회'}
             onChange={(state) => {
               if (state.start && state.end) {
+                const format = forSearchFormat(
+                  date(state.start),
+                  date(state.end),
+                );
                 setSearchParameters({
-                  createdAtStart: date(state.start).format(),
-                  createdAtEnd: date(state.end).format(),
+                  createdAtStart: format.start,
+                  createdAtEnd: format.end,
                 });
               }
             }}
@@ -150,9 +155,13 @@ const DataSearch = ({
             label={'검수일자별 조회'}
             onChange={(state) => {
               if (state.start && state.end) {
+                const format = forSearchFormat(
+                  date(state.start),
+                  date(state.end),
+                );
                 setSearchParameters({
-                  reviewedAtStart: date(state.start).format(),
-                  reviewedAtEnd: date(state.end).format(),
+                  reviewedAtStart: format.start,
+                  reviewedAtEnd: format.end,
                 });
               }
             }}
