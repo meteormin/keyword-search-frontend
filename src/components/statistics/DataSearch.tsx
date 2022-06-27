@@ -61,7 +61,17 @@ const DataSearch = ({
                 const value = e.target.value;
                 setValue(value);
                 if (selectName) {
-                  const param: StatsSearchParameter = {};
+                  const param: StatsSearchParameter = {
+                    creatorID: undefined,
+                    creatorName: undefined,
+                    reviewerID: undefined,
+                    reviewerName: undefined,
+                    domain: undefined,
+                    concept: undefined,
+                    taskID: undefined,
+                    refID: undefined,
+                  };
+
                   switch (selectName) {
                     case 'creatorID':
                       param.creatorID = value;

@@ -59,7 +59,15 @@ const Search = ({
                 const value = e.target.value;
                 setValue(value);
                 if (selectName) {
-                  const param: StatsSearchParameter = {};
+                  const param: StatsSearchParameter = {
+                    userID: undefined,
+                    name: undefined,
+                    domain: undefined,
+                    concept: undefined,
+                    taskID: undefined,
+                    refID: undefined,
+                  };
+
                   switch (selectName) {
                     case 'creatorID':
                       param.userID = value;
