@@ -1,5 +1,9 @@
 import { Option } from '../components/common/Select';
-import { ReviewStatus, CreateStatus } from '../utils/nia15/interfaces/search';
+import {
+  AssignStatus,
+  CreateStatus,
+  ReviewStatus,
+} from '../utils/nia15/interfaces/search';
 import { IdStateEnum } from '../components/reviews/IdState';
 import { SearchNames } from '../components/tasks/DataSearch';
 
@@ -185,9 +189,13 @@ const DataStatsSearchOptions: Option[] = [
 
 const AssignStatusOptions: Option[] = [
   { name: '검색어 선택', value: '' },
-  { name: '생성 할당', value: '' },
-  { name: '1차 검수', value: '' },
-  { name: '2차 검수', value: '' },
+  { name: '검수대기', value: AssignStatus.WAITING },
+  { name: '재검수대기', value: AssignStatus.R_WAITING },
+  { name: '검수보류', value: AssignStatus.HOLD1 },
+  { name: '1차 승인', value: AssignStatus.PASS1 },
+  { name: '1차 반려', value: AssignStatus.REJECT1 },
+  { name: '2차 승인', value: AssignStatus.PASS2 },
+  { name: '2차 반려', value: AssignStatus.REJECT2 },
 ];
 
 const SentenceStatusOptions: Option[] = [
