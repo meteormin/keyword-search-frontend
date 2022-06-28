@@ -25,6 +25,7 @@ import alertModal from '../../store/features/common/alertModal';
 import { Sentence } from '../../utils/nia15/interfaces/sentences';
 import { sentenceToCreateReview } from './reviewDataMap';
 import { CreateReview } from '../../utils/nia15/interfaces/reviews';
+import { ReviewListSchema } from './ReviewListSchema';
 
 const AssignListPage = ({ seq }: { seq: number }) => {
   const dispatch = useDispatch();
@@ -83,10 +84,33 @@ const AssignListPage = ({ seq }: { seq: number }) => {
   };
 
   const schema = () => {
-    const assignSchema: DynamicSchema = AssignListSchema;
+    let assignSchema: DynamicSchema = AssignListSchema;
 
     for (const [key, value] of Object.entries(assignSchema)) {
       assignSchema[key] = Object.assign({ onClick: handleClickRecord }, value);
+    }
+    if (seq == 2) {
+      assignSchema = Object.assign(
+        {
+          check: {
+            name: (
+              <Fragment>
+                <span>전체</span>
+                <Form.Check
+                  type="checkbox"
+                  onChange={(e) => {
+                    // 전체 선택
+                    if (e.target.checked) {
+                      setChecks(sentences);
+                    }
+                  }}
+                />
+              </Fragment>
+            ),
+          },
+        },
+        AssignListSchema,
+      );
     }
 
     return assignSchema;
@@ -258,49 +282,51 @@ const AssignListPage = ({ seq }: { seq: number }) => {
       </Row>
       <Row className="mt-5 align-content-center">
         <Col lg={4} className="mt-5">
-          <Row>
-            <Col lg={4}>
-              <Button
-                variant={'dark'}
-                className="float-end"
-                onClick={() => {
-                  if (checks.length != 0) {
-                    setActionMR('reject');
-                    setShowMR(true);
-                  } else {
-                    dispatch(
-                      alertModal.showAlert({
-                        title: '선택 반려',
-                        message: '선택된 문장이 없습니다.',
-                      }),
-                    );
-                  }
-                }}
-              >
-                선택반려
-              </Button>
-            </Col>
-            <Col lg={8}>
-              <Button
-                variant={'dark'}
-                onClick={() => {
-                  if (checks.length != 0) {
-                    setActionMR('pass');
-                    setShowMR(true);
-                  } else {
-                    dispatch(
-                      alertModal.showAlert({
-                        title: '선택 승인',
-                        message: '선택된 문장이 없습니다.',
-                      }),
-                    );
-                  }
-                }}
-              >
-                선택승인
-              </Button>
-            </Col>
-          </Row>
+          {seq == 2 ? (
+            <Row>
+              <Col lg={4}>
+                <Button
+                  variant={'dark'}
+                  className="float-end"
+                  onClick={() => {
+                    if (checks.length != 0) {
+                      setActionMR('reject');
+                      setShowMR(true);
+                    } else {
+                      dispatch(
+                        alertModal.showAlert({
+                          title: '선택 반려',
+                          message: '선택된 문장이 없습니다.',
+                        }),
+                      );
+                    }
+                  }}
+                >
+                  선택반려
+                </Button>
+              </Col>
+              <Col lg={8}>
+                <Button
+                  variant={'dark'}
+                  onClick={() => {
+                    if (checks.length != 0) {
+                      setActionMR('pass');
+                      setShowMR(true);
+                    } else {
+                      dispatch(
+                        alertModal.showAlert({
+                          title: '선택 승인',
+                          message: '선택된 문장이 없습니다.',
+                        }),
+                      );
+                    }
+                  }}
+                >
+                  선택승인
+                </Button>
+              </Col>
+            </Row>
+          ) : null}
         </Col>
         <Pagination
           currentPage={page}
