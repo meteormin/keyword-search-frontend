@@ -151,6 +151,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
                 setSearchParameter({
                   refID: state.refId,
                   domain: state.domain,
+                  concept: state.concept,
                 });
               }}
               defaultState={{
