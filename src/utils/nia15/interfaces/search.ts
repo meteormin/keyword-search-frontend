@@ -32,6 +32,17 @@ export interface SearchParameter {
   review2UserID?: string;
 }
 
+export enum AssignStatus {
+  TEMP = 'TEMP',
+  WAITING = 'WAITING',
+  HOLD1 = 'HOLD_1',
+  REJECT1 = 'REJECT_1',
+  REJECT2 = 'REJECT_2',
+  PASS1 = 'PASS_1',
+  PASS2 = 'PASS_2',
+  R_WAITING = 'R_WAITING',
+}
+
 export interface StatsSearchParameter extends SearchParameter {
   creatorID?: string;
   creatorName?: string;
@@ -40,6 +51,6 @@ export interface StatsSearchParameter extends SearchParameter {
   userID?: string;
   name?: string;
   groupName?: string;
-  assignStatus?: string;
+  assignStatus?: AssignStatus;
   taskID?: number[];
 }

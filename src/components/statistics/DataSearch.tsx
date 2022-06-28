@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import SelectFilter from '../common/SelectFilter';
 import { config, date } from '../../helpers';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import searchModule from '../../store/features/search';
 import { StatsSearchParameter } from '../../utils/nia15/interfaces/search';
 import Input from '../common/Input';
@@ -120,13 +120,11 @@ const DataSearch = ({
         </Col>
         <Col md={4}>
           <SelectFilter
-            label={'할당현황'}
+            label={'할당현황(X)'}
             onChange={(selectedValue) => {
-              setAssignStatus(selectedValue);
-              // setSearchParameters({
-              // });
+              setSentenceStatus(selectedValue);
             }}
-            options={config.selectOptions.AssignStatusOptions}
+            options={config.selectOptions.SentenceStatusOptions}
             value={assignStatus}
           />
         </Col>
@@ -134,8 +132,10 @@ const DataSearch = ({
           <SelectFilter
             label={'현재상태'}
             onChange={(selectedValue) => {
-              setSentenceStatus(selectedValue);
-              // setSearchParameters({});
+              setAssignStatus(selectedValue);
+              setSearchParameters({
+                assignStatus: selectedValue,
+              });
             }}
             options={config.selectOptions.AssignStatusOptions}
             value={sentenceStatus}
