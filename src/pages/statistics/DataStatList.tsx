@@ -78,6 +78,7 @@ const DataStatList = () => {
             <Col lg={4}>
               <Button
                 variant={'dark'}
+                className={'w-100'}
                 onClick={() => {
                   dispatch(statsModule.actions.downloadTask());
                 }}
@@ -88,6 +89,7 @@ const DataStatList = () => {
             <Col lg={8}>
               <Button
                 variant={'dark'}
+                className={'w-100'}
                 onClick={() => {
                   dispatch(statsModule.actions.downloadReport());
                 }}
