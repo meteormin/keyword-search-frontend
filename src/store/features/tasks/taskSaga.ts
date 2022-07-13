@@ -172,6 +172,7 @@ function* deleteTask(action: PayloadAction<number>) {
   try {
     const response: ApiResponse = yield call(taskApi.deleteTask, taskId);
     const res = apiResponse(response);
+    yield put(loaderModule.endLoading());
     if (response.isSuccess) {
       yield put(
         alertModalModule.showAlert({
