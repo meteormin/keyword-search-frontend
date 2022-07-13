@@ -146,6 +146,7 @@ const DataStatList = () => {
           // req api
           console.log(recordToTrash[0]);
           setRecordToTrash([]);
+          setConfirmShow(false);
           return null;
         }}
         onClose={() => setConfirmShow(false)}
