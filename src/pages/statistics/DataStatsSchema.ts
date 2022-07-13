@@ -53,6 +53,9 @@ export const DataStatsSchema: DynamicSchema = {
   review2Assign: {
     name: '2차 검수할당',
   },
+  trashBtn: {
+    name: '삭제',
+  },
 };
 
 export interface DataStatsRecord {
@@ -72,6 +75,8 @@ export interface DataStatsRecord {
   createAssign: string;
   review1Assign: string;
   review2Assign: string;
+  trashBtn?: JSX.Element[] | JSX.Element;
+  _origin: Task;
 }
 
 export const toRecord = (item: Task, i: number): DataStatsRecord => {
@@ -103,5 +108,6 @@ export const toRecord = (item: Task, i: number): DataStatsRecord => {
     createAssign: item.createAssignId || '',
     review1Assign: item.review1AssignId || '',
     review2Assign: item.review2AssignID || '',
+    _origin: item,
   };
 };

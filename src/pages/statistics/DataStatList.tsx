@@ -10,19 +10,41 @@ import searchModule from '../../store/features/search';
 import Pagination from '../../components/common/Pagination';
 import fileDownload from 'js-file-download';
 import { config } from '../../helpers';
+import ConfirmModal from '../../components/modals/ConfirmModal';
+import { Task } from '../../utils/nia15/interfaces/statics';
 
 const DataStatList = () => {
   const dispatch = useDispatch();
   const [limit, setLimit] = useState<number>(100);
   const [page, setPage] = useState<number>(1);
   const [records, setRecords] = useState<DataStatsRecord[]>([]);
+  const [confirmShow, setConfirmShow] = useState<boolean>(false);
+  const [recordToTrash, setRecordToTrash] = useState<Task[]>([]);
   const { statsTask, excelFile, jsonFile } = useSelector(
     statsModule.getStatsState,
   );
 
   useEffect(() => {
     if (statsTask.task) {
-      setRecords(statsTask.task.map(toRecord));
+      setRecords(
+        statsTask.task.map((t, i) => {
+          const record = toRecord(t, i);
+          record.trashBtn = (
+            <a
+              onClick={(e) => {
+                e.preventDefault();
+                setConfirmShow(true);
+                const willTrash = recordToTrash;
+                willTrash.push(record._origin);
+                setRecordToTrash(willTrash);
+              }}
+            >
+              <i className="fas fa-trash" style={{ cursor: 'pointer' }}></i>
+            </a>
+          );
+          return record;
+        }),
+      );
     }
   }, [statsTask]);
 
@@ -115,6 +137,19 @@ const DataStatList = () => {
         />
         <Col md={4}></Col>
       </Row>
+      <ConfirmModal
+        title="삭제"
+        message="정말로 삭제하시겠습까?"
+        show={confirmShow}
+        confirmText="삭제"
+        onConfirm={() => {
+          // req api
+          console.log(recordToTrash[0]);
+          setRecordToTrash([]);
+          return null;
+        }}
+        onClose={() => setConfirmShow(false)}
+      />
     </Fragment>
   );
 };

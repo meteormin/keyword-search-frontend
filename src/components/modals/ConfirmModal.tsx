@@ -1,26 +1,42 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 export interface ConfirmModalProps {
   title: string;
   message: string;
+  show: boolean;
   confirmText: string;
   onConfirm: () => any;
+  onClose: () => any;
 }
 
 const ConfirmModal = ({
   title,
   message,
+  show,
   confirmText,
   onConfirm,
+  onClose,
 }: ConfirmModalProps) => {
-  const [show, setShow] = useState(false);
+  const [showState, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  useEffect(() => {
+    setShow(show);
+  }, [show]);
+
+  const handleClose = () => {
+    setShow(false);
+    onClose();
+  };
+
+  const handleConfirm = () => {
+    setShow(false);
+    onConfirm();
+  };
 
   return (
     <Fragment>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={showState} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
@@ -29,7 +45,7 @@ const ConfirmModal = ({
           <Button variant="secondary" onClick={handleClose}>
             닫기
           </Button>
-          <Button variant="primary" onClick={onConfirm}>
+          <Button variant="primary" onClick={handleConfirm}>
             {confirmText}
           </Button>
         </Modal.Footer>
