@@ -16,7 +16,9 @@ const DataStatList = () => {
   const [limit, setLimit] = useState<number>(100);
   const [page, setPage] = useState<number>(1);
   const [records, setRecords] = useState<DataStatsRecord[]>([]);
-  const { statsTask, excelFile } = useSelector(statsModule.getStatsState);
+  const { statsTask, excelFile, jsonFile } = useSelector(
+    statsModule.getStatsState,
+  );
 
   useEffect(() => {
     if (statsTask.task) {
@@ -38,7 +40,11 @@ const DataStatList = () => {
     if (excelFile) {
       fileDownload(excelFile, 'task_statistics.xlsx');
     }
-  }, [excelFile]);
+
+    if (jsonFile) {
+      fileDownload(jsonFile, '15-2-task.json');
+    }
+  }, [excelFile, jsonFile]);
 
   return (
     <Fragment>
