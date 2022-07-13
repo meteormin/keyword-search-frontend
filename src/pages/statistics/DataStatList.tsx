@@ -12,6 +12,7 @@ import fileDownload from 'js-file-download';
 import { config } from '../../helpers';
 import ConfirmModal from '../../components/modals/ConfirmModal';
 import { Task } from '../../utils/nia15/interfaces/statics';
+import taskModule from '../../store/features/tasks';
 
 const DataStatList = () => {
   const dispatch = useDispatch();
@@ -145,9 +146,12 @@ const DataStatList = () => {
         onConfirm={() => {
           // req api
           console.log(recordToTrash[0]);
+          recordToTrash.forEach((t) => {
+            dispatch(taskModule.actions.deleteTask(t.id));
+          });
+
           setRecordToTrash([]);
           setConfirmShow(false);
-          return null;
         }}
         onClose={() => setConfirmShow(false)}
       />

@@ -93,6 +93,7 @@ function* assign() {
 
 function* getTask(action: PayloadAction<number>) {
   const taskId = action.payload;
+  yield put(loaderModule.startLoading());
   try {
     const response: ApiResponse = yield call(taskApi.getTask, taskId);
     const createdCount: ApiResponse = yield call(sentenceApi.createdCount);
@@ -164,11 +165,40 @@ function* getTime() {
   }
 }
 
+function* deleteTask(action: PayloadAction<number>) {
+  const taskId = action.payload;
+
+  yield put(loaderModule.startLoading());
+  try {
+    const response: ApiResponse = yield call(taskApi.deleteTask, taskId);
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      yield put(
+        alertModalModule.showAlert({
+          title: '삭제',
+          message: '삭제 완료: 복구는 관리자에게 문의해주세요.',
+        }),
+      );
+    } else {
+      yield put(alertModalModule.errorAlert(res));
+    }
+  } catch (e) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '삭제 실패',
+        message: e,
+      }),
+    );
+  }
+}
+
 function* watchTaskSaga() {
   yield takeLatest(taskModule.actions.getTaskList, getTaskList);
   yield takeLatest(taskModule.actions.getWorkTask, getTask);
   yield takeLatest(taskModule.actions.assign, assign);
   yield takeLatest(taskModule.actions.getExpiredAt, getTime);
+  yield takeLatest(taskModule.actions.deleteTask, deleteTask);
 }
 
 export default function* taskSaga() {

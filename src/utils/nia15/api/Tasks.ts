@@ -24,6 +24,10 @@ class Tasks extends BaseClient {
   getExpiredAt = async () => {
     return await this._client.get('/assign/expiredAt');
   };
+
+  deleteTask = async (taskId: number) => {
+    return await this._client.delete(`/${taskId}`);
+  };
 }
 
 export default Tasks;
