@@ -131,6 +131,7 @@ const ReviewForm = (props: CreateFormProps) => {
             <Row>
               <Col lg={4}>
                 <Prototype
+                  primaryCode={review?.edges?.task?.dataId || ''}
                   concepts={
                     review?.edges?.task?.edges?.concepts?.map((t) => t.stem) ||
                     []
