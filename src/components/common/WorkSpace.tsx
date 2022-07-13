@@ -64,6 +64,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
   const [textArea20, setText20] = useState('');
   const [textArea11, setText11] = useState('');
   const [textArea21, setText21] = useState('');
+  const [textArea12, setText12] = useState('');
+  const [textArea22, setText22] = useState('');
   const [patternedText, setPatText] = useState<string[]>(['', '']);
   const [wordCount1, setCount1] = useState(0);
   const [wordCount2, setCount2] = useState(0);
@@ -109,7 +111,23 @@ const WorkSpace = (props: WorkSpaceProps) => {
     if (props.task.sentence) {
       makeSP(props.task.sentence).then((res) => {
         if (res) {
-          setOriginSP(res);
+          setOriginSP(res.pattern);
+        }
+      });
+    }
+
+    if (props.workData?.textArea10) {
+      makeSP(props.workData.textArea10).then((res) => {
+        if (res) {
+          setText12(res.tagged);
+        }
+      });
+    }
+
+    if (props.workData?.textArea20) {
+      makeSP(props.workData.textArea20).then((res) => {
+        if (res) {
+          setText22(res.tagged);
         }
       });
     }
@@ -445,15 +463,18 @@ const WorkSpace = (props: WorkSpaceProps) => {
   ): Promise<{ status: boolean; message: string }> => {
     const basicSentence = props.task.sentence;
     let setSentencePattern: React.Dispatch<React.SetStateAction<string>>;
+    let setPartOfSpeech: React.Dispatch<React.SetStateAction<string>>;
     let otherSentence: string;
     let frame: FrameText | DualFrameText | TripleFrameText | null;
     if (cntNo == 1) {
       setSentencePattern = setText11;
+      setPartOfSpeech = setText12;
       otherSentence = textArea20;
       setIsClickedMkSp(cntNo - 1, false);
       setSentencePattern('');
     } else if (cntNo == 2) {
       setSentencePattern = setText21;
+      setPartOfSpeech = setText22;
       otherSentence = textArea10;
       setIsClickedMkSp(cntNo - 1, false);
       setSentencePattern('');
@@ -490,6 +511,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
           if (madeSP) {
             setIsClickedMkSp(cntNo - 1, true);
             setSentencePattern(madeSP);
+            const sp = await makeSP(str);
+            setPartOfSpeech(sp?.tagged || '');
             return {
               status: true,
               message: '',
@@ -499,7 +522,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
       } else {
         const madeSP = await makeSP(str);
         if (madeSP) {
-          setSentencePattern(madeSP);
+          setSentencePattern(madeSP.pattern);
+          setPartOfSpeech(madeSP.tagged);
           return {
             status: true,
             message: '',
@@ -509,6 +533,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
     } catch (e) {
       setIsClickedMkSp(cntNo - 1, false);
       setSentencePattern('');
+      setPartOfSpeech('');
       showAlertForMakeSP(cntNo, e);
       return {
         status: false,
@@ -531,11 +556,12 @@ const WorkSpace = (props: WorkSpaceProps) => {
             : lang.sentence.workSpace.work.subject
         }
       >
-        <p style={{ whiteSpace: 'pre' }}>
-          {props.workType == 'review'
-            ? lang.sentence.workSpace.review.description
-            : lang.sentence.workSpace.work.description}
-        </p>
+        {/*<p style={{ whiteSpace: 'pre' }}>*/}
+        {/*  {props.workType == 'review'*/}
+        {/*    ? lang.sentence.workSpace.review.description*/}
+        {/*    : lang.sentence.workSpace.work.description}*/}
+        {/*</p>*/}
+        <p></p>
       </Card>
       <Row>
         <Col lg={5}>
@@ -604,6 +630,17 @@ const WorkSpace = (props: WorkSpaceProps) => {
               }}
             />
           </Form.Group>
+
+          <Form.Group className="mt-2">
+            <Form.Label>품사1</Form.Label>
+            <Form.Control
+              as="textarea"
+              className="h-25"
+              rows={5}
+              value={textArea12}
+              readOnly={true}
+            />
+          </Form.Group>
         </Col>
       </Row>
       {props.workType == 'review' || props.workType == 'rework' ? (
@@ -636,6 +673,8 @@ const WorkSpace = (props: WorkSpaceProps) => {
               </Col>
             </Row>
           </Col>
+          <Col lg={2}></Col>
+          <Col></Col>
         </Row>
       )}
 
@@ -706,6 +745,17 @@ const WorkSpace = (props: WorkSpaceProps) => {
               }}
             />
           </Form.Group>
+
+          <Form.Group className="mt-2">
+            <Form.Label>품사2</Form.Label>
+            <Form.Control
+              as="textarea"
+              className="h-25"
+              rows={5}
+              value={textArea22}
+              readOnly={true}
+            />
+          </Form.Group>
         </Col>
       </Row>
       {props.workType == 'review' || props.workType == 'rework' ? (
@@ -738,6 +788,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
               </Col>
             </Row>
           </Col>
+          <Col lg={2}></Col>
           <Col></Col>
         </Row>
       )}

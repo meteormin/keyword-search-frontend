@@ -16,7 +16,7 @@ import Lang from './assets/lang';
 import { AxiosRequestHeaders } from 'axios';
 import * as Str from './utils/str';
 import * as Arr from './utils/arr';
-import BaikalNlp from './utils/BaikalNlp';
+import BaikalNlp, { AnalyzeData, AnalyzeToken } from './utils/BaikalNlp';
 import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
 import TmKor, {
@@ -140,23 +140,38 @@ export const tmKor = new TmKor(
 
 export const makeSentencePattern = async (
   sentence: string,
-): Promise<string | null> => {
+): Promise<{ tagged: string; pattern: string } | null> => {
   try {
     const baikalRes = await baikalNlp.analyze(sentence);
-    const req: getFrameRequest = {
-      sentences: baikalRes?.sentences || [],
-      language: 'ko_KR',
-    };
-    const tmKorRes = await tmKor.getFrame(req);
-    if (tmKorRes) {
-      const data = tmKorRes.data[0] as FrameText;
-      return data.frameText || null;
+
+    if (baikalRes) {
+      const sentencePattern: { tagged: string; pattern: string } = {
+        tagged: '',
+        pattern: '',
+      };
+
+      if (baikalRes?.sentences && baikalRes.sentences.length != 0) {
+        sentencePattern.tagged = baikalRes.sentences[0].tokens
+          .map((t) => t.tagged)
+          .join(' ');
+      }
+
+      const req: getFrameRequest = {
+        sentences: baikalRes?.sentences || [],
+        language: 'ko_KR',
+      };
+      const tmKorRes = await tmKor.getFrame(req);
+      if (tmKorRes) {
+        const data = tmKorRes.data[0] as FrameText;
+        sentencePattern.pattern = data.frameText;
+
+        return sentencePattern;
+      }
     }
+    return null;
   } catch (e) {
     return null;
   }
-
-  return null;
 };
 
 export const checkDualFrame = async (sentences: {

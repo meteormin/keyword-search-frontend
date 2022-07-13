@@ -10,6 +10,7 @@ export interface StatsState {
   statsCreator: StatsCreator;
   statsReviewer: StatsReviewer;
   excelFile: any | null;
+  jsonFile: any | null;
 }
 
 export const initialState: StatsState = {
@@ -27,6 +28,7 @@ export const initialState: StatsState = {
     statistic: [],
   },
   excelFile: null,
+  jsonFile: null,
 };
 
 const statsAction = {
@@ -44,6 +46,12 @@ const statsAction = {
   },
   setExcelFile: (state: StatsState, action: PayloadAction<any>) => {
     state.excelFile = action.payload;
+  },
+  downloadReport: (state: StatsState) => {
+    state.jsonFile = null;
+  },
+  setJsonFile: (state: StatsState, action: PayloadAction<any>) => {
+    state.jsonFile = action.payload;
   },
   setCreatorStats: (state: StatsState, action: PayloadAction<StatsCreator>) => {
     state.statsCreator = action.payload;

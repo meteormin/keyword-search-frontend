@@ -74,14 +74,28 @@ const DataStatList = () => {
       </Row>
       <Row className={'mt-2 mx-2'}>
         <Col md={4} className={'mt-5'}>
-          <Button
-            variant={'dark'}
-            onClick={() => {
-              dispatch(statsModule.actions.downloadTask());
-            }}
-          >
-            엑셀 다운로드
-          </Button>
+          <Row>
+            <Col lg={4}>
+              <Button
+                variant={'dark'}
+                onClick={() => {
+                  dispatch(statsModule.actions.downloadTask());
+                }}
+              >
+                엑셀 다운로드
+              </Button>
+            </Col>
+            <Col lg={8}>
+              <Button
+                variant={'dark'}
+                onClick={() => {
+                  dispatch(statsModule.actions.downloadReport());
+                }}
+              >
+                문장 현황 다운로드
+              </Button>
+            </Col>
+          </Row>
         </Col>
         <Pagination
           currentPage={page}

@@ -17,6 +17,7 @@ const Prototype = (props: PrototypeProps) => {
   const [wordCount, setWordCount] = useState<number>(0);
   const [basicSentence, setBasic] = useState<string>('');
   const [prototypeSentence, setPrototype] = useState<string>('');
+  const [partOfSpeech, setPartOfSpeech] = useState<string>('');
 
   useEffect(() => {
     setConcepts(props.concepts);
@@ -25,14 +26,16 @@ const Prototype = (props: PrototypeProps) => {
     setBasic(props.basicSentence);
 
     makeSentencePattern(props.basicSentence).then((res) => {
-      setPrototype(res || props.prototypeSentence);
+      setPrototype(res?.pattern || props.prototypeSentence);
+      setPartOfSpeech(res?.tagged || '');
     });
   }, []);
 
   return (
     <div>
       <Card header={lang.sentence.prototype.subject}>
-        <p>{lang.sentence.prototype.description}</p>
+        {/*<p>{lang.sentence.prototype.description}</p>*/}
+        <p></p>
       </Card>
       <Table
         variant="light"
@@ -43,24 +46,40 @@ const Prototype = (props: PrototypeProps) => {
       >
         <tbody>
           <tr>
-            <th scope="col">개념집합</th>
+            <th scope="col" className="col-md-4">
+              개념집합
+            </th>
             <td className="bg-white">{concepts.join(', ')}</td>
           </tr>
           <tr>
-            <th scope="col">개념집합태그</th>
+            <th scope="col" className="col-md-4">
+              개념집합태그
+            </th>
             <td className="bg-white">{conceptsTag.join(', ')}</td>
           </tr>
           <tr>
-            <th scope="col">단어개수</th>
+            <th scope="col" className="col-md-4">
+              단어개수
+            </th>
             <td className="bg-white">{wordCount}</td>
           </tr>
           <tr>
-            <th scope="col">기본문장</th>
+            <th scope="col" className="col-md-4">
+              기본문장
+            </th>
             <td className="bg-white">{basicSentence}</td>
           </tr>
           <tr>
-            <th scope="col">원천데이터 문형</th>
+            <th scope="col" className="col-md-4">
+              원천데이터 문형
+            </th>
             <td className="bg-white">{prototypeSentence}</td>
+          </tr>
+          <tr>
+            <th scope="col" className="col-md-4">
+              품사
+            </th>
+            <td className="bg-white">{partOfSpeech}</td>
           </tr>
         </tbody>
       </Table>
