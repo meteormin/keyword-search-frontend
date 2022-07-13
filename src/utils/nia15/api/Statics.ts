@@ -34,6 +34,15 @@ class Task extends BaseClient {
       responseType: 'blob',
     });
   };
+
+  downloadReport = async (searchParams?: StatsSearchParameter) => {
+    return this._client.request({
+      method: 'GET',
+      url: this._client.makeUrl(`${Task.prefix}/finished/download`),
+      params: searchParams,
+      responseType: 'blob',
+    });
+  };
 }
 
 class User extends BaseClient {
