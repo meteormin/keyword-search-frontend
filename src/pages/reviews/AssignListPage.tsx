@@ -49,6 +49,7 @@ const AssignListPage = ({ seq }: { seq: number }) => {
         checkbox = (
           <Form.Check
             type="checkbox"
+            onClick={() => console.log('click check')}
             onChange={(e) => {
               if (e.target.checked) {
                 const oldCh = checks;
