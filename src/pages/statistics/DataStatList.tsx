@@ -86,7 +86,7 @@ const DataStatList = () => {
                 엑셀 다운로드
               </Button>
             </Col>
-            <Col lg={8}>
+            <Col lg={6}>
               <Button
                 variant={'dark'}
                 className={'w-100'}
