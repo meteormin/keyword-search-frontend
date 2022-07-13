@@ -174,6 +174,7 @@ const CreateForm = (props: CreateFormProps) => {
             <Row>
               <Col lg={4}>
                 <Prototype
+                  primaryCode={task?.dataId || ''}
                   concepts={task?.edges?.concepts.map((t) => t.stem) || []}
                   conceptsTag={
                     task?.edges?.concepts.map(
