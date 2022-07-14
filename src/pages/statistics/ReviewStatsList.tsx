@@ -62,7 +62,7 @@ const ReviewStatList = ({ seq }: { seq: number }) => {
 
   useEffect(() => {
     if (excelFile) {
-      fileDownload(excelFile, 'reviewer_statistics.xlsx');
+      fileDownload(excelFile.data, excelFile.filename);
     }
   }, [excelFile]);
 

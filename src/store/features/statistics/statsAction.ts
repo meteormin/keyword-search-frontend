@@ -5,12 +5,17 @@ import {
   StatsReviewer,
 } from '../../../utils/nia15/interfaces/statics';
 
+export interface FileState {
+  data: Blob;
+  filename: string;
+}
+
 export interface StatsState {
   statsTask: StatsTask;
   statsCreator: StatsCreator;
   statsReviewer: StatsReviewer;
-  excelFile: any | null;
-  jsonFile: any | null;
+  excelFile: FileState | null;
+  jsonFile: FileState | null;
 }
 
 export const initialState: StatsState = {
@@ -48,6 +53,9 @@ const statsAction = {
     state.excelFile = action.payload;
   },
   downloadReport: (state: StatsState) => {
+    state.excelFile = null;
+  },
+  downloadJson: (state: StatsState) => {
     state.jsonFile = null;
   },
   setJsonFile: (state: StatsState, action: PayloadAction<any>) => {

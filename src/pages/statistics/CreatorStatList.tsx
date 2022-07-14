@@ -73,7 +73,7 @@ const CreatorStatList = () => {
 
   useEffect(() => {
     if (excelFile) {
-      fileDownload(excelFile, 'creator_statistics.xlsx');
+      fileDownload(excelFile.data, excelFile.filename);
     }
   }, [excelFile]);
 
