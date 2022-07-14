@@ -16,6 +16,7 @@ import {
 } from '../../../utils/nia15/interfaces/statics';
 import { StatsState } from './statsAction';
 
+const taskApi = newClient(Clients.Tasks);
 const statsApi = newClient(Clients.Statics);
 
 function* getTaskStats() {
@@ -260,6 +261,36 @@ function* downloadReviewerStats(action: PayloadAction<number>) {
   }
 }
 
+function* deleteTask(action: PayloadAction<number>) {
+  const taskId = action.payload;
+
+  yield put(loaderModule.startLoading());
+  try {
+    const response: ApiResponse = yield call(taskApi.deleteTask, taskId);
+    const res = apiResponse(response);
+    yield put(loaderModule.endLoading());
+    if (response.isSuccess) {
+      yield put(statsModule.actions.getTaskStats());
+      yield put(
+        alertModalModule.showAlert({
+          title: '삭제',
+          message: '삭제 완료: 복구는 관리자에게 문의해주세요.',
+        }),
+      );
+    } else {
+      yield put(alertModalModule.errorAlert(res));
+    }
+  } catch (e) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '삭제 실패',
+        message: e,
+      }),
+    );
+  }
+}
+
 function* watchStatsSaga() {
   yield takeLatest(statsModule.actions.getTaskStats, getTaskStats);
   yield takeLatest(statsModule.actions.downloadTask, downloadTask);
@@ -268,6 +299,7 @@ function* watchStatsSaga() {
   yield takeLatest(statsModule.actions.downloadCreator, downloadCreator);
   yield takeLatest(statsModule.actions.getReviewerStats, getReviewerStats);
   yield takeLatest(statsModule.actions.downloadReviewer, downloadReviewerStats);
+  yield takeLatest(statsModule.actions.deleteTask, deleteTask);
 }
 
 export default function* statsSaga() {

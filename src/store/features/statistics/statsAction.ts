@@ -89,5 +89,11 @@ const statsAction = {
       };
     }
   },
+  deleteTask: (state: StatsState, action: PayloadAction<number>) => {
+    state.statsTask = {
+      count: 0,
+      task: [],
+    };
+  },
 };
 export default statsAction;
