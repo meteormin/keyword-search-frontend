@@ -12,7 +12,6 @@ import fileDownload from 'js-file-download';
 import { config } from '../../helpers';
 import ConfirmModal from '../../components/modals/ConfirmModal';
 import { Task } from '../../utils/nia15/interfaces/statics';
-import taskModule from '../../store/features/tasks';
 
 const DataStatList = () => {
   const dispatch = useDispatch();
@@ -61,11 +60,11 @@ const DataStatList = () => {
 
   useEffect(() => {
     if (excelFile) {
-      fileDownload(excelFile, 'task_statistics.xlsx');
+      fileDownload(excelFile.data, excelFile.filename);
     }
 
     if (jsonFile) {
-      fileDownload(jsonFile, '15-2-task.json');
+      fileDownload(jsonFile.data, jsonFile.filename);
     }
   }, [excelFile, jsonFile]);
 
@@ -136,7 +135,22 @@ const DataStatList = () => {
             setPage(page);
           }}
         />
-        <Col md={4}></Col>
+        <Col md={4}>
+          <Row>
+            <Col></Col>
+            <Col lg={4}>
+              <Button
+                variant={'dark'}
+                className={'w-100'}
+                onClick={() => {
+                  dispatch(statsModule.actions.downloadJson());
+                }}
+              >
+                결과 다운로드
+              </Button>
+            </Col>
+          </Row>
+        </Col>
       </Row>
       <ConfirmModal
         title="삭제"

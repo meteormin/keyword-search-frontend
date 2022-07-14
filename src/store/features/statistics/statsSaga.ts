@@ -4,6 +4,7 @@ import alertModalModule from '../common/alertModal';
 import statsModule from './index';
 import { apiResponse } from '../../../helpers';
 import { ApiResponse } from '../../../utils/ApiClient';
+import { parseAttachFileName } from '../../../utils/str';
 import { toCamel } from 'snake-camel';
 import { SearchState } from '../search/searchAction';
 import searchModule from '../search';
@@ -65,7 +66,15 @@ function* downloadTask() {
 
     const res = apiResponse(response);
     if (response.isSuccess) {
-      yield put(statsModule.actions.setExcelFile(res));
+      const filename = parseAttachFileName(
+        response.res?.headers['content-disposition'] as string,
+      );
+      yield put(
+        statsModule.actions.setExcelFile({
+          data: res,
+          filename: filename,
+        }),
+      );
     } else {
       yield put(
         alertModalModule.errorAlert({
@@ -87,10 +96,48 @@ function* downloadTask() {
 function* downloadReport() {
   yield put(loaderModule.startLoading());
 
+  try {
+    const response: ApiResponse = yield call(statsApi.task.downloadReport);
+
+    yield put(loaderModule.endLoading());
+
+    const res = apiResponse(response);
+    if (response.isSuccess) {
+      const filename = parseAttachFileName(
+        response.res?.headers['content-disposition'] as string,
+      );
+
+      yield put(
+        statsModule.actions.setExcelFile({
+          data: res,
+          filename: filename,
+        }),
+      );
+    } else {
+      yield put(
+        alertModalModule.errorAlert({
+          res: res,
+        }),
+      );
+    }
+  } catch (err) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '다운로드 실패',
+        message: err,
+      }),
+    );
+  }
+}
+
+function* downloadJson() {
+  yield put(loaderModule.startLoading());
+
   const search: SearchState = yield select(searchModule.getSearchState);
   try {
     const response: ApiResponse = yield call(
-      statsApi.task.downloadReport,
+      statsApi.task.downloadJson,
       search.statsParameter || undefined,
     );
 
@@ -98,7 +145,16 @@ function* downloadReport() {
 
     const res = apiResponse(response);
     if (response.isSuccess) {
-      yield put(statsModule.actions.setJsonFile(res));
+      const filename = parseAttachFileName(
+        response.res?.headers['content-disposition'] as string,
+      );
+
+      yield put(
+        statsModule.actions.setJsonFile({
+          data: res,
+          filename: filename,
+        }),
+      );
     } else {
       yield put(
         alertModalModule.errorAlert({
@@ -295,6 +351,7 @@ function* watchStatsSaga() {
   yield takeLatest(statsModule.actions.getTaskStats, getTaskStats);
   yield takeLatest(statsModule.actions.downloadTask, downloadTask);
   yield takeLatest(statsModule.actions.downloadReport, downloadReport);
+  yield takeLatest(statsModule.actions.downloadJson, downloadJson);
   yield takeLatest(statsModule.actions.getCreatorStats, getCreatorStats);
   yield takeLatest(statsModule.actions.downloadCreator, downloadCreator);
   yield takeLatest(statsModule.actions.getReviewerStats, getReviewerStats);

@@ -58,3 +58,7 @@ export const isString = (value: any) => {
 };
 
 export const searchFormat = forSearchFormat;
+
+export const parseAttachFileName = (str: string) => {
+  return str.split(';')[1].trim().split('=')[1].replaceAll('"', '');
+};
