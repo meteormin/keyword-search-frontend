@@ -147,8 +147,7 @@ const DataStatList = () => {
           // req api
           console.log(recordToTrash[0]);
           recordToTrash.forEach((t) => {
-            dispatch(taskModule.actions.deleteTask(t.id));
-            dispatch(statsModule.actions.getTaskStats());
+            dispatch(statsModule.actions.deleteTask(t.id));
           });
 
           setRecordToTrash([]);
