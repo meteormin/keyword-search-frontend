@@ -68,28 +68,32 @@ const RejectReason: Option[] = [
     value: 8,
   },
   {
-    name: '9. 동일한 문장',
+    name: '9. 기타',
+    value: 9, // 기타 9 고정
+  },
+  {
+    name: '10. 동일한 문장',
     value: 10,
   },
   {
-    name: '10. 문장의 이질성',
+    name: '11. 문장의 이질성',
     value: 11,
   },
   {
-    name: '11. 단어수 과잉',
+    name: '12. 단어수 과잉',
     value: 12,
   },
   {
-    name: '12. 동일한 문형 사용',
+    name: '13. 동일한 문형 사용',
     value: 13,
   },
   {
-    name: '13. 문형 처리 오류',
+    name: '14. 문형 처리 오류',
     value: 14,
   },
   {
-    name: '14. 기타',
-    value: 9, // 기타 9 고정
+    name: '15. 생성 제외 문장',
+    value: 15,
   },
 ];
 
