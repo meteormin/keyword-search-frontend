@@ -146,7 +146,7 @@ const DataStatList = () => {
                   dispatch(statsModule.actions.downloadJson());
                 }}
               >
-                결과 다운로드
+                결과물다운로드
               </Button>
             </Col>
           </Row>
