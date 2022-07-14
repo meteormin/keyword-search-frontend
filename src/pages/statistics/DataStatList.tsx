@@ -135,7 +135,7 @@ const DataStatList = () => {
             setPage(page);
           }}
         />
-        <Col md={4}>
+        <Col md={4} className={'mt-5'}>
           <Row>
             <Col></Col>
             <Col lg={4}>
