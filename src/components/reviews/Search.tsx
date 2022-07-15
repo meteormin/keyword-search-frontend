@@ -7,7 +7,6 @@ import IdSearch from './IdSearch';
 import { useDispatch, useSelector } from 'react-redux';
 import searchModule from '../../store/features/search';
 import { SearchParameter } from '../../utils/nia15/interfaces/search';
-import { date, str } from '../../helpers';
 import SearchAndReset from '../common/SearchAndReset';
 
 export interface SearchProps {

@@ -21,6 +21,8 @@ import {
   TripleFrameText,
 } from '../../utils/tmkor/TmKor';
 
+export const ETC_REASON = 8;
+
 export enum ReviewResult {
   PASS = 'PASS',
   FAIL = 'FAIL',
@@ -317,9 +319,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
     if (reviewResult.radio == ReviewResult.FAIL) {
       if (reviewResult.check && reviewResult.check.length != 0) {
-        if (
-          reviewResult.check.includes(rejectReasons[rejectReasons.length - 1])
-        ) {
+        if (reviewResult.check.includes(rejectReasons[ETC_REASON])) {
           return !!reviewResult.memo;
         } else {
           return true;
