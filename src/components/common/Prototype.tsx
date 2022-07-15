@@ -67,7 +67,17 @@ const Prototype = (props: PrototypeProps) => {
           <tbody>
             <tr>
               <th scope="col">고유코드</th>
-              <td className="bg-white">{forceLineBreak(primaryCode)}</td>
+              <td className="bg-white">
+                <div
+                  style={{
+                    overflow: 'auto',
+                    maxWidth: '250px',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {primaryCode}
+                </div>
+              </td>
             </tr>
             <tr>
               <th scope="col" className="col-md-4">
