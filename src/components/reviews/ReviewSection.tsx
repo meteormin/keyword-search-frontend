@@ -19,6 +19,8 @@ export interface ReviewResultProps {
   onChange: (state: ReviewResultState) => any;
 }
 
+export const ETC_REASON = 8;
+
 const ReviewSection = (props: ReviewResultProps) => {
   const [radio, setRadio] = useState<ReviewResultEnum>(ReviewResultEnum.FAIL);
   const [check, setCheck] = useState<number[]>([]);
@@ -114,7 +116,7 @@ const ReviewSection = (props: ReviewResultProps) => {
               placeholder={'반력 사유 선택'}
             />
           </Col>
-          {check?.includes(reasonList[reasonList.length - 1]) ? (
+          {check?.includes(reasonList[ETC_REASON]) ? (
             <Col>
               <Form.Group>
                 <Form.Label controlid={'memo' + props.seq} className="mb-3">
