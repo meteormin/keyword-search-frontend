@@ -54,12 +54,14 @@ echo "copy ./build >> ./build_prd"
 
 if [ ! -d "./build_prd" ]; then
   mkdir ./build_prd
+  chmod -R 775 ./build_prd
 else
   rm -rf ./build_prd/*
 fi
 
 cp ./public/.htaccess ./build && cp -r ./build/* ./build_prd 2>/dev/null || res=$?
 cp ./public/.htaccess ./build_prd
+chmod -R 775 ./build_prd
 
 if [ "${res}" = 1 ]; then
   echo "failed copy build directory"
@@ -67,5 +69,7 @@ if [ "${res}" = 1 ]; then
 else
   echo "success copy!"
 fi
+
+rm -rf ./build
 
 exit 0
