@@ -1,7 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Button, Col, Row } from 'react-bootstrap';
 import LimitFilter from '../../components/common/LimitFilter';
-import DynamicTable from '../../components/common/DaynamicTable';
+import DynamicTable, {
+  DynamicSchema,
+} from '../../components/common/DaynamicTable';
 import { DataStatsRecord, DataStatsSchema, toRecord } from './DataStatsSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import statsModule from '../../store/features/statistics';
@@ -12,6 +14,8 @@ import fileDownload from 'js-file-download';
 import { config } from '../../helpers';
 import ConfirmModal from '../../components/modals/ConfirmModal';
 import { Task } from '../../utils/nia15/interfaces/statics';
+import taskModule from '../../store/features/tasks';
+import TaskInfoModal from '../../components/statistics/TaskInfoModal';
 
 const DataStatList = () => {
   const dispatch = useDispatch();
@@ -20,9 +24,24 @@ const DataStatList = () => {
   const [records, setRecords] = useState<DataStatsRecord[]>([]);
   const [confirmShow, setConfirmShow] = useState<boolean>(false);
   const [recordToTrash, setRecordToTrash] = useState<Task[]>([]);
+  const { workTask } = useSelector(taskModule.getTaskState);
   const { statsTask, excelFile, jsonFile } = useSelector(
     statsModule.getStatsState,
   );
+
+  const handleClickRecord = (record: DataStatsRecord) => {
+    dispatch(taskModule.actions.getWorkTask(record._origin.id));
+  };
+
+  const setSchema = (schema: DynamicSchema) => {
+    for (const [key, value] of Object.entries(schema)) {
+      if (key !== 'trashBtn') {
+        schema[key] = Object.assign({ onClick: handleClickRecord }, value);
+      }
+    }
+
+    return schema;
+  };
 
   useEffect(() => {
     if (statsTask.task) {
@@ -98,7 +117,7 @@ const DataStatList = () => {
         </Col>
       </Row>
       <Row className={'mt-4'}>
-        <DynamicTable schema={DataStatsSchema} records={records} />
+        <DynamicTable schema={setSchema(DataStatsSchema)} records={records} />
       </Row>
       <Row className={'mt-2 mx-2'}>
         <Col md={4} className={'mt-5'}>
@@ -168,6 +187,16 @@ const DataStatList = () => {
           setConfirmShow(false);
         }}
         onClose={() => setConfirmShow(false)}
+      />
+      <TaskInfoModal
+        concepts={
+          workTask?.edges?.concepts?.map((t) => t.stem).join(', ') || ''
+        }
+        basicSentence={workTask?.sentence || ''}
+        show={!!workTask}
+        onHide={() => {
+          dispatch(taskModule.actions.setWorkTask(null));
+        }}
       />
     </Fragment>
   );

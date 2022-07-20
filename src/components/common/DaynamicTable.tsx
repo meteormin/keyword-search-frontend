@@ -5,7 +5,7 @@ import { Table } from 'react-bootstrap';
 export interface DynamicTableProps {
   schema: DynamicSchema;
   records: any[];
-  onClick?: (record: any) => void;
+  onClick?: (record: any | any[]) => void;
 }
 
 export interface DynamicSchema {
@@ -22,7 +22,15 @@ class DynamicTable extends Component<DynamicTableProps> {
 
     for (const [key, column] of Object.entries(this.props.schema)) {
       columnsElement.push(
-        <th scope="col" key={'col_' + key}>
+        <th
+          scope="col"
+          key={'col_' + key}
+          onClick={() => {
+            if (column.onClick) {
+              column.onClick(this.props.records);
+            }
+          }}
+        >
           {column.name}
         </th>,
       );

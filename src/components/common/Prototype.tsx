@@ -34,22 +34,6 @@ const Prototype = (props: PrototypeProps) => {
     });
   }, []);
 
-  const forceLineBreak = (str: string) => {
-    console.log(str);
-    const result = [];
-    let tempStr = '';
-    for (let i = 0; i < str.length; i++) {
-      if (i >= 40 && i % 40 == 0) {
-        result.push(tempStr);
-        result.push(<br key={i} />);
-        tempStr = '';
-      }
-      tempStr += str[i];
-    }
-    result.push(tempStr);
-    return result;
-  };
-
   return (
     <div>
       <Card header={lang.sentence.prototype.subject}>
