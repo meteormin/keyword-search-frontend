@@ -303,10 +303,18 @@ const WorkSpace = (props: WorkSpaceProps) => {
       setReviewPassBtn(false);
     }
 
-    const validReject1 = validReject(reviewData1);
-    const validReject2 = validReject(reviewData2);
+    let validReject1 = true;
+    let validReject2 = true;
 
-    setReviewOpinionBtn(validReject1 || validReject2);
+    if (reviewData1?.radio == ReviewResult.FAIL) {
+      validReject1 = validReject(reviewData1);
+    }
+
+    if (reviewData2?.radio == ReviewResult.FAIL) {
+      validReject2 = validReject(reviewData2);
+    }
+    console.log('valid2', validReject2);
+    setReviewOpinionBtn(validReject1 && validReject2);
   };
 
   const validReject = (reviewResult: ReviewResultState | undefined) => {
