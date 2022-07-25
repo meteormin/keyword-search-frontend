@@ -137,7 +137,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
   useEffect(() => {
     const patText = patternedText;
-    if (prevPatText && patternedText[0] == prevPatText[0]) {
+    if (prevPatText && patternedText[0] != prevPatText[0]) {
       patText[0] = textArea10;
       if (
         textArea10 != props?.workData?.textArea10 &&
@@ -147,7 +147,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       }
     }
 
-    if (prevPatText && patternedText[1] == prevPatText[1]) {
+    if (prevPatText && patternedText[1] != prevPatText[1]) {
       patText[1] = textArea20;
       if (
         textArea20 != props?.workData?.textArea20 &&
@@ -519,6 +519,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
           if (madeSP) {
             setIsClickedMkSp(cntNo - 1, true);
             setSentencePattern(madeSP);
+
+            const newPatText = prevPatText;
+            newPatText[cntNo - 1] = madeSP;
+            setPatText(newPatText);
+
             const sp = await makeSP(str);
             setPartOfSpeech(sp?.tagged || '');
             return {
@@ -531,6 +536,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
         const madeSP = await makeSP(str);
         if (madeSP) {
           setSentencePattern(madeSP.pattern);
+
+          const newPatText = prevPatText;
+          newPatText[cntNo - 1] = madeSP.pattern;
+          setPatText(newPatText);
+
           setPartOfSpeech(madeSP.tagged);
           return {
             status: true,
@@ -541,6 +551,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
     } catch (e) {
       setIsClickedMkSp(cntNo - 1, false);
       setSentencePattern('');
+
+      const newPatText = prevPatText;
+      newPatText[cntNo - 1] = '';
+      setPatText(newPatText);
+
       setPartOfSpeech('');
       showAlertForMakeSP(cntNo, e);
       return {
