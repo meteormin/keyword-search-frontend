@@ -1,7 +1,10 @@
-import menu from './menu';
+import { menu152, menu153 } from './menu';
 
 const layouts = {
-  menu: menu,
+  menu: {
+    '152': menu152,
+    '153': menu153,
+  },
   header: {
     dropDownMenu: [
       {

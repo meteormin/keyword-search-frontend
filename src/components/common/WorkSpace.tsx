@@ -137,6 +137,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
   useEffect(() => {
     const patText = patternedText;
+
     if (prevPatText && patternedText[0] != prevPatText[0]) {
       patText[0] = textArea10;
       if (
@@ -157,7 +158,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       }
     }
 
-    setPatText(patText);
+    //setPatText(patText);
     setRequestBtn(false);
     setReviewPassBtn(false);
     setReviewOpinionBtn(false);
@@ -290,6 +291,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
       setRequestBtn(false);
     }
 
+    let validReject1;
+    let validReject2;
+
     if (
       reviewData1?.radio == ReviewResult.PASS &&
       reviewData2?.radio == ReviewResult.PASS
@@ -299,12 +303,14 @@ const WorkSpace = (props: WorkSpaceProps) => {
       } else {
         setReviewPassBtn(false);
       }
+
+      validReject1 = false;
+      validReject2 = false;
     } else {
       setReviewPassBtn(false);
+      validReject1 = true;
+      validReject2 = true;
     }
-
-    let validReject1 = true;
-    let validReject2 = true;
 
     if (reviewData1?.radio == ReviewResult.FAIL) {
       validReject1 = validReject(reviewData1);
@@ -313,6 +319,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
     if (reviewData2?.radio == ReviewResult.FAIL) {
       validReject2 = validReject(reviewData2);
     }
+    console.log('valid1', validReject1);
     console.log('valid2', validReject2);
     setReviewOpinionBtn(validReject1 && validReject2);
   };
@@ -390,6 +397,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
     checkBtnActivate();
     const data = toWorkData();
     props.onChange(data);
+    console.log('change pat', patternedText);
   }, [
     textArea10,
     textArea20,

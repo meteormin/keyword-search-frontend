@@ -192,7 +192,7 @@ REACT_APP_TMKOR_TOKEN={auth_token}
 
 > 라우팅 관련
 
-- Router.tsx: 기본 라우터
+- Router152.tsx: 기본 라우터
 
 ### store
 

@@ -134,7 +134,7 @@ export interface Review2StatsRecord {
 
 export const toRecord2 = (item: Reviewer2, i: number): Review2StatsRecord => {
   const totalReviewed =
-    item.reviewer2ReviewHoldAcc + item.reject2Acc + item.pass2; // TODO: 검수보류 + 1차승인 + 1차 반려 누적 + 2차 반려 누적 + 2차 승인
+    item.reviewer2ReviewHoldAcc + item.reject2Acc + item.pass2;
 
   return {
     no: i + 1,

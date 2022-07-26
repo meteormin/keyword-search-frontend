@@ -1,6 +1,6 @@
 import { Menu } from '../components/layouts/Navigator';
 
-const menu: Menu = {
+export const menu152: Menu = {
   header: '',
   url: '/',
   name: '',
@@ -69,4 +69,10 @@ const menu: Menu = {
   ],
 };
 
-export default menu;
+export const menu153: Menu = {
+  header: '',
+  url: '/',
+  name: '',
+  icon: '',
+  navItems: [],
+};
