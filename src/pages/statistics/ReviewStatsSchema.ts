@@ -14,6 +14,9 @@ export const Review1StatsSchema: DynamicSchema = {
   totalReviewed: {
     name: '총 검수 문장 셋 수',
   },
+  totalReworked: {
+    name: '총 재검수 문장 셋 수',
+  },
   review1Hold: {
     name: '검수보류',
   },
@@ -36,6 +39,7 @@ export interface Review1StatsRecord {
   reviewerId: string;
   reviewerName: string;
   totalReviewed: number;
+  totalReworked: number;
   review1Hold: number;
   review1Pass: number;
   review1RejectAcc: number;
@@ -52,6 +56,7 @@ export const toRecord1 = (item: Reviewer1, i: number): Review1StatsRecord => {
     reviewerId: item.loginId,
     reviewerName: item.name,
     totalReviewed: totalReviewed,
+    totalReworked: 0,
     review1Hold: item.hold1,
     review1Pass: item.pass1,
     review1RejectAcc: item.reject1Acc,
@@ -68,6 +73,7 @@ export const setFirstRow1 = (
     reviewerId: '전체',
     reviewerName: '전체',
     totalReviewed: 0,
+    totalReworked: 0,
     review1Hold: 0,
     review1Pass: 0,
     review1RejectAcc: 0,
@@ -104,6 +110,9 @@ export const Review2StatsSchema: DynamicSchema = {
   totalReviewed: {
     name: '총 검수 문장 셋 수',
   },
+  totalReworked: {
+    name: '총 재검수 문장 셋 수',
+  },
   review2RejectAcc: {
     name: '2차 반려 (누적)',
   },
@@ -117,6 +126,7 @@ export interface Review2StatsRecord {
   reviewerId: string;
   reviewerName: string;
   totalReviewed: number;
+  totalReworked: number;
   review2ReviewHoldAcc: number;
   review2RejectAcc: number;
   review2Pass: number;
@@ -132,6 +142,7 @@ export const toRecord2 = (item: Reviewer2, i: number): Review2StatsRecord => {
     reviewerName: item.name,
     review2ReviewHoldAcc: item.reviewer2ReviewHoldAcc,
     totalReviewed: totalReviewed,
+    totalReworked: item.rework,
     review2RejectAcc: item.reject2Acc,
     review2Pass: item.pass2,
   };
@@ -146,6 +157,7 @@ export const setFirstRow2 = (
     reviewerName: '전체',
     review2ReviewHoldAcc: 0,
     totalReviewed: 0,
+    totalReworked: 0,
     review2RejectAcc: 0,
     review2Pass: 0,
   };
@@ -155,6 +167,7 @@ export const setFirstRow2 = (
     firstRow.review2ReviewHoldAcc += item.review2ReviewHoldAcc;
     firstRow.review2RejectAcc += item.review2RejectAcc;
     firstRow.review2Pass += item.review2Pass;
+    firstRow.totalReworked += item.totalReworked;
   });
   records.unshift(firstRow);
 

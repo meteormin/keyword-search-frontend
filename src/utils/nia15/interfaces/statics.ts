@@ -27,6 +27,8 @@ export interface Reviewer1 {
   pass2: number;
   reject1Acc: number;
   reject2Acc: number;
+  work: number;
+  rework: number;
 }
 
 export interface Reviewer2 extends Reviewer1 {
