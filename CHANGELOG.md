@@ -6,6 +6,8 @@ fix
 
 - sentencePattern 문형 만들기 적용 안된 상태로 저장되던 문제 수정
 - sentencePatterned 파라미터가 입력 되지 않는 버그 수정
+- 1차 검수 통계 rework 개수 반영 되지 않은 이슈 수정
+
 ## v1.1.15 - 2022.07.22
 
 feat
