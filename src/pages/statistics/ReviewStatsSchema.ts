@@ -56,7 +56,7 @@ export const toRecord1 = (item: Reviewer1, i: number): Review1StatsRecord => {
     reviewerId: item.loginId,
     reviewerName: item.name,
     totalReviewed: totalReviewed,
-    totalReworked: 0,
+    totalReworked: item.rework,
     review1Hold: item.hold1,
     review1Pass: item.pass1,
     review1RejectAcc: item.reject1Acc,
@@ -88,6 +88,7 @@ export const setFirstRow1 = (
     firstRow.review1RejectAcc += item.review1RejectAcc;
     firstRow.review2RejectAcc += item.review2RejectAcc;
     firstRow.review2Pass += item.review2Pass;
+    firstRow.totalReworked += item.totalReworked;
   });
   records.unshift(firstRow);
 
