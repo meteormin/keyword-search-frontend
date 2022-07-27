@@ -1,5 +1,5 @@
 #!/bin/bash
-$env = $1
+env=$1
 
 echo "[start deploy react app] $env"
 
