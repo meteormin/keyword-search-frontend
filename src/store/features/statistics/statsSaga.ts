@@ -214,12 +214,20 @@ function* downloadCreator() {
       statsApi.user.download,
       search.statsParameter || undefined,
     );
-
+    console.log(response.res?.headers);
     yield put(loaderModule.endLoading());
 
     const res = apiResponse(response);
     if (response.isSuccess) {
-      yield put(statsModule.actions.setExcelFile(res));
+      const filename = parseAttachFileName(
+        response.res?.headers['content-disposition'] as string,
+      );
+      yield put(
+        statsModule.actions.setExcelFile({
+          filename: filename,
+          data: res,
+        }),
+      );
     } else {
       yield put(
         alertModalModule.errorAlert({
@@ -290,7 +298,15 @@ function* downloadReviewerStats(action: PayloadAction<number>) {
 
       const res = apiResponse(response);
       if (response.isSuccess) {
-        yield put(statsModule.actions.setExcelFile(res));
+        const filename = parseAttachFileName(
+          response.res?.headers['content-disposition'] as string,
+        );
+        yield put(
+          statsModule.actions.setExcelFile({
+            filename: filename,
+            data: res,
+          }),
+        );
       } else {
         yield put(
           alertModalModule.errorAlert({
