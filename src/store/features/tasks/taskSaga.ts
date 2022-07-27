@@ -82,9 +82,9 @@ function* assign() {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '할당 실패',
-        message: '할당 실패',
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: { title: '할당 실패', message: '할당 실패' },
         refresh: true,
       }),
     );
