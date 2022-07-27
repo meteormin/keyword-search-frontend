@@ -1,10 +1,14 @@
 #!/bin/bash
+env=$1
 
-echo "[start deploy react app]"
+echo "[start deploy react app] $env"
 
 echo "[pulling repository]"
-
-git pull origin main 2>/dev/null || res=$?
+if [ "$env" = "dev" ]; then
+  git pull origin develop 2>/dev/null || res=$?
+else
+  git pull origin main 2>/dev/null || res=$?
+fi
 
 if [ "${res}" = 1 ]; then
   echo "failed, git pull"
