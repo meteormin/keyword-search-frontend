@@ -49,7 +49,7 @@ const statsAction = {
   downloadTask: (state: StatsState) => {
     state.excelFile = null;
   },
-  setExcelFile: (state: StatsState, action: PayloadAction<any>) => {
+  setExcelFile: (state: StatsState, action: PayloadAction<FileState>) => {
     state.excelFile = action.payload;
   },
   downloadReport: (state: StatsState) => {
@@ -58,7 +58,7 @@ const statsAction = {
   downloadJson: (state: StatsState) => {
     state.jsonFile = null;
   },
-  setJsonFile: (state: StatsState, action: PayloadAction<any>) => {
+  setJsonFile: (state: StatsState, action: PayloadAction<FileState>) => {
     state.jsonFile = action.payload;
   },
   setCreatorStats: (state: StatsState, action: PayloadAction<StatsCreator>) => {
