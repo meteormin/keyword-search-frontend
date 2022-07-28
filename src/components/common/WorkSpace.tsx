@@ -91,31 +91,9 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
     setText10(props.workData?.textArea10 || '');
     setText20(props.workData?.textArea20 || '');
-
-    if (props.workData?.textArea10) {
-      if (props.workData?.textArea10 == props.workData?.textArea11) {
-        console.log('check same', true);
-        handleMakeSP(1, props.workData?.textArea10).then((r) => {
-          console.log('set11', r);
-          if (props.workData?.textArea20) {
-            if (props.workData?.textArea20 == props.workData?.textArea21) {
-              console.log('check same', true);
-              handleMakeSP(2, props.workData?.textArea20).then((r) =>
-                console.log('set21', r),
-              );
-            } else {
-              console.log('set21', props.workData.textArea21);
-              setText21(props.workData?.textArea21 || '');
-            }
-          }
-        });
-      } else {
-        console.log('set11 && set22', props.workData.textArea11);
-        setText11(props.workData?.textArea11 || '');
-        setText21(props.workData?.textArea21 || '');
-        setPatText(props.workData?.origin || ['', '']);
-      }
-    }
+    setText11(props.workData?.textArea11 || '');
+    setText21(props.workData?.textArea21 || '');
+    setPatText(props.workData?.origin || ['', '']);
 
     setReview1({
       radio: props.workData?.reviewData?.result1 as ReviewResult,
@@ -131,30 +109,30 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
     if (props.workType == 'rework' || props.workType == 'review') {
       setClickedMkSp([true, true]);
-    }
 
-    if (props.task.sentence) {
-      makeSP(props.task.sentence).then((res) => {
-        if (res) {
-          setOriginSP(res.pattern);
-        }
-      });
-    }
+      if (props.task.sentence) {
+        makeSP(props.task.sentence).then((res) => {
+          if (res) {
+            setOriginSP(res.pattern);
+          }
+        });
+      }
 
-    if (props.workData?.textArea10) {
-      makeSP(props.workData.textArea10).then((res) => {
-        if (res) {
-          setText12(res.tagged);
-        }
-      });
-    }
+      if (props.workData?.textArea10) {
+        makeSP(props.workData.textArea10).then((res) => {
+          if (res) {
+            setText12(res.tagged);
+          }
+        });
+      }
 
-    if (props.workData?.textArea20) {
-      makeSP(props.workData.textArea20).then((res) => {
-        if (res) {
-          setText22(res.tagged);
-        }
-      });
+      if (props.workData?.textArea20) {
+        makeSP(props.workData.textArea20).then((res) => {
+          if (res) {
+            setText22(res.tagged);
+          }
+        });
+      }
     }
   }, []);
 
@@ -171,6 +149,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       textArea20 != prevTextArea20
     ) {
       setIsClickedMkSp(1, false);
+    } else {
     }
 
     setRequestBtn(false);
@@ -179,13 +158,24 @@ const WorkSpace = (props: WorkSpaceProps) => {
   }, [textArea10, textArea20]);
 
   useEffect(() => {
+    console.log('prevPat', prevPatText);
     if (prevPatText && patternedText[0] != prevPatText[0]) {
-      setText11(patternedText[0] || textArea10);
+      if (patternedText[0] == textArea10) {
+        setText11(patternedText[0] || textArea10);
+        handleMakeSP(1, textArea10).then((r) => {
+          console.log(r);
+        });
+      }
       checkBtnActivate();
     }
 
     if (prevPatText && patternedText[1] != prevPatText[0]) {
-      setText21(patternedText[1] || textArea20);
+      if (patternedText[1] == textArea20) {
+        setText21(patternedText[1] || textArea20);
+        handleMakeSP(2, textArea20).then((r) => {
+          console.log(r);
+        });
+      }
       checkBtnActivate();
     }
   }, [patternedText]);
