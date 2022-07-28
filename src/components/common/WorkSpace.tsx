@@ -96,7 +96,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
         console.log('check same', true);
         handleMakeSP(1, props.workData?.textArea10).then((r) => console.log(r));
       } else {
-        console.log('set21', props.workData.textArea11);
+        console.log('set11', props.workData.textArea11);
         setText21(props.workData?.textArea11 || '');
       }
     }
@@ -159,7 +159,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
   useEffect(() => {
     const patText = patternedText;
 
-    if (prevPatText && patternedText[0] == prevPatText[0]) {
+    if (prevPatText && patternedText[0] != prevPatText[0]) {
       if (textArea10) {
         patText[0] = textArea10;
       }
@@ -172,7 +172,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       }
     }
 
-    if (prevPatText && patternedText[1] == prevPatText[1]) {
+    if (prevPatText && patternedText[1] != prevPatText[1]) {
       if (textArea20) {
         patText[1] = textArea20;
       }
