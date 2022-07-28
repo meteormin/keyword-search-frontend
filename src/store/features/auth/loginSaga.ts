@@ -41,7 +41,13 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
   } catch (error) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({ title: '로그인 실패', message: error }),
+      alertModalModule.errorAlert({
+        res: error,
+        fallback: {
+          title: '로그인',
+          message: '아이디 또는 비밀번화 틀렸습니다.',
+        },
+      }),
     );
   }
 }
