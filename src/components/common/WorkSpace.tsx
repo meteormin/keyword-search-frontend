@@ -149,7 +149,6 @@ const WorkSpace = (props: WorkSpaceProps) => {
       textArea20 != prevTextArea20
     ) {
       setIsClickedMkSp(1, false);
-    } else {
     }
 
     setRequestBtn(false);
