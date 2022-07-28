@@ -91,6 +91,15 @@ const WorkSpace = (props: WorkSpaceProps) => {
 
     setText10(props.workData?.textArea10 || '');
     setText11(props.workData?.textArea11 || '');
+    if (props.workData?.textArea10) {
+      if (props.workData?.textArea10 == props.workData?.textArea11) {
+        console.log('check same', true);
+        handleMakeSP(1, props.workData?.textArea10).then((r) => console.log(r));
+      } else {
+        console.log('set21', props.workData.textArea11);
+        setText21(props.workData?.textArea11 || '');
+      }
+    }
 
     setText20(props.workData?.textArea20 || '');
     setText21(props.workData?.textArea21 || '');
