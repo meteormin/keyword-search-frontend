@@ -88,10 +88,22 @@ const WorkSpace = (props: WorkSpaceProps) => {
   useEffect(() => {
     setCount1(props.workData?.wordCount1 || 0);
     setCount2(props.workData?.wordCount2 || 0);
+
     setText10(props.workData?.textArea10 || '');
     setText11(props.workData?.textArea11 || '');
+
     setText20(props.workData?.textArea20 || '');
     setText21(props.workData?.textArea21 || '');
+    if (props.workData?.textArea20) {
+      if (props.workData?.textArea20 == props.workData?.textArea21) {
+        console.log('check same', true);
+        handleMakeSP(2, props.workData?.textArea20).then((r) => console.log(r));
+      } else {
+        console.log('set21', props.workData.textArea21);
+        setText21(props.workData?.textArea21 || '');
+      }
+    }
+
     setPatText(props.workData?.origin || ['', '']);
 
     setReview1({
@@ -138,8 +150,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
   useEffect(() => {
     const patText = patternedText;
 
-    if (prevPatText && patternedText[0] != prevPatText[0]) {
-      patText[0] = textArea10;
+    if (prevPatText && patternedText[0] == prevPatText[0]) {
+      if (textArea10) {
+        patText[0] = textArea10;
+      }
+
       if (
         textArea10 != props?.workData?.textArea10 &&
         textArea10 != prevTextArea10
@@ -148,8 +163,11 @@ const WorkSpace = (props: WorkSpaceProps) => {
       }
     }
 
-    if (prevPatText && patternedText[1] != prevPatText[1]) {
-      patText[1] = textArea20;
+    if (prevPatText && patternedText[1] == prevPatText[1]) {
+      if (textArea20) {
+        patText[1] = textArea20;
+      }
+
       if (
         textArea20 != props?.workData?.textArea20 &&
         textArea20 != prevTextArea20
@@ -158,7 +176,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       }
     }
 
-    //setPatText(patText);
+    setPatText(patText);
     setRequestBtn(false);
     setReviewPassBtn(false);
     setReviewOpinionBtn(false);
@@ -528,7 +546,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
             setIsClickedMkSp(cntNo - 1, true);
             setSentencePattern(madeSP);
 
-            const newPatText = prevPatText;
+            const newPatText = prevPatText || ['', ''];
             newPatText[cntNo - 1] = madeSP;
             setPatText(newPatText);
 
@@ -545,7 +563,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
         if (madeSP) {
           setSentencePattern(madeSP.pattern);
 
-          const newPatText = prevPatText;
+          const newPatText = prevPatText || ['', ''];
           newPatText[cntNo - 1] = madeSP.pattern;
           setPatText(newPatText);
 
@@ -560,7 +578,7 @@ const WorkSpace = (props: WorkSpaceProps) => {
       setIsClickedMkSp(cntNo - 1, false);
       setSentencePattern('');
 
-      const newPatText = prevPatText;
+      const newPatText = prevPatText || ['', ''];
       newPatText[cntNo - 1] = '';
       setPatText(newPatText);
 

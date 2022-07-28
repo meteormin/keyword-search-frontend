@@ -241,11 +241,11 @@ export const checkTripleFrame = async (sentences: {
 export const switchReviewStatus = switchRS;
 
 export function usePrev<T>(value: T): T {
-  const ref = useRef();
+  const ref = useRef<T>();
 
   useEffect(() => {
-    ref.current = value as any;
+    ref.current = value as T;
   });
 
-  return ref.current as any;
+  return ref.current as T;
 }

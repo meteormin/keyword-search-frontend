@@ -59,9 +59,12 @@ function* getSentenceList() {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '데이터 조회 실패',
-        message: e,
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '문장 생성 내역',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -90,9 +93,12 @@ function* getSentence(action: PayloadAction<number>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '데이터 조회',
-        message: '데이터 조회 실패',
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '문장 생성 내역',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -134,9 +140,12 @@ function* createSentence(action: PayloadAction<CreateSentence>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '검수 요청',
-        message: '검수 요청 실패',
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '검수 요청',
+          message: '검수 요청 실패',
+        },
         refresh: true,
       }),
     );
@@ -159,10 +168,6 @@ function* updateSentence(action: PayloadAction<CreateSentence>) {
         alertModalModule.showAlert({
           title: '검수 요청',
           message: '검수 요청 완료',
-          // callback: () => {
-          //   const dispatch = useDispatch();
-          //   dispatch(sentenceModule.actions.getSentenceList());
-          // },
           refresh: false,
         }),
       );
@@ -179,9 +184,12 @@ function* updateSentence(action: PayloadAction<CreateSentence>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '검수 요청',
-        message: '검수 요청 실패',
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '검수 요청',
+          message: '검수 요청 실패',
+        },
         refresh: true,
       }),
     );
@@ -219,9 +227,12 @@ function* createTemp(action: PayloadAction<CreateSentence>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '임시 저장',
-        message: '임시 저장 실패',
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '임시 저장',
+          message: '임시 저장 실패',
+        },
         refresh: true,
       }),
     );
@@ -259,9 +270,12 @@ function* updateTemp(action: PayloadAction<CreateSentence>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '임시 저장',
-        message: '임시 저장 실패',
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '임시 저장',
+          message: '임시 저장 실패',
+        },
         refresh: true,
       }),
     );
