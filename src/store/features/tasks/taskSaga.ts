@@ -113,9 +113,12 @@ function* getTask(action: PayloadAction<number>) {
   } catch (error) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '데이터 조회 실패',
-        message: error,
+      alertModalModule.errorAlert({
+        res: error,
+        fallback: {
+          title: '문장 생성',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -186,9 +189,12 @@ function* deleteTask(action: PayloadAction<number>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '삭제 실패',
-        message: e,
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '삭제 실패',
+          message: '삭제 실패',
+        },
       }),
     );
   }

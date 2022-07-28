@@ -50,8 +50,10 @@ function* assign(action: PayloadAction<number>) {
     yield put(
       alertModalModule.errorAlert({
         res: e,
-        fallback: { title: '할당 실패', message: '할당 실패' },
-        refresh: true,
+        fallback: {
+          title: '할당 실패',
+          message: '할당 실패',
+        },
       }),
     );
   }
@@ -88,9 +90,12 @@ function* getAssignList(action: PayloadAction<{ seq: number }>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModal.showAlert({
-        title: '데이터 조회 실패',
-        message: '데이터 조회 실패',
+      alertModal.errorAlert({
+        res: e,
+        fallback: {
+          title: '데이터 조회 실패',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -123,9 +128,12 @@ function* getAssign(action: PayloadAction<{ seq: number; assignId: number }>) {
     }
   } catch (e) {
     yield put(
-      alertModal.showAlert({
-        title: '데이터 조회 실패',
-        message: '데이터 조회 실패',
+      alertModal.errorAlert({
+        res: e,
+        fallback: {
+          title: '데이터 조회 실패',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -170,9 +178,12 @@ function* getReviewList(action: PayloadAction<{ seq: number }>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModal.showAlert({
-        title: '데이터 조회 실패',
-        message: '데이터 조회 실패',
+      alertModal.errorAlert({
+        res: e,
+        fallback: {
+          title: '데이터 조회 실패',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -200,9 +211,12 @@ function* getReview(action: PayloadAction<{ seq: number; id: number }>) {
     }
   } catch (e) {
     yield put(
-      alertModal.showAlert({
-        title: '데이터 조회 실패',
-        message: '데이터 조회 실패',
+      alertModal.errorAlert({
+        res: e,
+        fallback: {
+          title: '데이터 조회 실패',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -247,9 +261,12 @@ function* createReview(
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModal.showAlert({
-        title: '검수 실패',
-        message: '검수 결과 저장 실패',
+      alertModal.errorAlert({
+        res: e,
+        fallback: {
+          title: '검수 실패',
+          message: '검수 결과 저장 실패',
+        },
       }),
     );
   }
@@ -294,9 +311,12 @@ function* updateReview(
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModal.showAlert({
-        title: '검수 실패',
-        message: '검수 결과 저장 실패',
+      alertModal.errorAlert({
+        res: e,
+        fallback: {
+          title: '검수 실패',
+          message: '검수 결과 저장 실패',
+        },
       }),
     );
   }
