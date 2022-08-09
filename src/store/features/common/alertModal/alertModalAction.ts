@@ -33,18 +33,27 @@ export default {
     action: PayloadAction<{
       res: any;
       refresh?: boolean;
+      fallback?: {
+        title: string;
+        message: string;
+      };
     }>,
   ) => {
-    const { res, refresh } = action.payload;
+    const { res, refresh, fallback } = action.payload;
     state.show = true;
     state.refresh = refresh || false;
     if (res instanceof ErrorResponse) {
       state.title = res.name;
       state.message = res.message;
     } else {
-      console.log(res);
-      state.title = '알 수 없는 에러';
-      state.message = '관리자에게 문의해주세요.';
+      console.error('Unknown Error:', res);
+      if (fallback) {
+        state.title = fallback.title;
+        state.message = fallback.message;
+      } else {
+        state.title = '알 수 없는 에러';
+        state.message = '관리자에게 문의해주세요.';
+      }
     }
   },
 };

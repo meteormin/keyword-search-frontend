@@ -85,9 +85,12 @@ function* downloadTask() {
   } catch (err) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '다운로드 실패',
-        message: err,
+      alertModalModule.errorAlert({
+        res: err,
+        fallback: {
+          title: '전제 데이터 다운로드',
+          message: '다운로드 실패',
+        },
       }),
     );
   }
@@ -123,9 +126,12 @@ function* downloadReport() {
   } catch (err) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '다운로드 실패',
-        message: err,
+      alertModalModule.errorAlert({
+        res: err,
+        fallback: {
+          title: '문장 현황 다운로드',
+          message: '문장 현황 다운로드 실패',
+        },
       }),
     );
   }
@@ -165,9 +171,12 @@ function* downloadJson() {
   } catch (err) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '다운로드 실패',
-        message: err,
+      alertModalModule.errorAlert({
+        res: err,
+        fallback: {
+          title: '결과물 다운로드',
+          message: '결과물 다운로드 실패',
+        },
       }),
     );
   }
@@ -198,9 +207,12 @@ function* getCreatorStats() {
   } catch (err) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '데이터 조회 실패',
-        message: err,
+      alertModalModule.errorAlert({
+        res: err,
+        fallback: {
+          title: '생성자 통계',
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -238,9 +250,12 @@ function* downloadCreator() {
   } catch (err) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '다운로드 실패',
-        message: err,
+      alertModalModule.errorAlert({
+        res: err,
+        fallback: {
+          title: '생성자 통계 다운로드',
+          message: '생성자 통계 다운로드 실패',
+        },
       }),
     );
   }
@@ -271,11 +286,15 @@ function* getReviewerStats(action: PayloadAction<number>) {
       );
     }
   } catch (err) {
+    const target = action.payload == 1 ? '검수자 통계' : '검수 관리자 통계';
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '데이터 조회 실패',
-        message: err,
+      alertModalModule.errorAlert({
+        res: err,
+        fallback: {
+          title: `${target}`,
+          message: '데이터 조회 실패',
+        },
       }),
     );
   }
@@ -324,10 +343,14 @@ function* downloadReviewerStats(action: PayloadAction<number>) {
     }
   } catch (err) {
     yield put(loaderModule.endLoading());
+    const target = action.payload == 1 ? '검수자 통계' : '검수 관리자 통계';
     yield put(
-      alertModalModule.showAlert({
-        title: '다운로드 실패',
-        message: err,
+      alertModalModule.errorAlert({
+        res: err,
+        fallback: {
+          title: `${target}`,
+          message: `${target} 다운로드 실패`,
+        },
       }),
     );
   }
@@ -355,9 +378,12 @@ function* deleteTask(action: PayloadAction<number>) {
   } catch (e) {
     yield put(loaderModule.endLoading());
     yield put(
-      alertModalModule.showAlert({
-        title: '삭제 실패',
-        message: e,
+      alertModalModule.errorAlert({
+        res: e,
+        fallback: {
+          title: '데이터 삭제',
+          message: '데이터 삭제 실패',
+        },
       }),
     );
   }
