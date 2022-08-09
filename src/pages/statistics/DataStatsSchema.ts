@@ -96,12 +96,12 @@ export const toRecord = (item: Task, i: number): DataStatsRecord => {
     createdAt: item.createdAt ? date(item.createdAt).format('YYYY.MM.DD') : '',
     createdBy: item.creatorId || '',
     createSentenceCount: createSentenceCount,
-    review1At: item.reviewer1At
-      ? date(item.reviewer1At).format('YYYY.MM.DD')
+    review1At: item.reviewed1At
+      ? date(item.reviewed1At).format('YYYY.MM.DD')
       : '',
     review1By: item.reviewer1Id || '',
-    review2At: item.reviewer2At
-      ? date(item.reviewer1At).format('YYYY.MM.DD')
+    review2At: item.reviewed2At
+      ? date(item.reviewed1At).format('YYYY.MM.DD')
       : '',
     review2By: item.reviewer2Id || '',
     rejectReason: (item.rejectReasons || []).join(','),
