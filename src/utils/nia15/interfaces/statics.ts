@@ -47,9 +47,9 @@ export interface Task {
   sentence1Length: number;
   sentence2Length: number;
   reviewer1Id: string | null;
-  reviewer1At: string | null;
+  reviewed1At: string | null;
   reviewer2Id: string | null;
-  reviewer2At: string | null;
+  reviewed2At: string | null;
   rejectReasons: number[] | null;
   createAssignId: string | null;
   review1AssignId: string | null;
