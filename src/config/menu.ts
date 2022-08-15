@@ -1,6 +1,6 @@
 import { Menu } from '../components/layouts/Navigator';
 
-export const menu152: Menu = {
+export const menu: Menu = {
   header: '',
   url: '/',
   name: '',
@@ -12,33 +12,23 @@ export const menu152: Menu = {
       icon: 'fas fa-users',
     },
     {
-      url: '/tasks',
-      name: '문장 생성',
+      url: '/scores/assigns',
+      name: '문장 평가',
       icon: 'fas fa-file-lines',
     },
     {
-      url: '/sentences',
-      name: '문장 생성 내역',
+      url: '/scores',
+      name: '문장 평가 내역',
       icon: 'fas fa-file-lines',
     },
     {
-      url: '/reviews/1/assign',
-      name: '1차 문장 검수',
+      url: '/reviews/assigns',
+      name: '평가 검수',
       icon: 'fas fa-file-lines',
     },
     {
-      url: '/reviews/1',
-      name: '1차 문장 검수 내역',
-      icon: 'fas fa-file-lines',
-    },
-    {
-      url: '/reviews/2/assign',
-      name: '2차 문장 검수',
-      icon: 'fas fa-file-lines',
-    },
-    {
-      url: '/reviews/2',
-      name: '2차 문장 검수 내역',
+      url: '/reviews',
+      name: '평가 검수 내역',
       icon: 'fas fa-file-lines',
     },
     {
@@ -52,27 +42,14 @@ export const menu152: Menu = {
       icon: 'fas fa-file-lines',
     },
     {
-      url: '/statistics/creator',
-      name: '생성자 통계',
+      url: '/statistics/scores',
+      name: '평가자 통계',
       icon: 'fas fa-file-lines',
     },
     {
-      url: '/statistics/review/1',
-      name: '검수자 통계',
-      icon: 'fas fa-file-lines',
-    },
-    {
-      url: '/statistics/review/2',
-      name: '검수 관리자 통계',
+      url: '/statistics/review',
+      name: '평가 검수자 통계',
       icon: 'fas fa-file-lines',
     },
   ],
-};
-
-export const menu153: Menu = {
-  header: '',
-  url: '/',
-  name: '',
-  icon: '',
-  navItems: [],
 };

@@ -1,10 +1,7 @@
-import { menu152, menu153 } from './menu';
+import { menu } from './menu';
 
 const layouts = {
-  menu: {
-    '152': menu152,
-    '153': menu153,
-  },
+  menu: menu,
   header: {
     dropDownMenu: [
       {
@@ -18,7 +15,7 @@ const layouts = {
     ],
   },
   footer: {
-    company: 'aiworks',
+    company: 'testworks',
     privacyUrl: '#',
     termsUrl: '#',
   },

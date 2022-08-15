@@ -24,7 +24,7 @@ import {
   ReviewStatsList,
 } from '../pages/statistics';
 
-const Router152 = ({ configKey }: { configKey: string }) => {
+const Router152 = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -45,10 +45,7 @@ const Router152 = ({ configKey }: { configKey: string }) => {
           path="/"
           element={
             <guard.Protected auth={auth.isLogin()} redirect={'/login'}>
-              <Home
-                role={auth.user()?.userType || ''}
-                rules={handleGoHome(configKey)}
-              />
+              <Home role={auth.user()?.userType || ''} rules={handleGoHome()} />
             </guard.Protected>
           }
         />

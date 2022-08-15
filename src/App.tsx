@@ -1,6 +1,5 @@
 import './App.css';
 import React, { useEffect } from 'react';
-import Router152 from './routes/Router152';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './assets/css/styles.css';
@@ -11,7 +10,7 @@ import Container from './components/layouts/Container';
 import { Menu } from './components/layouts/Navigator';
 import { UserType } from './config/UserType';
 import { handleMenuVisible } from './routes/handler';
-import Router153 from './routes/Router153';
+import Router from './routes/Router';
 
 function App() {
   useEffect(() => {
@@ -21,15 +20,7 @@ function App() {
     }
   });
 
-  const pathname: string = location.pathname.split('/').filter((v) => !!v)[0];
-  let menu = null;
-  const menus: { [key: string]: Menu } = config.layouts.menu;
-
-  if (pathname in menus) {
-    menu = menus[pathname] as Menu;
-  } else {
-    menu = menus['152'] as Menu;
-  }
+  const menu: Menu = config.layouts.menu;
 
   let userType = auth.user()?.userType;
 
@@ -37,14 +28,11 @@ function App() {
     case UserType.ADMIN:
       userType = '최고 관리자';
       break;
-    case UserType.REVIEWER1:
-      userType = '1차 검수자';
+    case UserType.SCORE:
+      userType = '평가자';
       break;
-    case UserType.WORKER:
-      userType = '생성자';
-      break;
-    case UserType.REVIEWER2:
-      userType = '2차 검수자';
+    case UserType.SCORE_REVIEWER:
+      userType = '검수자';
       break;
     default:
       auth.logout();
@@ -62,18 +50,11 @@ function App() {
         userName={auth.user()?.loginId || ''}
       />
       <Container
-        menu={handleMenuVisible(
-          pathname == '153' ? pathname : '152',
-          menu as Menu,
-        )}
+        menu={handleMenuVisible(menu as Menu)}
         isLogin={auth.isLogin()}
         footer={config.layouts.footer}
       >
-        {pathname == '153' ? (
-          <Router153 configKey={pathname} />
-        ) : (
-          <Router152 configKey={'152'} />
-        )}
+        <Router />
       </Container>
     </div>
   );

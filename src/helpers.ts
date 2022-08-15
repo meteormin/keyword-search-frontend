@@ -16,7 +16,7 @@ import Lang from './assets/lang';
 import { AxiosRequestHeaders } from 'axios';
 import * as Str from './utils/str';
 import * as Arr from './utils/arr';
-import BaikalNlp, { AnalyzeData, AnalyzeToken } from './utils/BaikalNlp';
+import BaikalNlp from './utils/BaikalNlp';
 import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
 import TmKor, {
