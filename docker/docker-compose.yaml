@@ -10,8 +10,8 @@ services:
       - ./testworks-license.pem:/baikal-nlp/config/license.pem
     networks:
       - nia-15
-  react-app:
-    container_name: 'nia-15-front'
+  nia-15-3-react:
+    container_name: 'nia-15-3-front'
     build: .
     restart: always
     stdin_open: true
