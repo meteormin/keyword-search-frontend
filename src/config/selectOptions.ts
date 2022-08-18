@@ -152,10 +152,6 @@ const DataSearchNames = [
     name: '고유번호',
     value: SearchNames.REF_ID,
   },
-  {
-    name: '주제',
-    value: SearchNames.DOMAIN,
-  },
 ];
 
 const CreateConditions: Option[] = [

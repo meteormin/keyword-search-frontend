@@ -1,5 +1,6 @@
 import { PaginationParameter } from './common';
-import { Sentence, SentenceMaster, SentenceSets } from './sentence';
+import { Concept, Sentence, SentenceMaster, SentenceSets } from './sentence';
+import { User } from './user';
 
 export interface SearchScores extends PaginationParameter {
   scoredAtStart?: string;
@@ -13,6 +14,15 @@ export interface SearchScores extends PaginationParameter {
 export interface SearchAssigns extends PaginationParameter {
   sentenceId?: number;
   concept?: string;
+}
+
+export interface ScoreAssign {
+  id: number;
+  user: User;
+  sentenceId: number;
+  concept: Concept[];
+  basicSentence: string;
+  scoreSentence: string;
 }
 
 export interface Score {
