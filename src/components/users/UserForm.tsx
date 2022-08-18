@@ -13,6 +13,11 @@ export interface FormInfo {
   userTypes: Option[];
 }
 
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+}
+
 const UserForm = ({
   formInfo,
   show,
@@ -33,6 +38,8 @@ const UserForm = ({
   const [name, setName] = useState<string>('');
   const [userType, setUserType] = useState<string>(UserType.ADMIN);
   const [_show, setShow] = useState<boolean>(false);
+  const [gender, setGender] = useState<Gender>();
+  const [age, setAge] = useState<string>();
   const { editUser, currentGroup } = useSelector(usersModule.getUsersState);
 
   const createUser = () => {
@@ -42,6 +49,8 @@ const UserForm = ({
         name: name,
         userType: userType,
         groupId: currentGroup.id,
+        age: age || null,
+        gender: gender || null,
       }),
     );
   };
@@ -154,6 +163,26 @@ const UserForm = ({
           onChange={(e) =>
             setUserType(e.target.options[e.target.selectedIndex].value)
           }
+        />
+      </div>
+      <div className="mt-3">
+        <Input
+          type={'text'}
+          id={'name'}
+          label={'성별'}
+          name={'name'}
+          value={gender}
+          onChange={(e) => setGender(e.target.value as Gender)}
+        />
+      </div>
+      <div className="mt-3">
+        <Input
+          type={'text'}
+          id={'name'}
+          label={'연령'}
+          name={'name'}
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
         />
       </div>
       <br />

@@ -29,7 +29,7 @@ function newClient<T extends BaseClient>(client: ClientType<T>): T {
   const token = auth.getToken();
   let withToken: Token | undefined;
   if (token) {
-    withToken = { token: token, tokenType: 'bearer' };
+    withToken = { token: token.accessToken, tokenType: 'bearer' };
   }
 
   return new client(

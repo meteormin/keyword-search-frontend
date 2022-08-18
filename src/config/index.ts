@@ -10,6 +10,8 @@ export default () => ({
   api: {
     default: {
       host: process.env.REACT_APP_API_SERVER,
+      clientId: process.env.REACT_APP_API_CLIENT_ID,
+      clientSecret: process.env.REACT_APP_API_CLIENT_SECRET,
     },
     baikalNlp: {
       host: process.env.REACT_APP_BAIKAL_NLP_HOST,
@@ -27,27 +29,15 @@ export default () => ({
     userTypes: [
       {
         name: '최고 관리자',
-        value: 'Admin',
-      },
-      {
-        name: '1차 검수자',
-        value: 'SentenceReview1',
-      },
-      {
-        name: '2차 검수자',
-        value: 'SentenceReview2',
+        value: 'ADMIN',
       },
       {
         name: '평가자',
-        value: 'SentenceScore',
+        value: 'SCORE',
       },
       {
-        name: '평가 검수자',
-        value: 'SentenceScoreReview',
-      },
-      {
-        name: '크라우드 워커',
-        value: 'Creator',
+        name: '검수자',
+        value: 'REVIEWER',
       },
     ],
     permissions: permissions,

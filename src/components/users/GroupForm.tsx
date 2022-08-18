@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import FormModal from './FormModal';
 import Input from '../common/Input';
-import { Permission } from './PermList';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import usersModule from '../../store/features/users';
-import { CreateGroup, Group } from '../../utils/nia15/interfaces/users';
+import { PostGroup, Group } from '../../utils/nia153/interfaces/group';
 import { Method } from './formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
 
 export interface FormInfo {
   method: Method;
-  permissions: Permission[];
 }
 
 const GroupForm = ({
@@ -30,37 +28,26 @@ const GroupForm = ({
 }) => {
   const dispatch = useDispatch();
   const [_editGroup, setEditGroup] = useState<Group | null>(editGroup);
-  const [permList, setPermList] = useState<number[]>([]);
   const [groupName, setGroupName] = useState<string>(editGroup?.name || '');
   const [_show, setShow] = useState<boolean>(show);
 
   useEffect(() => {
     setShow(show);
     if (show && formInfo.method == Method.UPDATE) {
-      if (editGroup?.edges?.permissions) {
-        setPermList(
-          editGroup?.edges?.permissions.map((permission): number => {
-            return permission.id;
-          }),
-        );
-      }
       setEditGroup(editGroup);
       setGroupName(editGroup?.name || '');
     } else {
       setGroupName('');
       setEditGroup(null);
-      setPermList([]);
     }
   }, [editGroup, _editGroup, show]);
 
-  const createGroup = (group: CreateGroup) => {
-    dispatch(usersModule.actions.saveGroup(group));
-  };
+  // const createGroup = (group: CreateGroup) => {
+  //   dispatch(usersModule.actions.saveGroup(group));
+  // };
 
-  const saveGroupPermission = (id: number) => {
-    dispatch(
-      usersModule.actions.setGroupPermission({ id: id, permissions: permList }),
-    );
+  const updateGroupName = (id: number, name: string) => {
+    dispatch(usersModule.actions.saveGroup({ id: id, name: name }));
   };
 
   const makeButton = () => {
@@ -69,22 +56,22 @@ const GroupForm = ({
         return (
           <Row className="justify-content-end">
             <Col md={4} className="offset-4">
-              <Button
-                variant="dark"
-                className="float-end"
-                onClick={() => {
-                  if (groupName) {
-                    createGroup({
-                      name: groupName,
-                      permissions: permList,
-                    });
-                  }
-                  onSave();
-                  onHide();
-                }}
-              >
-                저장
-              </Button>
+              {/*<Button*/}
+              {/*	variant="dark"*/}
+              {/*	className="float-end"*/}
+              {/*	onClick={() => {*/}
+              {/*		if (groupName) {*/}
+              {/*			createGroup({*/}
+              {/*				name: groupName,*/}
+              {/*				permissions: permList,*/}
+              {/*			});*/}
+              {/*		}*/}
+              {/*		onSave();*/}
+              {/*		onHide();*/}
+              {/*	}}*/}
+              {/*>*/}
+              {/*	저장*/}
+              {/*</Button>*/}
             </Col>
           </Row>
         );
@@ -97,7 +84,7 @@ const GroupForm = ({
                 className="ms-0"
                 onClick={() => {
                   if (_editGroup) {
-                    saveGroupPermission(_editGroup.id);
+                    updateGroupName(_editGroup.id, groupName);
                   }
                   onSave();
                   onHide();

@@ -12,3 +12,10 @@ export interface RefreshTokenGrantType {
   clientSecret: string;
   refresh_token: string;
 }
+
+export interface Tokens {
+  tokenType?: string;
+  expiresIn?: number;
+  accessToken: string;
+  refreshToken: string;
+}

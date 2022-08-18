@@ -1,26 +1,28 @@
 import { SearchState } from '../../../pages/users/UsersPage';
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
-  Group,
-  Permission,
   User,
-  CreateGroup,
-  CreateUser,
-  UpdateGroupPerm,
-} from '../../../utils/nia15/interfaces/users';
+  PatchUser,
+  PostUser,
+} from '../../../utils/nia153/interfaces/user';
+
+import {
+  Group,
+  PostGroup,
+  PatchGroup,
+} from '../../../utils/nia153/interfaces/group';
 
 export interface UsersState {
   method: string | null;
   currentGroup: Group;
   editGroup?: Group;
-  permList: Permission[];
   search: SearchState;
   groups: Group[];
   users: User[];
   editUser?: User;
-  postGroup?: Group | CreateGroup;
-  postUser?: User | CreateUser;
-  updateGroupPerm: UpdateGroupPerm;
+  postGroup?: Group | PostGroup | PatchGroup;
+  postUser?: User | PostUser | PatchUser;
+  updateGroupPerm: PatchGroup;
   getGroupId?: number;
   editGroupId?: number;
   editUserId?: number;
@@ -29,11 +31,10 @@ export interface UsersState {
 export const initialState: UsersState = {
   method: null,
   currentGroup: { id: 0, code: '', name: '' },
-  permList: [],
-  search: { id: '', name: '', permission: '' },
+  search: { loginId: '', name: '', permission: '', groupId: '' },
   groups: [],
   users: [],
-  updateGroupPerm: { permissions: [] },
+  updateGroupPerm: { id: 0, name: '' },
 };
 
 const userAction = {
@@ -44,22 +45,20 @@ const userAction = {
   getGroups: (state: UsersState) => {
     state.groups = [];
   },
-  getPermList: (state: UsersState) => {
-    state.permList = [];
-  },
-  setPermList: (state: UsersState, action: PayloadAction<Permission[]>) => {
-    state.permList = action.payload;
-  },
+
   getUsersByGroup: (state: UsersState, action: PayloadAction<Group>) => {
     state.currentGroup = action.payload;
     state.users = [];
   },
+
   getGroup: (state: UsersState, action: PayloadAction<number>) => {
     state.currentGroup.id = action.payload;
   },
+
   setGroup: (state: UsersState, action: PayloadAction<Group>) => {
     state.currentGroup = action.payload;
   },
+
   getEditGroup: (state: UsersState, action: PayloadAction<number>) => {
     state.editGroup = {
       id: action.payload,
@@ -67,19 +66,23 @@ const userAction = {
       code: '',
     };
   },
+
   setEditGroup: (state: UsersState, action: PayloadAction<Group>) => {
     state.editGroup = action.payload;
   },
+
   getEditUser: (state: UsersState, action: PayloadAction<number>) => {
     state.editUser = {
       id: action.payload,
       name: '',
       loginId: '',
       userType: '',
-      groupId: 0,
-      groupCode: '',
-      groupName: '',
-      createAt: '',
+      email: null,
+      age: null,
+      gender: null,
+      group: { id: 0, code: '', name: '' },
+      createdAt: null,
+      updatedAt: null,
     };
   },
   setEditUser: (state: UsersState, action: PayloadAction<User>) => {
@@ -91,19 +94,16 @@ const userAction = {
   setUsers: (state: UsersState, action: PayloadAction<User[]>) => {
     state.users = action.payload;
   },
-  setGroupPermission: (
-    state: UsersState,
-    action: PayloadAction<UpdateGroupPerm>,
-  ) => {
-    state.updateGroupPerm = action.payload;
-  },
   saveGroup: (
     state: UsersState,
-    action: PayloadAction<Group | CreateGroup>,
+    action: PayloadAction<PostGroup | PatchGroup>,
   ) => {
     state.postGroup = action.payload;
   },
-  saveUser: (state: UsersState, action: PayloadAction<User | CreateUser>) => {
+  saveUser: (
+    state: UsersState,
+    action: PayloadAction<PatchUser | PostUser>,
+  ) => {
     state.postUser = action.payload;
   },
   resetPassword: (state: UsersState, action: PayloadAction<number>) => {

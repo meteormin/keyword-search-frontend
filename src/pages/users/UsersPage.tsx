@@ -7,27 +7,37 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Col, Container, Row } from 'react-bootstrap';
 
 export interface SearchState {
-  id: string | number;
+  loginId: string;
   name: string;
   permission: string | number;
+  groupId: string | number;
 }
 
 const UsersPage = () => {
   const dispatch = useDispatch();
-  const { search } = useSelector(usersModule.getUsersState);
+  const { search, currentGroup } = useSelector(usersModule.getUsersState);
+  const [groupId, setGroupId] = useState<number | string>();
+
+  useEffect(() => {
+    setGroupId(currentGroup.id);
+  }, [currentGroup]);
 
   return (
     <Container>
       <Row className="mx-1">
         <Col lg={12} className="mt-4 ms-4">
           <Search
-            {...search}
-            onSubmit={(id, name, permission) => {
+            loginId={search.loginId}
+            name={search.name}
+            permission={search.permission}
+            groupId={groupId || ''}
+            onSubmit={(id, name, permission, groupId) => {
               dispatch(
                 usersModule.actions.searchUser({
-                  id: id as string,
+                  loginId: id as string,
                   name: name,
                   permission: permission as string,
+                  groupId: groupId,
                 }),
               );
             }}

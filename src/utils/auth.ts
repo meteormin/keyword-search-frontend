@@ -2,6 +2,7 @@ import config from '../config';
 import jwtDecode from 'jwt-decode';
 import { date } from '../helpers';
 import { UserType } from '../config/UserType';
+import { Tokens } from './nia153/interfaces/oauth';
 
 const conf = config();
 
@@ -42,12 +43,36 @@ export const user = (): User | null => {
   }
 };
 
-export const setToken = (token: string) => {
-  window.localStorage.setItem(conf.auth.tokenKey, token);
+export const setToken = (token: Tokens) => {
+  window.localStorage.setItem(conf.auth.tokenKey, token.accessToken);
+  window.localStorage.setItem(
+    conf.auth.tokenKey + '_type',
+    token.tokenType || '',
+  );
+  window.localStorage.setItem(
+    conf.auth.tokenKey + '_expires_in',
+    token.expiresIn?.toString() || '',
+  );
 };
 
-export const getToken = (): string | null => {
-  return window.localStorage.getItem(conf.auth.tokenKey) || null;
+export const getToken = (): Tokens | null => {
+  let token: Tokens | null = null;
+  if (conf.auth.tokenKey) {
+    token = {
+      accessToken: window.localStorage.getItem(conf.auth.tokenKey) || '',
+      tokenType:
+        window.localStorage.getItem(conf.auth.tokenKey + '_type') ||
+        undefined,
+      expiresIn: window.localStorage.getItem(conf.auth.tokenKey + '_expires_in')
+        ? parseInt(
+            window.localStorage.getItem(conf.auth.tokenKey + '_expires_in') ||
+              '0',
+          )
+        : undefined,
+      refreshToken: getRefresh() || '',
+    };
+  }
+  return token || null;
 };
 
 export const setRefresh = (refresh: string) => {
@@ -55,7 +80,7 @@ export const setRefresh = (refresh: string) => {
 };
 
 export const getRefresh = () => {
-  window.localStorage.getItem(conf.auth.refreshKey);
+  return window.localStorage.getItem(conf.auth.refreshKey);
 };
 
 export const logout = (): void => {
@@ -64,7 +89,7 @@ export const logout = (): void => {
 };
 
 export const isLogin = (): boolean => {
-  return user() != null && tokenInfo(getToken() as string) != null;
+  return user() != null && tokenInfo(getToken()?.accessToken as string) != null;
 };
 
 export const tokenInfo = (token: string): TokenInfo | null => {

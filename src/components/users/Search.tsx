@@ -1,26 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from '../common/Select';
 import { config } from '../../helpers';
 import { Col, Row } from 'react-bootstrap';
 
 export interface SearchProps {
-  id: string | number;
+  loginId: string | number;
   name: string;
   permission: string | number;
+  groupId: string | number;
   onSubmit: (
     id: string | number,
     name: string,
     permission: number | string,
+    groupId: number | string,
   ) => void;
 }
 
-const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
-  const [_id, setId] = useState<string | number>(id);
+const Search = ({
+  loginId,
+  name,
+  permission,
+  groupId,
+  onSubmit,
+}: SearchProps) => {
+  const [_id, setId] = useState<string | number>(loginId);
   const [_name, setName] = useState<string>(name);
   const [_permission, setPermission] = useState<string | number>(permission);
+  const [_groupId, setGroupId] = useState<string | number>(groupId);
   const permissionOptions = [{ name: '권한을 선택해주세요', value: '' }].concat(
     config.auth.userTypes,
   );
+
+  useEffect(() => {
+    setGroupId(groupId);
+  }, [groupId]);
 
   const onChangeInput = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -30,7 +43,7 @@ const Search = ({ id, name, permission, onSubmit }: SearchProps) => {
   };
 
   const onClickButton = () => {
-    onSubmit(_id, _name, _permission);
+    onSubmit(_id, _name, _permission, _groupId);
   };
 
   return (

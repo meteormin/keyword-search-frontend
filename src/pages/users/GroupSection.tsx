@@ -9,9 +9,7 @@ import { Button, Col, Row } from 'react-bootstrap';
 const GroupSection = () => {
   const dispatch = useDispatch();
 
-  const { permList, groups, editGroup } = useSelector(
-    usersModule.getUsersState,
-  );
+  const { groups, editGroup } = useSelector(usersModule.getUsersState);
 
   const [groupModal, showGroupModal] = useState(false);
   const [modalMethod, setModalMethod] = useState<Method>(Method.CREATE);
@@ -29,9 +27,6 @@ const GroupSection = () => {
   };
   const getGroup = (id: number) => {
     dispatch(usersModule.actions.getGroup(id));
-  };
-  const getPermList = () => {
-    dispatch(usersModule.actions.getPermList());
   };
 
   const makeModifyButton = (
@@ -65,7 +60,6 @@ const GroupSection = () => {
 
   useEffect(() => {
     getGroupList();
-    getPermList();
   }, []);
 
   return (
@@ -86,9 +80,9 @@ const GroupSection = () => {
           </Row>
         </Col>
         <Col lg={3}>
-          <Button variant="dark" className="float-end" onClick={createGroup}>
-            생성
-          </Button>
+          {/*<Button variant="dark" className="float-end" onClick={createGroup}>*/}
+          {/*  생성*/}
+          {/*</Button>*/}
         </Col>
       </Row>
       <Row className="mt-4" style={{ height: '90vh', overflowY: 'scroll' }}>
@@ -102,7 +96,6 @@ const GroupSection = () => {
       <GroupForm
         formInfo={{
           method: modalMethod,
-          permissions: permList,
         }}
         editGroup={editGroup || null}
         show={groupModal}

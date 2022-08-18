@@ -1,10 +1,10 @@
 import { api, auth, date } from '../../helpers';
 
 const authCheck = (store: any) => (next: any) => (action: any) => {
-  if (auth.getToken()) {
+  if (auth.getToken()?.accessToken) {
     let isValid = false;
     console.debug('hi');
-    const tokenInfo = auth.tokenInfo(auth.getToken() as string);
+    const tokenInfo = auth.tokenInfo(auth.getToken()?.accessToken as string);
 
     if (tokenInfo) {
       const expAt = date.unix(tokenInfo.exp);
@@ -18,8 +18,8 @@ const authCheck = (store: any) => (next: any) => (action: any) => {
 
     if (!isValid) {
       api()
-        .withToken(auth.getToken() as string, 'bearer')
-        .get('api/v1/users/me')
+        .withToken(auth.getToken()?.accessToken as string, 'bearer')
+        .get('api/users/me')
         .then((res) => {
           if (res.isSuccess) {
             console.log('access_token is alive');

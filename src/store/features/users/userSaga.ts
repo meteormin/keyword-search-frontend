@@ -8,24 +8,29 @@ import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
   Group,
-  UpdateGroupPerm,
+  PatchGroup,
+  PostGroup,
+} from '../../../utils/nia153/interfaces/group';
+import {
   User,
-  CreateGroup,
-  CreateUser,
-} from '../../../utils/nia15/interfaces/users';
-import newClient, { Clients } from '../../../utils/nia15/api';
+  PostUser,
+  PatchUser,
+} from '../../../utils/nia153/interfaces/user';
+import newClient, { Clients } from '../../../utils/nia153/api';
 import { UsersState } from './userAction';
+import { SearchState } from '../../../pages/users/UsersPage';
 
 const usersApi = newClient(Clients.Users);
+const groupsApi = newClient(Clients.Groups);
 
 function* getGroupsSaga() {
   yield put(loaderModule.startLoading());
   try {
-    const response: ApiResponse = yield call(usersApi.group.getGroup);
+    const response: ApiResponse = yield call(groupsApi.getGroups);
 
     const res = apiResponse(response);
     if (response.isSuccess) {
-      const groups: Group[] = res.data.groups.map(toCamel);
+      const groups: Group[] = res.data.map(toCamel);
 
       yield put(usersModule.actions.setGroups(groups));
       yield put(loaderModule.endLoading());
@@ -54,14 +59,14 @@ function* getGroupSaga(action: PayloadAction<number>) {
 
   try {
     const response: ApiResponse = yield call(
-      usersApi.group.getGroup,
+      groupsApi.getGroup,
       action.payload,
     );
 
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      const group: Group = toCamel(res.data.group) as Group;
+      const group: Group = toCamel(res) as Group;
       yield put(usersModule.actions.setGroup(group));
       yield put(loaderModule.endLoading());
     } else {
@@ -88,14 +93,14 @@ function* getEditGroupSaga(action: PayloadAction<number>) {
 
   try {
     const response: ApiResponse = yield call(
-      usersApi.group.getGroup,
+      groupsApi.getGroup,
       action.payload,
     );
 
     const res = apiResponse(response);
 
     if (response.isSuccess) {
-      const group: Group = toCamel(res.data.group) as Group;
+      const group: Group = toCamel(res) as Group;
       yield put(usersModule.actions.setEditGroup(group));
       yield put(loaderModule.endLoading());
     } else {
@@ -121,13 +126,11 @@ function* getEditUserSaga(action: PayloadAction<number>) {
   yield put(loaderModule.startLoading());
 
   try {
-    const response: ApiResponse = yield call(
-      usersApi.user.getUser,
-      action.payload,
-    );
+    const response: ApiResponse = yield call(usersApi.getUser, action.payload);
+
     const res = apiResponse(response);
     if (response.isSuccess) {
-      const user: User = toCamel(res.data.user) as User;
+      const user: User = toCamel(res) as User;
       yield put(usersModule.actions.setEditUser(user));
       yield put(loaderModule.endLoading());
     } else {
@@ -147,49 +150,12 @@ function* getEditUserSaga(action: PayloadAction<number>) {
   }
 }
 
-// function* getPermListSaga() {
-//   yield put(loaderModule.startLoading());
-//
-//   try {
-//     const response: ApiResponse = yield call(usersApi.group.getPermissions);
-//     const res = apiResponse(response);
-//     if (response.isSuccess) {
-//       const permList: Permission[] = res.data.permissions.map(toCamel);
-//       yield put(loaderModule.endLoading());
-//       yield put(usersModule.actions.setPermList(permList));
-//     } else {
-//       if ('name' in res && 'message' in res) {
-//         yield put(
-//           alertModalModule.showAlert({
-//             title: res.name,
-//             message: res.message,
-//           }),
-//         );
-//       } else {
-//         yield put(
-//           alertModalModule.showAlert({
-//             title: '데이터 조회 실패',
-//             message: '데이터를 불러오는데 실패했습니다.',
-//           }),
-//         );
-//       }
-//     }
-//   } catch (error) {
-//     yield put(
-//       alertModalModule.showAlert({
-//         title: '데이터 조회 실패',
-//         message: '데이터를 불러오는데 실패했습니다.',
-//       }),
-//     );
-//   }
-// }
-
-function* saveGroupPermSage(action: PayloadAction<UpdateGroupPerm>) {
+function* saveGroupPermSage(action: PayloadAction<PatchGroup>) {
   yield put(loaderModule.startLoading());
 
   try {
     const response: ApiResponse = yield call(
-      usersApi.group.patchGroupPerm,
+      groupsApi.updateGroup,
       action.payload,
     );
     const res = apiResponse(response);
@@ -217,11 +183,13 @@ function* saveGroupPermSage(action: PayloadAction<UpdateGroupPerm>) {
 
 function* resetPassword(action: PayloadAction<number>) {
   const userId = action.payload;
+
   yield put(loaderModule.startLoading());
   try {
     const response: ApiResponse = yield call(
-      usersApi.user.resetPassword,
+      usersApi.resetPassword,
       userId,
+      null,
     );
     const res = apiResponse(response);
     yield put(loaderModule.endLoading());
@@ -251,44 +219,26 @@ function* resetPassword(action: PayloadAction<number>) {
   }
 }
 
-function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
+function* saveGroup(action: PayloadAction<Group | PostGroup | PatchGroup>) {
   yield put(loaderModule.startLoading());
   try {
     let response: ApiResponse;
     let message: string;
 
-    if (action.payload.hasOwnProperty('id')) {
+    if ('id' in action.payload && action.payload.id) {
       message = '그룹 수정';
       response = yield call(
-        usersApi.group.updateGroup,
-        action.payload as Group,
+        groupsApi.updateGroup,
+        action.payload as PatchGroup,
       );
     } else {
       message = '그룹 등록';
-      response = yield call(usersApi.group.createGroup, action.payload);
+      response = yield call(groupsApi.createGroup, action.payload as PostGroup);
     }
 
     yield put(loaderModule.endLoading());
 
     if (response.isSuccess) {
-      // if ('permissions' in action.payload) {
-      //   const updateGroup: UpdateGroupPerm = {
-      //     id: res.groups.id,
-      //     permissions: action.payload.permissions,
-      //   };
-      //   response = yield call(usersApi.group.patchGroupPerm, updateGroup);
-      //   if (response.isSuccess) {
-      //     yield put(usersModule.actions.getGroups());
-      //   } else {
-      //     yield put(
-      //       alertModalModule.showAlert({
-      //         title: message + ' 실패',
-      //         message: message + ' 실패',
-      //       }),
-      //     );
-      //   }
-      //}
-
       yield put(
         alertModalModule.showAlert({
           title: message + ' 성공',
@@ -314,7 +264,7 @@ function* saveGroup(action: PayloadAction<Group | CreateGroup>) {
   }
 }
 
-function* saveUser(action: PayloadAction<User | CreateUser>) {
+function* saveUser(action: PayloadAction<PatchUser | PostUser>) {
   yield put(loaderModule.startLoading());
   try {
     let response: ApiResponse;
@@ -322,15 +272,17 @@ function* saveUser(action: PayloadAction<User | CreateUser>) {
     const { currentGroup }: UsersState = yield select(
       usersModule.getUsersState,
     );
-    if (action.payload.hasOwnProperty('id')) {
+    if ('id' in action.payload && action.payload.id) {
+      const patchUser = action.payload as PatchUser;
       message = '사용자 수정';
-      response = yield call(usersApi.user.updateUser, action.payload as User);
+      response = yield call(
+        usersApi.updateUser,
+        patchUser.id as number,
+        patchUser,
+      );
     } else {
       message = '사용자 등록';
-      response = yield call(
-        usersApi.user.createUser,
-        action.payload as CreateUser,
-      );
+      response = yield call(usersApi.createUser, action.payload as PostUser);
     }
 
     const res: ApiResponse = apiResponse(response);
@@ -367,7 +319,7 @@ function* updatePassword(action: PayloadAction<string>) {
   try {
     if (auth.user()?.id) {
       const response: ApiResponse = yield call(
-        usersApi.user.updatePassword,
+        usersApi.resetPassword,
         auth.user()?.id as number,
         action.payload,
       );
@@ -396,16 +348,66 @@ function* updatePassword(action: PayloadAction<string>) {
         }),
       );
     }
-  } catch (e) {}
+  } catch (e) {
+    yield put(
+      alertModalModule.showAlert({
+        title: '로그인 에러',
+        message: '로그인 정보가 없습니다.',
+      }),
+    );
+  }
+}
+
+function* searchUser(action: PayloadAction<SearchState>) {
+  yield put(loaderModule.startLoading());
+  const searchState = action.payload;
+
+  try {
+    if (searchState.groupId) {
+      const response: ApiResponse = yield call(
+        usersApi.searchUsers,
+        searchState,
+      );
+
+      const res = apiResponse(response);
+      yield put(loaderModule.endLoading());
+      if (!response.isSuccess) {
+        yield put(
+          alertModalModule.errorAlert({
+            res: res,
+            refresh: true,
+          }),
+        );
+      } else {
+        yield put(
+          usersModule.actions.setUsers(res.data.map(toCamel) as User[]),
+        );
+      }
+    } else {
+      yield put(loaderModule.endLoading());
+      yield put(
+        alertModalModule.showAlert({
+          title: '그룹 미선택',
+          message: '먼저 그룹을 선택해주세요.',
+        }),
+      );
+    }
+  } catch (e) {
+    yield put(loaderModule.endLoading());
+    yield put(
+      alertModalModule.showAlert({
+        title: '사용자 검색 실패',
+        message: e,
+      }),
+    );
+  }
 }
 
 function* watchUsersSaga() {
   yield takeLatest(usersModule.actions.getGroups, getGroupsSaga);
   yield takeLatest(usersModule.actions.getGroup, getGroupSaga);
   yield takeLatest(usersModule.actions.getEditGroup, getEditGroupSaga);
-  yield takeLatest(usersModule.actions.setGroupPermission, saveGroupPermSage);
-  // yield takeLatest(usersModule.actions.getPermList, getPermListSaga);
-
+  yield takeLatest(usersModule.actions.searchUser, searchUser);
   yield takeLatest(usersModule.actions.getEditUser, getEditUserSaga);
   yield takeLatest(usersModule.actions.resetPassword, resetPassword);
   yield takeLatest(usersModule.actions.saveUser, saveUser);

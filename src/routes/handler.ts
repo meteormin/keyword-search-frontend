@@ -7,8 +7,10 @@ import { NavCollapsedProps } from '../components/layouts/NavCollapsed';
 
 export const handlePerm = (menuPerm: string[]) => {
   const token = auth.getToken();
+
   if (token) {
-    const tokenInfo: TokenInfo | null = auth.tokenInfo(token);
+    const tokenInfo: TokenInfo | null = auth.tokenInfo(token.accessToken);
+
     if (tokenInfo) {
       const permission = tokenInfo.userType || auth.user()?.userType || '';
 

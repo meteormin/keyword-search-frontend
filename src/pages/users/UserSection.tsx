@@ -5,7 +5,7 @@ import { config, date } from '../../helpers';
 import { useDispatch, useSelector } from 'react-redux';
 import usersModule from '../../store/features/users';
 import { toCamel } from 'snake-camel';
-import { User } from '../../utils/nia15/interfaces/users';
+import { User } from '../../utils/nia153/interfaces/user';
 import { Method } from '../../components/users/formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
 
@@ -39,7 +39,7 @@ const UserSection = () => {
         name: user.name,
         groupName: currentGroup.name,
         type: userType?.name || user.userType,
-        createAt: date(user.createAt).format('yyyy.MM.DD'),
+        createAt: date(user.createdAt).format('yyyy.MM.DD'),
         operation: (
           <button
             type="button"
@@ -62,7 +62,7 @@ const UserSection = () => {
     if (currentGroup.id) {
       dispatch(
         usersModule.actions.setUsers(
-          (currentGroup.edges?.users?.map(toCamel) as User[]) || [],
+          (currentGroup?.users?.map(toCamel) as User[]) || [],
         ),
       );
     }
@@ -73,8 +73,9 @@ const UserSection = () => {
       <Row className="justify-content-end align-items-end">
         <Col lg={4} className="ms-0">
           <strong>사용자</strong>
-          <span className="ms-4 text-secondary">{currentGroup.name}</span>
+          <span className="ms-4 text-secondary">그룹: {currentGroup.name}</span>
         </Col>
+
         <Col lg={8} className="ms-0">
           {currentGroup.id ? (
             <Button variant="dark" className="float-end" onClick={createUser}>
