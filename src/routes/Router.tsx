@@ -23,6 +23,7 @@ import {
   DataStatList,
   ReviewStatsList,
 } from '../pages/statistics';
+import { ScoreAssignListPage } from '../pages/scores';
 
 const Router152 = () => {
   return (
@@ -83,15 +84,15 @@ const Router152 = () => {
             }
           />
         </Route>
-        <Route path="/tasks">
+        <Route path="/scores">
           <Route
-            index
+            path="assigns"
             element={
               <guard.Restricted
-                condition={handlePerm([UserType.WORKER, UserType.ADMIN])}
+                condition={handlePerm([UserType.SCORE, UserType.ADMIN])}
                 redirect={<ForbiddenPage />}
               >
-                <AssignTask />
+                <ScoreAssignListPage />
               </guard.Restricted>
             }
           />
@@ -101,7 +102,7 @@ const Router152 = () => {
             index
             element={
               <guard.Restricted
-                condition={handlePerm([UserType.WORKER, UserType.ADMIN])}
+                condition={handlePerm([UserType.SCORE, UserType.ADMIN])}
                 redirect={<ForbiddenPage />}
               >
                 <SentenceListPage />

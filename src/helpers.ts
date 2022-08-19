@@ -28,6 +28,7 @@ import TmKor, {
   TripleFrameText,
 } from './utils/tmkor/TmKor';
 import { switchReviewStatus as switchRS } from './utils/common/status';
+import makeClient, { Clients } from './utils/nia153/api';
 
 export const config = Config();
 export const auth = Auth;
@@ -137,6 +138,28 @@ export const tmKor = new TmKor(
     },
   }),
 );
+
+export const makeSentenceTagged = async (
+  sentence: string,
+): Promise<string | null> => {
+  try {
+    const baikalRes = await baikalNlp.analyze(sentence);
+    let sentenceTag: string | null = null;
+    if (baikalRes) {
+      if (baikalRes?.sentences && baikalRes.sentences.length != 0) {
+        sentenceTag = baikalRes.sentences[0].tokens
+          .map((t) => t.tagged)
+          .join(' ');
+      }
+
+      return sentenceTag;
+    }
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+  return null;
+};
 
 export const makeSentencePattern = async (
   sentence: string,
@@ -249,3 +272,21 @@ export function usePrev<T>(value: T): T {
 
   return ref.current as T;
 }
+
+export interface Reportable {
+  message: string;
+  context: object;
+}
+
+export const reportError = async (
+  r: Reportable,
+): Promise<ApiResponse | null> => {
+  try {
+    console.log(r);
+    const reportApi = makeClient(Clients.Report);
+    return await reportApi.report(r);
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+};

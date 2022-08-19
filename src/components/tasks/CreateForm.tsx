@@ -169,10 +169,10 @@ const CreateForm = (props: CreateFormProps) => {
             </Row>
           </Container>
         </Modal.Header>
-        <Modal.Body>
-          <Container className="mt-2">
-            <Row>
-              <Col lg={4}>
+	      <Modal.Body>
+		      <Container className="mt-2">
+			      <Row>
+				      <Col lg={4}>
                 <Prototype
                   primaryCode={task?.dataId || ''}
                   concepts={task?.edges?.concepts.map((t) => t.stem) || []}

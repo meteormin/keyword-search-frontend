@@ -13,7 +13,8 @@ import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import { useDispatch, useSelector } from 'react-redux';
 import scoreModule from '../../store/features/Scores';
-import { ScoreListRecord, ScoreListSchema } from './Schemas';
+import { ScoreAssignSchema, ScoreAssignRecord, toRecord } from './Schemas';
+import PostScoreForm from '../../components/scores/PostScoreForm';
 
 const ScoreAssignListPage = () => {
   const dispatch = useDispatch();
@@ -23,15 +24,29 @@ const ScoreAssignListPage = () => {
   );
   const [limit, setLimit] = useState<number>(100);
   const [page, setPage] = useState<number>(1);
-  const [records, setRecords] = useState<ScoreListRecord[]>([]);
+  const [records, setRecords] = useState<ScoreAssignRecord[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
-  const onSearch = () => {};
-  const resetSearchData = () => {};
-	const handleClickRecord = () => {};
+  const onSearch = () => {
+    dispatch(scoreModule.actions.getAssignList());
+  };
+
+  const resetSearchData = () => {
+    dispatch(searchModule.actions.search(null));
+  };
+
+  const handleClickRecord = (record: ScoreAssignRecord) => {
+    dispatch(scoreModule.actions.selectAssign(record._origin.id));
+  };
 
   useEffect(() => {
-    dispatch(scoreModule.actions.getList);
+    dispatch(scoreModule.actions.getAssignList());
   }, []);
+
+  useEffect(() => {
+    setRecords(assignList.data.map(toRecord));
+    setTotalCount(assignList.count);
+  }, [assignList]);
 
   return (
     <Container>
@@ -110,7 +125,7 @@ const ScoreAssignListPage = () => {
       </Row>
       <Row className={'mt-4'}>
         <DynamicTable
-          schema={ScoreListSchema}
+          schema={ScoreAssignSchema}
           records={records}
           onClick={handleClickRecord}
         />
@@ -129,7 +144,7 @@ const ScoreAssignListPage = () => {
           <SendQuestion isReply={false} div={QuestionDiv.CREATE} />
         </Col>
       </Row>
-      {/*	score form */}
+      <PostScoreForm onSubmit={() => null} onHold={() => null} />
     </Container>
   );
 };
