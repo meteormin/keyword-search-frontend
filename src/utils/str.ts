@@ -62,3 +62,16 @@ export const searchFormat = forSearchFormat;
 export const parseAttachFileName = (str: string) => {
   return str.split(';')[1].trim().split('=')[1].replaceAll('"', '');
 };
+
+export const replaceAll = (
+  str: string,
+  replace: { [key: string]: string },
+  format: string[] = ['{{', '}}'],
+) => {
+  let reStr = '';
+  for (let [k, v] of Object.entries(replace)) {
+    reStr = str.replaceAll(format[0] + k + format[1], v);
+  }
+
+  return reStr;
+};

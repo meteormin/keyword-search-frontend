@@ -25,7 +25,7 @@ import {
 } from '../pages/statistics';
 import { ScoreAssignListPage } from '../pages/scores';
 
-const Router152 = () => {
+const Router = () => {
   return (
     <BrowserRouter>
       <Routes>
@@ -241,4 +241,4 @@ const Router152 = () => {
   );
 };
 
-export default Router152;
+export default Router;

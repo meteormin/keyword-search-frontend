@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Select, { Option } from '../common/Select';
 import { Button, Col, Row } from 'react-bootstrap';
-import Timer from '../common/Timer';
-import { config } from '../../helpers';
 
 export interface DataAssignProps {
   onAssign: (selectedName: string | undefined) => any;
@@ -25,7 +23,7 @@ const DataAssign = ({ onAssign }: DataAssignProps) => {
 
   useEffect(() => {
     setCondition([]);
-  });
+  }, []);
 
   return (
     <Row className="mx-2">

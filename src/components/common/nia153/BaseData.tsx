@@ -44,7 +44,7 @@ const BaseData = (props: BaseDataProps) => {
     <div>
       <Row>
         <Col>
-          <h2>기본 데이터</h2>
+          <h3>기본 데이터</h3>
           <hr />
         </Col>
       </Row>
@@ -52,7 +52,6 @@ const BaseData = (props: BaseDataProps) => {
         <Table
           variant="light"
           responsive="sm"
-          hover
           className={'align-content-center'}
           bordered
         >

@@ -11,4 +11,4 @@ export const actions = scoreReducer.actions;
 
 export const getScoreState = (state: any): ScoreState => state.scores;
 
-export default scoreReducer;
+export default scoreReducer.reducer;

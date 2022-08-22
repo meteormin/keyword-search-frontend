@@ -7,15 +7,13 @@ import usersModule from '../../store/features/users';
 import { Method } from './formTypes';
 import { Button, Col, Row } from 'react-bootstrap';
 import { UserType } from '../../config/UserType';
+import alertModal from '../../store/features/common/alertModal';
 
 export interface FormInfo {
   method: Method;
   userTypes: Option[];
-}
-
-export enum Gender {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
+  genderTypes: Option[];
+  ageTypes: Option[];
 }
 
 const UserForm = ({
@@ -34,23 +32,35 @@ const UserForm = ({
   onDelete?: () => any;
 }) => {
   const dispatch = useDispatch();
-  const [id, setId] = useState<string>('');
+  const [userId, setUserId] = useState<number | null>(null);
+  const [id, setId] = useState<string>();
   const [name, setName] = useState<string>('');
   const [userType, setUserType] = useState<string>(UserType.ADMIN);
   const [_show, setShow] = useState<boolean>(false);
-  const [gender, setGender] = useState<Gender>();
-  const [age, setAge] = useState<string>();
+  const [gender, setGender] = useState<string | null>();
+  const [age, setAge] = useState<string | null>();
   const { editUser, currentGroup } = useSelector(usersModule.getUsersState);
 
   const createUser = () => {
+    if (!id) {
+      dispatch(
+        alertModal.showAlert({
+          title: '유효성 검사 실패',
+          message: '아이디는 필수 값입니다.',
+        }),
+      );
+      return;
+    }
+
     dispatch(
       usersModule.actions.saveUser({
+        id: userId,
         loginId: id,
         name: name,
-        userType: userType,
         groupId: currentGroup.id,
-        age: age || null,
         gender: gender || null,
+        age: age || null,
+        userType: userType,
       }),
     );
   };
@@ -59,16 +69,22 @@ const UserForm = ({
     setShow(show);
     if (show && formInfo.method == Method.UPDATE) {
       if (editUser) {
+        setUserId(editUser.id);
         setId(editUser.loginId);
         setName(editUser.name);
         setUserType(editUser.userType);
+        setGender(editUser.gender);
+        setAge(editUser.age);
       }
     } else {
       setId('');
       setName('');
       setUserType(UserType.ADMIN);
+      setGender(null);
+      setAge(null);
     }
   }, [editUser, show]);
+
   const makeButton = () => {
     switch (formInfo.method) {
       case Method.CREATE:
@@ -109,8 +125,9 @@ const UserForm = ({
                 variant="dark"
                 className="mx-2"
                 onClick={() => {
-                  onHide();
+                  createUser();
                   onSave();
+                  onHide();
                 }}
               >
                 수정
@@ -166,23 +183,27 @@ const UserForm = ({
         />
       </div>
       <div className="mt-3">
-        <Input
-          type={'text'}
-          id={'name'}
+        <Select
+          id={'gender'}
           label={'성별'}
-          name={'name'}
-          value={gender}
-          onChange={(e) => setGender(e.target.value as Gender)}
+          name={'gender'}
+          selectedValue={gender || 'm'}
+          options={formInfo.genderTypes}
+          onChange={(e) =>
+            setGender(e.target.options[e.target.selectedIndex].value)
+          }
         />
       </div>
       <div className="mt-3">
-        <Input
-          type={'text'}
-          id={'name'}
+        <Select
+          id={'age'}
           label={'연령'}
-          name={'name'}
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
+          name={'age'}
+          selectedValue={age || '10'}
+          options={formInfo.ageTypes}
+          onChange={(e) =>
+            setAge(e.target.options[e.target.selectedIndex].value)
+          }
         />
       </div>
       <br />

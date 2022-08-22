@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { lang } from '../../helpers';
-import DataAssign from '../../components/tasks/DataAssign';
+import { auth, date, lang, str } from '../../helpers';
+import DataAssign from '../../components/scores/DataAssign';
 import searchModule from '../../store/features/search';
 import Timer from '../../components/common/Timer';
-import DataSearch from '../../components/tasks/DataSearch';
+import DataSearch from '../../components/scores/DataSearch';
 import SearchAndReset from '../../components/common/SearchAndReset';
 import LimitFilter from '../../components/common/LimitFilter';
 import DynamicTable from '../../components/common/DaynamicTable';
@@ -12,9 +12,11 @@ import Pagination from '../../components/common/Pagination';
 import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import { useDispatch, useSelector } from 'react-redux';
-import scoreModule from '../../store/features/Scores';
-import { ScoreAssignSchema, ScoreAssignRecord, toRecord } from './Schemas';
+import scoreModule from '../../store/features/scores';
+import { ScoreAssignRecord, ScoreAssignSchema, toRecord } from './Schemas';
 import PostScoreForm from '../../components/scores/PostScoreForm';
+
+const ASSIGN_EXPIRES_HOUR = '1';
 
 const ScoreAssignListPage = () => {
   const dispatch = useDispatch();
@@ -36,16 +38,23 @@ const ScoreAssignListPage = () => {
   };
 
   const handleClickRecord = (record: ScoreAssignRecord) => {
-    dispatch(scoreModule.actions.selectAssign(record._origin.id));
+    dispatch(scoreModule.actions.selectAssign(record._origin.sentenceId));
   };
 
   useEffect(() => {
     dispatch(scoreModule.actions.getAssignList());
+    const timerId = setInterval(
+      () => dispatch(scoreModule.actions.getExpiresAt()),
+      1000,
+    );
+    return () => clearInterval(timerId);
   }, []);
 
   useEffect(() => {
-    setRecords(assignList.data.map(toRecord));
-    setTotalCount(assignList.count);
+    if (assignList) {
+      setRecords(assignList.data.map(toRecord));
+      setTotalCount(assignList.count);
+    }
   }, [assignList]);
 
   return (
@@ -58,7 +67,9 @@ const ScoreAssignListPage = () => {
             <Col md={4} className="text-end">
               {time ? (
                 <span className="text-danger">
-                  {lang.assign.assignedMessage}
+                  {str.replaceAll(lang.assign.assignedMessage, {
+                    hour: ASSIGN_EXPIRES_HOUR,
+                  })}
                 </span>
               ) : null}
             </Col>
@@ -67,16 +78,16 @@ const ScoreAssignListPage = () => {
       </Row>
       <Row className="ms-2 mt-2">
         <Col lg={8}>
-          {/*<DataAssign*/}
-          {/*  onAssign={(selectedName: string | undefined) => {*/}
-          {/*    dispatch(*/}
-          {/*      searchModule.actions.search({*/}
-          {/*        domain: selectedName,*/}
-          {/*      }),*/}
-          {/*    );*/}
-          {/*    dispatch(taskModule.actions.assign());*/}
-          {/*  }}*/}
-          {/*/>*/}
+          <DataAssign
+            onAssign={(selectedName: string | undefined) => {
+              // dispatch(
+              //   searchModule.actions.search({
+              //     domain: selectedName,
+              //   }),
+              // );
+              dispatch(scoreModule.actions.postAssign());
+            }}
+          />
         </Col>
         <Col lg={4}>
           <Timer time={time || '00:00:00'} className="float-end w-50" />
@@ -144,7 +155,11 @@ const ScoreAssignListPage = () => {
           <SendQuestion isReply={false} div={QuestionDiv.CREATE} />
         </Col>
       </Row>
-      <PostScoreForm onSubmit={() => null} onHold={() => null} />
+      <PostScoreForm
+        show={!!(selectAssign || false)}
+        onSubmit={() => null}
+        onHold={() => null}
+      />
     </Container>
   );
 };

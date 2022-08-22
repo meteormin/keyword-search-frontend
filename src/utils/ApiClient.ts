@@ -18,7 +18,9 @@ export interface ApiResponse {
 }
 
 export interface ErrorResInterface {
-  name: string;
+  status: string;
+  code: number;
+  error: string;
   message: string;
 }
 
@@ -28,19 +30,31 @@ export interface Attachment {
 }
 
 export class ErrorResponse implements ErrorResInterface {
-  private readonly _name: string;
+  private readonly _status: string;
+  private readonly _code: number;
+  private readonly _error: string;
   private readonly _message: string;
 
   constructor(props: ErrorResInterface) {
-    this._name = props.name;
+    this._status = props.status;
+    this._code = props.code;
+    this._error = props.error;
     this._message = props.message;
   }
 
-  get name() {
-    return this._name;
+  get status(): string {
+    return this._status;
   }
 
-  get message() {
+  get code(): number {
+    return this._code;
+  }
+
+  get error(): string {
+    return this._error;
+  }
+
+  get message(): string {
     return this._message;
   }
 }
@@ -164,22 +178,25 @@ export class ApiClient {
       this._isSuccess = false;
       this._error = error;
       const errorResponse: ErrorResInterface = {
-        name: '서버 에러',
+        status: 'error',
+        code: 99,
+        error: 'SERVER_ERROR',
         message: '관리자에게 문의해주세요.',
       };
 
       if (error instanceof AxiosError) {
         if (error.response?.status || 500 < 500) {
-          if (this.error.response.data.hasOwnProperty('fields')) {
-            errorResponse.name = '유효성 검사 실패';
+          if (this.error.response.data.hasOwnProperty('messages')) {
+            errorResponse.error = '유효성 검사 실패';
             const messages = [];
-            for (const [key] of Object.entries(error.response?.data.fields)) {
-              messages.push(`${key}(이)가 형식에 맞지 않습니다.`);
+            for (const [key, value] of Object.entries(
+              error.response?.data.messages,
+            )) {
+              messages.push(value);
             }
             errorResponse.message = messages.join(', ');
           } else {
-            const message = error.response?.data.msg || '';
-            errorResponse.message = message.split(':').shift().join(':');
+            errorResponse.message = error.response?.data.message || '';
           }
         }
       }

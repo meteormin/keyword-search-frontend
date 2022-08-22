@@ -1,7 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import {
-  Search, StatsSearch
-} from '../../../utils/nia153/interfaces/search';
+import { Search, StatsSearch } from '../../../utils/nia153/interfaces/search';
 
 export interface SearchState {
   parameters: Search | null;
@@ -14,10 +12,7 @@ export const initialState: SearchState = {
 };
 
 const searchAction = {
-  search: (
-    state: SearchState,
-    action: PayloadAction<Search | null>,
-  ) => {
+  search: (state: SearchState, action: PayloadAction<Search | null>) => {
     if (state.parameters == null || action.payload == null) {
       state.parameters = action.payload;
     } else {

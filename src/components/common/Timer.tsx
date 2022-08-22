@@ -11,7 +11,7 @@ const Timer = (props: TimerProps) => {
 
   useLayoutEffect(() => {
     setTime(props.time);
-  }, [props]);
+  }, [props.time]);
 
   return (
     <Fragment>

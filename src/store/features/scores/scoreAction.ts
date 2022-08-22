@@ -7,7 +7,6 @@ import {
   ScoreAssign,
   ScoreList,
 } from '../../../utils/nia153/interfaces/score';
-import { Search } from '../../../utils/nia153/interfaces/search';
 
 export interface ScoreState {
   scoreList: {
@@ -115,6 +114,12 @@ const scoreAction = {
   },
   updateScore: (state: ScoreState, action: PayloadAction<PatchScore>) => {
     state.patchScore = action.payload;
+  },
+  setTime: (state: ScoreState, action: PayloadAction<string>) => {
+    state.time = action.payload;
+  },
+  getExpiresAt: (state: ScoreState) => {
+    state.time = null;
   },
 };
 

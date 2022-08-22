@@ -12,8 +12,8 @@ export interface SearchScores extends PaginationParameter {
 }
 
 export interface SearchAssigns extends PaginationParameter {
-  sentenceId?: number;
-  concept?: string;
+  sentenceId?: number | null;
+  concept?: string | null;
 }
 
 export interface ScoreAssignList {
@@ -58,19 +58,23 @@ export interface ScoreList {
 
 export interface Score {
   id: number;
-  sentenceId: number;
   user: User;
   status: string;
-  sentenceMaster: SentenceMaster;
-  sentenceSets: SentenceSets;
-  sentence: Sentence;
+  masterId: number;
+  setsId: number;
+  sentenceId: number;
+  concept: Concept[];
+  basicSentence: string;
+  scoreSentence: string;
   grammatical: number;
   historicity: number;
   diversity: number;
   fluency: number;
-  score_time: number;
-  created_at: string;
-  updated_at: string;
+  scoreTime: number;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
+  updatedBy: string;
 }
 
 export interface PostScore {

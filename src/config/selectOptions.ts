@@ -218,6 +218,20 @@ const ReviewerSearchOptions: Option[] = [
   { name: '검수자 ID', value: 'reviewerID' },
 ];
 
+const GenderOptions: Option[] = [
+  { name: '남', value: 'm' },
+  { name: '여', value: 'f' },
+];
+
+const AgeOptions: Option[] = [
+  { name: '10대', value: '10' },
+  { name: '20대', value: '20' },
+  { name: '30대', value: '30' },
+  { name: '40대', value: '40' },
+  { name: '50대', value: '50' },
+  { name: '60대', value: '60' },
+];
+
 const selectOptions = {
   RejectReason,
   ReviewState,
@@ -230,6 +244,8 @@ const selectOptions = {
   AssignStatusOptions,
   SentenceStatusOptions,
   ReviewerSearchOptions,
+  GenderOptions,
+  AgeOptions,
 };
 
 export default selectOptions;

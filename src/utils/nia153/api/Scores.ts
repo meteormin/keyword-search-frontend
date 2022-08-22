@@ -15,8 +15,12 @@ class Scores extends BaseClient {
     super(client);
   }
 
-  getAssign = async (parameter: SearchAssigns): Promise<ApiResponse> => {
+  getAssigns = async (parameter: SearchAssigns): Promise<ApiResponse> => {
     return await this._client.get('/assigns', toSnake(parameter));
+  };
+
+  getAssign = async (sentenceId: number): Promise<ApiResponse> => {
+    return await this._client.get(`/assigns/${sentenceId}`);
   };
 
   getScores = async (parameter: SearchScores): Promise<ApiResponse> => {
@@ -36,6 +40,10 @@ class Scores extends BaseClient {
     data: PatchScore,
   ): Promise<ApiResponse> => {
     return await this._client.patch(`/${scoreId}`, toSnake(data));
+  };
+
+  assignStatus = async (): Promise<ApiResponse> => {
+    return await this._client.get('/assigns/status');
   };
 }
 

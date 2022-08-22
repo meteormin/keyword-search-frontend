@@ -61,8 +61,7 @@ export const getToken = (): Tokens | null => {
     token = {
       accessToken: window.localStorage.getItem(conf.auth.tokenKey) || '',
       tokenType:
-        window.localStorage.getItem(conf.auth.tokenKey + '_type') ||
-        undefined,
+        window.localStorage.getItem(conf.auth.tokenKey + '_type') || undefined,
       expiresIn: window.localStorage.getItem(conf.auth.tokenKey + '_expires_in')
         ? parseInt(
             window.localStorage.getItem(conf.auth.tokenKey + '_expires_in') ||

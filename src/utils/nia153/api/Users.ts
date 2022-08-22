@@ -3,7 +3,7 @@ import { ApiClient, ApiResponse } from '../../ApiClient';
 import { PaginationParameter } from '../interfaces/common';
 import { PostUser, PatchUser } from '../interfaces/user';
 import { toSnake } from 'snake-camel';
-import {SearchState} from "../../../pages/users/UsersPage";
+import { SearchState } from '../../../pages/users/UsersPage';
 
 class Users extends BaseClient {
   static readonly prefix = 'api/users';
@@ -45,14 +45,14 @@ class Users extends BaseClient {
     return await this._client.get('/me');
   };
 
-	searchUsers = async (searchState: SearchState) => {
-		return await this._client.get('/',{
-			login_id: searchState.loginId,
-			group_id: searchState.groupId,
-			name: searchState.name,
-			user_type: searchState.permission
-		});
-	}
+  searchUsers = async (searchState: SearchState) => {
+    return await this._client.get('/', {
+      login_id: searchState.loginId,
+      group_id: searchState.groupId,
+      name: searchState.name,
+      user_type: searchState.permission,
+    });
+  };
 }
 
 export default Users;

@@ -19,6 +19,8 @@ import questionReducer from './questions/questionReducer';
 import questionSaga from './questions/questionSaga';
 import statsReducer from './statistics/statsReducer';
 import statsSaga from './statistics/statsSaga';
+import scoreReducer from './scores/scoreReducer';
+import scoreSaga from './scores/scoreSaga';
 
 export const rootReducer = combineReducers({
   // reducers
@@ -32,6 +34,9 @@ export const rootReducer = combineReducers({
   search: searchReducer,
   question: questionReducer,
   statistics: statsReducer,
+
+  // 15-3
+  scores: scoreReducer,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -44,5 +49,6 @@ export const rootSaga = function* rootSaga() {
     call(searchSaga),
     call(questionSaga),
     call(statsSaga),
+    call(scoreSaga),
   ]);
 };
