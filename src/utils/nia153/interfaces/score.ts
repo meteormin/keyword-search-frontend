@@ -3,6 +3,8 @@ import { Concept, Sentence, SentenceMaster, SentenceSets } from './sentence';
 import { User } from './user';
 
 export interface SearchScores extends PaginationParameter {
+  sentenceId?: number;
+  concept?: string;
   scoredAtStart?: string;
   scoredAtEnd?: string;
   reviewAtStart?: string;
@@ -45,14 +47,14 @@ export interface ScoreList {
   user: User;
   status: string;
   sentenceId: number;
-  sentence: Sentence;
+  scoreSentence: string;
   grammatical: number;
   historicity: number;
   diversity: number;
   fluency: number;
-  score_time: number;
-  created_at: string;
-  updated_at: string;
+  scoreTime: number;
+  createdAt: string;
+  updatedAt: string;
   scoreReview?: any;
 }
 

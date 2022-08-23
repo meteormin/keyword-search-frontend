@@ -39,7 +39,9 @@ const PostScoreForm = (props: PostScoreFormProps) => {
   const { selectAssign, time } = useSelector(scoreModule.getScoreState);
   const dispatch = useDispatch();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setShow(props.show);
+  }, []);
 
   useEffect(() => {
     if (selectAssign.data) {
@@ -51,8 +53,10 @@ const PostScoreForm = (props: PostScoreFormProps) => {
       setTotalCount(selectAssign.leftCount);
       setCreatedCount(selectAssign.createdCount);
       setShow(true);
+    } else {
+			setShow(false);
     }
-  }, [selectAssign]);
+  }, [selectAssign.data]);
 
   useEffect(() => {
     if (
@@ -66,7 +70,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
     } else {
       setCanSubmit(false);
     }
-  }, [diversity, fluency, historicity, grammatical]);
+  }, [diversity, fluency, historicity, grammatical, scoreTime.current]);
 
   useEffect(() => {
     if (show) {
@@ -109,6 +113,14 @@ const PostScoreForm = (props: PostScoreFormProps) => {
     props.onHold();
   };
 
+	const resetData = () => {
+		setShow(false);
+		setDiversity(null);
+		setGrammatical(null);
+		setHistoricity(null);
+		setFluency(null);
+	}
+
   const onSubmit = () => {
     if (scoreTime.current < 5) {
       dispatch(
@@ -127,7 +139,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
           grammatical: grammatical,
           historicity: historicity,
           scoreTime: scoreTime.current,
-          status: PostScoreStatus.HOLD,
+          status: PostScoreStatus.SCORE,
           masterId: masterId,
           setsId: setsId,
           sentenceId: sentenceId,
@@ -178,7 +190,13 @@ const PostScoreForm = (props: PostScoreFormProps) => {
           if (timerId) {
             clearInterval();
           }
+
           setTimerId(null);
+          setGrammatical(null);
+          setFluency(null);
+          setCanSubmit(false);
+          setHistoricity(null);
+          setDiversity(null);
         }}
       >
         <Modal.Header closeButton>
@@ -192,11 +210,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
                     window.open(
                       lang.sentence.workSpace.dictLink,
                       'new',
-                      'toolbar=yes, menubar=yes, scrollbar=yes, resizeable=yes, width=' +
-                        screen.width / 3 +
-                        ', height=' +
-                        screen.height +
-                        ', left=0, top=0',
+                      'toolbar=yes, menubar=yes, scrollbar=yes, resizeable=yes, width=445, height=655, left=0, top=0',
                     );
                   }}
                 >

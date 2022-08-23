@@ -166,8 +166,8 @@ function* getAssign(action: PayloadAction<number>) {
 }
 
 function* getExpiresAt() {
-  const { assignList, time } = yield select(scoreModule.getScoreState);
-  if (assignList == 0 && time) {
+  const { assignList } = yield select(scoreModule.getScoreState);
+  if (assignList.data.length == 0) {
     return;
   }
 
@@ -187,7 +187,7 @@ function* getExpiresAt() {
         const expiresAt: { expiresAt: string } = toCamel(res) as {
           expiresAt: string;
         };
-        console.log('exp' + expiresAt.expiresAt);
+
         const jobTime = date(expiresAt.expiresAt);
         auth.setJobTimeAt(UserType.SCORE, expiresAt.expiresAt);
         const time = date.duration(jobTime.diff(now)).asMilliseconds();
@@ -196,6 +196,7 @@ function* getExpiresAt() {
         );
       } else {
         yield put(scoreModule.actions.getAssignList());
+        yield put(scoreModule.actions.setTime('00:00:00'));
         yield put(
           alertModalModule.showAlert({
             title: '진행 가능 시간 초과',
@@ -206,14 +207,12 @@ function* getExpiresAt() {
       }
     }
   } catch (e) {
+    yield put(scoreModule.actions.setTime('00:00:00'));
     yield put(
-      alertModal.errorAlert({
-        res: e,
+      alertModalModule.showAlert({
+        title: '진행 가능 시간 초과',
+        message: '진행 가능 시간이 초과 되었습니다.',
         refresh: true,
-        fallback: {
-          title: '할당 상태 조회 실패',
-          message: '알 수 없는 에러',
-        },
       }),
     );
   }
@@ -225,7 +224,9 @@ function* getList() {
   yield put(loaderModule.startLoading());
 
   const search: SearchState = yield select(searchModule.getSearchState);
-  const searchAssign: SearchScores = {
+  const searchScore: SearchScores = {
+    sentenceId: (search.parameters?.sentenceId as number) || undefined,
+    concept: search.parameters?.concept || undefined,
     scoredAtStart: search.parameters?.scoredAtStart || undefined,
     scoredAtEnd: search.parameters?.scoredAtEnd || undefined,
     reviewAtStart: search.parameters?.reviewAtStart || undefined,
@@ -236,7 +237,7 @@ function* getList() {
     page: search.parameters?.page || undefined,
   };
   try {
-    const response: ApiResponse = yield call(scoresApi.getScores, searchAssign);
+    const response: ApiResponse = yield call(scoresApi.getScores, searchScore);
     const res = apiResponse(response);
     yield put(loaderModule.endLoading());
     if (response.isSuccess) {

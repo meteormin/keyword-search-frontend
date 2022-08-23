@@ -12,12 +12,12 @@ export interface selectFilterProps {
 const SelectFilter = (props: selectFilterProps) => {
   return (
     <Row>
-      <Col md={4}>
+      <Col md={5}>
         <label className="form-label mt-2">
           <strong>{props.label}</strong>
         </label>
       </Col>
-      <Col md={8}>
+      <Col md={7}>
         <Select
           id={'selectFilter'}
           name={'selectFilter'}

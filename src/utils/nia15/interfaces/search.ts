@@ -1,16 +1,14 @@
 export enum CreateStatus {
-  WAITING = 'WAITING',
+  WAITING = 'WAIT',
   TEMP = 'TEMP',
   CREATED = 'CREATED',
 }
 
 export enum ReviewStatus {
-  NONE,
-  WAITING = 'WAITING',
-  REJECT1 = 'REJECT1',
-  PASS1 = 'PASS1',
-  REJECT2 = 'REJECT2',
-  PASS2 = 'PASS2',
+  NONE = '',
+  WAIT = 'WAIT',
+  REJECT = 'REJECT',
+  PASS = 'PASS',
 }
 
 export interface SearchParameter {

@@ -14,86 +14,46 @@ const ReviewState: Option[] = [
   },
   {
     name: '검수대기',
-    value: ReviewStatus.WAITING,
+    value: ReviewStatus.WAIT,
   },
   {
-    name: '1차승인',
-    value: ReviewStatus.PASS1,
+    name: '승인',
+    value: ReviewStatus.PASS,
   },
   {
-    name: '1차반려',
-    value: ReviewStatus.REJECT1,
-  },
-  {
-    name: '2차승인',
-    value: ReviewStatus.PASS2,
-  },
-  {
-    name: '2차반려',
-    value: ReviewStatus.REJECT2,
+    name: '반려',
+    value: ReviewStatus.REJECT,
   },
 ];
 
 const RejectReason: Option[] = [
   {
-    name: '1. 단어 수 미흡',
+    name: '반려 사유 선택',
+    value: 0,
+  },
+  {
+    name: '1. 평가시간 부적합',
     value: 1,
   },
   {
-    name: '2. 전문적인 용어 사용',
+    name: '2. 평가 평균값 부적합',
     value: 2,
   },
   {
-    name: '3.  지나치게 구체적인 지식정보',
+    name: '3. 평가값 이상치',
     value: 3,
   },
   {
-    name: '4. 문형 사용하지 않음',
+    name: '4. 평가 데이터 오류',
     value: 4,
   },
   {
-    name: '5. 문장 미완료',
+    name: '5. 기본 데이터 오류(평가 제외 문장)',
     value: 5,
   },
   {
-    name: '6. 문장 중복',
+    name: '6. 기타',
     value: 6,
-  },
-  {
-    name: '7. 맞춤법 오류',
-    value: 7,
-  },
-  {
-    name: '8. 비속어/은어 사용',
-    value: 8,
-  },
-  {
-    name: '9. 기타',
-    value: 9, // 기타 9 고정
-  },
-  {
-    name: '10. 동일한 문장',
-    value: 10,
-  },
-  {
-    name: '11. 문장의 이질성',
-    value: 11,
-  },
-  {
-    name: '12. 단어수 과잉',
-    value: 12,
-  },
-  {
-    name: '13. 동일한 문형 사용',
-    value: 13,
-  },
-  {
-    name: '14. 문형 처리 오류',
-    value: 14,
-  },
-  {
-    name: '15. 생성 제외 문장',
-    value: 15,
   },
 ];
 
@@ -175,7 +135,7 @@ const CreateConditions: Option[] = [
   { name: '기타', value: '기타' },
 ];
 
-// 전체 톨계 관련
+// 전체 통계 관련
 const DataStatsSearchOptions: Option[] = [
   { name: '검색어 선택', value: '' },
   { name: '생성자 ID', value: 'creatorID' },

@@ -23,7 +23,7 @@ import {
   DataStatList,
   ReviewStatsList,
 } from '../pages/statistics';
-import { ScoreAssignListPage } from '../pages/scores';
+import { ScoreAssignListPage, ScoreListPage } from '../pages/scores';
 
 const Router = () => {
   return (
@@ -93,6 +93,17 @@ const Router = () => {
                 redirect={<ForbiddenPage />}
               >
                 <ScoreAssignListPage />
+              </guard.Restricted>
+            }
+          />
+          <Route
+            index
+            element={
+              <guard.Restricted
+                condition={handlePerm([UserType.SCORE, UserType.ADMIN])}
+                redirect={<ForbiddenPage />}
+              >
+                <ScoreListPage />
               </guard.Restricted>
             }
           />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import { auth, date, lang, str } from '../../helpers';
+import { lang, str } from '../../helpers';
 import DataAssign from '../../components/scores/DataAssign';
 import searchModule from '../../store/features/search';
 import Timer from '../../components/common/Timer';
@@ -13,7 +13,11 @@ import SendQuestion from '../../components/questions/SendQuestion';
 import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import { useDispatch, useSelector } from 'react-redux';
 import scoreModule from '../../store/features/scores';
-import { ScoreAssignRecord, ScoreAssignSchema, toRecord } from './Schemas';
+import {
+  ScoreAssignRecord,
+  ScoreAssignSchema,
+  toAssignRecord,
+} from './Schemas';
 import PostScoreForm from '../../components/scores/PostScoreForm';
 
 const ASSIGN_EXPIRES_HOUR = '1';
@@ -51,11 +55,21 @@ const ScoreAssignListPage = () => {
   }, []);
 
   useEffect(() => {
-    if (assignList) {
-      setRecords(assignList.data.map(toRecord));
+    if (assignList.data.length != 0) {
+      setRecords(assignList.data.map(toAssignRecord));
       setTotalCount(assignList.count);
     }
-  }, [assignList]);
+  }, [assignList.data]);
+
+  useEffect(() => {
+    dispatch(
+      searchModule.actions.search({
+        page: page,
+        limit: limit,
+      }),
+    );
+    dispatch(scoreModule.actions.getAssignList());
+  }, [page, limit]);
 
   return (
     <Container>
@@ -156,7 +170,7 @@ const ScoreAssignListPage = () => {
         </Col>
       </Row>
       <PostScoreForm
-        show={!!(selectAssign || false)}
+        show={!!selectAssign.data}
         onSubmit={() => null}
         onHold={() => null}
       />
