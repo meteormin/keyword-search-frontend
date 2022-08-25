@@ -20,6 +20,7 @@ import {
 } from '../../../utils/nia153/interfaces/score';
 import { toCamel } from 'snake-camel';
 import { PayloadAction } from '@reduxjs/toolkit';
+import { AssignState } from '../../../utils/nia153/interfaces/common';
 
 const scoresApi = newClient(Clients.Scores);
 const assignsApi = newClient(Clients.Assigns);
@@ -31,7 +32,7 @@ function* postAssign() {
   const search: SearchState = yield select(searchModule.getSearchState);
 
   try {
-    let assignType: UserType = UserType.SCORE;
+    const assignType: UserType = UserType.SCORE;
 
     const response: ApiResponse = yield call(assignsApi.assign, assignType);
 
@@ -179,21 +180,25 @@ function* getExpiresAt() {
       yield put(scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
     } else {
       const response: ApiResponse = yield call(
-        assignsApi.getExpiresAt,
+        assignsApi.getAssign,
         UserType.SCORE,
       );
       const res = apiResponse(response);
       if (response.isSuccess) {
-        const expiresAt: { expiresAt: string } = toCamel(res) as {
-          expiresAt: string;
-        };
+        const assignState: AssignState = toCamel(res) as AssignState;
+        if (assignState.status) {
+          const expiresAt: string = assignState.expiresAt;
 
-        const jobTime = date(expiresAt.expiresAt);
-        auth.setJobTimeAt(UserType.SCORE, expiresAt.expiresAt);
-        const time = date.duration(jobTime.diff(now)).asMilliseconds();
-        yield put(
-          scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
-        );
+          const jobTime = date(expiresAt);
+          auth.setJobTimeAt(UserType.SCORE, expiresAt);
+          const time = date.duration(jobTime.diff(now)).asMilliseconds();
+          yield put(
+            scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
+          );
+        } else {
+          auth.setJobTimeAt(UserType.SCORE, '');
+          yield put(scoreModule.actions.setTime('할당 중'));
+        }
       } else {
         yield put(scoreModule.actions.getAssignList());
         yield put(scoreModule.actions.setTime('00:00:00'));

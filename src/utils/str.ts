@@ -69,7 +69,7 @@ export const replaceAll = (
   format: string[] = ['{{', '}}'],
 ) => {
   let reStr = '';
-  for (let [k, v] of Object.entries(replace)) {
+  for (const [k, v] of Object.entries(replace)) {
     reStr = str.replaceAll(format[0] + k + format[1], v);
   }
 

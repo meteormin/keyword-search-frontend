@@ -6,11 +6,11 @@ import DynamicTable from '../../components/common/DaynamicTable';
 import { QuestionRecord, QuestionSchema } from './QuestionSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import questionModule from '../../store/features/questions';
+import { QuestionDiv } from '../../utils/nia153/interfaces/question';
 import QuestionForm, {
   QuestionFormData,
   QuestionFormProps,
 } from '../../components/questions/QuestionForm';
-import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
 import LimitFilter from '../../components/common/LimitFilter';
 import alertModal from '../../store/features/common/alertModal';
 import SendQuestion from '../../components/questions/SendQuestion';

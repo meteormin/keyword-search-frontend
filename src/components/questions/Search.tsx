@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import questionModule from '../../store/features/questions';
-import { QuestionSearch } from '../../utils/nia15/interfaces/questions';
+import { QuestionSearch } from '../../utils/nia153/interfaces/question';
 import SelectFilter from '../common/SelectFilter';
 import { Row, Col, Button } from 'react-bootstrap';
 import {

@@ -15,7 +15,11 @@ class Assigns extends BaseClient {
   getExpiresAt = async (
     userType: string | null = null,
   ): Promise<ApiResponse> => {
-    return await this._client.get(`/expires-at/${userType}`);
+    return await this._client.get(`/${userType}/expires-at/`);
+  };
+
+  getAssign = async (assignType: string): Promise<ApiResponse> => {
+    return await this._client.get(`/${assignType}`);
   };
 }
 

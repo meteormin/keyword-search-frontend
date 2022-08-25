@@ -55,7 +55,7 @@ export interface ScoreList {
   scoreTime: number;
   createdAt: string;
   updatedAt: string;
-  scoreReview?: any;
+  scoreReview?: any | null;
 }
 
 export interface Score {

@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import QuestionForm, { QuestionFormData } from './QuestionForm';
 import { Button } from 'react-bootstrap';
-import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import { QuestionDiv } from '../../utils/nia153/interfaces/question';
 import { useDispatch, useSelector } from 'react-redux';
 import questionModule from '../../store/features/questions';
 

@@ -1,45 +1,9 @@
-import { ReviewStatus } from '../nia15/interfaces/reviews';
 import { lang } from '../../helpers';
 
 export const switchReviewStatus = (
-  status: ReviewStatus,
+  status: string,
 ): { reviewStatus: string; createStatus: string } => {
   switch (status) {
-    case ReviewStatus.PASS1:
-      return {
-        reviewStatus: lang.sentence.reviewState.review1.pass,
-        createStatus: lang.sentence.createState.complete,
-      };
-    case ReviewStatus.PASS2:
-      return {
-        reviewStatus: lang.sentence.reviewState.review2.pass,
-        createStatus: lang.sentence.createState.complete,
-      };
-    case ReviewStatus.REJECT1:
-      return {
-        reviewStatus: lang.sentence.reviewState.review1.fail,
-        createStatus: lang.sentence.createState.wait,
-      };
-    case ReviewStatus.REJECT2:
-      return {
-        reviewStatus: lang.sentence.reviewState.review2.fail,
-        createStatus: lang.sentence.createState.wait,
-      };
-    case ReviewStatus.WAITING:
-      return {
-        reviewStatus: lang.sentence.reviewState.common.wait,
-        createStatus: lang.sentence.createState.complete,
-      };
-    case ReviewStatus.TEMP:
-      return {
-        reviewStatus: '',
-        createStatus: lang.sentence.createState.temp,
-      };
-    case ReviewStatus.HOLD:
-      return {
-        reviewStatus: lang.sentence.reviewState.common.hold,
-        createStatus: lang.sentence.createState.complete,
-      };
     default:
       return {
         reviewStatus: '',

@@ -4,7 +4,7 @@ import {
   Question,
   Questions,
   QuestionDiv,
-} from '../../utils/nia15/interfaces/questions';
+} from '../../utils/nia153/interfaces/question';
 import { QuestionFormData } from '../../components/questions/QuestionForm';
 import { QuestionRecord } from './QuestionSchema';
 
@@ -41,14 +41,10 @@ export const getQuestionDiv = () => {
   }
 
   switch (userType) {
-    case UserType.WORKER:
-      return QuestionDiv.CREATE;
-    case UserType.REVIEWER1:
-    case UserType.REVIEWER2:
-      return QuestionDiv.REVIEW;
     case UserType.SCORE:
-    case UserType.SCORE_REVIEWER:
       return QuestionDiv.SCORE;
+    case UserType.SCORE_REVIEWER:
+      return QuestionDiv.REVIEW;
     default:
       return;
   }

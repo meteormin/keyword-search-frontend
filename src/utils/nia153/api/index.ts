@@ -7,6 +7,7 @@ import Oauth from './Oauth';
 import Scores from './Scores';
 import Users from './Users';
 import Report from './Report';
+import Questions from './Questions';
 
 export const Clients = {
   Assigns,
@@ -15,6 +16,7 @@ export const Clients = {
   Scores,
   Users,
   Report,
+  Questions,
 };
 
 interface ClientType<T> {

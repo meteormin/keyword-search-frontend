@@ -3,7 +3,7 @@ import {
   Question,
   Questions,
   QuestionSearch,
-} from '../../../utils/nia15/interfaces/questions';
+} from '../../../utils/nia153/interfaces/question';
 import { apiResponse } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { put, call, takeLatest, fork, select } from 'redux-saga/effects';
@@ -12,7 +12,7 @@ import { ApiResponse } from '../../../utils/ApiClient';
 import questionModule from './index';
 import alertModal from '../common/alertModal';
 import { toCamel } from 'snake-camel';
-import newClient, { Clients } from '../../../utils/nia15/api';
+import newClient, { Clients } from '../../../utils/nia153/api';
 
 const questionApi = newClient(Clients.Questions);
 

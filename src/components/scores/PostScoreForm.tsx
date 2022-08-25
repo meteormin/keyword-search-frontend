@@ -54,7 +54,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
       setCreatedCount(selectAssign.createdCount);
       setShow(true);
     } else {
-			setShow(false);
+      setShow(false);
     }
   }, [selectAssign.data]);
 
@@ -113,13 +113,13 @@ const PostScoreForm = (props: PostScoreFormProps) => {
     props.onHold();
   };
 
-	const resetData = () => {
-		setShow(false);
-		setDiversity(null);
-		setGrammatical(null);
-		setHistoricity(null);
-		setFluency(null);
-	}
+  const resetData = () => {
+    setShow(false);
+    setDiversity(null);
+    setGrammatical(null);
+    setHistoricity(null);
+    setFluency(null);
+  };
 
   const onSubmit = () => {
     if (scoreTime.current < 5) {

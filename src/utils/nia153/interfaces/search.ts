@@ -11,4 +11,27 @@ export interface Search extends PaginationParameter {
   rejectReason?: number | null;
 }
 
-export interface StatsSearch extends PaginationParameter {}
+export interface StatsSearch extends PaginationParameter {
+  stats: any;
+}
+
+export enum ReviewStatus {
+  NONE,
+  WAIT = 'WAIT',
+  PASS = 'PASS',
+  REJECT = 'REJECT',
+}
+
+export enum SearchNames {
+  NONE,
+  CONCEPT,
+  REF_ID,
+}
+
+export enum IdStateEnum {
+  NONE,
+  GROUP_NAME,
+  CREATOR_ID,
+  REVIEWER1_ID,
+  REVIEWER2_ID,
+}

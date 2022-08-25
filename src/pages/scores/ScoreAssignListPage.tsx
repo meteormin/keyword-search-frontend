@@ -10,7 +10,7 @@ import LimitFilter from '../../components/common/LimitFilter';
 import DynamicTable from '../../components/common/DaynamicTable';
 import Pagination from '../../components/common/Pagination';
 import SendQuestion from '../../components/questions/SendQuestion';
-import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import { QuestionDiv } from '../../utils/nia153/interfaces/question';
 import { useDispatch, useSelector } from 'react-redux';
 import scoreModule from '../../store/features/scores';
 import {

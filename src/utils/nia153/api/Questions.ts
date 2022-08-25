@@ -1,5 +1,5 @@
 import BaseClient from '../BaseClient';
-import { CreateQuestion, QuestionSearch } from '../interfaces/questions';
+import { CreateQuestion, QuestionSearch } from '../interfaces/question';
 import { ApiClient } from '../../ApiClient';
 
 class Questions extends BaseClient {

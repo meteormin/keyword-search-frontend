@@ -1,7 +1,7 @@
 import { ApiClient, ApiResponse } from './ApiClient';
 import { apiResponse } from '../helpers';
 import { toCamel } from 'snake-camel';
-import { Concept } from './nia15/interfaces/tasks';
+import { Concept } from './nia153/interfaces/sentence';
 
 export interface AnalyzeData {
   sentences: AnalyzeSentence[];
@@ -101,7 +101,7 @@ class BaikalNlp {
     if (analyzeData) {
       let cnt = 0;
       const conceptStem = concepts.map((c) => c.stem);
-      const conceptTags = concepts.map((c) => c.posttag);
+      const conceptTags = concepts.map((c) => c.postag);
       analyzeData.sentences.forEach((item) => {
         item.tokens.forEach((t) => {
           cnt += t.morphemes.filter((token) => {

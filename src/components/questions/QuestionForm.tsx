@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, InputGroup, Modal, Row } from 'react-bootstrap';
-import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import { QuestionDiv } from '../../utils/nia153/interfaces/question';
 import Select from '../common/Select';
 import { QuestionTypeOptions } from './QuestionOptions';
 import { useDispatch, useSelector } from 'react-redux';

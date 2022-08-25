@@ -65,7 +65,7 @@ const ScoreRadio = (props: ScoreRadioProps) => {
   };
 
   const makeRadioButtons = (rCount: number) => {
-    let elements = [];
+    const elements = [];
 
     console.log(rCount);
     for (let i = rCount; i > 0; i--) {

@@ -1,11 +1,7 @@
 import { Option } from '../components/common/Select';
-import {
-  AssignStatus,
-  CreateStatus,
-  ReviewStatus,
-} from '../utils/nia15/interfaces/search';
-import { IdStateEnum } from '../components/reviews/IdState';
-import { SearchNames } from '../components/tasks/DataSearch';
+import { ReviewStatus } from '../utils/nia153/interfaces/search';
+import { IdStateEnum } from '../utils/nia153/interfaces/search';
+import { SearchNames } from '../utils/nia153/interfaces/search';
 
 const ReviewState: Option[] = [
   {
@@ -54,25 +50,6 @@ const RejectReason: Option[] = [
   {
     name: '6. 기타',
     value: 6,
-  },
-];
-
-const CreateState: Option[] = [
-  {
-    name: '검색어 선택',
-    value: '',
-  },
-  {
-    name: '생성대기',
-    value: CreateStatus.WAITING,
-  },
-  {
-    name: '생성중',
-    value: CreateStatus.TEMP,
-  },
-  {
-    name: '생성완료',
-    value: CreateStatus.CREATED,
   },
 ];
 
@@ -147,17 +124,6 @@ const DataStatsSearchOptions: Option[] = [
   { name: '고유코드', value: 'refID' },
 ];
 
-const AssignStatusOptions: Option[] = [
-  { name: '검색어 선택', value: '' },
-  { name: '검수대기', value: AssignStatus.WAITING },
-  { name: '재검수대기', value: AssignStatus.R_WAITING },
-  { name: '검수보류', value: AssignStatus.HOLD1 },
-  { name: '1차 승인', value: AssignStatus.PASS1 },
-  { name: '1차 반려', value: AssignStatus.REJECT1 },
-  { name: '2차 승인', value: AssignStatus.PASS2 },
-  { name: '2차 반려', value: AssignStatus.REJECT2 },
-];
-
 const SentenceStatusOptions: Option[] = [
   { name: '선택', value: '' },
   { name: '검수대기', value: '' },
@@ -195,13 +161,11 @@ const AgeOptions: Option[] = [
 const selectOptions = {
   RejectReason,
   ReviewState,
-  CreateState,
   IdState,
   DataSearchNames,
   CreateConditions,
   DataStatsSearchOptions,
   CreatorSearchOptions,
-  AssignStatusOptions,
   SentenceStatusOptions,
   ReviewerSearchOptions,
   GenderOptions,

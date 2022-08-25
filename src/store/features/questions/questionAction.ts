@@ -4,7 +4,7 @@ import {
   Questions,
   CreateQuestion,
   QuestionSearch,
-} from '../../../utils/nia15/interfaces/questions';
+} from '../../../utils/nia153/interfaces/question';
 
 export interface QuestionState {
   isAdmin: boolean;

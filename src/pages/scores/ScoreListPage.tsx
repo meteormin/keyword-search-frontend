@@ -14,7 +14,7 @@ import DynamicTable from '../../components/common/DaynamicTable';
 import { toScoreRecord, ScoreListRecord, ScoreListSchema } from './Schemas';
 import Pagination from '../../components/common/Pagination';
 import SendQuestion from '../../components/questions/SendQuestion';
-import { QuestionDiv } from '../../utils/nia15/interfaces/questions';
+import { QuestionDiv } from '../../utils/nia153/interfaces/question';
 import { Search } from '../../utils/nia153/interfaces/search';
 
 const ScoreListPage = () => {

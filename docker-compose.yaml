@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  nia-15-3-react:
+    container_name: 'nia-15-3-front'
+    build: docker
+    restart: always
+    stdin_open: true
+    volumes:
+      - ./build_prd:/var/www/front
+      - ./apache:/etc/apache2/sites-available
+      - ./ssl:/etc/ssl
+    ports:
+      - '15380:80'
+      - '15343:443'
+    networks:
+      - nia-15
+networks:
+  nia-15:
+    driver: bridge
