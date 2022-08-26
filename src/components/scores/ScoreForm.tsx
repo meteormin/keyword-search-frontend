@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
 import ScoreRadio from './ScoreRadio';
-import {makeSentenceTagged} from "../../helpers";
+import { makeSentenceTagged } from '../../helpers';
 
 export interface ScoreFormProps {
   scoreSentence: string;
@@ -54,15 +54,15 @@ const ScoreForm = (props: ScoreFormProps) => {
     });
   }, [grammatical, fluency, historicity, diversity]);
 
-	useEffect(() => {
-		if (scoreSentence) {
-			const s = makeSentenceTagged(scoreSentence)
-				.then((rs) => setPartOfSpeech(rs || ''))
-				.catch((reason) => {
-					console.error(reason);
-				});
-		}
-	}, [scoreSentence]);
+  useEffect(() => {
+    if (scoreSentence) {
+      const s = makeSentenceTagged(scoreSentence)
+        .then((rs) => setPartOfSpeech(rs || ''))
+        .catch((reason) => {
+          console.error(reason);
+        });
+    }
+  }, [scoreSentence]);
 
   return (
     <div>
