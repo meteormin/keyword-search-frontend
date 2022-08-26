@@ -45,7 +45,7 @@ fi
 
 echo "[start build react app]"
 
-npm run build 2>/dev/null || res=$?
+yarn run build 2>/dev/null || res=$?
 
 if [ "${res}" = 1 ]; then
   echo "failed, build"
