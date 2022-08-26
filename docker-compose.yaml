@@ -1,5 +1,14 @@
 version: '3.9'
 services:
+  baikal-nlp:
+    image: 'baikalai/baikal-nlp:v1.7.2'
+    ports:
+      - '15357:15357'
+      - '15356:15356'
+    volumes:
+      - ./testworks-license.pem:/baikal-nlp/config/license.pem
+    networks:
+      - nia-15
   nia-15-3-react:
     container_name: 'nia-15-3-front'
     build: docker
@@ -14,6 +23,8 @@ services:
       - '15343:443'
     networks:
       - nia-15
+    depends_on:
+      - baikal-nlp
 networks:
   nia-15:
     driver: bridge
