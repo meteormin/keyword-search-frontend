@@ -6,7 +6,7 @@ services:
       - '15357:15357'
       - '15356:15356'
     volumes:
-      - ./testworks-license.pem:/baikal-nlp/config/license.pem
+      - ./docker/testworks-license.pem:/baikal-nlp/config/license.pem
     networks:
       - nia-15
   nia-15-3-react:
