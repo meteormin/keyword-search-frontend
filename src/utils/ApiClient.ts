@@ -189,7 +189,7 @@ export class ApiClient {
           errorResponse.status = error.response?.data.status || 'error';
           errorResponse.error = error.response?.data.error || 'SERVER_ERROR';
           errorResponse.code = error.response?.data.code || 99;
-          errorResponse.error = errorResponse.error.replaceAll('_', '');
+          errorResponse.error = errorResponse.error.replaceAll('_', ' ');
 
           if (this.error.response.data.hasOwnProperty('messages')) {
             errorResponse.error = '유효성 검사 실패';
