@@ -43,7 +43,7 @@ export default {
     state.show = true;
     state.refresh = refresh || false;
     if (res instanceof ErrorResponse) {
-      state.title = res.status;
+      state.title = res.error;
       state.message = res.message;
     } else {
       console.error('Unknown Error:', res);

@@ -48,9 +48,12 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
       yield put(loginModule.login({ token, user }));
     } else {
       yield put(
-        alertModalModule.showAlert({
-          title: '로그인 실패',
-          message: '아이디 또는 비밀번호가 틀렸습니다.',
+        alertModalModule.errorAlert({
+          res: res,
+          fallback: {
+            title: '로그인',
+            message: '아이디 또는 비밀번화 틀렸습니다.',
+          },
         }),
       );
     }
