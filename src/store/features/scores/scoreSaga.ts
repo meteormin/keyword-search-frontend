@@ -168,15 +168,28 @@ function* getAssign(action: PayloadAction<number>) {
 
 function* getExpiresAt() {
   const { assignList } = yield select(scoreModule.getScoreState);
+
+  const now = date();
+  let jobTime = null;
+  let time = 0;
+  if (auth.getJobTimeAt(UserType.SCORE)) {
+    jobTime = auth.getJobTimeAt(UserType.SCORE);
+    time = date.duration(date(jobTime).diff(now)).asMilliseconds();
+  }
+
   if (assignList.data.length == 0) {
-    return;
+    if (!jobTime) {
+      return;
+    }
+
+    if (time !== 0) {
+      yield put(scoreModule.actions.setTime('할당 중'));
+      return;
+    }
   }
 
   try {
-    const now = date();
-    if (auth.getJobTimeAt(UserType.SCORE)) {
-      const jobTime = auth.getJobTimeAt(UserType.SCORE);
-      const time = date.duration(date(jobTime).diff(now)).asMilliseconds();
+    if (time !== 0) {
       yield put(scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
     } else {
       const response: ApiResponse = yield call(
