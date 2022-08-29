@@ -80,8 +80,8 @@ const UserForm = ({
       setId('');
       setName('');
       setUserType(UserType.ADMIN);
-      setGender(null);
-      setAge(null);
+      setGender('m');
+      setAge('10');
     }
   }, [editUser, show]);
 
