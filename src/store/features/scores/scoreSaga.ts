@@ -214,13 +214,11 @@ function* getExpiresAt() {
           );
           yield put(scoreModule.actions.getAssignList());
         } else if (assignState.status === null) {
-
           auth.setJobTimeAt(UserType.SCORE, '');
           auth.setAssigned(UserType.SCORE, true);
 
           yield put(scoreModule.actions.setTime('할당 중'));
         } else {
-
           auth.setJobTimeAt(UserType.SCORE, '');
           auth.setAssigned(UserType.SCORE, false);
 
