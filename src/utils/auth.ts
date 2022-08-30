@@ -127,3 +127,11 @@ export const setJobTimeAt = (userType: UserType, expiredAt: string) => {
     expiredAt,
   );
 };
+
+export const setAssigned = (userType: UserType, status: boolean) => {
+  return window.localStorage.setItem(userType + '_ASSIGN', String(status));
+};
+
+export const getAssigned = (userType: UserType): boolean => {
+  return Boolean(window.localStorage.getItem(userType + '_ASSIGN'));
+};

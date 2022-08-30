@@ -42,6 +42,7 @@ function* postAssign() {
     if (response.isSuccess) {
       const result = res.message;
       yield put(scoreModule.actions.getAssignList());
+      auth.setAssigned(UserType.SCORE, true);
       yield put(scoreModule.actions.setTime('할당 중'));
       yield put(
         alertModal.showAlert({
@@ -173,24 +174,22 @@ function* getExpiresAt() {
   const now = date();
   let jobTime = null;
   let time = 0;
-  if (auth.getJobTimeAt(UserType.SCORE)) {
+  if (auth.getJobTimeAt(UserType.SCORE) && auth.getAssigned(UserType.SCORE)) {
     jobTime = auth.getJobTimeAt(UserType.SCORE);
     time = date.duration(date(jobTime).diff(now)).asMilliseconds();
   }
 
-  if (assignList.data.length == 0) {
+  if (assignList.data.length == 0 && auth.getAssigned(UserType.SCORE)) {
     if (jobTime && time !== 0) {
-      yield put(scoreModule.actions.setTime('할당 중'));
-      return;
-    } else {
+      yield put(scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
       return;
     }
   }
 
   try {
-    if (time !== 0) {
+    if (time !== 0 && auth.getAssigned(UserType.SCORE)) {
       yield put(scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
-    } else {
+    } else if (auth.getAssigned(UserType.SCORE) && time === 0) {
       const response: ApiResponse = yield call(
         assignsApi.getAssign,
         UserType.SCORE,
@@ -207,13 +206,15 @@ function* getExpiresAt() {
           yield put(
             scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
           );
+          yield put(scoreModule.actions.getAssignList());
         } else {
           auth.setJobTimeAt(UserType.SCORE, '');
           yield put(scoreModule.actions.setTime('할당 중'));
         }
       } else {
+        auth.setAssigned(UserType.SCORE, false);
         yield put(scoreModule.actions.getAssignList());
-        yield put(scoreModule.actions.setTime('00:00:00'));
+        yield put(scoreModule.actions.setTime(''));
         yield put(
           alertModalModule.showAlert({
             title: '진행 가능 시간 초과',
@@ -224,6 +225,7 @@ function* getExpiresAt() {
       }
     }
   } catch (e) {
+    auth.setAssigned(UserType.SCORE, false);
     yield put(scoreModule.actions.setTime('00:00:00'));
     yield put(
       alertModalModule.showAlert({
