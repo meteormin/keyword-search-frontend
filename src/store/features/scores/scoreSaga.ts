@@ -42,6 +42,7 @@ function* postAssign() {
     if (response.isSuccess) {
       const result = res.message;
       yield put(scoreModule.actions.getAssignList());
+      auth.setJobTimeAt(UserType.SCORE, '');
       auth.setAssigned(UserType.SCORE, true);
       yield put(scoreModule.actions.setTime('할당 중'));
       yield put(
