@@ -197,7 +197,7 @@ function* getExpiresAt() {
       const res = apiResponse(response);
       if (response.isSuccess) {
         const assignState: AssignState = toCamel(res) as AssignState;
-        if (assignState.status) {
+        if (assignState.status === true) {
           const expiresAt: string = assignState.expiresAt;
 
           const jobTime = date(expiresAt);
@@ -207,9 +207,23 @@ function* getExpiresAt() {
             scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
           );
           yield put(scoreModule.actions.getAssignList());
-        } else {
+        } else if (assignState.status === null) {
           auth.setJobTimeAt(UserType.SCORE, '');
           yield put(scoreModule.actions.setTime('할당 중'));
+        } else {
+          auth.setJobTimeAt(UserType.SCORE, '');
+          auth.setAssigned(UserType.SCORE, false);
+          const message =
+            assignState.assignCount == 0
+              ? '할당 가능한 문장이 없습니다.'
+              : '할당에 실패했습니다.';
+          yield put(
+            alertModalModule.showAlert({
+              title: '할당 실패',
+              message: message,
+              refresh: true,
+            }),
+          );
         }
       } else {
         auth.setAssigned(UserType.SCORE, false);
