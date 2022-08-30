@@ -178,11 +178,7 @@ function* getExpiresAt() {
   }
 
   if (assignList.data.length == 0) {
-    if (!jobTime) {
-      return;
-    }
-
-    if (time !== 0) {
+    if (jobTime && time !== 0) {
       yield put(scoreModule.actions.setTime('할당 중'));
       return;
     }
