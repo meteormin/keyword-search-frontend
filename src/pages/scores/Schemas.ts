@@ -38,7 +38,7 @@ export const toAssignRecord = (data: ScoreAssignList): ScoreAssignRecord => {
   return {
     no: data.no,
     refId: data.sentenceId,
-    concept: data.concept
+    concept: data.concepts
       .map((concept) => {
         return concept.stem;
       })
