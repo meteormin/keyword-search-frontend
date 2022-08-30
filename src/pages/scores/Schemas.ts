@@ -76,7 +76,7 @@ export const ScoreListSchema: DynamicSchema = {
     name: '평균',
   },
   scoreTime: {
-    name: '평균 시간',
+    name: '평가시간',
   },
   createdAt: {
     name: '평가일자',
