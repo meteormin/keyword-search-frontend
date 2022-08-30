@@ -191,7 +191,7 @@ function* getExpiresAt() {
       yield put(scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
     } else if (
       (auth.getAssigned(UserType.SCORE) && time === 0) ||
-      assignList.data.length != 0
+      (assignList.data.length != 0 && time === 0)
     ) {
       const response: ApiResponse = yield call(
         assignsApi.getAssign,
