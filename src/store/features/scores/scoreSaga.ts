@@ -42,6 +42,7 @@ function* postAssign() {
     if (response.isSuccess) {
       const result = res.message;
       yield put(scoreModule.actions.getAssignList());
+      yield put(scoreModule.actions.setTime('할당 중'));
       yield put(
         alertModal.showAlert({
           title: '평가 할당',
@@ -180,6 +181,8 @@ function* getExpiresAt() {
   if (assignList.data.length == 0) {
     if (jobTime && time !== 0) {
       yield put(scoreModule.actions.setTime('할당 중'));
+      return;
+    } else {
       return;
     }
   }
