@@ -237,6 +237,7 @@ function* getExpiresAt() {
           );
         }
       } else {
+        auth.setJobTimeAt(UserType.SCORE, '');
         auth.setAssigned(UserType.SCORE, false);
         yield put(scoreModule.actions.getAssignList());
         yield put(scoreModule.actions.setTime(''));
@@ -250,6 +251,7 @@ function* getExpiresAt() {
       }
     }
   } catch (e) {
+    auth.setJobTimeAt(UserType.SCORE, '');
     auth.setAssigned(UserType.SCORE, false);
     yield put(scoreModule.actions.setTime('00:00:00'));
     yield put(
