@@ -85,6 +85,9 @@ export const getRefresh = () => {
 export const logout = (): void => {
   window.localStorage.removeItem(conf.auth.tokenKey);
   window.localStorage.removeItem(conf.auth.userKey);
+  window.localStorage.removeItem(conf.auth.refreshKey);
+  window.localStorage.removeItem(conf.auth.jobExpiredAt);
+  window.localStorage.removeItem(user()?.userType + '_ASSIGN');
 };
 
 export const isLogin = (): boolean => {
