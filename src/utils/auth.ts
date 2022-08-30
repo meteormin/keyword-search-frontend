@@ -133,5 +133,5 @@ export const setAssigned = (userType: UserType, status: boolean) => {
 };
 
 export const getAssigned = (userType: UserType): boolean => {
-  return Boolean(window.localStorage.getItem(userType + '_ASSIGN'));
+  return window.localStorage.getItem(userType + '_ASSIGN') === 'true';
 };
