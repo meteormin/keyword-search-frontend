@@ -38,19 +38,19 @@ const menuPerm: { path: string; role: string[] }[] = [
   },
   {
     path: '/scores/assigns',
-    role: [UserType.SCORE, UserType.ADMIN],
+    role: [UserType.SCORE],
   },
   {
     path: '/scores',
-    role: [UserType.SCORE, UserType.ADMIN],
+    role: [UserType.SCORE],
   },
   {
     path: '/reviews',
-    role: [UserType.SCORE_REVIEWER, UserType.ADMIN],
+    role: [UserType.SCORE_REVIEWER],
   },
   {
     path: '/reviews/assigns',
-    role: [UserType.SCORE_REVIEWER, UserType.ADMIN],
+    role: [UserType.SCORE_REVIEWER],
   },
   {
     path: '/questions',
