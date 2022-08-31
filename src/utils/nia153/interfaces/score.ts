@@ -23,7 +23,7 @@ export interface ScoreAssignList {
   id: number;
   user: User;
   sentenceId: number;
-  concept: Concept[];
+  concepts: Concept[];
   basicSentence: string;
   scoreSentence: string;
 }
@@ -34,7 +34,7 @@ export interface ScoreAssign {
   masterId: number;
   setsId: number;
   sentenceId: number;
-  concept: Concept[];
+  concepts: Concept[];
   basicSentence: string;
   basicSentenceCount: number;
   scoreSentence: string;
@@ -65,7 +65,7 @@ export interface Score {
   masterId: number;
   setsId: number;
   sentenceId: number;
-  concept: Concept[];
+  concepts: Concept[];
   basicSentence: string;
   scoreSentence: string;
   grammatical: number;

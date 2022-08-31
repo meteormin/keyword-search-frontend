@@ -8,5 +8,5 @@ export interface AssignState {
   assignType: string;
   expiresAt: string;
   assignCount: number;
-  status: boolean;
+  status: boolean | null;
 }

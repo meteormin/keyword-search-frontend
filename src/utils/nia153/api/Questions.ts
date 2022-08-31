@@ -38,15 +38,15 @@ class Questions extends BaseClient {
     this._client.withHeader({ 'Content-Type': 'multipart/form-data' });
 
     return await this._client.post('/', {
-      title: question.title,
-      content: question.content,
+      subject: question.title,
+      contents: question.content,
       type: question.type,
       div: question.div,
     });
   };
 
   reply = async (questionId: number, reply: string) => {
-    return await this._client.post(`/${questionId}/reply`, { content: reply });
+    return await this._client.post(`/${questionId}/reply`, { reply: reply });
   };
 }
 

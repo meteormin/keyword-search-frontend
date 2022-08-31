@@ -1,12 +1,14 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import {
-  Score,
   PatchScore,
   PostScore,
-  ScoreAssignList,
+  Score,
   ScoreAssign,
+  ScoreAssignList,
   ScoreList,
 } from '../../../utils/nia153/interfaces/score';
+import { auth } from '../../../helpers';
+import { UserType } from '../../../config/UserType';
 
 export interface ScoreState {
   scoreList: {
@@ -119,7 +121,9 @@ const scoreAction = {
     state.time = action.payload;
   },
   getExpiresAt: (state: ScoreState) => {
-    state.time = null;
+    if (!auth.getAssigned(UserType.SCORE) && !state.time) {
+      state.time = null;
+    }
   },
 };
 

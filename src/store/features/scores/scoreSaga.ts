@@ -42,6 +42,9 @@ function* postAssign() {
     if (response.isSuccess) {
       const result = res.message;
       yield put(scoreModule.actions.getAssignList());
+      auth.setJobTimeAt(UserType.SCORE, '');
+      auth.setAssigned(UserType.SCORE, true);
+      yield put(scoreModule.actions.setTime('할당 중'));
       yield put(
         alertModal.showAlert({
           title: '평가 할당',
@@ -172,45 +175,72 @@ function* getExpiresAt() {
   const now = date();
   let jobTime = null;
   let time = 0;
-  if (auth.getJobTimeAt(UserType.SCORE)) {
+  if (auth.getJobTimeAt(UserType.SCORE) && auth.getAssigned(UserType.SCORE)) {
     jobTime = auth.getJobTimeAt(UserType.SCORE);
     time = date.duration(date(jobTime).diff(now)).asMilliseconds();
   }
 
-  if (assignList.data.length == 0) {
+  if (assignList.data.length == 0 && auth.getAssigned(UserType.SCORE)) {
     if (jobTime && time !== 0) {
-      yield put(scoreModule.actions.setTime('할당 중'));
+      yield put(scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
       return;
     }
   }
 
   try {
-    if (time !== 0) {
+    if (time !== 0 && auth.getAssigned(UserType.SCORE)) {
       yield put(scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')));
-    } else {
+    } else if (
+      (auth.getAssigned(UserType.SCORE) && time === 0) ||
+      (assignList.data.length != 0 && time === 0)
+    ) {
       const response: ApiResponse = yield call(
         assignsApi.getAssign,
         UserType.SCORE,
       );
+
       const res = apiResponse(response);
       if (response.isSuccess) {
         const assignState: AssignState = toCamel(res) as AssignState;
-        if (assignState.status) {
+        if (assignState.status === true) {
           const expiresAt: string = assignState.expiresAt;
-
           const jobTime = date(expiresAt);
+
           auth.setJobTimeAt(UserType.SCORE, expiresAt);
+          auth.setAssigned(UserType.SCORE, true);
+
           const time = date.duration(jobTime.diff(now)).asMilliseconds();
           yield put(
             scoreModule.actions.setTime(date.utc(time).format('HH:mm:ss')),
           );
+          yield put(scoreModule.actions.getAssignList());
+        } else if (assignState.status === null) {
+          auth.setJobTimeAt(UserType.SCORE, '');
+          auth.setAssigned(UserType.SCORE, true);
+
+          yield put(scoreModule.actions.setTime('할당 중'));
         } else {
           auth.setJobTimeAt(UserType.SCORE, '');
-          yield put(scoreModule.actions.setTime('할당 중'));
+          auth.setAssigned(UserType.SCORE, false);
+
+          const message =
+            assignState.assignCount == 0
+              ? '할당 가능한 문장이 없습니다.'
+              : '할당에 실패했습니다.';
+
+          yield put(
+            alertModalModule.showAlert({
+              title: '할당 실패',
+              message: message,
+              refresh: true,
+            }),
+          );
         }
       } else {
+        auth.setJobTimeAt(UserType.SCORE, '');
+        auth.setAssigned(UserType.SCORE, false);
         yield put(scoreModule.actions.getAssignList());
-        yield put(scoreModule.actions.setTime('00:00:00'));
+        yield put(scoreModule.actions.setTime(''));
         yield put(
           alertModalModule.showAlert({
             title: '진행 가능 시간 초과',
@@ -221,6 +251,8 @@ function* getExpiresAt() {
       }
     }
   } catch (e) {
+    auth.setJobTimeAt(UserType.SCORE, '');
+    auth.setAssigned(UserType.SCORE, false);
     yield put(scoreModule.actions.setTime('00:00:00'));
     yield put(
       alertModalModule.showAlert({

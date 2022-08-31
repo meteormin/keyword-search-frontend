@@ -83,8 +83,7 @@ export const getRefresh = () => {
 };
 
 export const logout = (): void => {
-  window.localStorage.removeItem(conf.auth.tokenKey);
-  window.localStorage.removeItem(conf.auth.userKey);
+  window.localStorage.clear();
 };
 
 export const isLogin = (): boolean => {
@@ -126,4 +125,12 @@ export const setJobTimeAt = (userType: UserType, expiredAt: string) => {
     userType + conf.auth.jobExpiredAt,
     expiredAt,
   );
+};
+
+export const setAssigned = (userType: UserType, status: boolean) => {
+  return window.localStorage.setItem(userType + '_ASSIGN', String(status));
+};
+
+export const getAssigned = (userType: UserType): boolean => {
+  return window.localStorage.getItem(userType + '_ASSIGN') === 'true';
 };
