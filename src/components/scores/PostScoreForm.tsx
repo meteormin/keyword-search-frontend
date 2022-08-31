@@ -54,7 +54,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
       setCreatedCount(selectAssign.createdCount);
       setShow(true);
     } else {
-      setShow(false);
+      resetData();
     }
   }, [selectAssign.data]);
 
