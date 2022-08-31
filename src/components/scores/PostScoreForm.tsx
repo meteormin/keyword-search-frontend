@@ -260,7 +260,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
                   basicSentenceCount={
                     selectAssign.data?.basicSentenceCount || 0
                   }
-                  concepts={selectAssign.data?.concept || []}
+                  concepts={selectAssign.data?.concepts || []}
                   primaryCode={selectAssign.data?.sentenceId || 0}
                 />
               </Col>

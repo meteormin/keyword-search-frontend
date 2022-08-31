@@ -125,8 +125,8 @@ export const toScoreRecord = (score: ScoreList): ScoreListRecord => {
         score.historicity) /
       4,
     scoreTime: score.scoreTime,
-    createdAt: score.createdAt,
-    reviewedAt: score?.scoreReview?.createdAt || '',
+    createdAt: score.updatedAt,
+    reviewedAt: score?.scoreReview?.updatedAt || '',
     rejectReason: score?.scoreReview?.rejectReason || '',
     reviewStatus: score?.scoreReview?.status || '검수대기',
     _origin: score,
