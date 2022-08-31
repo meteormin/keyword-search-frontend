@@ -54,7 +54,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
       setCreatedCount(selectAssign.createdCount);
       setShow(true);
     } else {
-      setShow(false);
+      resetData();
     }
   }, [selectAssign.data]);
 
@@ -119,6 +119,7 @@ const PostScoreForm = (props: PostScoreFormProps) => {
     setGrammatical(null);
     setHistoricity(null);
     setFluency(null);
+    scoreTime.current = 0;
   };
 
   const onSubmit = () => {
