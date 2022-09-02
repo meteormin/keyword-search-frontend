@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState, Fragment } from 'react';
 import { Col, Row, Table } from 'react-bootstrap';
+import Tooltip from 'react-bootstrap/Tooltip';
 import ScoreRadio from './ScoreRadio';
 import { makeSentenceTagged, arr } from '../../helpers';
 
@@ -112,6 +113,7 @@ const ScoreForm = (props: ScoreFormProps) => {
       return [
         {
           ko: '문법성',
+          tooltip: '',
           varName: 'grammatical',
           getter: grammatical,
           setter: setGrammatical,
@@ -122,6 +124,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '사실성',
+          tooltip: '',
           varName: 'historicity',
           getter: historicity,
           setter: setHistoricity,
@@ -132,6 +135,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '다양성',
+          tooltip: '',
           varName: 'diversity',
           getter: diversity,
           setter: setDiversity,
@@ -142,6 +146,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '유창성',
+          tooltip: '',
           varName: 'fluency',
           getter: fluency,
           onChange: (value: string | number) => {
@@ -153,13 +158,22 @@ const ScoreForm = (props: ScoreFormProps) => {
     }
   };
 
+  const renderTooltip = (props: any) => {
+    return <Tooltip id="button-tooltip" {...props}></Tooltip>;
+  };
+
   const randomRadioComponent = () => {
     const randomRadioList = radioList || [];
     const radioRows = randomRadioList.map((radio, key) => {
       return (
         <Row key={key}>
           <Col lg={3}>
-            <strong>{radio.ko}</strong>
+            <strong>
+              {radio.ko}
+
+                <i className="fa-regular fa-circle-question"></i>
+
+            </strong>
           </Col>
           <ScoreRadio
             id={radio.varName}
