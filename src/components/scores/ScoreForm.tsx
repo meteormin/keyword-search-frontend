@@ -1,8 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState, Fragment } from 'react';
-import { Col, Row, Table } from 'react-bootstrap';
+import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react';
+import { Col, OverlayTrigger, Row, Table } from 'react-bootstrap';
 import Tooltip from 'react-bootstrap/Tooltip';
 import ScoreRadio from './ScoreRadio';
-import { makeSentenceTagged, arr } from '../../helpers';
+import { arr, makeSentenceTagged } from '../../helpers';
 
 export interface ScoreFormProps {
   scoreSentence: string;
@@ -63,7 +63,7 @@ const ScoreForm = (props: ScoreFormProps) => {
 
   useEffect(() => {
     if (scoreSentence) {
-      const s = makeSentenceTagged(scoreSentence)
+      makeSentenceTagged(scoreSentence)
         .then((rs) => setPartOfSpeech(rs || ''))
         .catch((reason) => {
           console.error(reason);
@@ -113,7 +113,7 @@ const ScoreForm = (props: ScoreFormProps) => {
       return [
         {
           ko: '문법성',
-          tooltip: '',
+          tooltip: '문법성',
           varName: 'grammatical',
           getter: grammatical,
           setter: setGrammatical,
@@ -124,7 +124,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '사실성',
-          tooltip: '',
+          tooltip: '사실성',
           varName: 'historicity',
           getter: historicity,
           setter: setHistoricity,
@@ -135,7 +135,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '다양성',
-          tooltip: '',
+          tooltip: '다양성',
           varName: 'diversity',
           getter: diversity,
           setter: setDiversity,
@@ -146,7 +146,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '유창성',
-          tooltip: '',
+          tooltip: '유창성',
           varName: 'fluency',
           getter: fluency,
           onChange: (value: string | number) => {
@@ -158,8 +158,14 @@ const ScoreForm = (props: ScoreFormProps) => {
     }
   };
 
-  const renderTooltip = (props: any) => {
-    return <Tooltip id="button-tooltip" {...props}></Tooltip>;
+  const renderTooltip = (tooltip: string) => {
+    return function RenderTooltip(props: any) {
+      return (
+        <Tooltip id="button-tooltip" {...props}>
+          {tooltip}
+        </Tooltip>
+      );
+    };
   };
 
   const randomRadioComponent = () => {
@@ -168,12 +174,24 @@ const ScoreForm = (props: ScoreFormProps) => {
       return (
         <Row key={key}>
           <Col lg={3}>
-            <strong>
-              {radio.ko}
-
-                <i className="fa-regular fa-circle-question"></i>
-
-            </strong>
+            <OverlayTrigger
+              trigger={undefined}
+              delay={{ show: 250, hide: 400 }}
+              show={undefined}
+              defaultShow={undefined}
+              onToggle={undefined}
+              flip={undefined}
+              overlay={renderTooltip(radio.tooltip)}
+              popperConfig={undefined}
+              target={undefined}
+              onHide={undefined}
+              placement="right"
+            >
+              <strong>
+                {radio.ko}
+                <i className="fa-regular fa-circle-question ms-2"></i>
+              </strong>
+            </OverlayTrigger>
           </Col>
           <ScoreRadio
             id={radio.varName}
