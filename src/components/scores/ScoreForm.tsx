@@ -113,7 +113,7 @@ const ScoreForm = (props: ScoreFormProps) => {
       return [
         {
           ko: '문법성',
-          tooltip: lang.ko.score.tooltips.grammatical,
+          tooltip: lang.score.tooltips.grammatical,
           varName: 'grammatical',
           getter: grammatical,
           setter: setGrammatical,
@@ -124,7 +124,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '사실성',
-          tooltip: lang.ko.score.tooltips.historicity,
+          tooltip: lang.score.tooltips.historicity,
           varName: 'historicity',
           getter: historicity,
           setter: setHistoricity,
@@ -135,7 +135,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '다양성',
-          tooltip: lang.ko.score.tooltips.diversity,
+          tooltip: lang.score.tooltips.diversity,
           varName: 'diversity',
           getter: diversity,
           setter: setDiversity,
@@ -146,7 +146,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '유창성',
-          tooltip: lang.ko.score.tooltips.fluency,
+          tooltip: lang.score.tooltips.fluency,
           varName: 'fluency',
           getter: fluency,
           onChange: (value: string | number) => {
