@@ -11,3 +11,7 @@ export const remove = <T>(arr: T[], item: T): T[] => {
     return i != item;
   });
 };
+
+export const shuffle = <T>(arr: T[]): T[] => {
+  return arr.sort(() => Math.random() - 0.5);
+};
