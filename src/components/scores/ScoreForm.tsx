@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react';
 import { Col, OverlayTrigger, Row, Table } from 'react-bootstrap';
 import Tooltip from 'react-bootstrap/Tooltip';
 import ScoreRadio from './ScoreRadio';
-import { arr, makeSentenceTagged } from '../../helpers';
+import { arr, lang, makeSentenceTagged } from '../../helpers';
 
 export interface ScoreFormProps {
   scoreSentence: string;
@@ -113,7 +113,7 @@ const ScoreForm = (props: ScoreFormProps) => {
       return [
         {
           ko: '문법성',
-          tooltip: '문법성',
+          tooltip: lang.ko.score.tooltips.grammatical,
           varName: 'grammatical',
           getter: grammatical,
           setter: setGrammatical,
@@ -124,7 +124,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '사실성',
-          tooltip: '사실성',
+          tooltip: lang.ko.score.tooltips.historicity,
           varName: 'historicity',
           getter: historicity,
           setter: setHistoricity,
@@ -135,7 +135,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '다양성',
-          tooltip: '다양성',
+          tooltip: lang.ko.score.tooltips.diversity,
           varName: 'diversity',
           getter: diversity,
           setter: setDiversity,
@@ -146,7 +146,7 @@ const ScoreForm = (props: ScoreFormProps) => {
         },
         {
           ko: '유창성',
-          tooltip: '유창성',
+          tooltip: lang.ko.score.tooltips.fluency,
           varName: 'fluency',
           getter: fluency,
           onChange: (value: string | number) => {
