@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Col, Row, Table } from 'react-bootstrap';
+import React, { Fragment, useEffect, useLayoutEffect, useState } from 'react';
+import { Col, OverlayTrigger, Row, Table } from 'react-bootstrap';
+import Tooltip from 'react-bootstrap/Tooltip';
 import ScoreRadio from './ScoreRadio';
-import { makeSentenceTagged } from '../../helpers';
+import { arr, makeSentenceTagged } from '../../helpers';
 
 export interface ScoreFormProps {
   scoreSentence: string;
@@ -26,6 +27,8 @@ const ScoreForm = (props: ScoreFormProps) => {
   const [scoreSentence, setScoreSentence] = useState<string>();
   const [scoreTime, setScoreTime] = useState<number>(0);
   const [partOfSpeech, setPartOfSpeech] = useState<string>();
+  const [radioComponents, setRadioComponents] = useState<JSX.Element>();
+  const [radioList, setRadioList] = useState<any[]>();
 
   useLayoutEffect(() => {
     setScoreTime(props.scoreTime);
@@ -52,17 +55,163 @@ const ScoreForm = (props: ScoreFormProps) => {
       historicity: historicity || null,
       diversity: diversity || null,
     });
+
+    setRadioList(makeRadioList());
+    const element = randomRadioComponent();
+    setRadioComponents(element);
   }, [grammatical, fluency, historicity, diversity]);
 
   useEffect(() => {
     if (scoreSentence) {
-      const s = makeSentenceTagged(scoreSentence)
+      makeSentenceTagged(scoreSentence)
         .then((rs) => setPartOfSpeech(rs || ''))
         .catch((reason) => {
           console.error(reason);
         });
     }
   }, [scoreSentence]);
+
+  useEffect(() => {
+    const element = randomRadioComponent();
+    setRadioComponents(element);
+  }, [radioList]);
+
+  useEffect(() => {
+    setRadioList(arr.shuffle(makeRadioList()));
+    const element = randomRadioComponent();
+    setRadioComponents(element);
+  }, []);
+
+  useEffect(() => {
+    if (scoreTime == 0) {
+      setRadioList(arr.shuffle(makeRadioList()));
+      const element = randomRadioComponent();
+      setRadioComponents(element);
+    }
+  }, [scoreTime]);
+
+  const makeRadioList = () => {
+    if (radioList) {
+      return radioList.map((v) => {
+        switch (v.varName) {
+          case 'grammatical':
+            v.getter = grammatical;
+            break;
+          case 'historicity':
+            v.getter = historicity;
+            break;
+          case 'diversity':
+            v.getter = diversity;
+            break;
+          case 'fluency':
+            v.getter = fluency;
+            break;
+        }
+        return v;
+      });
+    } else {
+      return [
+        {
+          ko: '문법성',
+          tooltip: '문법성',
+          varName: 'grammatical',
+          getter: grammatical,
+          setter: setGrammatical,
+          onChange: (value: string | number) => {
+            console.log('문법성: ' + value.toString());
+            setGrammatical(value as number);
+          },
+        },
+        {
+          ko: '사실성',
+          tooltip: '사실성',
+          varName: 'historicity',
+          getter: historicity,
+          setter: setHistoricity,
+          onChange: (value: string | number) => {
+            console.log('사실성: ' + value.toString());
+            setHistoricity(value as number);
+          },
+        },
+        {
+          ko: '다양성',
+          tooltip: '다양성',
+          varName: 'diversity',
+          getter: diversity,
+          setter: setDiversity,
+          onChange: (value: string | number) => {
+            console.log('다양성: ' + value.toString());
+            setDiversity(value as number);
+          },
+        },
+        {
+          ko: '유창성',
+          tooltip: '유창성',
+          varName: 'fluency',
+          getter: fluency,
+          onChange: (value: string | number) => {
+            console.log('유창성: ' + value.toString());
+            setFluency(value as number);
+          },
+        },
+      ];
+    }
+  };
+
+  const renderTooltip = (tooltip: string) => {
+    return function RenderTooltip(props: any) {
+      return (
+        <Tooltip id="button-tooltip" {...props}>
+          {tooltip}
+        </Tooltip>
+      );
+    };
+  };
+
+  const randomRadioComponent = () => {
+    const randomRadioList = radioList || [];
+    const radioRows = randomRadioList.map((radio, key) => {
+      return (
+        <Row key={key}>
+          <Col lg={3}>
+            <OverlayTrigger
+              trigger={undefined}
+              delay={{ show: 250, hide: 400 }}
+              show={undefined}
+              defaultShow={undefined}
+              onToggle={undefined}
+              flip={undefined}
+              overlay={renderTooltip(radio.tooltip)}
+              popperConfig={undefined}
+              target={undefined}
+              onHide={undefined}
+              placement="right"
+            >
+              <strong>
+                {radio.ko}
+                <i className="fa-regular fa-circle-question ms-2"></i>
+              </strong>
+            </OverlayTrigger>
+          </Col>
+          <ScoreRadio
+            id={radio.varName}
+            name={radio.varName}
+            count={3}
+            selectedValue={radio.getter}
+            onChange={radio.onChange}
+          />
+          <hr />
+        </Row>
+      );
+    });
+    return (
+      <Fragment>
+        <Row>
+          <Col lg={12}>{radioRows}</Col>
+        </Row>
+      </Fragment>
+    );
+  };
 
   return (
     <div>
@@ -123,74 +272,75 @@ const ScoreForm = (props: ScoreFormProps) => {
           </Row>
         </Col>
       </Row>
-      <Row>
-        <Col lg={12}>
-          <Row>
-            <Col lg={3}>
-              <strong>문법성</strong>
-            </Col>
-            <ScoreRadio
-              id={'grammatical'}
-              name={'grammatical'}
-              count={3}
-              selectedValue={grammatical}
-              onChange={(value) => {
-                console.log('문법성: ' + value.toString());
-                setGrammatical(value as number);
-              }}
-            />
-            <hr />
-          </Row>
-          <Row>
-            <Col lg={3}>
-              <strong>사실성</strong>
-            </Col>
-            <ScoreRadio
-              id={'historicity'}
-              name={'historicity'}
-              count={3}
-              selectedValue={historicity}
-              onChange={(value) => {
-                console.log('사실성: ' + value.toString());
-                setHistoricity(value as number);
-              }}
-            />
-            <hr />
-          </Row>
-          <Row>
-            <Col lg={3}>
-              <strong>다양성</strong>
-            </Col>
-            <ScoreRadio
-              id={'diversity'}
-              name={'diversity'}
-              count={3}
-              selectedValue={diversity}
-              onChange={(value) => {
-                console.log('다양성: ' + value.toString());
-                setDiversity(value as number);
-              }}
-            />
-            <hr />
-          </Row>
-          <Row>
-            <Col lg={3}>
-              <strong>유창성</strong>
-            </Col>
-            <ScoreRadio
-              id={'fluency'}
-              name={'fluency'}
-              count={3}
-              selectedValue={fluency}
-              onChange={(value) => {
-                console.log('유창성: ' + value.toString());
-                setFluency(value as number);
-              }}
-            />
-            <hr />
-          </Row>
-        </Col>
-      </Row>
+      {/*<Row>*/}
+      {/*  <Col lg={12}>*/}
+      {/*    <Row>*/}
+      {/*      <Col lg={3}>*/}
+      {/*        <strong>문법성</strong>*/}
+      {/*      </Col>*/}
+      {/*      <ScoreRadio*/}
+      {/*        id={'grammatical'}*/}
+      {/*        name={'grammatical'}*/}
+      {/*        count={3}*/}
+      {/*        selectedValue={grammatical}*/}
+      {/*        onChange={(value) => {*/}
+      {/*          console.log('문법성: ' + value.toString());*/}
+      {/*          setGrammatical(value as number);*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*      <hr />*/}
+      {/*    </Row>*/}
+      {/*    <Row>*/}
+      {/*      <Col lg={3}>*/}
+      {/*        <strong>사실성</strong>*/}
+      {/*      </Col>*/}
+      {/*      <ScoreRadio*/}
+      {/*        id={'historicity'}*/}
+      {/*        name={'historicity'}*/}
+      {/*        count={3}*/}
+      {/*        selectedValue={historicity}*/}
+      {/*        onChange={(value) => {*/}
+      {/*          console.log('사실성: ' + value.toString());*/}
+      {/*          setHistoricity(value as number);*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*      <hr />*/}
+      {/*    </Row>*/}
+      {/*    <Row>*/}
+      {/*      <Col lg={3}>*/}
+      {/*        <strong>다양성</strong>*/}
+      {/*      </Col>*/}
+      {/*      <ScoreRadio*/}
+      {/*        id={'diversity'}*/}
+      {/*        name={'diversity'}*/}
+      {/*        count={3}*/}
+      {/*        selectedValue={diversity}*/}
+      {/*        onChange={(value) => {*/}
+      {/*          console.log('다양성: ' + value.toString());*/}
+      {/*          setDiversity(value as number);*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*      <hr />*/}
+      {/*    </Row>*/}
+      {/*    <Row>*/}
+      {/*      <Col lg={3}>*/}
+      {/*        <strong>유창성</strong>*/}
+      {/*      </Col>*/}
+      {/*      <ScoreRadio*/}
+      {/*        id={'fluency'}*/}
+      {/*        name={'fluency'}*/}
+      {/*        count={3}*/}
+      {/*        selectedValue={fluency}*/}
+      {/*        onChange={(value) => {*/}
+      {/*          console.log('유창성: ' + value.toString());*/}
+      {/*          setFluency(value as number);*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*      <hr />*/}
+      {/*    </Row>*/}
+      {/*  </Col>*/}
+      {/*</Row>*/}
+      {radioComponents}
     </div>
   );
 };
