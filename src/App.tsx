@@ -26,13 +26,7 @@ function App() {
 
   switch (userType) {
     case UserType.ADMIN:
-      userType = '최고 관리자';
-      break;
-    case UserType.SCORE:
-      userType = '평가자';
-      break;
-    case UserType.SCORE_REVIEWER:
-      userType = '검수자';
+      userType = 'ADMIN';
       break;
     default:
       auth.logout();

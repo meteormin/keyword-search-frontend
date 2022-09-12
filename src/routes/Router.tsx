@@ -5,13 +5,10 @@ import { auth, guard } from '../helpers';
 import { ForbiddenPage, NotFoundPage } from '../pages/error';
 import { LoginPage, LogoutPage } from '../pages/login';
 import { ResetPassPage } from '../pages/password';
-import { UsersPage } from '../pages/users';
+
 import Home from '../utils/Home';
-import { UserType } from '../config/UserType';
+
 import { handleGoHome, handlePerm } from './handler';
-import QuestionForm from '../components/questions/QuestionForm';
-import { QuestionsPage } from '../pages/questions';
-import { ScoreAssignListPage, ScoreListPage } from '../pages/scores';
 
 const Router = () => {
   return (
@@ -46,53 +43,6 @@ const Router = () => {
           />
         </Route>
         <Route path="/logout" element={<LogoutPage />} />
-        <Route path="/users">
-          <Route
-            index
-            element={
-              <guard.Restricted
-                condition={handlePerm([UserType.ADMIN])}
-                redirect={<ForbiddenPage />}
-              >
-                <UsersPage />
-              </guard.Restricted>
-            }
-          />
-        </Route>
-        <Route path="/scores">
-          <Route
-            path="assigns"
-            element={
-              <guard.Restricted
-                condition={handlePerm([UserType.SCORE, UserType.ADMIN])}
-                redirect={<ForbiddenPage />}
-              >
-                <ScoreAssignListPage />
-              </guard.Restricted>
-            }
-          />
-          <Route
-            index
-            element={
-              <guard.Restricted
-                condition={handlePerm([UserType.SCORE, UserType.ADMIN])}
-                redirect={<ForbiddenPage />}
-              >
-                <ScoreListPage />
-              </guard.Restricted>
-            }
-          />
-        </Route>
-        <Route path={'/questions'}>
-          <Route
-            index
-            element={
-              <QuestionsPage userType={auth.user()?.userType as UserType} />
-            }
-          />
-        </Route>
-
-        {/**통계**/}
 
         <Route path="errors">
           <Route path="403" element={<ForbiddenPage />} />

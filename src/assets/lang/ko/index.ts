@@ -1,9 +1,5 @@
-import sentence from './sentence';
-import assign from './assign';
-import score from './score';
-
-export default {
-  sentence,
-  assign,
-  score,
+const defaultLang = {
+  name: 'react-template',
 };
+
+export default { defaultLang };

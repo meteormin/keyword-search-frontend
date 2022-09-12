@@ -1,5 +1,5 @@
 FROM ubuntu/apache2:2.4-20.04_beta
-MAINTAINER "sm.yoo@testworks.co.kr"
+MAINTAINER "miniyu97@gmail.com"
 
 CMD ["/bin/bash"]
 

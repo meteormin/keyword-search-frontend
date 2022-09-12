@@ -1,22 +1,10 @@
-import { ApiClient, Token } from '../../ApiClient';
-import BaseClient from '../../nia153/BaseClient';
-import { api, auth } from '../../../helpers';
-import Assigns from './Assigns';
-import Groups from './Groups';
-import Oauth from './Oauth';
-import Scores from './Scores';
-import Users from './Users';
-import Report from './Report';
-import Questions from './Questions';
+import ApiClient, { Token } from './ApiClient';
+import BaseClient from './BaseClient';
+import { api, auth } from '../../helpers';
+import Report from './clients/Report';
 
 export const Clients = {
-  Assigns,
-  Groups,
-  Oauth,
-  Scores,
-  Users,
   Report,
-  Questions,
 };
 
 interface ClientType<T> {

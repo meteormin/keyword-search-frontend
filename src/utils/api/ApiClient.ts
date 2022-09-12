@@ -4,7 +4,7 @@ import axios, {
   AxiosResponse,
   AxiosError,
 } from 'axios';
-import { makePath } from './str';
+import { makePath } from '../str';
 
 export interface Token {
   tokenType: string | null;
@@ -59,7 +59,7 @@ export class ErrorResponse implements ErrorResInterface {
   }
 }
 
-export class ApiClient {
+export default class ApiClient {
   protected _host: string;
   protected _token: Token | null;
   protected _headers: AxiosRequestHeaders | null;

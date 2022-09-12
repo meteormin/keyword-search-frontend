@@ -5,14 +5,14 @@ import { Menu } from '../components/layouts/Navigator';
 import { NavItemProps } from '../components/layouts/NavItem';
 import { NavCollapsedProps } from '../components/layouts/NavCollapsed';
 
-export const handlePerm = (menuPerm: string[]) => {
+export const handlePerm = (menuPerm: string[]): boolean => {
   const token = auth.getToken();
 
   if (token) {
-    const tokenInfo: TokenInfo | null = auth.tokenInfo(token.accessToken);
+    const tokenInfo: TokenInfo | null = auth.tokenInfo(token.accessToken.token);
 
     if (tokenInfo) {
-      const permission = tokenInfo.userType || auth.user()?.userType || '';
+      const permission = auth.user()?.userType || '';
 
       return !menuPerm.includes(permission);
     }
@@ -22,9 +22,7 @@ export const handlePerm = (menuPerm: string[]) => {
 };
 
 export const redirectHomePath: { role: string; home: string }[] = [
-  { role: UserType.ADMIN, home: '/users' },
-  { role: UserType.SCORE, home: '/scores/assigns' },
-  { role: UserType.SCORE_REVIEWER, home: '/reviews/assigns' },
+  { role: UserType.ADMIN, home: '/' },
 ];
 
 export const handleGoHome = () => {
@@ -33,39 +31,7 @@ export const handleGoHome = () => {
 
 const menuPerm: { path: string; role: string[] }[] = [
   {
-    path: '/users',
-    role: [UserType.ADMIN],
-  },
-  {
-    path: '/scores/assigns',
-    role: [UserType.SCORE],
-  },
-  {
-    path: '/scores',
-    role: [UserType.SCORE],
-  },
-  {
-    path: '/reviews',
-    role: [UserType.SCORE_REVIEWER],
-  },
-  {
-    path: '/reviews/assigns',
-    role: [UserType.SCORE_REVIEWER],
-  },
-  {
-    path: '/questions',
-    role: [UserType.ADMIN, UserType.SCORE_REVIEWER, UserType.SCORE],
-  },
-  {
-    path: '/statistics',
-    role: [UserType.ADMIN],
-  },
-  {
-    path: '/statistics/score',
-    role: [UserType.ADMIN],
-  },
-  {
-    path: '/statistics/review',
+    path: '/',
     role: [UserType.ADMIN],
   },
 ];

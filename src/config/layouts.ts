@@ -15,7 +15,7 @@ const layouts = {
     ],
   },
   footer: {
-    company: 'testworks',
+    company: 'miniyus',
     privacyUrl: '#',
     termsUrl: '#',
   },

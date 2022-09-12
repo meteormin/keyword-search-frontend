@@ -2,29 +2,32 @@ import config from '../config';
 import jwtDecode from 'jwt-decode';
 import { date } from '../helpers';
 import { UserType } from '../config/UserType';
-import { Tokens } from './nia153/interfaces/oauth';
 
 const conf = config();
 
 export interface User {
   id: number;
   name: string;
-  email: string;
   loginId: string;
   userType: string;
-  groupId: number;
-  groupCode: string;
-  groupName: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface TokenInfo {
   exp: number;
-  group: number[];
   id: number;
-  permission: string;
-  userType: string;
+}
+
+export interface AccessToken {
+  token: string;
+  tokenType?: string;
+}
+
+export interface Tokens {
+  accessToken: AccessToken;
+  expiresIn?: number;
+  refreshToken?: string;
 }
 
 export const setUser = (user: object) => {
@@ -44,10 +47,10 @@ export const user = (): User | null => {
 };
 
 export const setToken = (token: Tokens) => {
-  window.localStorage.setItem(conf.auth.tokenKey, token.accessToken);
+  window.localStorage.setItem(conf.auth.tokenKey, token.accessToken.token);
   window.localStorage.setItem(
     conf.auth.tokenKey + '_type',
-    token.tokenType || '',
+    token.accessToken.tokenType || '',
   );
   window.localStorage.setItem(
     conf.auth.tokenKey + '_expires_in',
@@ -59,9 +62,12 @@ export const getToken = (): Tokens | null => {
   let token: Tokens | null = null;
   if (conf.auth.tokenKey) {
     token = {
-      accessToken: window.localStorage.getItem(conf.auth.tokenKey) || '',
-      tokenType:
-        window.localStorage.getItem(conf.auth.tokenKey + '_type') || undefined,
+      accessToken: {
+        token: window.localStorage.getItem(conf.auth.tokenKey) || '',
+        tokenType:
+          window.localStorage.getItem(conf.auth.tokenKey + '_type') ||
+          undefined,
+      },
       expiresIn: window.localStorage.getItem(conf.auth.tokenKey + '_expires_in')
         ? parseInt(
             window.localStorage.getItem(conf.auth.tokenKey + '_expires_in') ||
@@ -87,7 +93,9 @@ export const logout = (): void => {
 };
 
 export const isLogin = (): boolean => {
-  return user() != null && tokenInfo(getToken()?.accessToken as string) != null;
+  return (
+    user() != null && tokenInfo(getToken()?.accessToken.token as string) != null
+  );
 };
 
 export const tokenInfo = (token: string): TokenInfo | null => {

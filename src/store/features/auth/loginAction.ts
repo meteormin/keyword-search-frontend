@@ -1,26 +1,11 @@
 import { auth } from '../../../helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../../utils/auth';
-import { Group } from '../../../utils/nia153/interfaces/group';
-import { Tokens } from '../../../utils/nia153/interfaces/oauth';
-
-export interface LoginUser extends User {
-  id: number;
-  loginId: string;
-  email: string;
-  name: string;
-  gender: string | null;
-  age: string | null;
-  userType: string;
-  createdAt: string;
-  updatedAt: string;
-  group: Group;
-}
+import { Tokens, User } from '../../../utils/auth';
 
 export interface LoginState {
   id: string | null;
   password: string | null;
-  user: LoginUser | null;
+  user: User | null;
   token: Tokens | null;
 }
 
@@ -42,7 +27,7 @@ const loginAction = {
     state: LoginState,
     action: PayloadAction<{
       token: Tokens;
-      user: LoginUser;
+      user: User;
     }>,
   ) => {
     state.token = action.payload.token;
@@ -51,7 +36,9 @@ const loginAction = {
     if (state.user && state.token) {
       auth.setUser(state.user);
       auth.setToken(state.token);
-      auth.setRefresh(action.payload.token.refreshToken);
+      if (action.payload.token.refreshToken) {
+        auth.setRefresh(action.payload.token?.refreshToken);
+      }
     }
 
     window.location.href = '/';

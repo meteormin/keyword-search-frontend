@@ -1,34 +1,22 @@
 import * as Auth from './utils/auth';
-import * as Api from './utils/ApiClient';
 import Config from './config';
 import HiddenByRole from './utils/HiddenByRole';
 import Restricted from './utils/Restricted';
 import Protected from './utils/Protected';
-import {
-  ApiClient,
+import ApiClient, {
   ApiResponse,
   ErrorResInterface,
   Token,
-} from './utils/ApiClient';
+} from './utils/api/ApiClient';
 import moment from 'moment';
 import 'moment/locale/ko';
 import Lang from './assets/lang';
 import { AxiosRequestHeaders } from 'axios';
 import * as Str from './utils/str';
 import * as Arr from './utils/arr';
-import BaikalNlp from './utils/BaikalNlp';
 import { makePath } from './utils/str';
 import { useEffect, useRef } from 'react';
-import TmKor, {
-  CheckDualFrameRequest,
-  CheckTripleFrameRequest,
-  DualFrameText,
-  FrameText,
-  getFrameRequest,
-  TripleFrameText,
-} from './utils/tmkor/TmKor';
-import { switchReviewStatus as switchRS } from './utils/common/status';
-import makeClient, { Clients } from './utils/nia153/api';
+import makeClient, { Clients } from './utils/api';
 
 export const config = Config();
 export const auth = Auth;
@@ -76,8 +64,8 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
   }
 
   const client = apiConfig?.host
-    ? new Api.ApiClient(apiConfig.host)
-    : new Api.ApiClient(config.api.default.host as string);
+    ? new ApiClient(apiConfig.host)
+    : new ApiClient(config.api.default.host as string);
 
   if (apiConfig) {
     if (apiConfig.headers) {
@@ -125,143 +113,6 @@ export const lang = Lang();
 export const str = Str;
 
 export const arr = Arr;
-
-export const baikalNlp = new BaikalNlp(
-  api({ host: config.api.baikalNlp.host }),
-);
-
-export const tmKor = new TmKor(
-  api({
-    host: config.api.tmkor.host,
-    headers: {
-      'X-Auth': config.api.tmkor.token as string,
-    },
-  }),
-);
-
-export const makeSentenceTagged = async (
-  sentence: string,
-): Promise<string | null> => {
-  try {
-    const baikalRes = await baikalNlp.analyze(sentence);
-    let sentenceTag: string | null = null;
-    if (baikalRes) {
-      if (baikalRes?.sentences && baikalRes.sentences.length != 0) {
-        sentenceTag = baikalRes.sentences[0].tokens
-          .map((t) => t.tagged)
-          .join(' ');
-      }
-
-      return sentenceTag;
-    }
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-  return null;
-};
-
-export const makeSentencePattern = async (
-  sentence: string,
-): Promise<{ tagged: string; pattern: string } | null> => {
-  try {
-    const baikalRes = await baikalNlp.analyze(sentence);
-
-    if (baikalRes) {
-      const sentencePattern: { tagged: string; pattern: string } = {
-        tagged: '',
-        pattern: '',
-      };
-
-      if (baikalRes?.sentences && baikalRes.sentences.length != 0) {
-        sentencePattern.tagged = baikalRes.sentences[0].tokens
-          .map((t) => t.tagged)
-          .join(' ');
-      }
-
-      const req: getFrameRequest = {
-        sentences: baikalRes?.sentences || [],
-        language: 'ko_KR',
-      };
-      const tmKorRes = await tmKor.getFrame(req);
-      if (tmKorRes) {
-        const data = tmKorRes.data[0] as FrameText;
-        sentencePattern.pattern = data.frameText;
-
-        return sentencePattern;
-      }
-    }
-    return null;
-  } catch (e) {
-    return null;
-  }
-};
-
-export const checkDualFrame = async (sentences: {
-  text1: string;
-  text2: string;
-}): Promise<DualFrameText | null> => {
-  try {
-    const baikalRes1 = await baikalNlp.analyze(sentences.text1);
-    const baikalRes2 = await baikalNlp.analyze(sentences.text2);
-    const req: CheckDualFrameRequest = {
-      tagged_text_1: {
-        sentences: baikalRes1?.sentences || [],
-        language: 'ko_KR',
-      },
-      tagged_text_2: {
-        sentences: baikalRes2?.sentences || [],
-        language: 'ko_KR',
-      },
-    };
-
-    const res = await tmKor.checkDualFrame(req);
-    if (res) {
-      return res.data[0] as DualFrameText;
-    }
-  } catch (e) {
-    return null;
-  }
-
-  return null;
-};
-
-export const checkTripleFrame = async (sentences: {
-  defaultText: string;
-  text1: string;
-  text2: string;
-}) => {
-  try {
-    const baikalBasic = await baikalNlp.analyze(sentences.defaultText);
-    const baikalStr1 = await baikalNlp.analyze(sentences.text1);
-    const baikalStr2 = await baikalNlp.analyze(sentences.text2);
-    const req: CheckTripleFrameRequest = {
-      tagged_text_default: {
-        sentences: baikalBasic?.sentences || [],
-        language: 'ko_KR',
-      },
-      tagged_text_1: {
-        sentences: baikalStr1?.sentences || [],
-        language: 'ko_KR',
-      },
-      tagged_text_2: {
-        sentences: baikalStr2?.sentences || [],
-        language: 'ko_KR',
-      },
-    };
-
-    const res = await tmKor.checkTripleFrame(req);
-    if (res) {
-      return res.data[0] as TripleFrameText;
-    }
-  } catch (e) {
-    return null;
-  }
-
-  return null;
-};
-
-export const switchReviewStatus = switchRS;
 
 export function usePrev<T>(value: T): T {
   const ref = useRef<T>();
