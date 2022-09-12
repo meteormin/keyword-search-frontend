@@ -4,7 +4,9 @@ const authCheck = (store: any) => (next: any) => (action: any) => {
   if (auth.getToken()?.accessToken) {
     let isValid = false;
     console.debug('hi');
-    const tokenInfo = auth.tokenInfo(auth.getToken()?.accessToken as string);
+    const tokenInfo = auth.tokenInfo(
+      auth.getToken()?.accessToken.token as string,
+    );
 
     if (tokenInfo) {
       const expAt = date.unix(tokenInfo.exp);
@@ -18,7 +20,7 @@ const authCheck = (store: any) => (next: any) => (action: any) => {
 
     if (!isValid) {
       api()
-        .withToken(auth.getToken()?.accessToken as string, 'bearer')
+        .withToken(auth.getToken()?.accessToken.token as string, 'bearer')
         .get('api/users/me')
         .then((res) => {
           if (res.isSuccess) {
