@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import LoginForm from '../../components/login/LoginForm';
-import { useDispatch } from 'react-redux';
-import usersModule from '../../store/features/users';
+// import { useDispatch } from 'react-redux';
 
 const ResetPassPage = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [myPassword, setMyPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>('');
@@ -60,7 +59,7 @@ const ResetPassPage = () => {
               <a
                 className="btn btn-primary"
                 onClick={() => {
-                  dispatch(usersModule.actions.updatePassword(newPassword));
+                  // login
                 }}
               >
                 비밀번호 설정

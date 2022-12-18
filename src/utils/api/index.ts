@@ -18,8 +18,8 @@ function makeClient<T extends BaseClient>(client: ClientType<T>): T {
   let withToken: Token | undefined;
   if (token) {
     withToken = {
-      token: token.accessToken,
-      tokenType: token?.tokenType || null,
+      token: token.accessToken.token,
+      tokenType: token.accessToken.tokenType || null,
     };
   }
 

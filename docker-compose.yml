@@ -2,13 +2,19 @@ version: '3.9'
 services:
   react-template:
     container_name: 'react-template'
-    build: docker
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+      args:
+        WWWUSER: "1000"
+        WWWGROUP: "1000"
+        NODE_VERSION: "${NODE_VERSION:-18.12.1}"
     restart: always
     stdin_open: true
+    environment:
+      TIME_ZONE: '${TIME_ZONE:-Asia/Seoul}'
     volumes:
-      - ./build_prd:/var/www/front
-      - ./apache:/etc/apache2/sites-available
-      - ./ssl:/etc/ssl
+      - .:/var/www/front
     ports:
       - '80:80'
       - '443:443'
