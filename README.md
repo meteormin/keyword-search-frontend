@@ -5,7 +5,7 @@
 <img alt="Bootstrap" src ="https://img.shields.io/badge/Bootstrap-7952B3.svg?&style=for-the-badge&logo=Bootstrap&logoColor=white"/>
 
 - [bootstrap-sb-admin](https://github.com/StartBootstrap/startbootstrap-sb-admin)
-- react 17.0.0
+- react 18.2.0
     - @types/react 18.0.8
 - react-bootstrap 2.3.1
     - @types/react-bootstrap 0.32.29

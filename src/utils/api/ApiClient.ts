@@ -1,8 +1,8 @@
 import axios, {
   AxiosRequestConfig,
-  AxiosRequestHeaders,
   AxiosResponse,
   AxiosError,
+  RawAxiosRequestHeaders,
 } from 'axios';
 import { makePath } from 'utils/str';
 
@@ -62,7 +62,7 @@ export class ErrorResponse implements ErrorResInterface {
 export default class ApiClient {
   protected _host: string;
   protected _token: Token | null;
-  protected _headers: AxiosRequestHeaders | null;
+  protected _headers: RawAxiosRequestHeaders | null;
   protected _response: AxiosResponse | null;
   protected _attachment: Attachment[];
   protected _error: any;
@@ -125,10 +125,6 @@ export default class ApiClient {
       });
     }
 
-    if (this._headers != null) {
-      config.headers = this._headers;
-    }
-
     if (this._attachment && this._attachment.length != 0) {
       this._headers = Object.assign(this._headers || {}, {
         'Content-Type': 'multipart/form-data',
@@ -142,6 +138,10 @@ export default class ApiClient {
         data.append(attach.name, attach.file);
       }
       config.data = data;
+    }
+
+    if (this._headers != null) {
+      config.headers = this._headers;
     }
 
     return this.setResponse(axios.request(config));
@@ -235,10 +235,10 @@ export default class ApiClient {
 
   /**
    *
-   * @param {AxiosRequestHeaders} headers
+   * @param {RawAxiosRequestHeaders} headers
    * @returns {ApiClient}
    */
-  withHeader(headers: AxiosRequestHeaders): ApiClient {
+  withHeader(headers: RawAxiosRequestHeaders): ApiClient {
     this._headers = Object.assign(this._headers || {}, headers);
     return this;
   }
