@@ -1,4 +1,4 @@
-import { Menu } from '../components/layouts/Navigator';
+import { Menu } from 'components/layouts/Navigator';
 
 export const menu: Menu = {
   header: '',

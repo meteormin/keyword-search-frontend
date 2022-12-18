@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import logger from './middleware/logger';
-import saga from './middleware/saga';
-import { rootReducer, rootSaga } from './features';
-import authCheck from './middleware/authCheck';
+import logger from 'store/middleware/logger';
+import saga from 'store/middleware/saga';
+import { rootReducer, rootSaga } from 'store/features';
+import authCheck from 'store/middleware/authCheck';
 
 export default configureStore({
   reducer: rootReducer,

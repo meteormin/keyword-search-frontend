@@ -1,9 +1,9 @@
-import { auth } from '../helpers';
-import { TokenInfo } from '../utils/auth';
-import { UserType } from '../config/UserType';
-import { Menu } from '../components/layouts/Navigator';
-import { NavItemProps } from '../components/layouts/NavItem';
-import { NavCollapsedProps } from '../components/layouts/NavCollapsed';
+import { auth } from 'helpers';
+import { TokenInfo } from 'utils/auth';
+import { UserType } from 'config/UserType';
+import { Menu } from 'components/layouts/Navigator';
+import { NavItemProps } from 'components/layouts/NavItem';
+import { NavCollapsedProps } from 'components/layouts/NavCollapsed';
 
 export const handlePerm = (menuPerm: string[]): boolean => {
   const token = auth.getToken();

@@ -4,7 +4,7 @@ import axios, {
   AxiosResponse,
   AxiosError,
 } from 'axios';
-import { makePath } from '../str';
+import { makePath } from 'utils/str';
 
 export interface Token {
   tokenType: string | null;

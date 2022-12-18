@@ -1,4 +1,4 @@
-import loginModule from '../../store/features/auth';
+import loginModule from 'store/features/auth';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 

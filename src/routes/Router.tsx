@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import { auth, guard } from '../helpers';
-import { ForbiddenPage, NotFoundPage } from '../pages/error';
-import { LoginPage, LogoutPage } from '../pages/login';
-import { ResetPassPage } from '../pages/password';
+import { auth, guard } from 'helpers';
+import { ForbiddenPage, NotFoundPage } from 'pages/error';
+import { LoginPage, LogoutPage } from 'pages/login';
+import { ResetPassPage } from 'pages/password';
 
-import Home from '../utils/Home';
+import Home from 'utils/Home';
 
-import { handleGoHome, handlePerm } from './handler';
+import { handleGoHome, handlePerm } from 'routes/handler';
 
 const Router = () => {
   return (

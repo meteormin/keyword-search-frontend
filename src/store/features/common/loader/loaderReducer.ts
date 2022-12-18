@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import loaderAction, { initialState, LoaderState } from './loaderAction';
+import loaderAction, {
+  initialState,
+  LoaderState,
+} from 'store/features/common/loader/loaderAction';
 
 const loaderSlice = createSlice({
   name: 'loader',

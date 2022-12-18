@@ -1,3 +1,3 @@
-import TestMain from './TestMain';
+import TestMain from 'pages/test/TestMain';
 
 export { TestMain };

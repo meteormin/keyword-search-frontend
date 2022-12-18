@@ -1,8 +1,8 @@
 // sage
 import { call, fork, put, takeLatest } from 'redux-saga/effects';
-import loaderModule from '../common/loader';
-import alertModalModule from '../common/alertModal';
-import loginModule from './index';
+import loaderModule from 'store/features/common/loader';
+import alertModalModule from 'store/features/common/alertModal';
+import loginModule from 'store/features/auth';
 
 function* loginApiSaga(action: { payload: { id: string; password: string } }) {
   yield put(loaderModule.startLoading());

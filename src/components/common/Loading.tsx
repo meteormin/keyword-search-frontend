@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
-import Spinner from './Spinner';
+import Spinner from 'components/common/Spinner';
 import { useSelector } from 'react-redux';
-import loaderModule from '../../store/features/common/loader';
+import loaderModule from 'store/features/common/loader';
 
 const Loading = () => {
   const { isLoading } = useSelector(loaderModule.getLoaderState);

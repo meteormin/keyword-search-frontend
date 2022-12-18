@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Input, { InputProp } from './Input';
+import Input, { InputProp } from 'components/common/Input';
 
 export type ButtonProp = {
   classes: string[];

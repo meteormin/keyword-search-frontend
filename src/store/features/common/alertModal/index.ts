@@ -3,7 +3,7 @@ import {
   closeAlert,
   errorAlert,
   getAlertState,
-} from './alertModalReducer';
+} from 'store/features/common/alertModal/alertModalReducer';
 
 export default {
   showAlert,

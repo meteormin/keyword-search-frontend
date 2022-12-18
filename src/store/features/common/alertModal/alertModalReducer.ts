@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import alertModalAction, {
   initialState,
   AlertModalState,
-} from './alertModalAction';
+} from 'store/features/common/alertModal/alertModalAction';
 
 const alertModalSlice = createSlice({
   name: 'alertModal',

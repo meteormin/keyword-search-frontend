@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import Loading from '../common/Loading';
-import AlertModal from '../modals/AlertModal';
-import Footer from './Footer';
-import { guard } from '../../helpers';
-import Navigator, { Menu } from './Navigator';
+import Loading from 'components/common/Loading';
+import AlertModal from 'components/modals/AlertModal';
+import Footer from 'components/layouts/Footer';
+import { guard } from 'helpers';
+import Navigator, { Menu } from 'components/layouts/Navigator';
 
 export interface ContainerProps {
   isLogin: boolean;

@@ -1,22 +1,22 @@
-import * as Auth from './utils/auth';
-import Config from './config';
-import HiddenByRole from './utils/HiddenByRole';
-import Restricted from './utils/Restricted';
-import Protected from './utils/Protected';
+import * as Auth from 'utils/auth';
+import Config from 'config';
+import HiddenByRole from 'utils/HiddenByRole';
+import Restricted from 'utils/Restricted';
+import Protected from 'utils/Protected';
 import ApiClient, {
   ApiResponse,
   ErrorResInterface,
   Token,
-} from './utils/api/ApiClient';
+} from 'utils/api/ApiClient';
 import moment from 'moment';
 import 'moment/locale/ko';
-import Lang from './assets/lang';
+import Lang from 'assets/lang';
 import { AxiosRequestHeaders } from 'axios';
-import * as Str from './utils/str';
-import * as Arr from './utils/arr';
-import { makePath } from './utils/str';
+import * as Str from 'utils/str';
+import * as Arr from 'utils/arr';
+import { makePath } from 'utils/str';
 import { useEffect, useRef } from 'react';
-import makeClient, { Clients } from './utils/api';
+import makeClient, { Clients } from 'utils/api';
 
 export const config = Config();
 export const auth = Auth;

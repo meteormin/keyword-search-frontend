@@ -1,7 +1,7 @@
-import layouts from './layouts';
-import permissions from './permissions';
-import selectOptions from './selectOptions';
-import { UserType } from './UserType';
+import layouts from 'config/layouts';
+import permissions from 'config/permissions';
+import selectOptions from 'config/selectOptions';
+import { UserType } from 'config/UserType';
 
 export default () => ({
   app: {

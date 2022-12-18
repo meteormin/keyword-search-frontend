@@ -1,4 +1,4 @@
-import Select, { Option } from './Select';
+import Select, { Option } from 'components/common/Select';
 import React from 'react';
 
 const limitOptions: Option[] = [

@@ -5,7 +5,7 @@ import {
   loginSubmit,
   getLoginState,
   logout,
-} from './loginReducer';
+} from 'store/features/auth/loginReducer';
 
 export default {
   changeId,

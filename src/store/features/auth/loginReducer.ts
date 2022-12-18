@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import loginAction, { initialState } from './loginAction';
+import loginAction, { initialState } from 'store/features/auth/loginAction';
 
 const loginSlice = createSlice({
   name: 'login',

@@ -1,7 +1,7 @@
 import React from 'react';
 import NavItem, { NavItemProps } from './NavItem';
 import NavCollapsed, { NavCollapsedProps } from './NavCollapsed';
-import { guard, auth } from '../../helpers';
+import { guard, auth } from 'helpers';
 
 export interface Menu {
   header: string;

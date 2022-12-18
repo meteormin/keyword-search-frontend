@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import LoginForm from '../../components/login/LoginForm';
+import LoginForm from 'components/login/LoginForm';
 // import { useDispatch } from 'react-redux';
 
 const ResetPassPage = () => {

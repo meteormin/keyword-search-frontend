@@ -1,6 +1,6 @@
-import { auth } from '../../../helpers';
+import { auth } from 'helpers';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { Tokens, User } from '../../../utils/auth';
+import { Tokens, User } from 'utils/auth';
 
 export interface LoginState {
   id: string | null;

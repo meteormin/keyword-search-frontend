@@ -1,10 +1,10 @@
 import DynamicTable, {
   DynamicTableProps,
-} from '../../components/common/DaynamicTable';
-import Content from '../../components/layouts/Content';
+} from 'components/common/DaynamicTable';
+import Content from 'components/layouts/Content';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import alertModalModule from '../../store/features/common/alertModal';
+import alertModalModule from 'store/features/common/alertModal';
 
 const TestMain = () => {
   const dispatch = useDispatch();

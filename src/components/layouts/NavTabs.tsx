@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavItemProps } from './NavItem';
-import { guard, auth } from '../../helpers';
+import { NavItemProps } from 'components/layouts/NavItem';
+import { guard, auth } from 'helpers';
 import { Nav } from 'react-bootstrap';
 
 export interface Menu {

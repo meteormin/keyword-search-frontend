@@ -1,7 +1,7 @@
-import ApiClient, { Token } from './ApiClient';
-import BaseClient from './BaseClient';
-import { api, auth } from '../../helpers';
-import Report from './clients/Report';
+import ApiClient, { Token } from 'utils/api/ApiClient';
+import BaseClient from 'utils/api/BaseClient';
+import { api, auth } from 'helpers';
+import Report from 'utils/api/clients/Report';
 
 export const Clients = {
   Report,

@@ -1,4 +1,4 @@
-import { menu } from './menu';
+import { menu } from 'config/menu';
 
 const layouts = {
   menu: menu,

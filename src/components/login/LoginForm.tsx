@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import Loading from '../common/Loading';
-import AlertModal from '../modals/AlertModal';
+import Loading from 'components/common/Loading';
+import AlertModal from 'components/modals/AlertModal';
 import { Col, Container, Row } from 'react-bootstrap';
 
 export interface LoginFormProps {

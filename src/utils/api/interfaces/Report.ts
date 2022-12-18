@@ -1,4 +1,4 @@
-import { ApiResponse } from '../ApiClient';
+import { ApiResponse } from 'utils/api/ApiClient';
 
 export interface Reportable {
   message: string;

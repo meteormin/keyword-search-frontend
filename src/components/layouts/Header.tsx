@@ -1,6 +1,6 @@
 import React from 'react';
 import DropDownMenu, { DropDownMenuProps } from './DropDownMenu';
-import { guard } from '../../helpers';
+import { guard } from 'helpers';
 
 export interface HeaderProps {
   appName: string;

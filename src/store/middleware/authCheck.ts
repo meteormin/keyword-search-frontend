@@ -1,4 +1,4 @@
-import { api, auth, date } from '../../helpers';
+import { api, auth, date } from 'helpers';
 
 const authCheck = (store: any) => (next: any) => (action: any) => {
   if (auth.getToken()?.accessToken) {

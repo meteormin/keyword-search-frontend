@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import Input from './Input';
+import Input from 'components/common/Input';
 
 export interface InputFilter {
   label: string;

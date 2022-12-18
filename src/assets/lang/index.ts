@@ -1,5 +1,5 @@
-import ko from './ko';
-import Config from '../../config';
+import ko from 'assets/lang/ko';
+import Config from 'config';
 
 const defaultLang = 'ko';
 

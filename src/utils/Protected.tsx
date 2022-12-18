@@ -1,5 +1,5 @@
 import React from 'react';
-import Restricted from './Restricted';
+import Restricted from 'utils/Restricted';
 import { ReactElementLike } from 'prop-types';
 
 export interface ProtectedProps {

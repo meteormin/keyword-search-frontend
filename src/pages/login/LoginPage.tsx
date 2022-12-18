@@ -1,9 +1,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import loginModule from '../../store/features/auth';
-import LoginForm from '../../components/login/LoginForm';
-import { getLoginState } from '../../store/features/auth/loginReducer';
-import alertModalModule from '../../store/features/common/alertModal';
+import loginModule from 'store/features/auth';
+import LoginForm from 'components/login/LoginForm';
+import { getLoginState } from 'store/features/auth/loginReducer';
+import alertModalModule from 'store/features/common/alertModal';
 
 const LoginPage = () => {
   const { id, password } = useSelector(getLoginState);
