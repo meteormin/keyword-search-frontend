@@ -1,6 +1,6 @@
 import { auth } from 'helpers';
 import { TokenInfo } from 'utils/auth';
-import { UserType } from 'config/UserType';
+import { UserRole } from 'config/UserType';
 import { Menu } from 'components/layouts/Navigator';
 import { NavItemProps } from 'components/layouts/NavItem';
 import { NavCollapsedProps } from 'components/layouts/NavCollapsed';
@@ -12,7 +12,7 @@ export const handlePerm = (menuPerm: string[]): boolean => {
     const tokenInfo: TokenInfo | null = auth.tokenInfo(token.accessToken.token);
 
     if (tokenInfo) {
-      const permission = auth.user()?.userType || '';
+      const permission = auth.user()?.role || '';
 
       return !menuPerm.includes(permission);
     }
@@ -22,7 +22,7 @@ export const handlePerm = (menuPerm: string[]): boolean => {
 };
 
 export const redirectHomePath: { role: string; home: string }[] = [
-  { role: UserType.ADMIN, home: '/' },
+  { role: UserRole.ADMIN, home: '/' },
 ];
 
 export const handleGoHome = () => {
@@ -32,7 +32,7 @@ export const handleGoHome = () => {
 const menuPerm: { path: string; role: string[] }[] = [
   {
     path: '/',
-    role: [UserType.ADMIN],
+    role: [UserRole.ADMIN],
   },
 ];
 
@@ -43,7 +43,7 @@ const getPathRole = (path: string) => {
 };
 
 export const handleMenuVisible = (menu: Menu): Menu => {
-  const userType = auth.user()?.userType as UserType;
+  const userType = auth.user()?.role as UserRole;
   menu.navItems = menu.navItems.map(
     (
       item: NavItemProps | NavCollapsedProps,

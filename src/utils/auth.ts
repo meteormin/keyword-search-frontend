@@ -1,15 +1,14 @@
 import config from '../config';
 import jwtDecode from 'jwt-decode';
-import { date } from '../helpers';
-import { UserType } from '../config/UserType';
 
 const conf = config();
 
 export interface User {
   id: number;
-  name: string;
-  loginId: string;
-  userType: string;
+  username: string;
+  email: string;
+  role: string;
+  groupId: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -107,38 +106,4 @@ export const tokenInfo = (token: string): TokenInfo | null => {
     }
   }
   return null;
-};
-
-export const getJobTimeAt = (userType: UserType) => {
-  const now = date();
-  const expiredAt = window.localStorage.getItem(
-    userType + conf.auth.jobExpiredAt,
-  );
-
-  if (expiredAt) {
-    const leftTime = date(expiredAt).diff(now);
-    console.log('left time', leftTime);
-    if (leftTime >= 0) {
-      return date(expiredAt);
-    } else {
-      window.localStorage.removeItem(userType + conf.auth.jobExpiredAt);
-    }
-  }
-
-  return null;
-};
-
-export const setJobTimeAt = (userType: UserType, expiredAt: string) => {
-  return window.localStorage.setItem(
-    userType + conf.auth.jobExpiredAt,
-    expiredAt,
-  );
-};
-
-export const setAssigned = (userType: UserType, status: boolean) => {
-  return window.localStorage.setItem(userType + '_ASSIGN', String(status));
-};
-
-export const getAssigned = (userType: UserType): boolean => {
-  return window.localStorage.getItem(userType + '_ASSIGN') === 'true';
 };

@@ -7,7 +7,7 @@ import { auth, config } from 'helpers';
 import Header from 'components/layouts/Header';
 import Container from 'components/layouts/Container';
 import { Menu } from 'components/layouts/Navigator';
-import { UserType } from 'config/UserType';
+import { UserRole } from 'config/UserType';
 import { handleMenuVisible } from 'routes/handler';
 import Router from 'routes/Router';
 
@@ -21,10 +21,10 @@ function App() {
 
   const menu: Menu = config.layouts.menu;
 
-  let userType = auth.user()?.userType;
+  let userType = auth.user()?.role;
 
   switch (userType) {
-    case UserType.ADMIN:
+    case UserRole.ADMIN:
       userType = 'ADMIN';
       break;
     default:
@@ -40,7 +40,7 @@ function App() {
         appName={config.app.name as string}
         isLogin={auth.isLogin()}
         dropDownMenu={config.layouts.header.dropDownMenu}
-        userName={auth.user()?.loginId || ''}
+        userName={auth.user()?.username || ''}
       />
       <Container
         menu={handleMenuVisible(menu as Menu)}

@@ -8,8 +8,13 @@ export const menu: Menu = {
   navItems: [
     {
       url: '/',
-      name: 'main page',
+      name: 'Main',
       icon: 'fas fa-users',
+    },
+    {
+      url: '/hosts',
+      name: 'Hosts',
+      icon: 'fa-sharp fa-solid fa-link-horizontal',
     },
   ],
 };

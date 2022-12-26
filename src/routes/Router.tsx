@@ -8,7 +8,8 @@ import { ResetPassPage } from 'pages/password';
 
 import Home from 'utils/Home';
 
-import { handleGoHome, handlePerm } from 'routes/handler';
+import { handleGoHome } from 'routes/handler';
+import HostListPage from '../pages/hosts/HostListPage';
 
 const Router = () => {
   return (
@@ -18,7 +19,7 @@ const Router = () => {
           path="/"
           element={
             <guard.Protected auth={auth.isLogin()} redirect={'/login'}>
-              <Home role={auth.user()?.userType || ''} rules={handleGoHome()} />
+              <Home role={auth.user()?.role || ''} rules={handleGoHome()} />
             </guard.Protected>
           }
         />
@@ -43,7 +44,9 @@ const Router = () => {
           />
         </Route>
         <Route path="/logout" element={<LogoutPage />} />
-
+        <Route path="/hosts">
+          <Route index element={<HostListPage />} />
+        </Route>
         <Route path="errors">
           <Route path="403" element={<ForbiddenPage />} />
           <Route path="404" element={<NotFoundPage />} />
