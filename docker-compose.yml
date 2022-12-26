@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   react-template:
-    container_name: 'react-template'
+    container_name: 'keyword-search-react'
     build:
       context: ./docker
       dockerfile: Dockerfile
