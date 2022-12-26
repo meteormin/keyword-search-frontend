@@ -3,7 +3,7 @@ import { Component } from 'react';
 
 type CardProps = {
   header: string;
-  children: JSX.Element;
+  children: JSX.Element[];
 };
 
 export default class Card extends Component<CardProps> {
