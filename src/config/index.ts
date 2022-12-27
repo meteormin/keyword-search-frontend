@@ -1,7 +1,7 @@
 import layouts from 'config/layouts';
 import permissions from 'config/permissions';
 import selectOptions from 'config/selectOptions';
-import { UserType } from 'config/UserType';
+import { UserRole } from 'config/UserType';
 
 export default () => ({
   app: {
@@ -23,7 +23,7 @@ export default () => ({
     userTypes: [
       {
         name: 'ADMIN',
-        value: UserType.ADMIN,
+        value: UserRole.ADMIN,
       },
     ],
     permissions: permissions,

@@ -20,7 +20,6 @@ export interface ApiResponse {
 export interface ErrorResInterface {
   status: string;
   code: number;
-  error: string;
   message: string;
 }
 
@@ -32,13 +31,11 @@ export interface Attachment {
 export class ErrorResponse implements ErrorResInterface {
   private readonly _status: string;
   private readonly _code: number;
-  private readonly _error: string;
   private readonly _message: string;
 
   constructor(props: ErrorResInterface) {
     this._status = props.status;
     this._code = props.code;
-    this._error = props.error;
     this._message = props.message;
   }
 
@@ -48,10 +45,6 @@ export class ErrorResponse implements ErrorResInterface {
 
   get code(): number {
     return this._code;
-  }
-
-  get error(): string {
-    return this._error;
   }
 
   get message(): string {
@@ -179,20 +172,15 @@ export default class ApiClient {
       this._error = error;
       const errorResponse: ErrorResInterface = {
         status: 'error',
-        code: 99,
-        error: 'SERVER_ERROR',
+        code: 999,
         message: '관리자에게 문의해주세요.',
       };
 
       if (error instanceof AxiosError) {
         if (error.response?.status || 500 < 500) {
           errorResponse.status = error.response?.data.status || 'error';
-          errorResponse.error = error.response?.data.error || 'SERVER_ERROR';
-          errorResponse.code = error.response?.data.code || 99;
-          errorResponse.error = errorResponse.error.replaceAll('_', ' ');
-
-          if (this.error.response.data.hasOwnProperty('messages')) {
-            errorResponse.error = '유효성 검사 실패';
+          errorResponse.code = error.response?.data.code || 999;
+          if (this.error.response.data.hasOwnProperty('failed_fields')) {
             const messages = [];
             for (const [key, value] of Object.entries(
               error.response?.data.messages,

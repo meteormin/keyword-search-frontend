@@ -3,7 +3,7 @@ services:
   react-template:
     container_name: 'keyword-search-react'
     build:
-      context: ./docker
+      context: .
       dockerfile: Dockerfile
       args:
         WWWUSER: "1000"
@@ -13,13 +13,11 @@ services:
     stdin_open: true
     environment:
       TIME_ZONE: '${TIME_ZONE:-Asia/Seoul}'
-    volumes:
-      - .:/var/www/front
     ports:
       - '80:80'
       - '443:443'
     networks:
-      - react-template
+      - react
 networks:
-  react-template:
+  react:
     driver: bridge
