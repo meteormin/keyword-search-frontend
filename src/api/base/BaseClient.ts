@@ -1,4 +1,4 @@
-import ApiClient from 'utils/api/ApiClient';
+import ApiClient from 'api/base/ApiClient';
 
 class BaseClient {
   protected _client: ApiClient;

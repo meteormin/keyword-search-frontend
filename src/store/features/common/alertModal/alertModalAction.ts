@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { ErrorResponse } from 'utils/api/ApiClient';
+import { ErrorResponse } from 'api/base/ApiClient';
 
 export interface AlertModalState {
   title: string;
