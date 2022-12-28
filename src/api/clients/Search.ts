@@ -64,7 +64,7 @@ class SearchClient extends BaseClient {
     id: number,
     params: UpdateSearch,
   ): Promise<Search | ErrorResInterface | null> => {
-    const res = await this._client.put(`'/${id}`, toSnake(params));
+    const res = await this._client.put(`/${id}`, toSnake(params));
     if (res.isSuccess) {
       const data = toCamel(res.res?.data);
       return data as Search;
