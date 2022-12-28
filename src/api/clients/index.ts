@@ -1,7 +1,13 @@
-import Report from 'api/clients/Report';
-import Host from 'api/clients/Host';
+import ReportClient from 'api/clients/Report';
+import HostClient from 'api/clients/Host';
+import AuthClient from './Auth';
+import SearchClient from './Search';
+import RedirectClient from './Redirect';
 
 export default {
-  Report,
-  Host,
+  ReportClient,
+  HostClient,
+  AuthClient,
+  SearchClient,
+  RedirectClient,
 };

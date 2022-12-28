@@ -3,14 +3,44 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderModule from 'store/features/common/loader';
 import alertModalModule from 'store/features/common/alertModal';
 import loginModule from 'store/features/auth';
+import makeClient from 'api';
+import AuthClient, { TokenRes } from 'api/clients/Auth';
+import { tokenInfo, Tokens, User } from 'utils/auth';
+import { AuthUser } from 'api/interfaces/Auth';
+
+const client = makeClient<AuthClient>(AuthClient);
 
 function* loginApiSaga(action: { payload: { id: string; password: string } }) {
   yield put(loaderModule.startLoading());
 
   try {
+    const loginParam = {
+      username: action.payload.id,
+      password: action.payload.password,
+    };
+
+    const tokenRes: TokenRes = yield call(client.token, loginParam);
     yield put(loaderModule.endLoading());
 
-    //yield put(loginModule.login({ token, user }));
+    const tokenInfoObj = tokenInfo(tokenRes.token);
+
+    const tokens: Tokens = {
+      accessToken: { token: tokenRes.token, tokenType: 'bearer' },
+      expiresIn: tokenInfoObj?.exp || 0,
+    };
+
+    const authUser: AuthUser = yield call(client.me);
+    const user: User = {
+      id: authUser.id,
+      username: authUser.username,
+      email: authUser.email,
+      role: authUser.role,
+      groupId: authUser.groupId,
+      createdAt: authUser.createdAt,
+      updatedAt: authUser.createdAt,
+    };
+
+    yield put(loginModule.login({ token: tokens, user: user }));
   } catch (error) {
     yield put(loaderModule.endLoading());
     yield put(

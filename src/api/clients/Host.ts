@@ -2,8 +2,9 @@ import BaseClient from 'api/base/BaseClient';
 import { ErrorResInterface } from 'api/base/ApiClient';
 import { Host } from 'api/interfaces/Host';
 import { toCamel, toSnake } from 'snake-camel';
+import { Page } from '../interfaces/Common';
 
-export interface GetListParam {
+export interface GetListParam extends Page {
   page: number;
   pageSize: number;
 }
@@ -97,9 +98,11 @@ class HostClient extends BaseClient {
     return res.error;
   };
 
-  public delete = async (id: number): Promise<boolean> => {
-    const result = await this._client.delete(`/${id}`);
-    return result.isSuccess;
+  public delete = async (
+    id: number,
+  ): Promise<boolean | ErrorResInterface | null> => {
+    const res = await this._client.delete(`/${id}`);
+    return res.isSuccess ? res.isSuccess : res.error;
   };
 }
 

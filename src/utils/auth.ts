@@ -1,4 +1,4 @@
-import config from '../config';
+import config from 'config';
 import jwtDecode from 'jwt-decode';
 
 const conf = config();
