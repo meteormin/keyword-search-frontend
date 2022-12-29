@@ -1,8 +1,4 @@
-import ApiClient, {
-  ApiResponse,
-  ErrorResInterface,
-  Token,
-} from 'api/base/ApiClient';
+import ApiClient, { ErrorResponse, Token } from 'api/base/ApiClient';
 import BaseClient from 'api/base/BaseClient';
 import { makePath } from 'utils/str';
 import { AxiosRequestHeaders } from 'axios';
@@ -23,14 +19,12 @@ export interface ApiConfig {
   token?: Token;
 }
 
-export const apiResponse = (res: ApiResponse): any | ErrorResInterface => {
-  if (res.isSuccess && res.res) {
-    return res.res.data;
+export const isErrorResponse = (res: any): boolean => {
+  if (res instanceof ErrorResponse) {
+    return true;
   }
 
-  if (res.error) {
-    return res.error;
-  }
+  return 'status' in res && 'code' in res && 'message' in res;
 };
 
 /**

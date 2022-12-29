@@ -50,7 +50,7 @@ export const limitArray = (
 
 export const makePath = (source: string, target: string): string => {
   const path = source + '/' + target;
-  return path.replace('//', '/');
+  return path.replaceAll('//', '/');
 };
 
 export const isString = (value: any) => {

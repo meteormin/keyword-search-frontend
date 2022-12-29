@@ -1,13 +1,14 @@
 version: '3.9'
 services:
-  react-template:
+  keyword-search-frontend:
     container_name: 'keyword-search-react'
+    image: keyword-search-frontend
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        WWWUSER: "1000"
-        WWWGROUP: "1000"
+        WWWUSER: "${WWWUSER:-501}"
+        WWWGROUP: "${WWWGROUP:-20}"
         NODE_VERSION: "${NODE_VERSION:-18.12.1}"
     restart: always
     stdin_open: true

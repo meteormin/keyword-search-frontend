@@ -22,7 +22,7 @@ export const handlePerm = (menuPerm: string[]): boolean => {
 };
 
 export const redirectHomePath: { role: string; home: string }[] = [
-  { role: UserRole.ADMIN, home: '/' },
+  { role: UserRole.ADMIN, home: '/hosts' },
 ];
 
 export const handleGoHome = () => {
@@ -32,6 +32,10 @@ export const handleGoHome = () => {
 const menuPerm: { path: string; role: string[] }[] = [
   {
     path: '/',
+    role: [UserRole.ADMIN],
+  },
+  {
+    path: '/hosts',
     role: [UserRole.ADMIN],
   },
 ];

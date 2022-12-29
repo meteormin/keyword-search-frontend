@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DropDownMenu, { DropDownMenuProps } from './DropDownMenu';
 import { guard } from 'helpers';
 
@@ -10,6 +10,8 @@ export interface HeaderProps {
 }
 
 const Header = ({ appName, dropDownMenu, isLogin, userName }: HeaderProps) => {
+  const [toggle, setToggle] = useState<boolean>(false);
+
   const userMenu = (isLogin: boolean) => {
     if (isLogin) {
       return <DropDownMenu userName={userName} items={dropDownMenu} />;
@@ -21,6 +23,19 @@ const Header = ({ appName, dropDownMenu, isLogin, userName }: HeaderProps) => {
         Login
       </a>
     );
+  };
+
+  useEffect(() => {
+    const body = document.getElementsByTagName('body')[0];
+    if (toggle) {
+      body.classList.add('sb-sidenav-toggled');
+    } else {
+      body.classList.remove('sb-sidenav-toggled');
+    }
+  }, [toggle]);
+
+  const sidebarToggle = () => {
+    setToggle(!toggle);
   };
 
   return (
@@ -35,6 +50,7 @@ const Header = ({ appName, dropDownMenu, isLogin, userName }: HeaderProps) => {
           className="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
           id="sidebarToggle"
           // href="#!"
+          onClick={sidebarToggle}
         >
           <i className="fas fa-bars"></i>
         </button>

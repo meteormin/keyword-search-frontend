@@ -2,7 +2,7 @@ import BaseClient from '../base/BaseClient';
 import { ErrorResInterface } from '../base/ApiClient';
 
 class RedirectClient extends BaseClient {
-  static readonly prefix = 'redirect';
+  static readonly prefix = '/api/redirect';
   public redirect = async (
     code: string,
   ): Promise<string | ErrorResInterface | null> => {

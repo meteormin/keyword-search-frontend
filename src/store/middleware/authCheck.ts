@@ -2,7 +2,9 @@ import { auth, date } from 'helpers';
 import { api } from 'api';
 
 const authCheck = (store: any) => (next: any) => (action: any) => {
-  if (auth.getToken()?.accessToken) {
+  const token = auth.getToken()?.accessToken;
+
+  if (token?.token) {
     let isValid = false;
     console.debug('hi');
     const tokenInfo = auth.tokenInfo(
@@ -22,7 +24,7 @@ const authCheck = (store: any) => (next: any) => (action: any) => {
     if (!isValid) {
       api()
         .withToken(auth.getToken()?.accessToken.token as string, 'bearer')
-        .get('api/users/me')
+        .get('api/auth/me')
         .then((res) => {
           if (res.isSuccess) {
             console.log('access_token is alive');

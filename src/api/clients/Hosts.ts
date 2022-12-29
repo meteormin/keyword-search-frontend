@@ -1,6 +1,6 @@
 import BaseClient from 'api/base/BaseClient';
 import { ErrorResInterface } from 'api/base/ApiClient';
-import { Host } from 'api/interfaces/Host';
+import { Host } from 'api/interfaces/Hosts';
 import { toCamel, toSnake } from 'snake-camel';
 import { Page } from '../interfaces/Common';
 
@@ -37,7 +37,7 @@ export interface PatchHost {
 }
 
 class HostClient extends BaseClient {
-  static readonly prefix: string = 'hosts';
+  static readonly prefix: string = '/api/hosts';
 
   public create = async (
     params: CreateHost,

@@ -50,6 +50,14 @@ export class ErrorResponse implements ErrorResInterface {
   get message(): string {
     return this._message;
   }
+
+  public serialize(): ErrorResInterface {
+    return {
+      status: this.status,
+      code: this.code,
+      message: this.message,
+    };
+  }
 }
 
 export default class ApiClient {

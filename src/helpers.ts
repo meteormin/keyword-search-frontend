@@ -10,8 +10,8 @@ import * as Str from 'utils/str';
 import * as Arr from 'utils/arr';
 import { useEffect, useRef } from 'react';
 import makeClient from 'api';
-import clients from 'api/clients';
-import { ApiResponse } from './api/base/ApiClient';
+import { ApiResponse } from 'api/base/ApiClient';
+import ReportClient from 'api/clients/Report';
 
 export const config = Config();
 export const auth = Auth;
@@ -58,7 +58,7 @@ export const reportError = async (
 ): Promise<ApiResponse | null> => {
   try {
     console.log(r);
-    const reportApi = makeClient(clients.Report);
+    const reportApi = makeClient<ReportClient>(ReportClient);
     return await reportApi.report(r);
   } catch (e) {
     console.error(e);

@@ -2,6 +2,7 @@ import BaseClient from '../base/BaseClient';
 import { toCamel, toSnake } from 'snake-camel';
 import { ErrorResInterface } from '../base/ApiClient';
 import { AuthUser } from '../interfaces/Auth';
+import { AccessToken } from '../../utils/auth';
 
 export interface TokenParam {
   username: string;
@@ -32,7 +33,7 @@ export interface PasswordParam {
 }
 
 class AuthClient extends BaseClient {
-  static readonly prefix = 'auth';
+  static readonly prefix = '/api/auth';
 
   public token = async (
     params: TokenParam,
@@ -57,7 +58,13 @@ class AuthClient extends BaseClient {
     return res.error;
   };
 
-  public me = async (): Promise<Me | ErrorResInterface | null> => {
+  public me = async (
+    token?: AccessToken,
+  ): Promise<Me | ErrorResInterface | null> => {
+    if (token) {
+      this._client.withToken(token.token, token.tokenType || 'bearer');
+    }
+
     const res = await this._client.get('/me');
     if (res.isSuccess) {
       const data = res.res?.data;

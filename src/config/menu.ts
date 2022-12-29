@@ -14,7 +14,7 @@ export const menu: Menu = {
     {
       url: '/hosts',
       name: 'Hosts',
-      icon: 'fa-sharp fa-solid fa-link-horizontal',
+      icon: 'fas fa-link',
     },
   ],
 };
