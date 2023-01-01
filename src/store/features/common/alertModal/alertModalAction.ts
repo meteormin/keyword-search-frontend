@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { ErrorResponse } from 'api/base/ApiClient';
+import { auth } from '../../../../helpers';
 
 export interface AlertModalState {
   title: string;
@@ -45,6 +46,10 @@ export default {
     if (res instanceof ErrorResponse) {
       state.title = res.status;
       state.message = res.message;
+      if (res.code == 401) {
+        auth.logout();
+        window.location.href = '/login';
+      }
     } else {
       console.error('Unknown Error:', res);
       if (fallback) {

@@ -7,6 +7,7 @@ import HostClient, {
   CreateHost,
   GetList,
   GetListParam,
+  GetSearch,
 } from 'api/clients/Hosts';
 import { ErrorResInterface } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -56,6 +57,45 @@ function* getList(action: PayloadAction<{ page: Page }>) {
   }
 }
 
+function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
+  yield put(loaderStore.startLoading());
+  try {
+    const res: GetSearch | ErrorResInterface | null = yield call(
+      client.getSearch,
+      action.payload.hostId,
+      action.payload.page,
+    );
+    yield put(loaderStore.endLoading());
+    if (isErrorResponse(res)) {
+      yield put(
+        alertModalStore.errorAlert({
+          res: res,
+          fallback: {
+            title: 'Hosts',
+            message: `Host ${action.payload.hostId} Search 목록 조회 실패`,
+          },
+        }),
+      );
+      return;
+    }
+
+    const list = res as GetSearch;
+
+    yield put(hostStore.actions.setSearch(list));
+  } catch (err) {
+    yield put(loaderStore.endLoading());
+    yield put(
+      alertModalStore.errorAlert({
+        res: err,
+        fallback: {
+          title: 'Hosts',
+          message: `Host ${action.payload.hostId} Search 목록 조회 실패`,
+        },
+      }),
+    );
+  }
+}
+
 function* create(action: PayloadAction<CreateHost>) {
   yield put(loaderStore.startLoading());
   try {
@@ -94,6 +134,7 @@ function* create(action: PayloadAction<CreateHost>) {
 
 function* watchSaga() {
   yield takeLatest(hostStore.actions.getList, getList);
+  yield takeLatest(hostStore.actions.getSearch, getSearch);
   yield takeLatest(hostStore.actions.create, create);
 }
 

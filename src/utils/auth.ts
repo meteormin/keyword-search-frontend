@@ -1,5 +1,8 @@
 import config from 'config';
 import jwtDecode from 'jwt-decode';
+import { auth, date } from '../helpers';
+import { api } from '../api';
+import { toCamel } from 'snake-camel';
 
 const conf = config();
 
@@ -14,7 +17,7 @@ export interface User {
 }
 
 export interface TokenInfo {
-  exp: number;
+  expiresIn: number;
   id: number;
 }
 
@@ -91,16 +94,77 @@ export const logout = (): void => {
   window.localStorage.clear();
 };
 
+const authCheck = (): boolean => {
+  const token = auth.getToken()?.accessToken;
+
+  if (token?.token) {
+    let isValid = false;
+    console.debug('hi');
+    const tokenInfo = auth.tokenInfo(
+      auth.getToken()?.accessToken.token as string,
+    );
+
+    if (tokenInfo) {
+      const expAt = date.unix(tokenInfo.expiresIn);
+      const now = date(new Date());
+      const expTime = date.duration(expAt.diff(now));
+
+      if (expTime.asSeconds() > 0) {
+        isValid = true;
+      }
+    }
+
+    if (!isValid) {
+      api()
+        .withToken(auth.getToken()?.accessToken.token as string, 'bearer')
+        .get('api/auth/me')
+        .then((res) => {
+          if (res.isSuccess) {
+            console.log('access_token is alive');
+            return;
+          }
+
+          if (res.res && res.res.status == 401) {
+            // refresh
+            console.log('need refresh');
+          }
+
+          auth.logout();
+          window.location.href = '/login';
+        })
+        .catch((reason) => {
+          console.log('need refresh', reason);
+          auth.logout();
+          window.location.href = '/login';
+        });
+    }
+    return isValid;
+  }
+
+  return false;
+};
+
 export const isLogin = (): boolean => {
-  return (
-    user() != null && tokenInfo(getToken()?.accessToken.token as string) != null
-  );
+  const isValid = authCheck();
+  if (isValid) {
+    return (
+      user() != null &&
+      tokenInfo(getToken()?.accessToken.token as string) != null
+    );
+  }
+
+  return false;
 };
 
 export const tokenInfo = (token: string): TokenInfo | null => {
   if (token) {
     try {
-      return jwtDecode(token);
+      const tokenInfo = jwtDecode(token);
+      if (tokenInfo != null) {
+        return toCamel(tokenInfo) as TokenInfo;
+      }
+
+      return tokenInfo as null;
     } catch (e) {
       console.log(e);
     }

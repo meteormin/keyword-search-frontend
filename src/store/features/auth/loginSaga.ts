@@ -47,7 +47,7 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
 
     const tokens: Tokens = {
       accessToken: { token: tokenRes.token, tokenType: 'bearer' },
-      expiresIn: tokenInfoObj?.exp || 0,
+      expiresIn: tokenInfoObj?.expiresIn || 0,
     };
 
     const authUser: AuthUser = yield call(client.me, tokens.accessToken);

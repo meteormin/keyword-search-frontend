@@ -55,6 +55,7 @@ const loginAction = {
     state.user = null;
 
     auth.logout();
+    window.location.href = '/login';
   },
   refresh: (state: LoginState, action: PayloadAction<string>) => {
     state.token = null;

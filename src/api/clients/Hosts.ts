@@ -2,7 +2,8 @@ import BaseClient from 'api/base/BaseClient';
 import { ErrorResInterface } from 'api/base/ApiClient';
 import { Host } from 'api/interfaces/Hosts';
 import { toCamel, toSnake } from 'snake-camel';
-import { Page } from '../interfaces/Common';
+import { Page } from 'api/interfaces/Common';
+import { Search } from 'api/interfaces/Search';
 
 export interface GetListParam extends Page {
   page: number;
@@ -14,6 +15,13 @@ export interface GetList {
   pageSize: number;
   totalCount: number;
   data: Host[];
+}
+
+export interface GetSearch {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  data: Search[];
 }
 
 export interface CreateHost {
@@ -77,6 +85,24 @@ class HostClient extends BaseClient {
     }
 
     return result.error;
+  };
+
+  public getSearch = async (
+    id: number,
+    page: Page,
+  ): Promise<GetSearch | ErrorResInterface | null> => {
+    const res = await this._client.get(`/${id}/search`, toSnake(page));
+    if (res.isSuccess) {
+      const data = toCamel(res.res?.data) as any;
+      return {
+        page: data.page,
+        pageSize: data.pageSize,
+        totalCount: data.totalCount,
+        data: data.data.map(toCamel) as Search[],
+      };
+    }
+
+    return res.error;
   };
 
   public update = async (

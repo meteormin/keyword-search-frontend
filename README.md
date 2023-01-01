@@ -181,7 +181,7 @@ REACT_APP_API_PROXY=/proxy
 
 > 기타 유틸리티
 
-### helpers.ts
+### utils.ts
 
 utils하위의 JS 함수들을 하나의 모듈로 생성하여 사용할 수 있게
 

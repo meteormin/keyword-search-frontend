@@ -9,7 +9,9 @@ import { ResetPassPage } from 'pages/password';
 import Home from 'utils/Home';
 
 import { handleGoHome } from 'routes/handler';
-import HostListPage from '../pages/hosts/HostListPage';
+import { HostListPage, EditHostPage, SearchListPage } from 'pages/hosts';
+
+const isLogin = auth.isLogin();
 
 const Router = () => {
   return (
@@ -18,7 +20,7 @@ const Router = () => {
         <Route
           path="/"
           element={
-            <guard.Protected auth={auth.isLogin()} redirect={'/login'}>
+            <guard.Protected auth={isLogin} redirect={'/login'}>
               <Home role={auth.user()?.role || ''} rules={handleGoHome()} />
             </guard.Protected>
           }
@@ -27,7 +29,7 @@ const Router = () => {
           <Route
             index
             element={
-              <guard.Restricted condition={auth.isLogin()} redirect={'/'}>
+              <guard.Restricted condition={isLogin} redirect={'/'}>
                 <LoginPage />
               </guard.Restricted>
             }
@@ -37,7 +39,7 @@ const Router = () => {
           <Route
             path="reset"
             element={
-              <guard.Protected auth={auth.isLogin()} redirect={'/login'}>
+              <guard.Protected auth={isLogin} redirect={'/login'}>
                 <ResetPassPage />
               </guard.Protected>
             }
@@ -45,7 +47,30 @@ const Router = () => {
         </Route>
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/hosts">
-          <Route index element={<HostListPage />} />
+          <Route
+            index
+            element={
+              <guard.Protected auth={isLogin} redirect={'/login'}>
+                <HostListPage />
+              </guard.Protected>
+            }
+          />
+          <Route
+            path=":id"
+            element={
+              <guard.Protected auth={isLogin} redirect={'/login'}>
+                <EditHostPage />
+              </guard.Protected>
+            }
+          />
+          <Route
+            path=":id/search"
+            element={
+              <guard.Protected auth={isLogin} redirect={'/login'}>
+                <SearchListPage />
+              </guard.Protected>
+            }
+          />
         </Route>
         <Route path="errors">
           <Route path="403" element={<ForbiddenPage />} />

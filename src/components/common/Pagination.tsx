@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pagination as Pages } from 'react-bootstrap';
 
 export interface PaginationProps {
@@ -46,6 +46,10 @@ const Pagination = (props: PaginationProps) => {
     }
 
     for (let i = 1; i <= count; i++) {
+      if (page + (i - currentIndex) > totalPage) {
+        break;
+      }
+
       if (i === currentIndex) {
         pageItems.push(
           <Pages.Item key={`page_${i}`} active onClick={() => onClick(page)}>
@@ -82,7 +86,8 @@ const Pagination = (props: PaginationProps) => {
   };
 
   return (
-    <Fragment>
+    <div className="row">
+      <div className="col-lg-4"></div>
       <div className="col-lg-4">
         <div className="mx-4 mt-5">
           <Pages className="justify-content-center text-center">
@@ -115,7 +120,8 @@ const Pagination = (props: PaginationProps) => {
           </Pages>
         </div>
       </div>
-    </Fragment>
+      <div className="col-lg-4"></div>
+    </div>
   );
 };
 

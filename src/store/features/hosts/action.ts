@@ -1,11 +1,18 @@
 import { Host } from 'api/interfaces/Hosts';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Page } from 'api/interfaces/Common';
-import { CreateHost, GetList, PatchHost, UpdateHost } from 'api/clients/Hosts';
+import {
+  CreateHost,
+  GetList,
+  GetSearch,
+  PatchHost,
+  UpdateHost,
+} from 'api/clients/Hosts';
 
 export interface HostState {
   selectId: number | null;
   list: GetList | null;
+  search: GetSearch | null;
   create: CreateHost | null;
   update: UpdateHost | null;
   patch: PatchHost | null;
@@ -16,6 +23,7 @@ export interface HostState {
 export const initialState: HostState = {
   selectId: null,
   list: null,
+  search: null,
   create: null,
   update: null,
   patch: null,
@@ -29,6 +37,9 @@ const action = {
   },
   setList: (state: HostState, action: PayloadAction<GetList>) => {
     state.list = action.payload;
+  },
+  setSearch: (state: HostState, action: PayloadAction<GetSearch>) => {
+    state.search = action.payload;
   },
   setCreate: (state: HostState, action: PayloadAction<CreateHost | null>) => {
     state.create = action.payload;
@@ -47,6 +58,13 @@ const action = {
   getList: (state: HostState, action: PayloadAction<{ page: Page }>) => {
     state.page = action.payload.page;
     state.list = null;
+  },
+  getSearch: (
+    state: HostState,
+    action: PayloadAction<{ hostId: number; page: Page }>,
+  ) => {
+    state.page = action.payload.page;
+    state.search = null;
   },
   create: (state: HostState, action: PayloadAction<CreateHost>) => {
     state.create = action.payload;
