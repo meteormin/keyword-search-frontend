@@ -17,7 +17,7 @@ export interface HostState {
   update: UpdateHost | null;
   patch: PatchHost | null;
   select: Host | null;
-  page: Page | null;
+  page: Page;
 }
 
 export const initialState: HostState = {
@@ -28,7 +28,10 @@ export const initialState: HostState = {
   update: null,
   patch: null,
   select: null,
-  page: null,
+  page: {
+    page: 1,
+    pageSize: 10,
+  },
 };
 
 const action = {

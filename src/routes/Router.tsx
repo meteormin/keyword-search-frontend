@@ -1,19 +1,21 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import { auth, guard } from 'helpers';
 import { ForbiddenPage, NotFoundPage } from 'pages/error';
 import { LoginPage, LogoutPage } from 'pages/login';
 import { ResetPassPage } from 'pages/password';
-
 import Home from 'utils/Home';
-
 import { handleGoHome } from 'routes/handler';
 import { HostListPage, EditHostPage, SearchListPage } from 'pages/hosts';
+import { guard } from 'helpers';
+import { User } from 'utils/auth';
 
-const isLogin = auth.isLogin();
+export interface RouterProps {
+  isLogin: boolean;
+  authUser: User | null;
+}
 
-const Router = () => {
+const Router = ({ isLogin, authUser }: RouterProps) => {
   return (
     <BrowserRouter>
       <Routes>
@@ -21,7 +23,7 @@ const Router = () => {
           path="/"
           element={
             <guard.Protected auth={isLogin} redirect={'/login'}>
-              <Home role={auth.user()?.role || ''} rules={handleGoHome()} />
+              <Home role={authUser?.role || ''} rules={handleGoHome()} />
             </guard.Protected>
           }
         />

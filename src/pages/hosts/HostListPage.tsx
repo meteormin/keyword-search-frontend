@@ -8,17 +8,16 @@ import Pagination from '../../components/common/Pagination';
 
 function HostListPage() {
   const dispatch = useDispatch();
-
-  const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
-  const { list } = useSelector(hostStore.getState);
+  const { list, page } = useSelector(hostStore.getState);
   const [rows, setRows] = useState<Host[][]>([]);
+  const [pageNumber, setPageNumber] = useState<number>(page.page);
+  const [pageSize, setPageSize] = useState<number>(page.pageSize);
 
   const getList = () => {
     dispatch(
       hostStore.actions.getList({
         page: {
-          page: page,
+          page: pageNumber,
           pageSize: pageSize,
         },
       }),
@@ -43,17 +42,13 @@ function HostListPage() {
     return rList;
   };
 
-  const handlePagination = (page: number) => {
-    setPage(page);
+  const handlePagination = (pn: number) => {
+    setPageNumber(pn);
   };
 
   useEffect(() => {
     getList();
-  }, []);
-
-  useEffect(() => {
-    getList();
-  }, [page, pageSize]);
+  }, [pageNumber, pageSize]);
 
   useEffect(() => {
     setRows(makeMatrix(list?.data || []));
@@ -75,7 +70,7 @@ function HostListPage() {
         );
       })}
       <Pagination
-        currentPage={page}
+        currentPage={pageNumber}
         totalCount={list?.totalCount || 0}
         limit={pageSize}
         onClick={handlePagination}

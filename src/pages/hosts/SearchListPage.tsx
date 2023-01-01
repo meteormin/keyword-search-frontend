@@ -12,11 +12,10 @@ const SearchListPage = () => {
   const params = useParams();
   const hostId: number = params.id ? parseInt(params.id) : 0;
   const dispatch = useDispatch();
+  const { search, page } = useSelector(hostStore.getState);
+  const [pageNumber, setPageNumber] = useState<number>(page.page);
+  const [pageSize, setPageSize] = useState<number>(page.pageSize);
   const [records, setRecords] = useState<SearchTableSchema[]>([]);
-  const [page, setPage] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
-
-  const { search } = useSelector(hostStore.getState);
 
   const getSearch = () => {
     if (hostId) {
@@ -24,7 +23,7 @@ const SearchListPage = () => {
         hostStore.actions.getSearch({
           hostId: hostId,
           page: {
-            page: page,
+            page: pageNumber,
             pageSize: pageSize,
           },
         }),
@@ -55,8 +54,8 @@ const SearchListPage = () => {
     }
   };
 
-  const handlePagination = (page: number) => {
-    setPage(page);
+  const handlePagination = (pn: number) => {
+    setPageNumber(pn);
   };
 
   useEffect(() => {
@@ -65,7 +64,7 @@ const SearchListPage = () => {
 
   useEffect(() => {
     getSearch();
-  }, [page, pageSize]);
+  }, [pageNumber, pageSize]);
 
   useEffect(() => {
     setMapRecords();
@@ -75,7 +74,7 @@ const SearchListPage = () => {
     <Container className="mt-4">
       {hostId ? <SearchTable hostId={hostId} records={records} /> : null}
       <Pagination
-        currentPage={page}
+        currentPage={pageNumber}
         totalCount={search?.totalCount || 0}
         limit={pageSize}
         onClick={handlePagination}
