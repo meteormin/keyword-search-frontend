@@ -17,11 +17,25 @@ export interface GetList {
   data: Host[];
 }
 
+export interface GetSubjects {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  data: { id: number; subject: string }[];
+}
+
 export interface GetSearch {
   page: number;
   pageSize: number;
   totalCount: number;
   data: Search[];
+}
+
+export interface GetSearchDescriptions {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  data: { id: number; description: string; shortUrl: string }[];
 }
 
 export interface CreateHost {
@@ -70,6 +84,23 @@ class HostClient extends BaseClient {
     return res.error;
   };
 
+  public getSubjects = async (
+    params: GetListParam,
+  ): Promise<GetSubjects | ErrorResInterface | null> => {
+    const result = await this._client.get('/subjects', toSnake(params));
+    if (result.isSuccess) {
+      const data = toCamel(result.res?.data) as any;
+      return {
+        page: data.page,
+        pageSize: data.pageSize,
+        totalCount: data.totalCount,
+        data: data.data.map(toCamel) as { id: number; subject: string }[],
+      };
+    }
+
+    return result.error;
+  };
+
   public getList = async (
     params: GetListParam,
   ): Promise<GetList | ErrorResInterface | null> => {
@@ -99,6 +130,31 @@ class HostClient extends BaseClient {
         pageSize: data.pageSize,
         totalCount: data.totalCount,
         data: data.data.map(toCamel) as Search[],
+      };
+    }
+
+    return res.error;
+  };
+
+  public getSearchDescriptions = async (
+    id: number,
+    page: Page,
+  ): Promise<GetSearchDescriptions | ErrorResInterface | null> => {
+    const res = await this._client.get(
+      `/${id}/search/descriptions`,
+      toSnake(page),
+    );
+    if (res.isSuccess) {
+      const data = toCamel(res.res?.data) as any;
+      return {
+        page: data.page,
+        pageSize: data.pageSize,
+        totalCount: data.totalCount,
+        data: data.data.map(toCamel) as {
+          id: number;
+          description: string;
+          shortUrl: string;
+        }[],
       };
     }
 

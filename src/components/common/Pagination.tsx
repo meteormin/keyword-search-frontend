@@ -35,8 +35,8 @@ const Pagination = (props: PaginationProps) => {
     const pageItems = [];
 
     let count = 10;
-    if (totalPage < 10) {
-      count = totalPage;
+    if (totalCount < 10) {
+      count = 1;
     }
 
     let currentIndex = page % 10;

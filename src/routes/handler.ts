@@ -38,6 +38,10 @@ const menuPerm: { path: string; role: string[] }[] = [
     path: '/hosts',
     role: [UserRole.ADMIN],
   },
+  {
+    path: '/search',
+    role: [UserRole.ADMIN],
+  },
 ];
 
 const getPathRole = (path: string) => {

@@ -8,6 +8,8 @@ import HostClient, {
   GetList,
   GetListParam,
   GetSearch,
+  GetSearchDescriptions,
+  GetSubjects,
 } from 'api/clients/Hosts';
 import { ErrorResInterface } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
@@ -96,6 +98,86 @@ function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
   }
 }
 
+function* getSubjects(action: PayloadAction<{ page: Page }>) {
+  yield put(loaderStore.startLoading());
+  try {
+    const res: GetSubjects | ErrorResInterface | null = yield call(
+      client.getSubjects,
+      action.payload.page,
+    );
+
+    yield put(loaderStore.endLoading());
+    if (isErrorResponse(res)) {
+      yield put(
+        alertModalStore.errorAlert({
+          res: res,
+          fallback: {
+            title: 'Hosts',
+            message: `Host subjects 조회 실패`,
+          },
+        }),
+      );
+      return;
+    }
+
+    const list = res as GetSubjects;
+
+    yield put(hostStore.actions.setSubjects(list));
+  } catch (err) {
+    yield put(loaderStore.endLoading());
+    yield put(
+      alertModalStore.errorAlert({
+        res: err,
+        fallback: {
+          title: 'Hosts',
+          message: `Host subjects 조회 실패`,
+        },
+      }),
+    );
+  }
+}
+
+function* getSearchDescriptions(
+  action: PayloadAction<{ hostId: number; page: Page }>,
+) {
+  yield put(loaderStore.startLoading());
+  try {
+    const res: GetSearchDescriptions | ErrorResInterface | null = yield call(
+      client.getSearchDescriptions,
+      action.payload.hostId,
+      action.payload.page,
+    );
+    yield put(loaderStore.endLoading());
+    if (isErrorResponse(res)) {
+      yield put(
+        alertModalStore.errorAlert({
+          res: res,
+          fallback: {
+            title: 'Hosts',
+            message: `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
+          },
+        }),
+      );
+      return;
+    }
+
+    const list = res as GetSearchDescriptions;
+
+    yield put(hostStore.actions.setSearchDescriptions(list));
+  } catch (err) {
+    yield put(loaderStore.endLoading());
+    yield put(
+      alertModalStore.errorAlert({
+        res: err,
+        fallback: {
+          title: 'Hosts',
+          message: `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
+        },
+      }),
+    );
+  }
+}
+
 function* create(action: PayloadAction<CreateHost>) {
   yield put(loaderStore.startLoading());
   try {
@@ -135,6 +217,11 @@ function* create(action: PayloadAction<CreateHost>) {
 function* watchSaga() {
   yield takeLatest(hostStore.actions.getList, getList);
   yield takeLatest(hostStore.actions.getSearch, getSearch);
+  yield takeLatest(hostStore.actions.getSubjects, getSubjects);
+  yield takeLatest(
+    hostStore.actions.getSearchDescriptions,
+    getSearchDescriptions,
+  );
   yield takeLatest(hostStore.actions.create, create);
 }
 

@@ -9,6 +9,7 @@ import { handleGoHome } from 'routes/handler';
 import { HostListPage, EditHostPage, SearchListPage } from 'pages/hosts';
 import { guard } from 'helpers';
 import { User } from 'utils/auth';
+import { SearchPage } from 'pages/search';
 
 export interface RouterProps {
   isLogin: boolean;
@@ -74,7 +75,18 @@ const Router = ({ isLogin, authUser }: RouterProps) => {
             }
           />
         </Route>
-        <Route path="errors">
+
+        <Route path="/search">
+          <Route
+            index
+            element={
+              <guard.Protected auth={isLogin} redirect={'/login'}>
+                <SearchPage />
+              </guard.Protected>
+            }
+          />
+        </Route>
+        <Route path="/errors">
           <Route path="403" element={<ForbiddenPage />} />
           <Route path="404" element={<NotFoundPage />} />
         </Route>

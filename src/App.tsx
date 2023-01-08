@@ -13,34 +13,26 @@ import Router from 'routes/Router';
 import { User } from './utils/auth';
 
 function App() {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
-  const [authUser, setAuthUser] = useState<User | null>(null);
-  const [menu, setMenu] = useState<Menu>(config.layouts.menu);
+  const htmlTitle = document.querySelector('title');
+  if (htmlTitle) {
+    htmlTitle.innerHTML = config.app.name || 'title';
+  }
 
-  useEffect(() => {
-    const htmlTitle = document.querySelector('title');
-    if (htmlTitle) {
-      htmlTitle.innerHTML = config.app.name || 'title';
-    }
+  const user = auth.user();
+  const isLogin = auth.isLogin();
 
-    const user = auth.user();
-    setIsLogin(auth.isLogin());
-    setAuthUser(auth.user());
+  let userType = user?.role;
+  switch (userType) {
+    case UserRole.ADMIN:
+      userType = 'ADMIN';
+      break;
+    default:
+      auth.logout();
+      break;
+  }
 
-    let userType = user?.role;
-    switch (userType) {
-      case UserRole.ADMIN:
-        userType = 'ADMIN';
-        break;
-      default:
-        auth.logout();
-        break;
-    }
-
-    const updateMenu = Object.assign({}, menu);
-    updateMenu.header = userType as string;
-    setMenu(updateMenu);
-  }, []);
+  const updateMenu = Object.assign({}, config.layouts.menu);
+  updateMenu.header = userType as string;
 
   return (
     <div className="sb-nav">
@@ -48,14 +40,14 @@ function App() {
         appName={config.app.name as string}
         isLogin={isLogin}
         dropDownMenu={config.layouts.header.dropDownMenu}
-        userName={authUser?.username || ''}
+        userName={user?.username || ''}
       />
       <Container
-        menu={handleMenuVisible(menu)}
+        menu={handleMenuVisible(updateMenu)}
         isLogin={isLogin}
         footer={config.layouts.footer}
       >
-        <Router isLogin={isLogin} authUser={authUser} />
+        <Router isLogin={isLogin} authUser={user} />
       </Container>
     </div>
   );

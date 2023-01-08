@@ -10,7 +10,7 @@ export interface RestrictedProps {
 }
 
 /**
- * redirectPath와 render 속성이 모두 존재하느 경우 redirectPath를 우선 처리 되어 redirect 됩니다.
+ * redirectPath와 render 속성이 모두 존재하는 경우 redirectPath를 우선 처리 되어 redirect 됩니다.
  * @param {RestrictedProps} props
  * @constructor
  */

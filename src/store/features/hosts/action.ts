@@ -5,6 +5,8 @@ import {
   CreateHost,
   GetList,
   GetSearch,
+  GetSearchDescriptions,
+  GetSubjects,
   PatchHost,
   UpdateHost,
 } from 'api/clients/Hosts';
@@ -18,6 +20,8 @@ export interface HostState {
   patch: PatchHost | null;
   select: Host | null;
   page: Page;
+  subjects: GetSubjects | null;
+  searchDescriptions: GetSearchDescriptions | null;
 }
 
 export const initialState: HostState = {
@@ -32,6 +36,8 @@ export const initialState: HostState = {
     page: 1,
     pageSize: 10,
   },
+  subjects: null,
+  searchDescriptions: null,
 };
 
 const action = {
@@ -56,11 +62,24 @@ const action = {
   setSelect: (state: HostState, action: PayloadAction<Host | null>) => {
     state.select = action.payload;
   },
+  setSubjects: (state: HostState, action: PayloadAction<GetSubjects>) => {
+    state.subjects = action.payload;
+  },
+  setSearchDescriptions: (
+    state: HostState,
+    action: PayloadAction<GetSearchDescriptions>,
+  ) => {
+    state.searchDescriptions = action.payload;
+  },
 
   // api req
   getList: (state: HostState, action: PayloadAction<{ page: Page }>) => {
     state.page = action.payload.page;
     state.list = null;
+  },
+  getSubjects: (state: HostState, action: PayloadAction<{ page: Page }>) => {
+    state.page = action.payload.page;
+    state.subjects = null;
   },
   getSearch: (
     state: HostState,
@@ -68,6 +87,13 @@ const action = {
   ) => {
     state.page = action.payload.page;
     state.search = null;
+  },
+  getSearchDescriptions: (
+    state: HostState,
+    action: PayloadAction<{ hostId: number; page: Page }>,
+  ) => {
+    state.page = action.payload.page;
+    state.searchDescriptions = null;
   },
   create: (state: HostState, action: PayloadAction<CreateHost>) => {
     state.create = action.payload;

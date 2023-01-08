@@ -16,5 +16,10 @@ export const menu: Menu = {
       name: 'Hosts',
       icon: 'fas fa-link',
     },
+    {
+      url: '/search',
+      name: 'Search',
+      icon: 'fas fa-magnifying-glass',
+    },
   ],
 };
