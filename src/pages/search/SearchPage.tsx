@@ -68,6 +68,7 @@ const SearchPage = () => {
 
   const handleSubjectsChange = (s: string[]) => {
     const fId = findHostId(s[0]);
+    setSearchData([]);
     setSelectedId(fId);
   };
 
