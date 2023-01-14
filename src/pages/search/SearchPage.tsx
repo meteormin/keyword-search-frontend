@@ -79,7 +79,7 @@ const SearchPage = () => {
 
   const findHostId = (str: string): number | null => {
     const found =
-      subjects?.data.filter((s) => {
+      subjectsData.filter((s) => {
         return str == s.subject;
       }) || [];
 
@@ -92,7 +92,7 @@ const SearchPage = () => {
 
   const handleSearchChange = (str: string[]) => {
     const found =
-      searchDescriptions?.data.filter((s) => {
+      searchData.filter((s) => {
         return str[0] == s.description;
       }) || [];
 
