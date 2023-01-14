@@ -9,9 +9,16 @@ export interface SearchBarProps {
   data: any[];
   onPaginate?: () => any;
   onChange?: (selected: any[]) => any;
+  maxResults: number;
 }
 
-const SearchBar = ({ id, data, onPaginate, onChange }: SearchBarProps) => {
+const SearchBar = ({
+  id,
+  data,
+  onPaginate,
+  onChange,
+  maxResults,
+}: SearchBarProps) => {
   const [options, setOptions] = useState<any[]>([]);
 
   useEffect(() => {
@@ -23,6 +30,7 @@ const SearchBar = ({ id, data, onPaginate, onChange }: SearchBarProps) => {
       id={id}
       options={options}
       onPaginate={onPaginate}
+      maxResults={maxResults}
       paginate={true}
       onChange={onChange}
     />
