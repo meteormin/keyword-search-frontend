@@ -81,6 +81,8 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
 }
 
 function* logoutSaga() {
+  yield call(client.revoke);
+
   yield call(() => {
     location.href = '/login';
   });

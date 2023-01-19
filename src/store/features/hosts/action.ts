@@ -117,6 +117,7 @@ const action = {
   },
   find: (state: HostState, action: PayloadAction<number>) => {
     state.selectId = action.payload;
+    state.select = null;
   },
 };
 export default action;

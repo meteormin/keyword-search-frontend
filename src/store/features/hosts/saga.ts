@@ -11,7 +11,7 @@ import HostClient, {
   GetSearchDescriptions,
   GetSubjects,
 } from 'api/clients/Hosts';
-import { ErrorResInterface } from 'api/base/ApiClient';
+import { ErrorResInterface, ErrorResponse } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Host } from 'api/interfaces/Hosts';
 import { Page } from 'api/interfaces/Common';
@@ -178,6 +178,43 @@ function* getSearchDescriptions(
   }
 }
 
+function* find(action: PayloadAction<number>) {
+  yield put(loaderStore.startLoading());
+  try {
+    const res: Host | ErrorResInterface | null = yield call(
+      client.find,
+      action.payload,
+    );
+    yield put(loaderStore.endLoading());
+    if (isErrorResponse(res)) {
+      yield put(
+        alertModalStore.errorAlert({
+          res: res,
+        }),
+      );
+      return;
+    }
+    const host = res as Host;
+    yield put(hostStore.actions.setSelect(host));
+  } catch (err) {
+    if (isErrorResponse(err)) {
+      if (err instanceof ErrorResponse) {
+        err = err.serialize();
+      }
+    }
+    yield put(loaderStore.endLoading());
+    yield put(
+      alertModalStore.errorAlert({
+        res: err,
+        fallback: {
+          title: 'Hosts',
+          message: 'Host 조회 실패',
+        },
+      }),
+    );
+  }
+}
+
 function* create(action: PayloadAction<CreateHost>) {
   yield put(loaderStore.startLoading());
   try {
@@ -222,6 +259,7 @@ function* watchSaga() {
     hostStore.actions.getSearchDescriptions,
     getSearchDescriptions,
   );
+  yield takeLatest(hostStore.actions.find, find);
   yield takeLatest(hostStore.actions.create, create);
 }
 
