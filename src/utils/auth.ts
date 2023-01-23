@@ -99,7 +99,7 @@ const authCheck = (): boolean => {
 
   if (token?.token) {
     let isValid = false;
-    console.debug('hi');
+
     const tokenInfo = auth.tokenInfo(
       auth.getToken()?.accessToken.token as string,
     );
