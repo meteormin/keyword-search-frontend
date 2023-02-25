@@ -3,11 +3,11 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderStore from 'store/features/common/loader';
 import alertModalStore from 'store/features/common/alertModal';
 import loginStore from 'store/features/auth';
-import makeClient, { isErrorResponse } from 'api';
+import makeClient, { isErrorResponse, serializeErrorResponse } from 'api';
 import AuthClient, { TokenRes } from 'api/clients/Auth';
 import { tokenInfo, Tokens, User } from 'utils/auth';
 import { AuthUser } from 'api/interfaces/Auth';
-import { ErrorResInterface, ErrorResponse } from 'api/base/ApiClient';
+import { ErrorResInterface } from 'api/base/ApiClient';
 
 const client = makeClient<AuthClient>(AuthClient);
 
@@ -28,10 +28,9 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
     yield put(loaderStore.endLoading());
 
     if (isErrorResponse(res)) {
-      const err = res as ErrorResponse;
       yield put(
         alertModalStore.errorAlert({
-          res: err.serialize(),
+          res: serializeErrorResponse(res),
           fallback: {
             title: '로그인',
             message: '아이디 또는 비밀번화 틀렸습니다.',
@@ -62,15 +61,11 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
     };
 
     yield put(loginStore.login({ token: tokens, user: user }));
-  } catch (error) {
+  } catch (err) {
     yield put(loaderStore.endLoading());
-    let err = error;
-    if (isErrorResponse(error)) {
-      err = (error as ErrorResponse).serialize();
-    }
     yield put(
       alertModalStore.errorAlert({
-        res: err,
+        res: serializeErrorResponse(err),
         fallback: {
           title: '로그인',
           message: '아이디 또는 비밀번화 틀렸습니다.',

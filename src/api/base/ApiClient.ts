@@ -191,8 +191,9 @@ export default class ApiClient {
           if (this.error.response.data.hasOwnProperty('failed_fields')) {
             const messages = [];
             for (const [key, value] of Object.entries(
-              error.response?.data.messages,
+              error.response?.data.failed_fields,
             )) {
+              console.debug(`failed_key: ${key}, failed_value: ${value}`);
               messages.push(value);
             }
             errorResponse.message = messages.join(', ');

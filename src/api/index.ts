@@ -1,4 +1,8 @@
-import ApiClient, { ErrorResponse, Token } from 'api/base/ApiClient';
+import ApiClient, {
+  ErrorResInterface,
+  ErrorResponse,
+  Token,
+} from 'api/base/ApiClient';
 import BaseClient from 'api/base/BaseClient';
 import { makePath } from 'utils/str';
 import { AxiosRequestHeaders } from 'axios';
@@ -25,6 +29,22 @@ export const isErrorResponse = (res: any): boolean => {
   }
 
   return 'status' in res && 'code' in res && 'message' in res;
+};
+
+export const serializeErrorResponse = (res: any): ErrorResInterface => {
+  if (res instanceof ErrorResponse) {
+    return res.serialize();
+  }
+
+  if ('status' in res && 'code' in res && 'message' in res) {
+    return res;
+  } else {
+    return {
+      status: 'Unknown Error',
+      code: 0,
+      message: 'Unknown Error',
+    };
+  }
 };
 
 /**

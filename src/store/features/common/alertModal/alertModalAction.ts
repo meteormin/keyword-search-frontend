@@ -1,6 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { ErrorResponse } from 'api/base/ApiClient';
+import { ErrorResInterface, ErrorResponse } from 'api/base/ApiClient';
 import { auth } from '../../../../helpers';
+import { isErrorResponse } from '../../../../api';
 
 export interface AlertModalState {
   title: string;
@@ -43,7 +44,7 @@ export default {
     const { res, refresh, fallback } = action.payload;
     state.show = true;
     state.refresh = refresh || false;
-    if (res instanceof ErrorResponse) {
+    if (isErrorResponse(res)) {
       state.title = res.status;
       state.message = res.message;
       if (res.code == 401) {

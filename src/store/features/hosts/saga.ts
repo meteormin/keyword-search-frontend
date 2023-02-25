@@ -2,7 +2,7 @@ import { call, fork, put, takeLatest } from 'redux-saga/effects';
 import loaderStore from 'store/features/common/loader';
 import alertModalStore from 'store/features/common/alertModal';
 import hostStore from 'store/features/hosts';
-import makeClient, { isErrorResponse } from 'api';
+import makeClient, { isErrorResponse, serializeErrorResponse } from 'api';
 import HostClient, {
   CreateHost,
   GetList,
@@ -10,12 +10,14 @@ import HostClient, {
   GetSearch,
   GetSearchDescriptions,
   GetSubjects,
+  PatchHost,
 } from 'api/clients/Hosts';
-import { ErrorResInterface, ErrorResponse } from 'api/base/ApiClient';
+import { ErrorResInterface } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Host } from 'api/interfaces/Hosts';
 import { Page } from 'api/interfaces/Common';
 import { auth } from 'helpers';
+import { useNavigate } from 'react-router-dom';
 
 const client = makeClient<HostClient>(HostClient, {
   token: auth.getToken()?.accessToken.token || '',
@@ -33,7 +35,7 @@ function* getList(action: PayloadAction<{ page: Page }>) {
     if (isErrorResponse(res)) {
       yield put(
         alertModalStore.errorAlert({
-          res: res,
+          res: serializeErrorResponse(res),
           fallback: {
             title: 'Hosts',
             message: 'Host 목록 조회 실패',
@@ -49,7 +51,7 @@ function* getList(action: PayloadAction<{ page: Page }>) {
     yield put(loaderStore.endLoading());
     yield put(
       alertModalStore.errorAlert({
-        res: err,
+        res: serializeErrorResponse(err),
         fallback: {
           title: 'Hosts',
           message: 'Host 목록 조회 실패',
@@ -71,7 +73,7 @@ function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
     if (isErrorResponse(res)) {
       yield put(
         alertModalStore.errorAlert({
-          res: res,
+          res: serializeErrorResponse(res),
           fallback: {
             title: 'Hosts',
             message: `Host ${action.payload.hostId} Search 목록 조회 실패`,
@@ -88,7 +90,7 @@ function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
     yield put(loaderStore.endLoading());
     yield put(
       alertModalStore.errorAlert({
-        res: err,
+        res: serializeErrorResponse(err),
         fallback: {
           title: 'Hosts',
           message: `Host ${action.payload.hostId} Search 목록 조회 실패`,
@@ -110,7 +112,7 @@ function* getSubjects(action: PayloadAction<{ page: Page }>) {
     if (isErrorResponse(res)) {
       yield put(
         alertModalStore.errorAlert({
-          res: res,
+          res: serializeErrorResponse(res),
           fallback: {
             title: 'Hosts',
             message: `Host subjects 조회 실패`,
@@ -127,7 +129,7 @@ function* getSubjects(action: PayloadAction<{ page: Page }>) {
     yield put(loaderStore.endLoading());
     yield put(
       alertModalStore.errorAlert({
-        res: err,
+        res: serializeErrorResponse(err),
         fallback: {
           title: 'Hosts',
           message: `Host subjects 조회 실패`,
@@ -151,7 +153,7 @@ function* getSearchDescriptions(
     if (isErrorResponse(res)) {
       yield put(
         alertModalStore.errorAlert({
-          res: res,
+          res: serializeErrorResponse(res),
           fallback: {
             title: 'Hosts',
             message: `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
@@ -168,7 +170,7 @@ function* getSearchDescriptions(
     yield put(loaderStore.endLoading());
     yield put(
       alertModalStore.errorAlert({
-        res: err,
+        res: serializeErrorResponse(err),
         fallback: {
           title: 'Hosts',
           message: `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
@@ -189,7 +191,7 @@ function* find(action: PayloadAction<number>) {
     if (isErrorResponse(res)) {
       yield put(
         alertModalStore.errorAlert({
-          res: res,
+          res: serializeErrorResponse(res),
         }),
       );
       return;
@@ -197,15 +199,10 @@ function* find(action: PayloadAction<number>) {
     const host = res as Host;
     yield put(hostStore.actions.setSelect(host));
   } catch (err) {
-    if (isErrorResponse(err)) {
-      if (err instanceof ErrorResponse) {
-        err = err.serialize();
-      }
-    }
     yield put(loaderStore.endLoading());
     yield put(
       alertModalStore.errorAlert({
-        res: err,
+        res: serializeErrorResponse(err),
         fallback: {
           title: 'Hosts',
           message: 'Host 조회 실패',
@@ -226,7 +223,7 @@ function* create(action: PayloadAction<CreateHost>) {
     if (isErrorResponse(res)) {
       yield put(
         alertModalStore.errorAlert({
-          res: res,
+          res: serializeErrorResponse(res),
           fallback: {
             title: 'Hosts',
             message: 'Host 생성 실패',
@@ -237,14 +234,64 @@ function* create(action: PayloadAction<CreateHost>) {
     }
     const host: Host = res as Host;
     yield put(hostStore.actions.setSelect(host));
+    yield put(
+      alertModalStore.showAlert({
+        title: 'Hosts',
+        message: 'Host 생성 성공',
+      }),
+    );
   } catch (err) {
     yield put(loaderStore.endLoading());
     yield put(
       alertModalStore.errorAlert({
-        res: err,
+        res: serializeErrorResponse(err),
         fallback: {
           title: 'Hosts',
           message: 'Host 생성 실패',
+        },
+      }),
+    );
+  }
+}
+
+function* patch(action: PayloadAction<{ id: number; host: PatchHost }>) {
+  yield put(loaderStore.startLoading());
+  try {
+    const res: Host | ErrorResInterface | null = yield call(
+      client.patch,
+      action.payload.id,
+      action.payload.host,
+    );
+    yield put(loaderStore.endLoading());
+    if (isErrorResponse(res)) {
+      yield put(
+        alertModalStore.errorAlert({
+          res: serializeErrorResponse(res),
+          fallback: {
+            title: 'Hosts',
+            message: 'Host 수정 실패',
+          },
+        }),
+      );
+      return;
+    }
+    const host: Host = res as Host;
+    yield put(hostStore.actions.setSelect(host));
+    yield put(
+      alertModalStore.showAlert({
+        title: 'Hosts',
+        message: 'Host 수정 성공',
+        refresh: true,
+      }),
+    );
+  } catch (err) {
+    yield put(loaderStore.endLoading());
+    yield put(
+      alertModalStore.errorAlert({
+        res: serializeErrorResponse(err),
+        fallback: {
+          title: 'Hosts',
+          message: 'Host 수정 실패',
         },
       }),
     );
@@ -261,6 +308,7 @@ function* watchSaga() {
   );
   yield takeLatest(hostStore.actions.find, find);
   yield takeLatest(hostStore.actions.create, create);
+  yield takeLatest(hostStore.actions.patch, patch);
 }
 
 export default function* Saga() {

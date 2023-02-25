@@ -10,6 +10,7 @@ import { HostListPage, EditHostPage, SearchListPage } from 'pages/hosts';
 import { guard } from 'helpers';
 import { User } from 'utils/auth';
 import { SearchPage } from 'pages/search';
+import CreateHostPage from '../pages/hosts/CreateHostPage';
 
 export interface RouterProps {
   isLogin: boolean;
@@ -55,6 +56,14 @@ const Router = ({ isLogin, authUser }: RouterProps) => {
             element={
               <guard.Protected auth={isLogin} redirect={'/login'}>
                 <HostListPage />
+              </guard.Protected>
+            }
+          />
+          <Route
+            path="create"
+            element={
+              <guard.Protected auth={isLogin} redirect={'/login'}>
+                <CreateHostPage />
               </guard.Protected>
             }
           />

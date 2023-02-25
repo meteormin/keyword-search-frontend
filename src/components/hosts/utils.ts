@@ -1,5 +1,5 @@
 import { Host } from 'api/interfaces/Hosts';
-import { FormHost } from 'components/hosts/HostCard';
+import { FormHost } from 'components/hosts/HostForm';
 
 export const useHostState = (origin: Host, setter: (host: FormHost) => any) => {
   let copy = Object.assign({}, origin);

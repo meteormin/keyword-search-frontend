@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Card from 'components/common/Card';
 import { Host } from 'api/interfaces/Hosts';
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import {
-  useHostState,
-  setFormHostByKey,
-  FormHostKeys,
-} from 'components/hosts/utils';
+import { useHostState } from 'components/hosts/utils';
+import HostForm, { FormHost } from 'components/hosts/HostForm';
 
 export interface HostCardProps {
   host: Host;
@@ -15,16 +12,6 @@ export interface HostCardProps {
   onChange?: (host: FormHost | null) => any;
   onEdit?: (host: FormHost) => any;
   onDelete?: (host: FormHost) => any;
-}
-
-export interface FormHost {
-  id: number;
-  userId: number;
-  subject?: string;
-  description?: string;
-  host?: string;
-  path?: string;
-  publish?: boolean;
 }
 
 const HostCard = ({
@@ -38,18 +25,24 @@ const HostCard = ({
   const [formHost, setFormHost] = useState<FormHost | null>(null);
   const setHost = useHostState(host, setFormHost);
 
+  const handleChange = (ch: FormHost | null) => {
+    if (ch) {
+      setHost(ch);
+    }
+  };
+
   const handleSearch = () => {
     navigate(`/hosts/${host.id}/search`);
   };
 
   const handleEdit = () => {
-    if (readOnly == undefined) {
+    if (readOnly) {
       navigate(`/hosts/${host.id}`);
       return;
     }
 
     if (onEdit && formHost != null) {
-      onEdit(host);
+      onEdit(formHost);
     }
   };
 
@@ -60,24 +53,13 @@ const HostCard = ({
     return;
   };
 
-  const styleCursor = () => {
-    if (readOnly != undefined) {
-      return { cursor: 'pointer' };
-    }
-  };
-
-  const handleFormChange = (
-    property: string,
-    value: string | number | boolean,
-  ) => {
-    let ch = Object.assign({}, formHost);
-    ch = setFormHostByKey(ch, property, value);
-    setHost(ch);
-  };
+  useEffect(() => {
+    setHost(host);
+  }, []);
 
   useEffect(() => {
-    setFormHost(host);
-  }, []);
+    setHost(host);
+  }, [host]);
 
   useEffect(() => {
     if (onChange) {
@@ -102,69 +84,7 @@ const HostCard = ({
         </Row>
       }
     >
-      <div style={styleCursor()}>
-        <Form>
-          <Form.Group className="mb-3" controlId="subject">
-            <Form.Label>Subject</Form.Label>
-            <Form.Control
-              type="text"
-              readOnly={readOnly != undefined}
-              value={formHost?.subject || ''}
-              onChange={(e) => {
-                handleFormChange(FormHostKeys.subject, e.target.value);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="description">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              readOnly={readOnly != undefined}
-              value={formHost?.description || ''}
-              onChange={(e) => {
-                handleFormChange(FormHostKeys.description, e.target.value);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="host">
-            <Form.Label>host</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="host"
-              readOnly={readOnly != undefined}
-              value={formHost?.host || ''}
-              onChange={(e) => {
-                handleFormChange(FormHostKeys.host, e.target.value);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="path">
-            <Form.Label>path</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="path"
-              readOnly={readOnly != undefined}
-              value={formHost?.path || ''}
-              onChange={(e) => {
-                handleFormChange(FormHostKeys.path, e.target.value);
-              }}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="publish">
-            <Form.Check
-              type="switch"
-              disabled={readOnly != undefined}
-              id="publish"
-              label="Publish"
-              checked={!!formHost?.publish}
-              onChange={(e) => {
-                handleFormChange(FormHostKeys.publish, e.target.value);
-              }}
-            />
-          </Form.Group>
-        </Form>
-      </div>
+      <HostForm host={host} onChange={handleChange} readOnly={readOnly} />
       <hr />
       <Row>
         <Col>
