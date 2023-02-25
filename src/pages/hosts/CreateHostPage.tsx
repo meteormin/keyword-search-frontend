@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const CreateHostPage = () => {
   const dispatch = useDispatch();
-  const naviagte = useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormHost | null>(null);
   const { select } = useSelector(hostStore.getState);
   const { show } = useSelector(alertStore.getAlertState);
@@ -54,7 +54,7 @@ const CreateHostPage = () => {
 
   useEffect(() => {
     if (select && !show) {
-      naviagte(`/hosts/${select.id}`);
+      navigate(`/hosts/${select.id}`);
     }
   }, [select, show]);
 
