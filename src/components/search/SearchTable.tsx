@@ -46,7 +46,7 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   };
 
   const handleClickCreate = () => {
-    setFormData(null);
+    setFormData({ hostId: hostId });
     setAction('create');
     setShow(true);
   };

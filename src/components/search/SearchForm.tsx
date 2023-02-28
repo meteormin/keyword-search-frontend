@@ -3,11 +3,11 @@ import { FormSearchKeys, setFormSearchByKey } from './utils';
 import { Form } from 'react-bootstrap';
 
 export interface FormSearch {
-  id: number;
-  publish: boolean;
-  query: string;
-  queryKey: string;
-  description: string;
+  id?: number;
+  publish?: boolean;
+  query?: string;
+  queryKey?: string;
+  description?: string;
   hostId: number;
 }
 
@@ -70,12 +70,21 @@ const SearchForm = ({ readOnly, onChange, search }: SearchFormProps) => {
           <Form.Label>Query</Form.Label>
           <Form.Control
             type="text"
-            placeholder="host"
+            placeholder="query"
             readOnly={readOnly != undefined}
             value={formData?.query || ''}
             onChange={(e) => {
               handleFormChange(FormSearchKeys.query, e.target.value);
             }}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="host">
+          <Form.Label>HostId</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="query"
+            readOnly={true}
+            value={formData?.hostId || ''}
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="publish">

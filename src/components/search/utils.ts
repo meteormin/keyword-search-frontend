@@ -68,21 +68,21 @@ export const apiCall = (dispatch: any): Dispatcher => {
     },
     create: (data: FormSearch) => {
       const create: CreateSearch = {
-        publish: data.publish,
-        query: data.query,
-        queryKey: data.queryKey,
-        description: data.description,
+        publish: data?.publish || false,
+        query: data?.query || '',
+        queryKey: data?.queryKey || '',
+        description: data?.description || '',
         hostId: data.hostId,
       };
 
       dispatch(searchStore.actions.create(create));
     },
-    update: (id: number, data: UpdateSearch) => {
+    update: (id: number, data: FormSearch) => {
       const update: UpdateSearch = {
-        publish: data.publish,
-        query: data.query,
-        queryKey: data.queryKey,
-        description: data.description,
+        publish: data?.publish || false,
+        query: data?.query || '',
+        queryKey: data?.queryKey || '',
+        description: data?.description || '',
         hostId: data.hostId,
       };
 
