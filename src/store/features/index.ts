@@ -7,6 +7,8 @@ import alertModalReducer from 'store/features/common/alertModal/alertModalReduce
 import loginSaga from 'store/features/auth/loginSaga';
 import hostsReducer from 'store/features/hosts/reducer';
 import hostSaga from 'store/features/hosts/saga';
+import searchReducer from 'store/features/search/reducer';
+import searchSaga from 'store/features/search/saga';
 
 export const rootReducer = combineReducers({
   // reducers
@@ -14,8 +16,9 @@ export const rootReducer = combineReducers({
   login: loginReducer,
   alertModal: alertModalReducer,
   hosts: hostsReducer,
+  search: searchReducer,
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([call(loginSaga), call(hostSaga)]);
+  yield all([call(loginSaga), call(hostSaga), call(searchSaga)]);
 };

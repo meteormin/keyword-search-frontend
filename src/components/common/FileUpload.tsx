@@ -1,7 +1,6 @@
 import React, { ChangeEvent, Fragment, useState } from 'react';
 import { Form } from 'react-bootstrap';
 import ReactSelect from 'react-select';
-import CheckBoxOption from 'components/common/CheckBoxOption';
 
 export interface FilUploadProps {
   readOnly: boolean;

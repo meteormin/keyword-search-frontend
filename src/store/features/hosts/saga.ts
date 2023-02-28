@@ -17,7 +17,6 @@ import { PayloadAction } from '@reduxjs/toolkit';
 import { Host } from 'api/interfaces/Hosts';
 import { Page } from 'api/interfaces/Common';
 import { auth } from 'helpers';
-import { useNavigate } from 'react-router-dom';
 
 const client = makeClient<HostClient>(HostClient, {
   token: auth.getToken()?.accessToken.token || '',

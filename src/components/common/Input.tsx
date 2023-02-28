@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component, FocusEvent } from 'react';
+import React, { ChangeEvent, FocusEvent, useState, useEffect } from 'react';
 
 export type InputProp = {
   type: 'text' | 'email' | 'password';
@@ -12,73 +12,58 @@ export type InputProp = {
   onBlur?: (e: FocusEvent<HTMLInputElement>) => any;
 };
 
-export type InputState = InputProp;
+function Input(props: InputProp) {
+  const [state, setState] = useState<InputProp>({
+    type: 'text',
+    name: '',
+    id: '',
+    value: '',
+  });
 
-class Input extends Component<InputProp, InputState> {
-  constructor(props: InputProp) {
-    super(props);
-    this.state = {
-      type: 'text',
-      name: '',
-      id: '',
-      value: '',
-    };
-  }
+  useEffect(() => {
+    setState(props);
+  }, [props]);
 
-  componentDidMount() {
-    this.setState(this.props);
-  }
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, value: e.target.value });
 
-  componentDidUpdate(prevProps: Readonly<InputProp>) {
-    if (prevProps.value !== this.props.value) {
-      this.setState(this.props);
-    }
-  }
-
-  onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      value: e.target.value,
-    });
-
-    if (this.state.onChange) {
-      this.state.onChange(e);
+    if (state.onChange) {
+      state.onChange(e);
     }
   };
 
-  makeLabel() {
-    if (this.state.label) {
+  const makeLabel = () => {
+    if (state.label) {
       return (
         <label
-          key={'label' + this.state.id}
-          htmlFor={this.state.id}
+          key={'label' + state.id}
+          htmlFor={state.id}
           className="form-label"
         >
-          {this.state.label}
+          {state.label}
         </label>
       );
     }
     return null;
-  }
+  };
 
-  render() {
-    return (
-      <div key={'div' + this.state.id} className="form-group">
-        {this.makeLabel()}
-        <input
-          key={'input' + this.state.id}
-          className="form-control"
-          type={this.state.type}
-          name={this.state.name}
-          id={this.state.id}
-          value={this.state.value || ''}
-          onChange={this.onChange}
-          readOnly={this.state?.readonly || false}
-          placeholder={this.state.placeholder || ''}
-          onBlur={this.props.onBlur}
-        />
-      </div>
-    );
-  }
+  return (
+    <div key={'div' + state.id} className="form-group">
+      {makeLabel()}
+      <input
+        key={'input' + state.id}
+        className="form-control"
+        type={state.type}
+        name={state.name}
+        id={state.id}
+        value={state.value || ''}
+        onChange={onChange}
+        readOnly={state?.readonly || false}
+        placeholder={state.placeholder || ''}
+        onBlur={props.onBlur}
+      />
+    </div>
+  );
 }
 
 export default Input;

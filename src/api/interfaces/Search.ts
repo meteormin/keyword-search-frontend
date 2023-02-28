@@ -7,5 +7,5 @@ export interface Search {
   queryKey: string;
   shortUrl: string;
   description: string;
-  hostId: string;
+  hostId: number;
 }

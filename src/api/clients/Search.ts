@@ -18,7 +18,7 @@ export interface CreateSearch {
   query: string;
   queryKey: string;
   description: string;
-  hostId: string;
+  hostId: number;
 }
 
 export interface UpdateSearch extends CreateSearch {
@@ -30,11 +30,11 @@ export interface PatchSearch {
   query?: string;
   queryKey?: string;
   description?: string;
-  hostId: string;
+  hostId: number;
 }
 
 class SearchClient extends BaseClient {
-  static readonly prefix = 'search';
+  static readonly prefix = '/api/search';
 
   public all = async (
     params: AllParam,

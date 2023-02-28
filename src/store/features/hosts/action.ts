@@ -71,6 +71,9 @@ const action = {
   ) => {
     state.searchDescriptions = action.payload;
   },
+  setPage: (state: HostState, action: PayloadAction<Page>) => {
+    state.page = action.payload;
+  },
 
   // api req
   getList: (state: HostState, action: PayloadAction<{ page: Page }>) => {

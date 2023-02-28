@@ -1,5 +1,4 @@
 import React from 'react';
-import { Component } from 'react';
 import { Table } from 'react-bootstrap';
 
 export interface DynamicTableProps {
@@ -16,18 +15,18 @@ export interface DynamicSchema {
   };
 }
 
-class DynamicTable extends Component<DynamicTableProps> {
-  columnsHeader() {
+const DynamicTable = (props: DynamicTableProps) => {
+  const columnsHeader = () => {
     const columnsElement = [];
 
-    for (const [key, column] of Object.entries(this.props.schema)) {
+    for (const [key, column] of Object.entries(props.schema)) {
       columnsElement.push(
         <th
           scope="col"
           key={'col_' + key}
           onClick={() => {
             if (column.onClick) {
-              column.onClick(this.props.records);
+              column.onClick(props.records);
             }
           }}
         >
@@ -37,22 +36,20 @@ class DynamicTable extends Component<DynamicTableProps> {
     }
 
     return <tr className="text-center align-middle">{columnsElement}</tr>;
-  }
+  };
 
-  onClick = (record: any) => {
-    if (this.props.onClick) {
-      this.props.onClick(record);
+  const onClick = (record: any) => {
+    if (props.onClick) {
+      props.onClick(record);
     }
-
-    return;
   };
 
-  hasOnClick = (param: any) => {
-    return param.hasOwnProperty('onClick');
+  const hasOnClick = (param: any): boolean => {
+    return 'onClick' in param;
   };
 
-  addCursor = (param: any) => {
-    if (this.hasOnClick(param)) {
+  const addCursor = (param: any) => {
+    if (hasOnClick(param)) {
       return {
         cursor: 'pointer',
       };
@@ -61,19 +58,19 @@ class DynamicTable extends Component<DynamicTableProps> {
     return {};
   };
 
-  records() {
+  const records = () => {
     let rowsElement = [];
     const records: JSX.Element[] = [];
 
-    this.props.records.forEach((row, index) => {
+    props.records.forEach((row, index) => {
       rowsElement = [];
-      for (const [key, column] of Object.entries(this.props.schema)) {
+      for (const [key, column] of Object.entries(props.schema)) {
         if (column.primaryKey) {
           rowsElement.push(
             <th
               scope="row"
               key={key}
-              style={this.addCursor(column)}
+              style={addCursor(column)}
               onClick={() => {
                 if (column.onClick) {
                   column.onClick(row);
@@ -83,7 +80,7 @@ class DynamicTable extends Component<DynamicTableProps> {
               {row[key]}
             </th>,
           );
-        } else if (row.hasOwnProperty(key)) {
+        } else if (key in row) {
           rowsElement.push(
             <td
               key={key}
@@ -102,8 +99,8 @@ class DynamicTable extends Component<DynamicTableProps> {
         <tr
           key={'tr_' + index.toString()}
           className="text-center"
-          onClick={() => this.onClick(row)}
-          style={this.addCursor(this.props)}
+          onClick={() => onClick(row)}
+          style={addCursor(props)}
         >
           {rowsElement}
         </tr>,
@@ -111,16 +108,14 @@ class DynamicTable extends Component<DynamicTableProps> {
     });
 
     return records;
-  }
+  };
 
-  render() {
-    return (
-      <Table responsive="sm" hover className={'align-content-center'}>
-        <thead className={'table-light'}>{this.columnsHeader()}</thead>
-        <tbody>{this.records()}</tbody>
-      </Table>
-    );
-  }
-}
+  return (
+    <Table responsive="sm" hover className={'align-content-center'}>
+      <thead className={'table-light'}>{columnsHeader()}</thead>
+      <tbody>{records()}</tbody>
+    </Table>
+  );
+};
 
 export default DynamicTable;
