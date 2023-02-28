@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import SearchForm, { FormSearch } from './SearchForm';
 import { apiCall } from 'components/search/utils';
@@ -25,7 +25,6 @@ const ActionBtn = ({
         return dispatcher.create(data);
       case 'update':
         return data.id ? dispatcher.patch(data.id, data) : null;
-
       case 'delete':
         return data.id ? dispatcher.delete(data.id) : null;
     }
