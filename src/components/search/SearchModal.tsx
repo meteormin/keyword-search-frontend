@@ -24,9 +24,10 @@ const ActionBtn = ({
       case 'create':
         return dispatcher.create(data);
       case 'update':
-        return dispatcher.patch(data.id, data);
+        return data.id ? dispatcher.patch(data.id, data) : null;
+
       case 'delete':
-        return dispatcher.delete(data.id);
+        return data.id ? dispatcher.delete(data.id) : null;
     }
   };
 
