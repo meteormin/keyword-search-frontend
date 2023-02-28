@@ -1,7 +1,5 @@
-import { Search } from 'api/interfaces/Search';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { CreateSearch, PatchSearch, UpdateSearch } from 'api/clients/Search';
-import { number } from 'prop-types';
 
 export interface SearchState {
   selectId: number | null;

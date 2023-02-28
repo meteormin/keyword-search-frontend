@@ -1,5 +1,5 @@
 import DynamicTable from 'components/common/DaynamicTable';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SearchTableSchema, schema } from 'components/search/schema';
 import Card from 'components/common/Card';
 import { apiCall, defaultOnClick } from 'components/search/utils';

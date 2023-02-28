@@ -1,7 +1,6 @@
 import { SearchTableSchema } from 'components/search/schema';
 import { config, auth } from 'helpers';
 import { FormSearch } from 'components/search/SearchForm';
-import { useDispatch } from 'react-redux';
 import searchStore from 'store/features/search';
 import { CreateSearch, PatchSearch, UpdateSearch } from 'api/clients/Search';
 import hostStore from 'store/features/hosts';
