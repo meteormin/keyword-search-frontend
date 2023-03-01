@@ -101,10 +101,10 @@ export const api = (apiConfig?: ApiConfig): ApiClient => {
   return client;
 };
 
-function makeClient<T extends BaseClient>(
+const makeClient = <T extends BaseClient>(
   client: ClientType<T>,
   token?: Token | null,
-): T {
+): T => {
   let withToken: Token | undefined;
   if (token) {
     withToken = {
@@ -119,6 +119,6 @@ function makeClient<T extends BaseClient>(
       token: withToken,
     }),
   );
-}
+};
 
 export default makeClient;
