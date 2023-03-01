@@ -1,7 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { ErrorResInterface, ErrorResponse } from 'api/base/ApiClient';
-import { auth } from '../../../../helpers';
-import { isErrorResponse } from '../../../../api';
+import { auth } from 'helpers';
+import { isErrorResponse } from 'api';
 
 export interface AlertModalState {
   title: string;

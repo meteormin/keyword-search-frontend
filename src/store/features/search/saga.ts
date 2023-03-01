@@ -1,17 +1,21 @@
-import { call, fork, put, takeLatest } from 'redux-saga/effects';
-import loaderStore from 'store/features/common/loader';
-import alertModalStore from 'store/features/common/alertModal';
+import { call, fork, takeLatest } from 'redux-saga/effects';
 import searchStore from 'store/features/search';
-import makeClient, { isErrorResponse, serializeErrorResponse } from 'api';
+import makeClient from 'api';
 import SearchClient, {
   CreateSearch,
   UpdateSearch,
   PatchSearch,
 } from 'api/clients/Search';
 import { Search } from 'api/interfaces/Search';
-import { ErrorResInterface } from 'api/base/ApiClient';
+import { ApiResponse, ErrorResInterface } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { auth } from 'helpers';
+import {
+  putEndLoading,
+  putErrorAlert,
+  putShowAlert,
+  putStartLoading,
+} from '../index';
 
 const client = makeClient<SearchClient>(SearchClient, {
   token: auth.getToken()?.accessToken.token || '',
@@ -19,162 +23,83 @@ const client = makeClient<SearchClient>(SearchClient, {
 });
 
 function* create(action: PayloadAction<CreateSearch>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: Search | ErrorResInterface | null = yield call(
+    const res: ApiResponse<Search | ErrorResInterface> = yield call(
       client.create,
       action.payload,
     );
 
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Search',
-            message: 'Search 수정 실패',
-          },
-        }),
-      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Search', 'Search 생성 실패');
       return;
     }
-    yield put(
-      alertModalStore.showAlert({
-        title: 'Search',
-        message: 'Search 생성 성공',
-        refresh: true,
-      }),
-    );
+    yield putShowAlert('Search', 'Search 생성 성공', true);
   } catch (e) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(e),
-        fallback: {
-          title: 'Search',
-          message: 'Search 생성 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(e, 'Search', 'Search 생성 실패');
   }
 }
 
 function* update(action: PayloadAction<{ id: number; update: UpdateSearch }>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: Search | ErrorResInterface | null = yield call(
+    const res: ApiResponse<Search | ErrorResInterface> = yield call(
       client.update,
       action.payload.id,
       action.payload.update,
     );
 
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Search',
-            message: 'Search 수정 실패',
-          },
-        }),
-      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Search', 'Search 수정 실패');
       return;
     }
-
-    yield put(
-      alertModalStore.showAlert({
-        title: 'Search',
-        message: 'Search 수정 성공',
-        refresh: true,
-      }),
-    );
+    yield putShowAlert('Search', 'Search 수정 성공', true);
   } catch (e) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(e),
-        fallback: {
-          title: 'Search',
-          message: 'Search 수정 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(e, 'Search', 'Search 수정 실패');
   }
 }
 
 function* patch(action: PayloadAction<{ id: number; patch: PatchSearch }>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: Search | ErrorResInterface | null = yield call(
+    const res: ApiResponse<Search | ErrorResInterface> = yield call(
       client.patch,
       action.payload.id,
       action.payload.patch,
     );
 
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Search',
-            message: 'Search 수정 실패',
-          },
-        }),
-      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Search', 'Search 수정 실패');
       return;
     }
-
-    yield put(
-      alertModalStore.showAlert({
-        title: 'Search',
-        message: 'Search 수정 성공',
-        refresh: true,
-      }),
-    );
+    yield putShowAlert('Search', 'Search 수정 성공', true);
   } catch (e) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(e),
-        fallback: {
-          title: 'Search',
-          message: 'Search 수정 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(e, 'Search', 'Search 수정 실패');
   }
 }
 
 function* destroy(action: PayloadAction<number>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: Search | ErrorResInterface | null = yield call(
+    const res: ApiResponse<Search | ErrorResInterface> = yield call(
       client.delete,
       action.payload,
     );
-    console.debug(res);
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.showAlert({
-        title: 'Search',
-        message: 'Search 삭제 성공',
-        refresh: true,
-      }),
-    );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Search', 'Search 삭제 실패');
+      return;
+    }
+    yield putShowAlert('Search', 'Search 삭제 성공');
   } catch (e) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(e),
-        fallback: {
-          title: 'Search',
-          message: 'Search 삭제 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(e, 'Search', 'Search 삭제 실패');
   }
 }
 

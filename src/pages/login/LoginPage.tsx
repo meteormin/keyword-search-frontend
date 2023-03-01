@@ -1,33 +1,28 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import loginModule from 'store/features/auth';
+import { useAuthDispatch, useAuthState } from 'store/features/auth';
 import LoginForm from 'components/login/LoginForm';
-import { getLoginState } from 'store/features/auth/loginReducer';
-import alertModalModule from 'store/features/common/alertModal';
+import { useAlertModalDispatch } from 'store/features/common/alertModal';
 
 const LoginPage = () => {
-  const { id, password } = useSelector(getLoginState);
-
-  const dispatch = useDispatch();
-
+  const { id, password } = useAuthState();
+  const authDispatcher = useAuthDispatch();
+  const alertModalDispatcher = useAlertModalDispatch();
   const onSubmit = () => {
     if (id && password) {
-      dispatch(loginModule.loginSubmit({ id, password }));
+      authDispatcher.login(id, password);
     } else {
-      dispatch(
-        alertModalModule.showAlert({
-          title: '로그인',
-          message: '아이디 또는 비밀번호를 입력해주세요.',
-        }),
+      alertModalDispatcher.showAlert(
+        '로그인',
+        '아이디 또는 비밀번호를 입력해주세요.',
       );
     }
   };
 
   const onChangeId = (e: { target: HTMLInputElement }) =>
-    dispatch(loginModule.changeId(e.target.value));
+    authDispatcher.changeId(e.target.value);
 
   const onChangePass = (e: { target: HTMLInputElement }) =>
-    dispatch(loginModule.changePass(e.target.value));
+    authDispatcher.changePass(e.target.value);
 
   return (
     <LoginForm>

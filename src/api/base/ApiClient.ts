@@ -11,9 +11,10 @@ export interface Token {
   token: string | null;
 }
 
-export interface ApiResponse {
+export interface ApiResponse<T = any, D = any> extends AxiosResponse<T, D> {
+  data: T;
+  config: AxiosRequestConfig<D>;
   isSuccess: boolean;
-  res: AxiosResponse<any, any> | null;
   error: ErrorResInterface | null;
 }
 
@@ -170,9 +171,10 @@ export default class ApiClient {
     try {
       this._response = await res;
       this._isSuccess = true;
+
       return {
+        ...(this.response as AxiosResponse<any, any>),
         isSuccess: true,
-        res: this.response,
         error: null,
       };
     } catch (error: any | AxiosError) {
@@ -204,8 +206,8 @@ export default class ApiClient {
       }
 
       return {
+        ...(error.response as AxiosResponse<ErrorResInterface, any>),
         isSuccess: false,
-        res: error,
         error: new ErrorResponse(errorResponse),
       };
     }
@@ -283,7 +285,7 @@ export default class ApiClient {
    *
    * @param {string} path
    * @param {*} data
-   * @returns {Promise<ApiResponse>|*|null>}
+   * @returns {Promise<ApiResponse>}
    */
   put(path: string, data: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
@@ -298,7 +300,7 @@ export default class ApiClient {
    *
    * @param {string} path
    * @param {*} data
-   * @returns {Promise<ApiResponse>|*|null>}
+   * @returns {Promise<ApiResponse>}
    */
   patch(path: string, data: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};
@@ -313,7 +315,7 @@ export default class ApiClient {
    *
    * @param {string} path
    * @param {*} data
-   * @returns {Promise<ApiResponse>|*|null>}
+   * @returns {Promise<ApiResponse>>}
    */
   delete(path: string, data: object = {}): Promise<ApiResponse> {
     const config: AxiosRequestConfig = {};

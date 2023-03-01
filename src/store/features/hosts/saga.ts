@@ -1,8 +1,6 @@
 import { call, fork, put, takeLatest } from 'redux-saga/effects';
-import loaderStore from 'store/features/common/loader';
-import alertModalStore from 'store/features/common/alertModal';
 import hostStore from 'store/features/hosts';
-import makeClient, { isErrorResponse, serializeErrorResponse } from 'api';
+import makeClient from 'api';
 import HostClient, {
   CreateHost,
   GetList,
@@ -12,11 +10,17 @@ import HostClient, {
   GetSubjects,
   PatchHost,
 } from 'api/clients/Hosts';
-import { ErrorResInterface } from 'api/base/ApiClient';
+import { ApiResponse, ErrorResInterface } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Host } from 'api/interfaces/Hosts';
 import { Page } from 'api/interfaces/Common';
 import { auth } from 'helpers';
+import {
+  putEndLoading,
+  putErrorAlert,
+  putShowAlert,
+  putStartLoading,
+} from '../index';
 
 const client = makeClient<HostClient>(HostClient, {
   token: auth.getToken()?.accessToken.token || '',
@@ -24,276 +28,175 @@ const client = makeClient<HostClient>(HostClient, {
 });
 
 function* getList(action: PayloadAction<{ page: Page }>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: GetList | ErrorResInterface | null = yield call(
+    const res: ApiResponse<GetList | ErrorResInterface> = yield call(
       client.getList,
       action.payload.page as GetListParam,
     );
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Hosts',
-            message: 'Host 목록 조회 실패',
-          },
-        }),
-      );
+    yield putEndLoading();
+    console.log(res);
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Hosts', 'Host 목록 조회 실패');
       return;
     }
-    const list = res as GetList;
+    const list = res.data as GetList;
 
     yield put(hostStore.actions.setList(list));
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: 'Hosts',
-          message: 'Host 목록 조회 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(err, 'Hosts', 'Host 목록 조회 실패');
   }
 }
 
 function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: GetSearch | ErrorResInterface | null = yield call(
+    const res: ApiResponse<GetSearch | ErrorResInterface> = yield call(
       client.getSearch,
       action.payload.hostId,
       action.payload.page,
     );
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Hosts',
-            message: `Host ${action.payload.hostId} Search 목록 조회 실패`,
-          },
-        }),
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(
+        res.data,
+        'Hosts',
+        `Host ${action.payload.hostId} Search 목록 조회 실패`,
       );
       return;
     }
 
-    const list = res as GetSearch;
+    const list = res.data as GetSearch;
 
     yield put(hostStore.actions.setSearch(list));
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: 'Hosts',
-          message: `Host ${action.payload.hostId} Search 목록 조회 실패`,
-        },
-      }),
+    yield putEndLoading();
+    yield putErrorAlert(
+      err,
+      'Hosts',
+      `Host ${action.payload.hostId} Search 목록 조회 실패`,
     );
   }
 }
 
 function* getSubjects(action: PayloadAction<{ page: Page }>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: GetSubjects | ErrorResInterface | null = yield call(
+    const res: ApiResponse<GetSubjects | ErrorResInterface> = yield call(
       client.getSubjects,
       action.payload.page,
     );
 
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Hosts',
-            message: `Host subjects 조회 실패`,
-          },
-        }),
-      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Hosts', 'Hosts Subjects 조회 실패');
       return;
     }
 
-    const list = res as GetSubjects;
+    const list = res.data as GetSubjects;
 
     yield put(hostStore.actions.setSubjects(list));
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: 'Hosts',
-          message: `Host subjects 조회 실패`,
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(err, 'Hosts', 'Hosts Subjects 조회 실패');
   }
 }
 
 function* getSearchDescriptions(
   action: PayloadAction<{ hostId: number; page: Page }>,
 ) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: GetSearchDescriptions | ErrorResInterface | null = yield call(
-      client.getSearchDescriptions,
-      action.payload.hostId,
-      action.payload.page,
-    );
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Hosts',
-            message: `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
-          },
-        }),
+    const res: ApiResponse<GetSearchDescriptions | ErrorResInterface> =
+      yield call(
+        client.getSearchDescriptions,
+        action.payload.hostId,
+        action.payload.page,
+      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(
+        res.data,
+        'Hosts',
+        `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
       );
       return;
     }
 
-    const list = res as GetSearchDescriptions;
+    const list = res.data as GetSearchDescriptions;
 
     yield put(hostStore.actions.setSearchDescriptions(list));
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: 'Hosts',
-          message: `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
-        },
-      }),
+    yield putEndLoading();
+    yield putErrorAlert(
+      err,
+      'Hosts',
+      `Host ${action.payload.hostId} Search Description 목록 조회 실패`,
     );
   }
 }
 
 function* find(action: PayloadAction<number>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: Host | ErrorResInterface | null = yield call(
+    const res: ApiResponse<Host | ErrorResInterface> = yield call(
       client.find,
       action.payload,
     );
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-        }),
-      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Hosts', 'Host 조회 실패');
       return;
     }
-    const host = res as Host;
+    const host = res.data as Host;
     yield put(hostStore.actions.setSelect(host));
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: 'Hosts',
-          message: 'Host 조회 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(err, 'Hosts', 'Host 조회 실패');
   }
 }
 
 function* create(action: PayloadAction<CreateHost>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: Host | ErrorResInterface | null = yield call(
+    const res: ApiResponse<Host | ErrorResInterface> = yield call(
       client.create,
       action.payload,
     );
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Hosts',
-            message: 'Host 생성 실패',
-          },
-        }),
-      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Hosts', 'Host 생성 실패');
       return;
     }
-    const host: Host = res as Host;
+    const host: Host = res.data as Host;
     yield put(hostStore.actions.setSelect(host));
-    yield put(
-      alertModalStore.showAlert({
-        title: 'Hosts',
-        message: 'Host 생성 성공',
-      }),
-    );
+    yield putShowAlert('Hosts', 'Host 생성 성공', true);
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: 'Hosts',
-          message: 'Host 생성 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(err, 'Hosts', 'Host 생성 실패');
   }
 }
 
 function* patch(action: PayloadAction<{ id: number; host: PatchHost }>) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
   try {
-    const res: Host | ErrorResInterface | null = yield call(
+    const res: ApiResponse<Host | ErrorResInterface> = yield call(
       client.patch,
       action.payload.id,
       action.payload.host,
     );
-    yield put(loaderStore.endLoading());
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: 'Hosts',
-            message: 'Host 수정 실패',
-          },
-        }),
-      );
+    yield putEndLoading();
+    if (!res.isSuccess) {
+      yield putErrorAlert(res.data, 'Hosts', 'Host 수정 실패');
       return;
     }
-    const host: Host = res as Host;
+    const host: Host = res.data as Host;
     yield put(hostStore.actions.setSelect(host));
-    yield put(
-      alertModalStore.showAlert({
-        title: 'Hosts',
-        message: 'Host 수정 성공',
-        refresh: true,
-      }),
-    );
+    yield putShowAlert('Hosts', 'Host 수정 성공', true);
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: 'Hosts',
-          message: 'Host 수정 실패',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(err, 'Hosts', 'Host 수정 실패');
   }
 }
 

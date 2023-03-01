@@ -1,18 +1,17 @@
 // sage
 import { call, fork, put, takeLatest } from 'redux-saga/effects';
-import loaderStore from 'store/features/common/loader';
-import alertModalStore from 'store/features/common/alertModal';
 import loginStore from 'store/features/auth';
-import makeClient, { isErrorResponse, serializeErrorResponse } from 'api';
+import makeClient from 'api';
 import AuthClient, { TokenRes } from 'api/clients/Auth';
 import { tokenInfo, Tokens, User } from 'utils/auth';
 import { AuthUser } from 'api/interfaces/Auth';
-import { ErrorResInterface } from 'api/base/ApiClient';
+import { ApiResponse, ErrorResInterface } from 'api/base/ApiClient';
+import { putEndLoading, putErrorAlert, putStartLoading } from 'store/features';
 
 const client = makeClient<AuthClient>(AuthClient);
 
 function* loginApiSaga(action: { payload: { id: string; password: string } }) {
-  yield put(loaderStore.startLoading());
+  yield putStartLoading();
 
   try {
     const loginParam = {
@@ -20,27 +19,23 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
       password: action.payload.password,
     };
 
-    const res: TokenRes | ErrorResInterface | null = yield call(
+    const res: ApiResponse<TokenRes | ErrorResInterface> = yield call(
       client.token,
       loginParam,
     );
 
-    yield put(loaderStore.endLoading());
+    yield putEndLoading();
 
-    if (isErrorResponse(res)) {
-      yield put(
-        alertModalStore.errorAlert({
-          res: serializeErrorResponse(res),
-          fallback: {
-            title: '로그인',
-            message: '아이디 또는 비밀번화 틀렸습니다.',
-          },
-        }),
+    if (!res.isSuccess) {
+      yield putErrorAlert(
+        res.data,
+        '로그인',
+        '아이디 또는 비밀번호가 틀렸습니다.',
       );
       return;
     }
 
-    const tokenRes: TokenRes = res as TokenRes;
+    const tokenRes: TokenRes = res.data as TokenRes;
 
     const tokenInfoObj = tokenInfo(tokenRes.token);
 
@@ -49,7 +44,12 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
       expiresIn: tokenInfoObj?.expiresIn || 0,
     };
 
-    const authUser: AuthUser = yield call(client.me, tokens.accessToken);
+    const getMe: ApiResponse<AuthUser | ErrorResInterface> = yield call(
+      client.me,
+      tokens.accessToken,
+    );
+
+    const authUser = getMe.data as AuthUser;
     const user: User = {
       id: authUser.id,
       username: authUser.username,
@@ -62,22 +62,13 @@ function* loginApiSaga(action: { payload: { id: string; password: string } }) {
 
     yield put(loginStore.login({ token: tokens, user: user }));
   } catch (err) {
-    yield put(loaderStore.endLoading());
-    yield put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(err),
-        fallback: {
-          title: '로그인',
-          message: '아이디 또는 비밀번화 틀렸습니다.',
-        },
-      }),
-    );
+    yield putEndLoading();
+    yield putErrorAlert(err, '로그인', '아이디 또는 비밀번호가 틀렸습니다.');
   }
 }
 
 function* logoutSaga() {
   yield call(client.revoke);
-
   yield call(() => {
     location.href = '/login';
   });

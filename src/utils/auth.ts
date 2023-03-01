@@ -124,7 +124,7 @@ const authCheck = (): boolean => {
             return;
           }
 
-          if (res.res && res.res.status == 401) {
+          if (res.data && res.status == 401) {
             // refresh
             console.log('need refresh');
           }

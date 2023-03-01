@@ -1,6 +1,6 @@
 import BaseClient from '../base/BaseClient';
 import { toCamel, toSnake } from 'snake-camel';
-import { ErrorResInterface } from '../base/ApiClient';
+import { ApiResponse, ErrorResInterface } from '../base/ApiClient';
 import { AuthUser } from '../interfaces/Auth';
 import { AccessToken } from '../../utils/auth';
 
@@ -37,57 +37,58 @@ class AuthClient extends BaseClient {
 
   public token = async (
     params: TokenParam,
-  ): Promise<TokenRes | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<TokenRes | ErrorResInterface>> => {
     const res = await this._client.post('/token', toSnake(params));
     if (res.isSuccess) {
-      const data = res.res?.data;
-      return toCamel(data) as TokenRes;
+      const data = res?.data;
+      res.data = toCamel(data) as TokenRes;
     }
-    return res.error;
+    return res;
   };
 
   public register = async (
     params: RegisterParam,
-  ): Promise<ResisterRes | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<ResisterRes | ErrorResInterface>> => {
     const res = await this._client.post('/register', toSnake(params));
     if (res.isSuccess) {
-      const data = res.res?.data;
-      return toCamel(data) as ResisterRes;
+      const data = res?.data;
+      res.data = toCamel(data) as ResisterRes;
     }
-
-    return res.error;
+    return res;
   };
 
   public me = async (
     token?: AccessToken,
-  ): Promise<Me | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<Me | ErrorResInterface>> => {
     if (token) {
       this._client.withToken(token.token, token.tokenType || 'bearer');
     }
-
     const res = await this._client.get('/me');
     if (res.isSuccess) {
-      const data = res.res?.data;
-      return toCamel(data) as Me;
+      const data = res?.data;
+      res.data = toCamel(data) as Me;
     }
-
-    return res.error;
+    return res;
   };
 
-  public revoke = async (): Promise<boolean | ErrorResInterface | null> => {
+  public revoke = async (): Promise<
+    ApiResponse<boolean | ErrorResInterface>
+  > => {
     const res = await this._client.delete('/revoke');
-    return res.isSuccess ? res.isSuccess : res.error;
+    if (res.isSuccess) {
+      res.data = res.isSuccess;
+    }
+    return res;
   };
 
   public password = async (
     params: PasswordParam,
-  ): Promise<AuthUser | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<AuthUser | ErrorResInterface>> => {
     const res = await this._client.patch('/password', toSnake(params));
     if (res.isSuccess) {
-      return toCamel(res.res?.data) as AuthUser;
+      res.data = toCamel(res?.data) as AuthUser;
     }
-
-    return res.error;
+    return res;
   };
 }
 

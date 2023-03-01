@@ -1,5 +1,5 @@
 import BaseClient from 'api/base/BaseClient';
-import { ErrorResInterface } from 'api/base/ApiClient';
+import { ApiResponse, ErrorResInterface } from 'api/base/ApiClient';
 import { Host } from 'api/interfaces/Hosts';
 import { toCamel, toSnake } from 'snake-camel';
 import { Page } from 'api/interfaces/Common';
@@ -63,34 +63,32 @@ class HostClient extends BaseClient {
 
   public create = async (
     params: CreateHost,
-  ): Promise<Host | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<Host | ErrorResInterface>> => {
     const res = await this._client.post('/', toSnake(params));
     if (res.isSuccess) {
-      const data = toCamel(res.res?.data) as any;
-      return toCamel(data) as Host;
+      const data = toCamel(res?.data) as any;
+      res.data = toCamel(data) as Host;
     }
-
-    return res.error;
+    return res;
   };
 
   public find = async (
     id: number,
-  ): Promise<Host | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<Host | ErrorResInterface>> => {
     const res = await this._client.get(`/${id}`);
     if (res.isSuccess) {
-      return toCamel(res.res?.data) as Host;
+      res.data = toCamel(res?.data) as Host;
     }
-
-    return res.error;
+    return res;
   };
 
   public getSubjects = async (
     params: GetListParam,
-  ): Promise<GetSubjects | ErrorResInterface | null> => {
-    const result = await this._client.get('/subjects', toSnake(params));
-    if (result.isSuccess) {
-      const data = toCamel(result.res?.data) as any;
-      return {
+  ): Promise<ApiResponse<GetSubjects | ErrorResInterface>> => {
+    const res = await this._client.get('/subjects', toSnake(params));
+    if (res.isSuccess) {
+      const data = toCamel(res?.data) as any;
+      res.data = {
         page: data.page,
         pageSize: data.pageSize,
         totalCount: data.totalCount,
@@ -98,16 +96,16 @@ class HostClient extends BaseClient {
       };
     }
 
-    return result.error;
+    return res;
   };
 
   public getList = async (
     params: GetListParam,
-  ): Promise<GetList | ErrorResInterface | null> => {
-    const result = await this._client.get('/', toSnake(params));
-    if (result.isSuccess) {
-      const data = toCamel(result.res?.data) as any;
-      return {
+  ): Promise<ApiResponse<GetList | ErrorResInterface>> => {
+    const res = await this._client.get('/', toSnake(params));
+    if (res.isSuccess) {
+      const data = toCamel(res?.data) as any;
+      res.data = {
         page: data.page,
         pageSize: data.pageSize,
         totalCount: data.totalCount,
@@ -115,17 +113,17 @@ class HostClient extends BaseClient {
       };
     }
 
-    return result.error;
+    return res;
   };
 
   public getSearch = async (
     id: number,
     page: Page,
-  ): Promise<GetSearch | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<GetSearch | ErrorResInterface>> => {
     const res = await this._client.get(`/${id}/search`, toSnake(page));
     if (res.isSuccess) {
-      const data = toCamel(res.res?.data) as any;
-      return {
+      const data = toCamel(res?.data) as any;
+      res.data = {
         page: data.page,
         pageSize: data.pageSize,
         totalCount: data.totalCount,
@@ -133,20 +131,20 @@ class HostClient extends BaseClient {
       };
     }
 
-    return res.error;
+    return res;
   };
 
   public getSearchDescriptions = async (
     id: number,
     page: Page,
-  ): Promise<GetSearchDescriptions | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<GetSearchDescriptions | ErrorResInterface>> => {
     const res = await this._client.get(
       `/${id}/search/descriptions`,
       toSnake(page),
     );
     if (res.isSuccess) {
-      const data = toCamel(res.res?.data) as any;
-      return {
+      const data = toCamel(res?.data) as any;
+      res.data = {
         page: data.page,
         pageSize: data.pageSize,
         totalCount: data.totalCount,
@@ -158,33 +156,39 @@ class HostClient extends BaseClient {
       };
     }
 
-    return res.error;
+    return res;
   };
 
   public update = async (
     id: number,
     params: UpdateHost,
-  ): Promise<Host | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<Host | ErrorResInterface>> => {
     const res = await this._client.put(`/${id}`, toSnake(params));
     if (res.isSuccess) {
-      return toCamel(res.res?.data) as Host;
+      res.data = toCamel(res?.data) as Host;
     }
-    return res.error;
+    return res;
   };
 
-  public patch = async (id: number, params: PatchHost) => {
+  public patch = async (
+    id: number,
+    params: PatchHost,
+  ): Promise<ApiResponse<Host | ErrorResInterface>> => {
     const res = await this._client.patch(`/${id}`, toSnake(params));
     if (res.isSuccess) {
-      return toCamel(res.res?.data) as Host;
+      res.data = toCamel(res?.data) as Host;
     }
-    return res.error;
+    return res;
   };
 
   public delete = async (
     id: number,
-  ): Promise<boolean | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<boolean | ErrorResInterface>> => {
     const res = await this._client.delete(`/${id}`);
-    return res.isSuccess ? res.isSuccess : res.error;
+    if (res.isSuccess) {
+      res.data = res.isSuccess;
+    }
+    return res;
   };
 }
 

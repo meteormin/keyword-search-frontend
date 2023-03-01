@@ -1,18 +1,17 @@
 import BaseClient from '../base/BaseClient';
-import { ErrorResInterface } from '../base/ApiClient';
+import { ApiResponse, ErrorResInterface } from '../base/ApiClient';
 
 class RedirectClient extends BaseClient {
   static readonly prefix = '/api/redirect';
   public redirect = async (
     code: string,
-  ): Promise<string | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<string | ErrorResInterface>> => {
     const res = await this._client.get(`/${code}/url`);
     if (res.isSuccess) {
-      const data = res.res?.data;
-      return data.url as string;
+      const data = res?.data;
+      res.data = data.url as string;
     }
-
-    return res.error;
+    return res;
   };
 }
 

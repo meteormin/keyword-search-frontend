@@ -1,7 +1,7 @@
 import BaseClient from '../base/BaseClient';
 import { Page, Paginator } from '../interfaces/Common';
 import { toCamel, toSnake } from 'snake-camel';
-import { ErrorResInterface } from '../base/ApiClient';
+import { ApiResponse, ErrorResInterface } from '../base/ApiClient';
 import { Search } from '../interfaces/Search';
 
 export interface AllParam extends Page {
@@ -38,59 +38,59 @@ class SearchClient extends BaseClient {
 
   public all = async (
     params: AllParam,
-  ): Promise<AllRes | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<AllRes | ErrorResInterface>> => {
     const res = await this._client.get('/all', toSnake(params));
     if (res.isSuccess) {
-      const data = toCamel(res.res?.data) as Paginator;
+      const data = toCamel(res?.data) as Paginator;
       data.data = data.data.map(toCamel);
-      return data as AllRes;
+      res.data = data as AllRes;
     }
-    return res.error;
+    return res;
   };
 
   public create = async (
     params: CreateSearch,
-  ): Promise<Search | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
     const res = await this._client.post('/', toSnake(params));
     if (res.isSuccess) {
-      const data = toCamel(res.res?.data);
-      return data as Search;
+      const data = toCamel(res?.data);
+      res.data = data as Search;
     }
-
-    return res.error;
+    return res;
   };
 
   public update = async (
     id: number,
     params: UpdateSearch,
-  ): Promise<Search | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
     const res = await this._client.put(`/${id}`, toSnake(params));
     if (res.isSuccess) {
-      const data = toCamel(res.res?.data);
-      return data as Search;
+      const data = toCamel(res?.data);
+      res.data = data as Search;
     }
-
-    return res.error;
+    return res;
   };
 
   public patch = async (
     id: number,
     params: PatchSearch,
-  ): Promise<Search | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
     const res = await this._client.patch(`/${id}`, toSnake(params));
     if (res.isSuccess) {
-      const data = toCamel(res.res?.data);
-      return data as Search;
+      const data = toCamel(res?.data);
+      res.data = data as Search;
     }
-
-    return res.error;
+    return res;
   };
 
   public delete = async (
     id: number,
-  ): Promise<boolean | ErrorResInterface | null> => {
+  ): Promise<ApiResponse<boolean | ErrorResInterface>> => {
     const res = await this._client.delete(`/${id}`);
-    return res.isSuccess ? res.isSuccess : res.error;
+    if (res.isSuccess) {
+      res.data = res.isSuccess;
+    }
+    return res;
   };
 }
 
