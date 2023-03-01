@@ -9,6 +9,7 @@ import {
   GetListParam,
   GetSearch,
   GetSearchDescriptions,
+  GetSearchParam,
   GetSubjects,
   PatchHost,
 } from 'api/clients/Hosts';
@@ -45,11 +46,13 @@ function* getList(action: PayloadAction<{ page: Page }>) {
   }
 }
 
-function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
+function* getSearch(
+  action: PayloadAction<{ hostId: number; query: GetSearchParam }>,
+) {
   yield putStartLoading();
   try {
     const res: ApiResponse<GetSearch | ErrorResInterface> =
-      yield apiCall.getSearch(action.payload.hostId, action.payload.page);
+      yield apiCall.getSearch(action.payload.hostId, action.payload.query);
     yield putEndLoading();
     if (!res.isSuccess) {
       yield putErrorAlert(
@@ -95,14 +98,14 @@ function* getSubjects(action: PayloadAction<{ page: Page }>) {
 }
 
 function* getSearchDescriptions(
-  action: PayloadAction<{ hostId: number; page: Page }>,
+  action: PayloadAction<{ hostId: number; query: GetSearchParam }>,
 ) {
   yield putStartLoading();
   try {
     const res: ApiResponse<GetSearchDescriptions | ErrorResInterface> =
       yield apiCall.getSearchDescriptions(
         action.payload.hostId,
-        action.payload.page,
+        action.payload.query,
       );
     yield putEndLoading();
     if (!res.isSuccess) {

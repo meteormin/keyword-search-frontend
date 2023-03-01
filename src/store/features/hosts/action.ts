@@ -6,6 +6,7 @@ import {
   GetList,
   GetSearch,
   GetSearchDescriptions,
+  GetSearchParam,
   GetSubjects,
   PatchHost,
   UpdateHost,
@@ -86,16 +87,16 @@ const action = {
   },
   getSearch: (
     state: HostState,
-    action: PayloadAction<{ hostId: number; page: Page }>,
+    action: PayloadAction<{ hostId: number; query: GetSearchParam }>,
   ) => {
-    state.page = action.payload.page;
+    state.page = action.payload.query;
     state.search = null;
   },
   getSearchDescriptions: (
     state: HostState,
-    action: PayloadAction<{ hostId: number; page: Page }>,
+    action: PayloadAction<{ hostId: number; query: GetSearchParam }>,
   ) => {
-    state.page = action.payload.page;
+    state.page = action.payload.query;
     state.searchDescriptions = null;
   },
   create: (state: HostState, action: PayloadAction<CreateHost>) => {

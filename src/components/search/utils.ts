@@ -5,6 +5,7 @@ import { useSearchDispatch } from 'store/features/search';
 import { CreateSearch, PatchSearch, UpdateSearch } from 'api/clients/Search';
 import { useHostDispatch } from 'store/features/hosts';
 import { Page } from '../../api/interfaces/Common';
+import { GetSearchParam } from '../../api/clients/Hosts';
 
 const host = config.api.default.host;
 const redirectPath = '/api/short-url';
@@ -53,7 +54,7 @@ export const setFormSearchByKey = (
 };
 
 interface Dispatcher {
-  getList: (hostId: number, page: Page) => void;
+  getList: (hostId: number, query: GetSearchParam) => void;
   create: (data: FormSearch) => void;
   update: (id: number, data: FormSearch) => void;
   patch: (id: number, data: FormSearch) => void;
@@ -65,8 +66,8 @@ export const useDispatcher = (): Dispatcher => {
   const searchDispatch = useSearchDispatch();
 
   return {
-    getList: (hostId: number, page: Page) => {
-      hostDispatch.getSearch(hostId, page);
+    getList: (hostId: number, query: GetSearchParam) => {
+      hostDispatch.getSearch(hostId, query);
     },
     create: (data: FormSearch) => {
       const create: CreateSearch = {

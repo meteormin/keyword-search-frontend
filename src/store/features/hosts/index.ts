@@ -6,6 +6,7 @@ import HostClient, {
   GetListParam,
   GetSearch,
   GetSearchDescriptions,
+  GetSearchParam,
   GetSubjects,
   PatchHost,
   UpdateHost,
@@ -30,10 +31,10 @@ export const useCallHostApi = () => {
   return {
     getList: (getList: GetListParam) => call(client.getList, getList),
     getSubjects: (page: Page) => call(client.getSubjects, page),
-    getSearch: (hostId: number, page: Page) =>
-      call(client.getSearch, hostId, page),
-    getSearchDescriptions: (hostId: number, page: Page) =>
-      call(client.getSearchDescriptions, hostId, page),
+    getSearch: (hostId: number, query: GetSearchParam) =>
+      call(client.getSearch, hostId, query),
+    getSearchDescriptions: (hostId: number, query: GetSearchParam) =>
+      call(client.getSearchDescriptions, hostId, query),
     create: (create: CreateHost) => call(client.create, create),
     update: (id: number, update: UpdateHost) => call(client.update, id, update),
     patch: (id: number, host: PatchHost) => call(client.patch, id, host),
@@ -46,10 +47,10 @@ const actionCall = (call: ActionCall) => {
   return {
     getList: (page: Page) => call(actions.getList({ page })),
     getSubjects: (page: Page) => call(actions.getSubjects({ page })),
-    getSearch: (hostId: number, page: Page) =>
-      call(actions.getSearch({ hostId, page })),
-    getSearchDescriptions: (hostId: number, page: Page) =>
-      call(actions.getSearchDescriptions({ hostId, page })),
+    getSearch: (hostId: number, query: GetSearchParam) =>
+      call(actions.getSearch({ hostId, query })),
+    getSearchDescriptions: (hostId: number, query: GetSearchParam) =>
+      call(actions.getSearchDescriptions({ hostId, query })),
     create: (create: CreateHost) => call(actions.create(create)),
     update: (id: number, update: UpdateHost) =>
       call(actions.update({ id: id, host: update })),

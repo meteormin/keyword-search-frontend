@@ -1,12 +1,22 @@
 import DynamicTable from 'components/common/DaynamicTable';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { SearchTableSchema, schema } from 'components/search/schema';
 import Card from 'components/common/Card';
 import { useDispatcher, defaultOnClick } from 'components/search/utils';
-import hostStore, { useHostState } from 'store/features/hosts';
+import { useHostState } from 'store/features/hosts';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import SearchModal, { Action } from './SearchModal';
-import { FormSearch } from './SearchForm';
+import { FormSearch } from 'components/search/SearchForm';
+import SelectFilter from 'components/common/SelectFilter';
+import SearchAndReset from 'components/common/SearchAndReset';
+import { Option } from 'components/common/Select';
+import Input from '../common/Input';
+
+const selectOptions: Option[] = [
+  { name: '검색기준', value: '' },
+  { name: 'QueryKey', value: 'queryKey' },
+  { name: 'Query', value: 'query' },
+];
 
 export interface SearchTableProps {
   hostId: number;
@@ -20,6 +30,9 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   const [action, setAction] = useState<Action>('create');
   const [formData, setFormData] = useState<FormSearch | null>(null);
   const { search, page } = useHostState();
+
+  const [select, setSelect] = useState<string>('');
+  const [queryString, setQueryString] = useState<string>('');
 
   useEffect(() => {
     dispatcher.getList(hostId, page);
@@ -86,9 +99,66 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
     }
   }
 
+  const handleQueryKeyChange = (selectedValue: string) => {
+    setSelect(selectedValue);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQueryString(e.target.value);
+  };
+
+  const handleSearch = () => {
+    if (select && queryString) {
+      let queryKey = undefined;
+      let query = undefined;
+      switch (select) {
+        case 'queryKey':
+          queryKey = queryString;
+          break;
+        case 'query':
+          query = queryString;
+          break;
+      }
+
+      dispatcher.getList(hostId, {
+        queryKey: queryKey,
+        query: query,
+        page: 1,
+        pageSize: 20,
+      });
+    }
+  };
+
+  const handleReset = () => {
+    setSelect('');
+    setQueryString('');
+  };
+
   return (
     <>
       <Card header={`Host: ${hostId} Search`}>
+        <Row className="mt-2 mb-4">
+          <Col md="3">
+            <SelectFilter
+              label="Key"
+              onChange={handleQueryKeyChange}
+              options={selectOptions}
+              value={select}
+            />
+          </Col>
+          <Col md="6">
+            <Input
+              type="text"
+              id="queryString"
+              name="queryString"
+              value={queryString}
+              onChange={handleInputChange}
+            />
+          </Col>
+          <Col>
+            <SearchAndReset onSearch={handleSearch} onReset={handleReset} />
+          </Col>
+        </Row>
         <DynamicTable schema={refactorSchema} records={records} />
         <Row className="mt-4">
           <Col>

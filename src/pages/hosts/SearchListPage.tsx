@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
 import SearchTable from 'components/search/SearchTable';
 import { useHostDispatch, useHostState } from 'store/features/hosts';
 import Pagination from '../../components/common/Pagination';
