@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import SearchForm, { FormSearch } from './SearchForm';
-import { apiCall } from 'components/search/utils';
-import { useDispatch } from 'react-redux';
+import { useDispatcher } from 'components/search/utils';
 
 export type Action = 'create' | 'update' | 'delete';
 
@@ -13,7 +12,7 @@ const ActionBtn = ({
   action: Action;
   data: FormSearch | null;
 }) => {
-  const dispatcher = apiCall(useDispatch());
+  const dispatcher = useDispatcher();
   const btnTxt = action.charAt(0).toUpperCase() + action.slice(1);
   const handleClick = () => {
     if (data == null) {

@@ -2,9 +2,8 @@ import DynamicTable from 'components/common/DaynamicTable';
 import React, { useEffect, useState } from 'react';
 import { SearchTableSchema, schema } from 'components/search/schema';
 import Card from 'components/common/Card';
-import { apiCall, defaultOnClick } from 'components/search/utils';
-import { useDispatch, useSelector } from 'react-redux';
-import hostStore from 'store/features/hosts';
+import { useDispatcher, defaultOnClick } from 'components/search/utils';
+import hostStore, { useHostState } from 'store/features/hosts';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import SearchModal, { Action } from './SearchModal';
 import { FormSearch } from './SearchForm';
@@ -15,12 +14,12 @@ export interface SearchTableProps {
 }
 
 const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
-  const dispatcher = apiCall(useDispatch());
+  const dispatcher = useDispatcher();
   const [records, setRecords] = useState<SearchTableSchema[]>([]);
   const [show, setShow] = useState<boolean>(false);
   const [action, setAction] = useState<Action>('create');
   const [formData, setFormData] = useState<FormSearch | null>(null);
-  const { search, page } = useSelector(hostStore.getState);
+  const { search, page } = useHostState();
 
   useEffect(() => {
     dispatcher.getList(hostId, page);

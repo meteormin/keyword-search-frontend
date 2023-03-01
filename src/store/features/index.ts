@@ -1,6 +1,6 @@
 // import reducers
-import { combineReducers } from 'redux';
-import { all, call, put } from 'redux-saga/effects';
+import { Action, combineReducers } from 'redux';
+import { all, call, put, SimpleEffect } from 'redux-saga/effects';
 import loaderReducer from 'store/features/common/loader/loaderReducer';
 import loginReducer from 'store/features/auth/loginReducer';
 import alertModalReducer from 'store/features/common/alertModal/alertModalReducer';
@@ -12,6 +12,10 @@ import searchSaga from 'store/features/search/saga';
 import { isErrorResponse, serializeErrorResponse } from '../../api';
 import alertModalStore from 'store/features/common/alertModal';
 import loaderStore from 'store/features/common/loader';
+
+export interface ActionCall {
+  (action: Action): Action | SimpleEffect<any>;
+}
 
 export const rootReducer = combineReducers({
   // reducers

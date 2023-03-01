@@ -24,6 +24,11 @@ export interface GetSubjects {
   data: { id: number; subject: string }[];
 }
 
+export interface GetSearchParam extends Page {
+  query?: string;
+  queryKey?: string;
+}
+
 export interface GetSearch {
   page: number;
   pageSize: number;
@@ -118,9 +123,9 @@ class HostClient extends BaseClient {
 
   public getSearch = async (
     id: number,
-    page: Page,
+    query: GetSearchParam,
   ): Promise<ApiResponse<GetSearch | ErrorResInterface>> => {
-    const res = await this._client.get(`/${id}/search`, toSnake(page));
+    const res = await this._client.get(`/${id}/search`, toSnake(query));
     if (res.isSuccess) {
       const data = toCamel(res?.data) as any;
       res.data = {
@@ -136,11 +141,11 @@ class HostClient extends BaseClient {
 
   public getSearchDescriptions = async (
     id: number,
-    page: Page,
+    query: GetSearchParam,
   ): Promise<ApiResponse<GetSearchDescriptions | ErrorResInterface>> => {
     const res = await this._client.get(
       `/${id}/search/descriptions`,
-      toSnake(page),
+      toSnake(query),
     );
     if (res.isSuccess) {
       const data = toCamel(res?.data) as any;

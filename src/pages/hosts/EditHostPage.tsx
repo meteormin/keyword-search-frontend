@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Col, Container, Row } from 'react-bootstrap';
 import HostCard from 'components/hosts/HostCard';
-import hostStore from 'store/features/hosts';
-import { useDispatch, useSelector } from 'react-redux';
+import { useHostDispatch, useHostState } from 'store/features/hosts';
 import { PatchHost } from 'api/clients/Hosts';
 import { FormHost } from 'components/hosts/HostForm';
 
 const EditHostPage = () => {
-  const dispatch = useDispatch();
+  const { patch, find } = useHostDispatch();
+
   const { id } = useParams();
-  const { select } = useSelector(hostStore.getState);
+  const { select } = useHostState();
 
   const handleEdit = (edit: FormHost) => {
     const hostId = edit.id;
@@ -22,14 +22,13 @@ const EditHostPage = () => {
       publish: edit?.publish,
     };
 
-    dispatch(hostStore.actions.patch({ id: hostId, host: patchHost }));
+    patch(hostId, patchHost);
   };
 
   useEffect(() => {
     if (id) {
       const hostId = parseInt(id);
-
-      dispatch(hostStore.actions.find(hostId));
+      find(hostId);
     }
   }, []);
 

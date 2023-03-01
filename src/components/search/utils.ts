@@ -1,9 +1,9 @@
 import { SearchTableSchema } from 'components/search/schema';
 import { config, auth } from 'helpers';
 import { FormSearch } from 'components/search/SearchForm';
-import searchStore from 'store/features/search';
+import { useSearchDispatch } from 'store/features/search';
 import { CreateSearch, PatchSearch, UpdateSearch } from 'api/clients/Search';
-import hostStore from 'store/features/hosts';
+import { useHostDispatch } from 'store/features/hosts';
 import { Page } from '../../api/interfaces/Common';
 
 const host = config.api.default.host;
@@ -60,10 +60,13 @@ interface Dispatcher {
   delete: (id: number) => void;
 }
 
-export const apiCall = (dispatch: any): Dispatcher => {
+export const useDispatcher = (): Dispatcher => {
+  const hostDispatch = useHostDispatch();
+  const searchDispatch = useSearchDispatch();
+
   return {
     getList: (hostId: number, page: Page) => {
-      dispatch(hostStore.actions.getSearch({ hostId: hostId, page: page }));
+      hostDispatch.getSearch(hostId, page);
     },
     create: (data: FormSearch) => {
       const create: CreateSearch = {
@@ -73,8 +76,7 @@ export const apiCall = (dispatch: any): Dispatcher => {
         description: data?.description || '',
         hostId: data.hostId,
       };
-
-      dispatch(searchStore.actions.create(create));
+      searchDispatch.create(create);
     },
     update: (id: number, data: FormSearch) => {
       const update: UpdateSearch = {
@@ -84,8 +86,7 @@ export const apiCall = (dispatch: any): Dispatcher => {
         description: data?.description || '',
         hostId: data.hostId,
       };
-
-      dispatch(searchStore.actions.update({ id: id, update: update }));
+      searchDispatch.update(id, update);
     },
     patch: (id: number, data: FormSearch) => {
       const patch: PatchSearch = {
@@ -95,9 +96,8 @@ export const apiCall = (dispatch: any): Dispatcher => {
         description: data.description,
         hostId: data.hostId,
       };
-
-      dispatch(searchStore.actions.patch({ id: id, patch: patch }));
+      searchDispatch.patch(id, patch);
     },
-    delete: (id: number) => dispatch(searchStore.actions.delete(id)),
+    delete: (id: number) => searchDispatch.delete(id),
   };
 };

@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import hostStore from 'store/features/hosts';
-import alertStore from 'store/features/common/alertModal';
-import { useDispatch, useSelector } from 'react-redux';
+import { useHostDispatch, useHostState } from 'store/features/hosts';
+import {
+  useAlertModalDispatch,
+  useAlertModalState,
+} from 'store/features/common/alertModal';
 import HostForm, { FormHost } from 'components/hosts/HostForm';
 import { useNavigate } from 'react-router-dom';
 
 const CreateHostPage = () => {
-  const dispatch = useDispatch();
+  const { create } = useHostDispatch();
+  const { showAlert } = useAlertModalDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormHost | null>(null);
-  const { select } = useSelector(hostStore.getState);
-  const { show } = useSelector(alertStore.getAlertState);
+  const { select } = useHostState();
+  const { show } = useAlertModalState();
   const handleChange = (host: FormHost | null) => {
-    console.log(host);
     setFormData(host);
   };
 
@@ -31,25 +33,18 @@ const CreateHostPage = () => {
 
   const handleCreate = () => {
     if (formData && validateCreate(formData)) {
-      dispatch(
-        hostStore.actions.create({
-          host: formData?.host || '',
-          path: formData?.path || '',
-          description: formData?.description || '',
-          publish: formData?.publish || false,
-          subject: formData?.subject || '',
-        }),
-      );
+      create({
+        host: formData?.host || '',
+        path: formData?.path || '',
+        description: formData?.description || '',
+        publish: formData?.publish || false,
+        subject: formData?.subject || '',
+      });
 
       return;
     }
 
-    dispatch(
-      alertStore.showAlert({
-        title: '유효성 검사 실패',
-        message: '빈 칸이 존재합니다.',
-      }),
-    );
+    showAlert('유효성 검사 실패', '빈 칸이 존재합니다.');
   };
 
   useEffect(() => {

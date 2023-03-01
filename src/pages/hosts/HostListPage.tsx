@@ -1,27 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import HostCard from 'components/hosts/HostCard';
-import { useDispatch, useSelector } from 'react-redux';
 import { Host } from 'api/interfaces/Hosts';
-import hostStore from 'store/features/hosts';
+import { useHostDispatch, useHostState } from 'store/features/hosts';
 import { Col, Container, Row } from 'react-bootstrap';
-import Pagination from '../../components/common/Pagination';
+import Pagination from 'components/common/Pagination';
 
 function HostListPage() {
-  const dispatch = useDispatch();
-  const { list, page } = useSelector(hostStore.getState);
+  const { getList } = useHostDispatch();
+  const { list, page } = useHostState();
   const [rows, setRows] = useState<Host[][]>([]);
   const [pageNumber, setPageNumber] = useState<number>(page.page);
   const [pageSize, setPageSize] = useState<number>(page.pageSize);
 
-  const getList = () => {
-    dispatch(
-      hostStore.actions.getList({
-        page: {
-          page: pageNumber,
-          pageSize: pageSize,
-        },
-      }),
-    );
+  const getListFromApi = () => {
+    getList({ page: pageNumber, pageSize: pageSize });
   };
 
   const makeMatrix = (data: Host[]) => {
@@ -47,7 +39,7 @@ function HostListPage() {
   };
 
   useEffect(() => {
-    getList();
+    getListFromApi();
   }, [pageNumber, pageSize]);
 
   useEffect(() => {

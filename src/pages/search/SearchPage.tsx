@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { openWindows } from 'components/search/utils';
-
 import SearchBar from 'components/search/SearchBar';
 import { Col, Container, Form, Row } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import hostStore from 'store/features/hosts';
+import { useHostDispatch, useHostState } from 'store/features/hosts';
 
 const SearchPage = () => {
-  const dispatch = useDispatch();
-  const { subjects, page, searchDescriptions } = useSelector(
-    hostStore.getState,
-  );
+  const hostDispatcher = useHostDispatch();
+  const { subjects, page, searchDescriptions } = useHostState();
   const [hostPageNumber, setHostPageNumber] = useState<number>(page.page);
   const [hostPageSize, setHostPageSize] = useState<number>(20);
   const [subjectsData, setSubjectsData] = useState<
@@ -25,36 +21,25 @@ const SearchPage = () => {
   >([]);
 
   const getSubjects = () => {
-    dispatch(
-      hostStore.actions.getSubjects({
-        page: {
-          page: hostPageNumber,
-          pageSize: hostPageSize,
-        },
-      }),
-    );
+    hostDispatcher.getSubjects({
+      page: hostPageNumber,
+      pageSize: hostPageSize,
+    });
   };
 
   const getSearch = () => {
     if (selectedId) {
-      dispatch(
-        hostStore.actions.getSearchDescriptions({
-          hostId: selectedId,
-          page: {
-            page: searchPageNumber,
-            pageSize: searchPageSize,
-          },
-        }),
-      );
+      hostDispatcher.getSearchDescriptions(selectedId, {
+        page: searchPageNumber,
+        pageSize: searchPageSize,
+      });
     } else {
-      dispatch(
-        hostStore.actions.setSearchDescriptions({
-          page: 1,
-          pageSize: 10,
-          totalCount: 0,
-          data: [],
-        }),
-      );
+      hostDispatcher.setSearchDescriptions({
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        data: [],
+      });
     }
   };
 

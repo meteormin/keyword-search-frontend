@@ -1,12 +1,11 @@
-import loginModule from 'store/features/auth';
-import { useDispatch } from 'react-redux';
+import { useAuthDispatch } from 'store/features/auth';
 import { useEffect } from 'react';
 
 const LogoutPage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAuthDispatch();
 
   useEffect(() => {
-    dispatch(loginModule.logout());
+    dispatch.logout();
   }, []);
 
   return null;

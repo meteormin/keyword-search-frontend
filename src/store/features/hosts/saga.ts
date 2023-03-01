@@ -1,7 +1,9 @@
-import { call, fork, put, takeLatest } from 'redux-saga/effects';
-import hostStore from 'store/features/hosts';
-import makeClient from 'api';
-import HostClient, {
+import { fork, takeLatest } from 'redux-saga/effects';
+import hostStore, {
+  useCallHostApi,
+  usePutHostAction,
+} from 'store/features/hosts';
+import {
   CreateHost,
   GetList,
   GetListParam,
@@ -14,35 +16,29 @@ import { ApiResponse, ErrorResInterface } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { Host } from 'api/interfaces/Hosts';
 import { Page } from 'api/interfaces/Common';
-import { auth } from 'helpers';
 import {
   putEndLoading,
   putErrorAlert,
   putShowAlert,
   putStartLoading,
-} from '../index';
+} from 'store/features';
 
-const client = makeClient<HostClient>(HostClient, {
-  token: auth.getToken()?.accessToken.token || '',
-  tokenType: auth.getToken()?.accessToken.tokenType || '',
-});
+const apiCall = useCallHostApi();
+const putAction = usePutHostAction();
 
 function* getList(action: PayloadAction<{ page: Page }>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<GetList | ErrorResInterface> = yield call(
-      client.getList,
+    const res: ApiResponse<GetList | ErrorResInterface> = yield apiCall.getList(
       action.payload.page as GetListParam,
     );
     yield putEndLoading();
-    console.log(res);
     if (!res.isSuccess) {
       yield putErrorAlert(res.data, 'Hosts', 'Host 목록 조회 실패');
       return;
     }
     const list = res.data as GetList;
-
-    yield put(hostStore.actions.setList(list));
+    yield putAction.setList(list);
   } catch (err) {
     yield putEndLoading();
     yield putErrorAlert(err, 'Hosts', 'Host 목록 조회 실패');
@@ -52,11 +48,8 @@ function* getList(action: PayloadAction<{ page: Page }>) {
 function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<GetSearch | ErrorResInterface> = yield call(
-      client.getSearch,
-      action.payload.hostId,
-      action.payload.page,
-    );
+    const res: ApiResponse<GetSearch | ErrorResInterface> =
+      yield apiCall.getSearch(action.payload.hostId, action.payload.page);
     yield putEndLoading();
     if (!res.isSuccess) {
       yield putErrorAlert(
@@ -69,7 +62,7 @@ function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
 
     const list = res.data as GetSearch;
 
-    yield put(hostStore.actions.setSearch(list));
+    yield putAction.setSearch(list);
   } catch (err) {
     yield putEndLoading();
     yield putErrorAlert(
@@ -83,10 +76,8 @@ function* getSearch(action: PayloadAction<{ hostId: number; page: Page }>) {
 function* getSubjects(action: PayloadAction<{ page: Page }>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<GetSubjects | ErrorResInterface> = yield call(
-      client.getSubjects,
-      action.payload.page,
-    );
+    const res: ApiResponse<GetSubjects | ErrorResInterface> =
+      yield apiCall.getSubjects(action.payload.page);
 
     yield putEndLoading();
     if (!res.isSuccess) {
@@ -96,7 +87,7 @@ function* getSubjects(action: PayloadAction<{ page: Page }>) {
 
     const list = res.data as GetSubjects;
 
-    yield put(hostStore.actions.setSubjects(list));
+    yield putAction.setSubjects(list);
   } catch (err) {
     yield putEndLoading();
     yield putErrorAlert(err, 'Hosts', 'Hosts Subjects 조회 실패');
@@ -109,8 +100,7 @@ function* getSearchDescriptions(
   yield putStartLoading();
   try {
     const res: ApiResponse<GetSearchDescriptions | ErrorResInterface> =
-      yield call(
-        client.getSearchDescriptions,
+      yield apiCall.getSearchDescriptions(
         action.payload.hostId,
         action.payload.page,
       );
@@ -126,7 +116,7 @@ function* getSearchDescriptions(
 
     const list = res.data as GetSearchDescriptions;
 
-    yield put(hostStore.actions.setSearchDescriptions(list));
+    yield putAction.setSearchDescriptions(list);
   } catch (err) {
     yield putEndLoading();
     yield putErrorAlert(
@@ -140,8 +130,7 @@ function* getSearchDescriptions(
 function* find(action: PayloadAction<number>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<Host | ErrorResInterface> = yield call(
-      client.find,
+    const res: ApiResponse<Host | ErrorResInterface> = yield apiCall.find(
       action.payload,
     );
     yield putEndLoading();
@@ -150,7 +139,7 @@ function* find(action: PayloadAction<number>) {
       return;
     }
     const host = res.data as Host;
-    yield put(hostStore.actions.setSelect(host));
+    yield putAction.setSelect(host);
   } catch (err) {
     yield putEndLoading();
     yield putErrorAlert(err, 'Hosts', 'Host 조회 실패');
@@ -160,8 +149,7 @@ function* find(action: PayloadAction<number>) {
 function* create(action: PayloadAction<CreateHost>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<Host | ErrorResInterface> = yield call(
-      client.create,
+    const res: ApiResponse<Host | ErrorResInterface> = yield apiCall.create(
       action.payload,
     );
     yield putEndLoading();
@@ -170,7 +158,7 @@ function* create(action: PayloadAction<CreateHost>) {
       return;
     }
     const host: Host = res.data as Host;
-    yield put(hostStore.actions.setSelect(host));
+    yield putAction.setSelect(host);
     yield putShowAlert('Hosts', 'Host 생성 성공', true);
   } catch (err) {
     yield putEndLoading();
@@ -181,8 +169,7 @@ function* create(action: PayloadAction<CreateHost>) {
 function* patch(action: PayloadAction<{ id: number; host: PatchHost }>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<Host | ErrorResInterface> = yield call(
-      client.patch,
+    const res: ApiResponse<Host | ErrorResInterface> = yield apiCall.patch(
       action.payload.id,
       action.payload.host,
     );
@@ -192,7 +179,7 @@ function* patch(action: PayloadAction<{ id: number; host: PatchHost }>) {
       return;
     }
     const host: Host = res.data as Host;
-    yield put(hostStore.actions.setSelect(host));
+    yield putAction.setSelect(host);
     yield putShowAlert('Hosts', 'Host 수정 성공', true);
   } catch (err) {
     yield putEndLoading();

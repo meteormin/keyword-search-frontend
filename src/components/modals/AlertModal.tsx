@@ -1,15 +1,15 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
-import alertModalModule from 'store/features/common/alertModal';
+import alertModalModule, {
+  useAlertModalDispatch,
+  useAlertModalState,
+} from 'store/features/common/alertModal';
 
 const AlertModal = () => {
-  const { title, message, show, refresh } = useSelector(
-    alertModalModule.getAlertState,
-  );
-  const dispatch = useDispatch();
+  const { title, message, show, refresh } = useAlertModalState();
+  const { closeAlert } = useAlertModalDispatch();
   const handleClose = () => {
-    dispatch(alertModalModule.closeAlert());
+    closeAlert();
     if (refresh) {
       window.location.reload();
     }

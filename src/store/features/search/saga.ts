@@ -1,32 +1,25 @@
-import { call, fork, takeLatest } from 'redux-saga/effects';
-import searchStore from 'store/features/search';
-import makeClient from 'api';
-import SearchClient, {
-  CreateSearch,
-  UpdateSearch,
-  PatchSearch,
-} from 'api/clients/Search';
+import { fork, takeLatest } from 'redux-saga/effects';
+import searchStore, {
+  useCallSearchApi,
+  usePutSearchAction,
+} from 'store/features/search';
+import { CreateSearch, UpdateSearch, PatchSearch } from 'api/clients/Search';
 import { Search } from 'api/interfaces/Search';
 import { ApiResponse, ErrorResInterface } from 'api/base/ApiClient';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { auth } from 'helpers';
 import {
   putEndLoading,
   putErrorAlert,
   putShowAlert,
   putStartLoading,
-} from '../index';
+} from 'store/features';
 
-const client = makeClient<SearchClient>(SearchClient, {
-  token: auth.getToken()?.accessToken.token || '',
-  tokenType: auth.getToken()?.accessToken.tokenType || '',
-});
+const apiCall = useCallSearchApi();
 
 function* create(action: PayloadAction<CreateSearch>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<Search | ErrorResInterface> = yield call(
-      client.create,
+    const res: ApiResponse<Search | ErrorResInterface> = yield apiCall.create(
       action.payload,
     );
 
@@ -45,8 +38,7 @@ function* create(action: PayloadAction<CreateSearch>) {
 function* update(action: PayloadAction<{ id: number; update: UpdateSearch }>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<Search | ErrorResInterface> = yield call(
-      client.update,
+    const res: ApiResponse<Search | ErrorResInterface> = yield apiCall.update(
       action.payload.id,
       action.payload.update,
     );
@@ -66,8 +58,7 @@ function* update(action: PayloadAction<{ id: number; update: UpdateSearch }>) {
 function* patch(action: PayloadAction<{ id: number; patch: PatchSearch }>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<Search | ErrorResInterface> = yield call(
-      client.patch,
+    const res: ApiResponse<Search | ErrorResInterface> = yield apiCall.patch(
       action.payload.id,
       action.payload.patch,
     );
@@ -87,8 +78,7 @@ function* patch(action: PayloadAction<{ id: number; patch: PatchSearch }>) {
 function* destroy(action: PayloadAction<number>) {
   yield putStartLoading();
   try {
-    const res: ApiResponse<Search | ErrorResInterface> = yield call(
-      client.delete,
+    const res: ApiResponse<Search | ErrorResInterface> = yield apiCall.delete(
       action.payload,
     );
     yield putEndLoading();
