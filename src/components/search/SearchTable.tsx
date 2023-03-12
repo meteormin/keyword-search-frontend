@@ -1,5 +1,5 @@
 import DynamicTable from 'components/common/DaynamicTable';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SearchTableSchema, schema } from 'components/search/schema';
 import Card from 'components/common/Card';
 import { useDispatcher, defaultOnClick } from 'components/search/utils';
@@ -11,11 +11,18 @@ import SelectFilter from 'components/common/SelectFilter';
 import SearchAndReset from 'components/common/SearchAndReset';
 import { Option } from 'components/common/Select';
 import Input from '../common/Input';
+import { GetSearchParam } from '../../api/clients/Hosts';
 
-const selectOptions: Option[] = [
+const searchOptions: Option[] = [
   { name: '검색기준', value: '' },
   { name: 'QueryKey', value: 'queryKey' },
   { name: 'Query', value: 'query' },
+];
+
+const sortOptions: Option[] = [
+  { name: '정렬기준', value: '' },
+  { name: '최신순', value: 'recent' },
+  { name: '조회순', value: 'views' },
 ];
 
 export interface SearchTableProps {
@@ -30,17 +37,31 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   const [action, setAction] = useState<Action>('create');
   const [formData, setFormData] = useState<FormSearch | null>(null);
   const { search, page } = useHostState();
+  const [searchParams, setSearchParams] = useState<GetSearchParam>({
+    page: 1,
+    pageSize: 20,
+  });
 
   const [select, setSelect] = useState<string>('');
   const [queryString, setQueryString] = useState<string>('');
 
+  const [sort, setSort] = useState<string>('');
+
   useEffect(() => {
-    dispatcher.getList(hostId, page);
+    setSearchParams((prev) => ({
+      ...prev,
+      page: page.page,
+      pageSize: page.pageSize,
+    }));
   }, [hostId, page.page, page.pageSize]);
 
   useEffect(() => {
     setMapRecords();
   }, [search, search?.totalCount]);
+
+  useEffect(() => {
+    dispatcher.getList(hostId, searchParams);
+  }, [searchParams]);
 
   const UpdateButton = (hostId: number, data: FormSearch) => {
     return (
@@ -109,8 +130,8 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
 
   const handleSearch = () => {
     if (select && queryString) {
-      let queryKey = undefined;
-      let query = undefined;
+      let queryKey: string | undefined = undefined;
+      let query: string | undefined = undefined;
       switch (select) {
         case 'queryKey':
           queryKey = queryString;
@@ -120,18 +141,44 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
           break;
       }
 
-      dispatcher.getList(hostId, {
+      setSearchParams((prev) => ({
+        ...prev,
         queryKey: queryKey,
         query: query,
         page: 1,
         pageSize: 20,
-      });
+      }));
     }
   };
 
   const handleReset = () => {
     setSelect('');
     setQueryString('');
+  };
+
+  const handleChangeSort = (selectedValue: string) => {
+    let sortBy: string | undefined = undefined;
+    let orderBy: string | undefined = undefined;
+
+    setSort(selectedValue);
+    switch (selectedValue) {
+      case 'recent':
+        sortBy = 'created_at';
+        orderBy = 'desc';
+        break;
+      case 'views':
+        sortBy = 'views';
+        orderBy = 'desc';
+        break;
+      default:
+        break;
+    }
+
+    setSearchParams((prev) => ({
+      ...prev,
+      sortBy,
+      orderBy,
+    }));
   };
 
   return (
@@ -142,7 +189,7 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
             <SelectFilter
               label="Key"
               onChange={handleQueryKeyChange}
-              options={selectOptions}
+              options={searchOptions}
               value={select}
             />
           </Col>
@@ -157,6 +204,16 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
           </Col>
           <Col>
             <SearchAndReset onSearch={handleSearch} onReset={handleReset} />
+          </Col>
+        </Row>
+        <Row className="mt-2 mb-4">
+          <Col md="3">
+            <SelectFilter
+              label="sort"
+              onChange={handleChangeSort}
+              options={sortOptions}
+              value={sort}
+            />
           </Col>
         </Row>
         <DynamicTable schema={refactorSchema} records={records} />

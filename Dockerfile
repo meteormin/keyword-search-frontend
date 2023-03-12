@@ -11,7 +11,7 @@ COPY . .
 RUN yarn install
 RUN yarn run build
 
-FROM ubuntu:22.04
+FROM ubuntu:22.04 AS base
 
 LABEL maintainer="miniyu97@gmail.com"
 
@@ -34,6 +34,9 @@ RUN groupadd --force -g $WWWGROUP react-user
 RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 react-user
 
 RUN mkdir -p /var/www/react
+
+FROM base AS deploy
+
 WORKDIR /var/www/react
 
 COPY --from=build /react/build ./build

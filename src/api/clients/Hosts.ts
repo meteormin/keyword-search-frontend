@@ -27,6 +27,9 @@ export interface GetSubjects {
 export interface GetSearchParam extends Page {
   query?: string;
   queryKey?: string;
+  publish?: boolean;
+  sortBy?: string;
+  orderBy?: string;
 }
 
 export interface GetSearch {

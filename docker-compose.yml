@@ -18,7 +18,7 @@ services:
       - '80:80'
       - '443:443'
     networks:
-      - react
+      - ks
 networks:
-  react:
-    driver: bridge
+  ks:
+    external: true

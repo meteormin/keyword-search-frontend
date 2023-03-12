@@ -1,8 +1,5 @@
 import { fork, takeLatest } from 'redux-saga/effects';
-import searchStore, {
-  useCallSearchApi,
-  usePutSearchAction,
-} from 'store/features/search';
+import searchStore, { useCallSearchApi } from 'store/features/search';
 import { CreateSearch, UpdateSearch, PatchSearch } from 'api/clients/Search';
 import { Search } from 'api/interfaces/Search';
 import { ApiResponse, ErrorResInterface } from 'api/base/ApiClient';
