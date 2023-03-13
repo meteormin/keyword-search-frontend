@@ -8,4 +8,5 @@ export interface Search {
   shortUrl: string;
   description: string;
   hostId: number;
+  views: number;
 }

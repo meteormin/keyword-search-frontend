@@ -95,6 +95,7 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
         description: s.description,
         query: s.query,
         queryKey: s.queryKey,
+        views: s.views,
         update: UpdateButton(s.hostId, s),
         origin: s,
       };

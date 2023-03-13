@@ -11,6 +11,7 @@ export interface SearchTableSchema {
   description: string;
   createdAt: string;
   updatedAt: string;
+  views: number;
   update?: React.ReactNode;
   origin: Search;
 }
@@ -40,6 +41,9 @@ export const schema: DynamicSchema = {
   },
   updatedAt: {
     name: 'updated at',
+  },
+  views: {
+    name: 'views',
   },
   update: {
     name: 'update',
