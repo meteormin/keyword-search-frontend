@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import SearchForm, { FormSearch } from './SearchForm';
 import { useDispatcher } from 'components/search/utils';
+import { useSearchState } from '../../store/features/search';
 
 export type Action = 'create' | 'update' | 'delete';
 
@@ -48,6 +49,8 @@ export interface SearchModalProps {
 }
 
 const SearchModal = (props: SearchModalProps) => {
+  const dispatcher = useDispatcher();
+  const { previewImage } = useSearchState();
   const [show, setShow] = useState<boolean>(!!props.show);
   const [action, setAction] = useState<Action>(props.action);
   const [data, setData] = useState<FormSearch | null>(props.data);
@@ -63,13 +66,25 @@ const SearchModal = (props: SearchModalProps) => {
     setData(search);
   };
 
+  useEffect(() => {
+    if (action != 'create') {
+      if (data?.id) {
+        dispatcher.getImage(data?.id);
+      }
+    }
+  }, []);
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>Search Form</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <SearchForm search={data} onChange={handleChange} />
+        <SearchForm
+          search={data}
+          previewImage={previewImage}
+          onChange={handleChange}
+        />
       </Modal.Body>
       <Modal.Footer>
         <ActionBtn action={action} data={data} />

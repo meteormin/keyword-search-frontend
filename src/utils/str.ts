@@ -75,3 +75,13 @@ export const replaceAll = (
 
   return reStr;
 };
+
+export const decodeUnicode = (unicodeString: string): string => {
+  const r = /\\u([\d\w]{4})/gi;
+
+  unicodeString = decodeURI(unicodeString);
+  unicodeString = unicodeString.replace(r, function (match, grp) {
+    return String.fromCharCode(parseInt(grp, 16));
+  });
+  return unicodeString;
+};

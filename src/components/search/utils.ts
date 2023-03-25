@@ -4,8 +4,8 @@ import { FormSearch } from 'components/search/SearchForm';
 import { useSearchDispatch } from 'store/features/search';
 import { CreateSearch, PatchSearch, UpdateSearch } from 'api/clients/Search';
 import { useHostDispatch } from 'store/features/hosts';
-import { Page } from '../../api/interfaces/Common';
-import { GetSearchParam } from '../../api/clients/Hosts';
+import { GetSearchParam } from 'api/clients/Hosts';
+import { PreviewImage } from 'store/features/search/action';
 
 const host = config.api.default.host;
 const redirectPath = '/api/short-url';
@@ -59,6 +59,8 @@ interface Dispatcher {
   update: (id: number, data: FormSearch) => void;
   patch: (id: number, data: FormSearch) => void;
   delete: (id: number) => void;
+  uploadImage: (id: number, file: PreviewImage) => void;
+  getImage: (id: number) => void;
 }
 
 export const useDispatcher = (): Dispatcher => {
@@ -100,5 +102,8 @@ export const useDispatcher = (): Dispatcher => {
       searchDispatch.patch(id, patch);
     },
     delete: (id: number) => searchDispatch.delete(id),
+    uploadImage: (id: number, file: PreviewImage) =>
+      searchDispatch.uploadImage(id, file),
+    getImage: (id: number) => searchDispatch.getImage(id),
   };
 };

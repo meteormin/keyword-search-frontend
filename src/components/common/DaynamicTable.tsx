@@ -5,6 +5,10 @@ export interface DynamicTableProps {
   schema: DynamicSchema;
   records: any[];
   onClick?: (record: any | any[]) => void;
+  onHover?: {
+    onEnter: (record: any | any[]) => void;
+    onLeave: (record: any | any[]) => void;
+  };
 }
 
 export interface DynamicSchema {
@@ -12,6 +16,10 @@ export interface DynamicSchema {
     name: string | JSX.Element | JSX.Element[];
     primaryKey?: boolean;
     onClick?: (records: any[]) => void;
+    onHover?: {
+      onEnter: (record: any | any[]) => void;
+      onLeave: (record: any | any[]) => void;
+    };
   };
 }
 
@@ -89,6 +97,16 @@ const DynamicTable = (props: DynamicTableProps) => {
                   column.onClick(row);
                 }
               }}
+              onMouseEnter={() => {
+                if (column.onHover?.onEnter) {
+                  column.onHover.onEnter(row);
+                }
+              }}
+              onMouseLeave={() => {
+                if (column.onHover?.onLeave) {
+                  column.onHover.onLeave(row);
+                }
+              }}
             >
               {row[key]}
             </td>,
@@ -100,6 +118,8 @@ const DynamicTable = (props: DynamicTableProps) => {
           key={'tr_' + index.toString()}
           className="text-center"
           onClick={() => onClick(row)}
+          onMouseEnter={() => props.onHover?.onEnter(row)}
+          onMouseLeave={() => props.onHover?.onLeave(row)}
           style={addCursor(props)}
         >
           {rowsElement}

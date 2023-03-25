@@ -92,6 +92,41 @@ class SearchClient extends BaseClient {
     }
     return res;
   };
+
+  public uploadImage = async (
+    id: number,
+    image: File,
+  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
+    this._client.attach({
+      name: 'image',
+      file: image,
+    });
+
+    this._client.withHeader({ 'Content-Type': 'multipart/form-data' });
+
+    const res = await this._client.post(`/${id}/image`);
+    if (res.isSuccess) {
+      const data = toCamel(res.data);
+      res.data = data as Search;
+    }
+
+    return res;
+  };
+
+  public getPreviewImage = async (
+    id: number,
+  ): Promise<ApiResponse | ErrorResInterface> => {
+    const res = await this._client.request({
+      url: this._client.makeUrl(`/${id}/image`),
+      method: 'GET',
+      responseType: 'blob',
+    });
+    if (!res.isSuccess) {
+      res.data = res.error;
+    }
+
+    return res;
+  };
 }
 
 export default SearchClient;

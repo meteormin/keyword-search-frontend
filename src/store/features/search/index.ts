@@ -10,6 +10,7 @@ import SearchClient, {
 import { call, put } from 'redux-saga/effects';
 import { ActionCall } from 'store/features';
 import { auth } from 'helpers';
+import { PreviewImage } from 'store/features/search/action';
 
 export const useSearchState = () => {
   return useSelector(getState);
@@ -28,6 +29,8 @@ export const useCallSearchApi = () => {
       call(client.update, id, params),
     patch: (id: number, params: PatchSearch) => call(client.patch, id, params),
     delete: (id: number) => call(client.delete, id),
+    uploadImage: (id: number, file: File) => call(client.uploadImage, id, file),
+    getImage: (id: number) => call(client.getPreviewImage, id),
   };
 };
 
@@ -39,6 +42,11 @@ const actionCall = (call: ActionCall) => {
     patch: (id: number, patch: PatchSearch) =>
       call(actions.patch({ id, patch })),
     delete: (id: number) => call(actions.delete(id)),
+    uploadImage: (id: number, file: PreviewImage) =>
+      call(actions.uploadImage({ id, file })),
+    getImage: (id: number) => call(actions.getImage(id)),
+    setPreviewImage: (file: PreviewImage) =>
+      call(actions.setPreviewImage(file)),
   };
 };
 

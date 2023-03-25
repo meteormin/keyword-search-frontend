@@ -10,8 +10,10 @@ import { FormSearch } from 'components/search/SearchForm';
 import SelectFilter from 'components/common/SelectFilter';
 import SearchAndReset from 'components/common/SearchAndReset';
 import { Option } from 'components/common/Select';
-import Input from '../common/Input';
-import { GetSearchParam } from '../../api/clients/Hosts';
+import Input from 'components/common/Input';
+import { GetSearchParam } from 'api/clients/Hosts';
+import PreviewModal from 'components/search/PreviewModal';
+import { useSearchState } from '../../store/features/search';
 
 const searchOptions: Option[] = [
   { name: '검색기준', value: '' },
@@ -32,6 +34,7 @@ export interface SearchTableProps {
 
 const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   const dispatcher = useDispatcher();
+  const { previewImage } = useSearchState();
   const [records, setRecords] = useState<SearchTableSchema[]>([]);
   const [show, setShow] = useState<boolean>(false);
   const [action, setAction] = useState<Action>('create');
@@ -44,8 +47,8 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
 
   const [select, setSelect] = useState<string>('');
   const [queryString, setQueryString] = useState<string>('');
-
   const [sort, setSort] = useState<string>('');
+  const [preview, setPreview] = useState<boolean>(false);
 
   useEffect(() => {
     setSearchParams((prev) => ({
@@ -62,6 +65,12 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   useEffect(() => {
     dispatcher.getList(hostId, searchParams);
   }, [searchParams]);
+
+  useEffect(() => {
+    if (previewImage != null) {
+      setPreview(true);
+    }
+  }, [previewImage]);
 
   const UpdateButton = (hostId: number, data: FormSearch) => {
     return (
@@ -82,6 +91,16 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
     setFormData({ hostId: hostId });
     setAction('create');
     setShow(true);
+  };
+
+  const handleLeaveRow = (record: SearchTableSchema) => {
+    console.log(record.id);
+    setPreview(false);
+  };
+
+  const handleEnterRow = (record: SearchTableSchema) => {
+    console.log(record.id);
+    dispatcher.getImage(record.id);
   };
 
   const mapSearchTable = () => {
@@ -117,7 +136,13 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
 
   for (const [key, value] of Object.entries(refactorSchema)) {
     if (key != 'update') {
-      refactorSchema[key] = Object.assign({ onClick: onClick }, value);
+      refactorSchema[key] = Object.assign(
+        {
+          onClick: onClick,
+          onHover: { onEnter: handleEnterRow, onLeave: handleLeaveRow },
+        },
+        value,
+      );
     }
   }
 
@@ -232,6 +257,14 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
           action={action}
           data={formData}
           onHide={() => setShow(false)}
+        />
+      ) : null}
+      {previewImage ? (
+        <PreviewModal
+          show={preview}
+          onHide={() => setPreview(false)}
+          blobUrl={previewImage?.url || ''}
+          filename={previewImage?.filename || ''}
         />
       ) : null}
     </>

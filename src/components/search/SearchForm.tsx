@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FormSearchKeys, setFormSearchByKey } from './utils';
 import { Form } from 'react-bootstrap';
+import { PreviewImage } from 'store/features/search/action';
 
 export interface FormSearch {
   id?: number;
@@ -13,12 +14,19 @@ export interface FormSearch {
 
 export interface SearchFormProps {
   readOnly?: boolean;
-  onChange?: (search: FormSearch | null) => any;
+  onChange?: (search: FormSearch | null, file: PreviewImage | null) => any;
   search?: FormSearch | null;
+  previewImage?: PreviewImage | null;
 }
 
-const SearchForm = ({ readOnly, onChange, search }: SearchFormProps) => {
+const SearchForm = ({
+  readOnly,
+  onChange,
+  search,
+  previewImage,
+}: SearchFormProps) => {
   const [formData, setFormData] = useState<FormSearch | null>(search || null);
+  const [file, setFile] = useState<PreviewImage | null>(previewImage || null);
 
   const styleCursor = () => {
     if (readOnly != undefined) {
@@ -35,11 +43,23 @@ const SearchForm = ({ readOnly, onChange, search }: SearchFormProps) => {
     setFormData(ch);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if ('files' in e.target) {
+      const files = e.target.files;
+      if (files != null) {
+        const file = files[0];
+        const url = URL.createObjectURL(file);
+        const filename = file.name;
+        setFile({ url, filename });
+      }
+    }
+  };
+
   useEffect(() => {
     if (onChange) {
-      onChange(formData);
+      onChange(formData, file);
     }
-  }, [formData]);
+  }, [formData, file]);
 
   return (
     <div style={styleCursor()}>
@@ -76,6 +96,15 @@ const SearchForm = ({ readOnly, onChange, search }: SearchFormProps) => {
             onChange={(e) => {
               handleFormChange(FormSearchKeys.query, e.target.value);
             }}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="host">
+          <Form.Label>PreviewImage</Form.Label>
+          <Form.Control
+            type="file"
+            readOnly={readOnly != undefined}
+            accept="image/gif,image/jpeg,image/jpg,image/png"
+            onChange={handleFileChange}
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="host">

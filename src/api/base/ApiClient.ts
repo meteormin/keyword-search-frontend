@@ -111,9 +111,7 @@ export default class ApiClient {
    * @param {AxiosRequestConfig} config
    * @returns {Promise<AxiosResponse<*, *>|*>}
    */
-  async request(
-    config: AxiosRequestConfig,
-  ): Promise<AxiosResponse<any, any> | any> {
+  async request(config: AxiosRequestConfig): Promise<ApiResponse> {
     if (this._token != null) {
       let token;
       if (this._token.tokenType) {
@@ -171,9 +169,8 @@ export default class ApiClient {
     try {
       this._response = await res;
       this._isSuccess = true;
-
       return {
-        ...(this.response as AxiosResponse<any, any>),
+        ...this._response,
         isSuccess: true,
         error: null,
       };
@@ -189,7 +186,9 @@ export default class ApiClient {
       if (error instanceof AxiosError) {
         if (error.response?.status || 500 < 500) {
           errorResponse.status = error.response?.data.status || 'error';
-          errorResponse.code = error.response?.data.code || 999;
+          errorResponse.code =
+            error.response?.data.code || error.response?.status || 999;
+
           if (this.error.response.data.hasOwnProperty('failed_fields')) {
             const messages = [];
             for (const [key, value] of Object.entries(
@@ -200,13 +199,14 @@ export default class ApiClient {
             }
             errorResponse.message = messages.join(', ');
           } else {
-            errorResponse.message = error.response?.data.message || '';
+            errorResponse.message =
+              error.response?.data.message || error.response?.statusText || '';
           }
         }
       }
 
       return {
-        ...(error.response as AxiosResponse<ErrorResInterface, any>),
+        ...error.response,
         isSuccess: false,
         error: new ErrorResponse(errorResponse),
       };
