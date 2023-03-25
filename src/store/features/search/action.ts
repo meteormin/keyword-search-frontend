@@ -55,7 +55,7 @@ const action = {
   },
   setPreviewImage: (
     state: SearchState,
-    action: PayloadAction<PreviewImage>,
+    action: PayloadAction<PreviewImage | null>,
   ) => {
     state.previewImage = action.payload;
   },

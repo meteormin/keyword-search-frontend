@@ -105,6 +105,7 @@ class SearchClient extends BaseClient {
     this._client.withHeader({ 'Content-Type': 'multipart/form-data' });
 
     const res = await this._client.post(`/${id}/image`);
+
     if (res.isSuccess) {
       const data = toCamel(res.data);
       res.data = data as Search;

@@ -13,7 +13,7 @@ import {
   putShowAlert,
   putStartLoading,
 } from 'store/features';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { PreviewImage, SearchState } from './action';
 import { parseAttachFileName } from '../../../utils/str';
 
@@ -36,15 +36,19 @@ function* create(action: PayloadAction<CreateSearch>) {
     const { previewImage }: SearchState = yield select(searchStore.getState);
     if (previewImage != null) {
       const search = res.data as Search;
-      const fileBlob: Blob = yield call(axios.get, previewImage.url);
+      const blobRes: AxiosResponse = yield call(axios.get, previewImage.url, {
+        responseType: 'blob',
+      });
+      const fileBlob: Blob = blobRes.data;
       res = yield apiCall.uploadImage(
         search.id,
-        new File([fileBlob], previewImage.filename),
+        new File([fileBlob], previewImage.filename, { type: 'image/png' }),
       );
       if (!res.isSuccess) {
         console.log(res);
         yield putErrorAlert(res.data, 'Search', 'Search 이미지 업로드 실패');
       }
+      yield putAction.setPreviewImage(null);
     }
 
     yield putShowAlert('Search', 'Search 생성 성공', true);
@@ -91,7 +95,10 @@ function* patch(action: PayloadAction<{ id: number; patch: PatchSearch }>) {
     const { previewImage }: SearchState = yield select(searchStore.getState);
     if (previewImage != null) {
       const search = res.data as Search;
-      const fileBlob: Blob = yield call(axios.get, previewImage.url);
+      const blobRes: AxiosResponse = yield call(axios.get, previewImage.url, {
+        responseType: 'blob',
+      });
+      const fileBlob: Blob = blobRes.data;
       res = yield apiCall.uploadImage(
         search.id,
         new File([fileBlob], previewImage.filename),
@@ -100,6 +107,7 @@ function* patch(action: PayloadAction<{ id: number; patch: PatchSearch }>) {
         console.log(res);
         yield putErrorAlert(res.data, 'Search', 'Search 이미지 업로드 실패');
       }
+      yield putAction.setPreviewImage(null);
     }
 
     yield putShowAlert('Search', 'Search 수정 성공', true);

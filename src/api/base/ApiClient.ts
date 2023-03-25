@@ -138,10 +138,13 @@ export default class ApiClient {
         data.append(attach.name, attach.file);
       }
       config.data = data;
+
+      this._attachment = [];
     }
 
     if (this._headers != null) {
       config.headers = this._headers;
+      this._headers = null;
     }
 
     return this.setResponse(axios.request(config));

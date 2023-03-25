@@ -45,7 +45,7 @@ const actionCall = (call: ActionCall) => {
     uploadImage: (id: number, file: PreviewImage) =>
       call(actions.uploadImage({ id, file })),
     getImage: (id: number) => call(actions.getImage(id)),
-    setPreviewImage: (file: PreviewImage) =>
+    setPreviewImage: (file: PreviewImage | null) =>
       call(actions.setPreviewImage(file)),
   };
 };

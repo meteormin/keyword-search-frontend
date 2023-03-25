@@ -3,6 +3,7 @@ import { Button, Modal } from 'react-bootstrap';
 import SearchForm, { FormSearch } from './SearchForm';
 import { useDispatcher } from 'components/search/utils';
 import { useSearchState } from '../../store/features/search';
+import { PreviewImage } from '../../store/features/search/action';
 
 export type Action = 'create' | 'update' | 'delete';
 
@@ -62,8 +63,12 @@ const SearchModal = (props: SearchModalProps) => {
     props.onHide();
   };
 
-  const handleChange = (search: FormSearch | null) => {
+  const handleChange = (
+    search: FormSearch | null,
+    file: PreviewImage | null,
+  ) => {
     setData(search);
+    dispatcher.setPreviewImage(file);
   };
 
   useEffect(() => {

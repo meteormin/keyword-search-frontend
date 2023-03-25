@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Modal } from 'react-bootstrap';
-import { decodeUnicode } from '../../utils/str';
+import { Button, Col, Image, Modal, Row } from 'react-bootstrap';
+import { decodeUnicode } from 'utils/str';
+import { openWindows } from 'components/search/utils';
 
 export interface PreviewModalProps {
+  id: number | null;
+  shorUrl: string;
   show?: boolean;
   onHide: () => void;
   blobUrl: string;
@@ -24,11 +27,23 @@ const PreviewModal = (props: PreviewModalProps) => {
   return (
     <Modal show={show} onHide={handleClose} centered size={'lg'}>
       <Modal.Header closeButton>
-        <Modal.Title>{decodeUnicode(props.filename)}</Modal.Title>
+        <Modal.Title>
+          {props.id + '. '}
+          {decodeUnicode(props.filename) || '이미지 없음'}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Image src={props.blobUrl} width={720} />
       </Modal.Body>
+      <Modal.Footer>
+        <Button
+          className="w-100"
+          variant="primary"
+          onClick={() => openWindows(props.shorUrl)}
+        >
+          이동
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 };

@@ -2,7 +2,7 @@ import DynamicTable from 'components/common/DaynamicTable';
 import React, { useEffect, useState } from 'react';
 import { SearchTableSchema, schema } from 'components/search/schema';
 import Card from 'components/common/Card';
-import { useDispatcher, defaultOnClick } from 'components/search/utils';
+import { useDispatcher } from 'components/search/utils';
 import { useHostState } from 'store/features/hosts';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 import SearchModal, { Action } from './SearchModal';
@@ -13,7 +13,7 @@ import { Option } from 'components/common/Select';
 import Input from 'components/common/Input';
 import { GetSearchParam } from 'api/clients/Hosts';
 import PreviewModal from 'components/search/PreviewModal';
-import { useSearchState } from '../../store/features/search';
+import { useSearchState } from 'store/features/search';
 
 const searchOptions: Option[] = [
   { name: '검색기준', value: '' },
@@ -34,7 +34,7 @@ export interface SearchTableProps {
 
 const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   const dispatcher = useDispatcher();
-  const { previewImage } = useSearchState();
+  const { previewImage, selectId } = useSearchState();
   const [records, setRecords] = useState<SearchTableSchema[]>([]);
   const [show, setShow] = useState<boolean>(false);
   const [action, setAction] = useState<Action>('create');
@@ -48,7 +48,7 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   const [select, setSelect] = useState<string>('');
   const [queryString, setQueryString] = useState<string>('');
   const [sort, setSort] = useState<string>('');
-  const [preview, setPreview] = useState<boolean>(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     setSearchParams((prev) => ({
@@ -67,10 +67,10 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (previewImage != null) {
-      setPreview(true);
+    if (previewUrl == null) {
+      dispatcher.setPreviewImage(null);
     }
-  }, [previewImage]);
+  }, [previewUrl]);
 
   const UpdateButton = (hostId: number, data: FormSearch) => {
     return (
@@ -93,14 +93,10 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
     setShow(true);
   };
 
-  const handleLeaveRow = (record: SearchTableSchema) => {
-    console.log(record.id);
-    setPreview(false);
-  };
-
   const handleEnterRow = (record: SearchTableSchema) => {
     console.log(record.id);
     dispatcher.getImage(record.id);
+    setPreviewUrl(record.shortUrl);
   };
 
   const mapSearchTable = () => {
@@ -128,18 +124,13 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
     }
   };
 
-  if (!onClick) {
-    onClick = defaultOnClick;
-  }
-
   const refactorSchema = Object.assign({}, schema);
 
   for (const [key, value] of Object.entries(refactorSchema)) {
     if (key != 'update') {
       refactorSchema[key] = Object.assign(
         {
-          onClick: onClick,
-          onHover: { onEnter: handleEnterRow, onLeave: handleLeaveRow },
+          onClick: handleEnterRow,
         },
         value,
       );
@@ -259,14 +250,14 @@ const SearchTable = ({ hostId, onClick }: SearchTableProps) => {
           onHide={() => setShow(false)}
         />
       ) : null}
-      {previewImage ? (
-        <PreviewModal
-          show={preview}
-          onHide={() => setPreview(false)}
-          blobUrl={previewImage?.url || ''}
-          filename={previewImage?.filename || ''}
-        />
-      ) : null}
+      <PreviewModal
+        id={selectId}
+        show={!!previewUrl}
+        onHide={() => setPreviewUrl(null)}
+        blobUrl={previewImage?.url || ''}
+        filename={previewImage?.filename || ''}
+        shorUrl={previewUrl || ''}
+      />
     </>
   );
 };

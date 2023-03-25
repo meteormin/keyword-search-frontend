@@ -61,6 +61,7 @@ interface Dispatcher {
   delete: (id: number) => void;
   uploadImage: (id: number, file: PreviewImage) => void;
   getImage: (id: number) => void;
+  setPreviewImage: (preview: PreviewImage | null) => void;
 }
 
 export const useDispatcher = (): Dispatcher => {
@@ -105,5 +106,7 @@ export const useDispatcher = (): Dispatcher => {
     uploadImage: (id: number, file: PreviewImage) =>
       searchDispatch.uploadImage(id, file),
     getImage: (id: number) => searchDispatch.getImage(id),
+    setPreviewImage: (preview: PreviewImage | null) =>
+      searchDispatch.setPreviewImage(preview),
   };
 };
