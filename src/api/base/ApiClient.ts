@@ -4,7 +4,7 @@ import axios, {
   AxiosError,
   RawAxiosRequestHeaders,
 } from 'axios';
-import { makePath } from 'utils/str';
+import { makePath } from 'utils/common/str';
 
 export interface Token {
   tokenType: string | null;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Image, Modal, Row } from 'react-bootstrap';
-import { decodeUnicode } from 'utils/str';
+import { Button, Image, Modal } from 'react-bootstrap';
+import { decodeUnicode } from 'utils/common/str';
 import { openWindows } from 'components/search/utils';
 
 export interface PreviewModalProps {
@@ -33,7 +33,7 @@ const PreviewModal = (props: PreviewModalProps) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Image src={props.blobUrl} width={720} />
+        <Image src={props.blobUrl} width="100%" />
       </Modal.Body>
       <Modal.Footer>
         <Button

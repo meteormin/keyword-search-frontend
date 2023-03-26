@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
-import SearchTable from 'components/search/SearchTable';
+import { Container } from 'react-bootstrap';
+import SearchList from 'components/search/SearchList';
 import { useHostDispatch, useHostState } from 'store/features/hosts';
 import Pagination from '../../components/common/Pagination';
 import { useParams } from 'react-router';
@@ -23,7 +23,7 @@ const SearchListPage = () => {
 
   return (
     <Container className="mt-4">
-      {hostId ? <SearchTable hostId={hostId} /> : null}
+      {hostId ? <SearchList hostId={hostId} /> : null}
       <Pagination
         currentPage={pageNumber}
         totalCount={search?.totalCount || 0}

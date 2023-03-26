@@ -1,4 +1,5 @@
-import { forSearchFormat } from './common/dateFormat';
+import { forSearchFormat } from './dateFormat';
+import axios from 'axios';
 
 export const filterKorean = (value: string): string | boolean => {
   const regExpEng = /^[^a-zA-Z]*$/;
@@ -58,6 +59,18 @@ export const isString = (value: any) => {
 };
 
 export const searchFormat = forSearchFormat;
+
+export const toBlob = async (blobUrl: string): Promise<Blob | null> => {
+  if (blobUrl.includes('blob:', 0)) {
+    const blobRes = await axios.get(blobUrl, {
+      responseType: 'blob',
+    });
+
+    return blobRes.data;
+  }
+
+  return null;
+};
 
 export const parseAttachFileName = (str: string) => {
   return str.split(';')[1].trim().split('=')[1].replaceAll('"', '');

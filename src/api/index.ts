@@ -4,7 +4,7 @@ import ApiClient, {
   Token,
 } from 'api/base/ApiClient';
 import BaseClient from 'api/base/BaseClient';
-import { makePath } from 'utils/str';
+import { makePath } from 'utils/common/str';
 import { AxiosRequestHeaders } from 'axios';
 import Config from 'config';
 

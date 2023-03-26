@@ -13,9 +13,8 @@ import {
   putShowAlert,
   putStartLoading,
 } from 'store/features';
-import axios, { AxiosResponse } from 'axios';
-import { PreviewImage, SearchState } from './action';
-import { parseAttachFileName } from '../../../utils/str';
+import { PreviewImage, SearchState } from 'store/features/search/action';
+import { parseAttachFileName, toBlob } from 'utils/common/str';
 
 const apiCall = useCallSearchApi();
 const putAction = usePutSearchAction();
@@ -36,18 +35,20 @@ function* create(action: PayloadAction<CreateSearch>) {
     const { previewImage }: SearchState = yield select(searchStore.getState);
     if (previewImage != null) {
       const search = res.data as Search;
-      const blobRes: AxiosResponse = yield call(axios.get, previewImage.url, {
-        responseType: 'blob',
-      });
-      const fileBlob: Blob = blobRes.data;
-      res = yield apiCall.uploadImage(
-        search.id,
-        new File([fileBlob], previewImage.filename, { type: 'image/png' }),
-      );
-      if (!res.isSuccess) {
-        console.log(res);
+      const blob: Blob | null = yield call(toBlob, previewImage.url);
+      if (blob != null) {
+        res = yield apiCall.uploadImage(
+          search.id,
+          new File([blob], previewImage.filename, { type: 'image/png' }),
+        );
+        if (!res.isSuccess) {
+          console.log(res);
+          yield putErrorAlert(res.data, 'Search', 'Search 이미지 업로드 실패');
+        }
+      } else {
         yield putErrorAlert(res.data, 'Search', 'Search 이미지 업로드 실패');
       }
+
       yield putAction.setPreviewImage(null);
     }
 
@@ -95,21 +96,21 @@ function* patch(action: PayloadAction<{ id: number; patch: PatchSearch }>) {
     const { previewImage }: SearchState = yield select(searchStore.getState);
     if (previewImage != null) {
       const search = res.data as Search;
-      const blobRes: AxiosResponse = yield call(axios.get, previewImage.url, {
-        responseType: 'blob',
-      });
-      const fileBlob: Blob = blobRes.data;
-      res = yield apiCall.uploadImage(
-        search.id,
-        new File([fileBlob], previewImage.filename),
-      );
-      if (!res.isSuccess) {
-        console.log(res);
+      const blob: Blob | null = yield call(toBlob, previewImage.url);
+      if (blob != null) {
+        res = yield apiCall.uploadImage(
+          search.id,
+          new File([blob], previewImage.filename),
+        );
+        if (!res.isSuccess) {
+          console.log(res);
+          yield putErrorAlert(res.data, 'Search', 'Search 이미지 업로드 실패');
+        }
+      } else {
         yield putErrorAlert(res.data, 'Search', 'Search 이미지 업로드 실패');
       }
       yield putAction.setPreviewImage(null);
     }
-
     yield putShowAlert('Search', 'Search 수정 성공', true);
   } catch (e) {
     yield putEndLoading();
@@ -140,8 +141,11 @@ function* uploadImage(
 ) {
   yield putStartLoading();
   try {
-    const fileBlob: Blob = yield call(axios.get, action.payload.file.url);
-
+    const fileBlob: Blob | null = yield call(toBlob, action.payload.file.url);
+    if (fileBlob == null) {
+      yield putShowAlert('Search', 'Search 이미지 업로드 실패');
+      return;
+    }
     const res: ApiResponse<Search | ErrorResInterface> =
       yield apiCall.uploadImage(
         action.payload.id,

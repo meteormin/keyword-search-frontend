@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { ReactElementLike } from 'prop-types';
 import { Navigate } from 'react-router';
-import { isString } from 'utils/str';
+import { isString } from 'utils/common/str';
 
 export interface RestrictedProps {
   condition: boolean;
