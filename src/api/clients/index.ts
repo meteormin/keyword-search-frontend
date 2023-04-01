@@ -5,9 +5,9 @@ import SearchClient from './Search';
 import RedirectClient from './Redirect';
 
 export default {
-  ReportClient,
-  HostsClient,
-  AuthClient,
-  SearchClient,
-  RedirectClient,
+    ReportClient,
+    HostsClient,
+    AuthClient,
+    SearchClient,
+    RedirectClient,
 };

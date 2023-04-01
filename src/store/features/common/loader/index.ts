@@ -1,26 +1,26 @@
 import {
-  startLoading,
-  endLoading,
-  getLoaderState,
+    startLoading,
+    endLoading,
+    getLoaderState,
 } from 'store/features/common/loader/loaderReducer';
 import { LoaderState } from 'store/features/common/loader/loaderAction';
 import { useDispatch, useSelector } from 'react-redux';
 
 export const useLoaderState = (): LoaderState => {
-  return useSelector(getLoaderState);
+    return useSelector(getLoaderState);
 };
 
 export const useLoaderDispatch = () => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  return {
-    startLoading: dispatch(startLoading()),
-    endLoading: dispatch(endLoading()),
-  };
+    return {
+        startLoading: dispatch(startLoading()),
+        endLoading: dispatch(endLoading()),
+    };
 };
 
 export default {
-  startLoading,
-  endLoading,
-  getLoaderState,
+    startLoading,
+    endLoading,
+    getLoaderState,
 };

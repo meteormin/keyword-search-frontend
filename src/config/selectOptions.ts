@@ -3,7 +3,7 @@ import { Option } from 'components/common/Select';
 const TestOptions: Option[] = [{ name: 'test', value: 'test' }];
 
 const selectOptions = {
-  TestOptions,
+    TestOptions,
 };
 
 export default selectOptions;

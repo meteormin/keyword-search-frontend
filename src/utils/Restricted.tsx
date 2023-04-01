@@ -4,9 +4,9 @@ import { Navigate } from 'react-router';
 import { isString } from 'utils/common/str';
 
 export interface RestrictedProps {
-  condition: boolean;
-  children: ReactElementLike;
-  redirect?: string | ReactElementLike;
+    condition: boolean;
+    children: ReactElementLike;
+    redirect?: string | ReactElementLike;
 }
 
 /**
@@ -15,19 +15,19 @@ export interface RestrictedProps {
  * @constructor
  */
 const Restricted = (props: RestrictedProps) => {
-  if (!props.condition) {
-    return props.children;
-  }
-
-  if (props.redirect) {
-    if (isString(props.redirect)) {
-      return <Navigate to={props.redirect as string} />;
-    } else {
-      return props.redirect as JSX.Element;
+    if (!props.condition) {
+        return props.children;
     }
-  }
 
-  return <Fragment></Fragment>;
+    if (props.redirect) {
+        if (isString(props.redirect)) {
+            return <Navigate to={props.redirect as string} />;
+        } else {
+            return props.redirect as JSX.Element;
+        }
+    }
+
+    return <Fragment></Fragment>;
 };
 
 export default Restricted;

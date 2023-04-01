@@ -6,32 +6,32 @@ import Pagination from '../../components/common/Pagination';
 import { useParams } from 'react-router';
 
 const SearchListPage = () => {
-  const params = useParams();
-  const hostId: number = params.id ? parseInt(params.id) : 0;
-  const { setPage } = useHostDispatch();
-  const { search, page } = useHostState();
-  const [pageNumber, setPageNumber] = useState<number>(page.page);
-  const [pageSize, setPageSize] = useState<number>(page.pageSize);
+    const params = useParams();
+    const hostId: number = params.id ? parseInt(params.id) : 0;
+    const { setPage } = useHostDispatch();
+    const { search, page } = useHostState();
+    const [pageNumber, setPageNumber] = useState<number>(page.page);
+    const [pageSize, setPageSize] = useState<number>(page.pageSize);
 
-  const handlePagination = (pn: number) => {
-    setPageNumber(pn);
-  };
+    const handlePagination = (pn: number) => {
+        setPageNumber(pn);
+    };
 
-  useEffect(() => {
-    setPage({ page: pageNumber, pageSize: pageSize });
-  }, [pageNumber, pageSize]);
+    useEffect(() => {
+        setPage({ page: pageNumber, pageSize: pageSize });
+    }, [pageNumber, pageSize]);
 
-  return (
-    <Container className="mt-4">
-      {hostId ? <SearchList hostId={hostId} /> : null}
-      <Pagination
-        currentPage={pageNumber}
-        totalCount={search?.totalCount || 0}
-        limit={pageSize}
-        onClick={handlePagination}
-      />
-    </Container>
-  );
+    return (
+        <Container className="mt-4">
+            {hostId ? <SearchList hostId={hostId} /> : null}
+            <Pagination
+                currentPage={pageNumber}
+                totalCount={search?.totalCount || 0}
+                limit={pageSize}
+                onClick={handlePagination}
+            />
+        </Container>
+    );
 };
 
 export default SearchListPage;

@@ -13,44 +13,44 @@ import Router from 'routes/Router';
 import { User } from './utils/auth';
 
 function App() {
-  const htmlTitle = document.querySelector('title');
-  if (htmlTitle) {
-    htmlTitle.innerHTML = config.app.name || 'title';
-  }
+    const htmlTitle = document.querySelector('title');
+    if (htmlTitle) {
+        htmlTitle.innerHTML = config.app.name || 'title';
+    }
 
-  const user = auth.user();
-  const isLogin = auth.isLogin();
+    const user = auth.user();
+    const isLogin = auth.isLogin();
 
-  let userType = user?.role;
-  switch (userType) {
-    case UserRole.ADMIN:
-      userType = 'ADMIN';
-      break;
-    default:
-      auth.logout();
-      break;
-  }
+    let userType = user?.role;
+    switch (userType) {
+        case UserRole.ADMIN:
+            userType = 'ADMIN';
+            break;
+        default:
+            auth.logout();
+            break;
+    }
 
-  const updateMenu = Object.assign({}, config.layouts.menu);
-  updateMenu.header = userType as string;
+    const updateMenu = Object.assign({}, config.layouts.menu);
+    updateMenu.header = userType as string;
 
-  return (
-    <div className="sb-nav">
-      <Header
-        appName={config.app.name as string}
-        isLogin={isLogin}
-        dropDownMenu={config.layouts.header.dropDownMenu}
-        userName={user?.username || ''}
-      />
-      <Container
-        menu={handleMenuVisible(updateMenu)}
-        isLogin={isLogin}
-        footer={config.layouts.footer}
-      >
-        <Router isLogin={isLogin} authUser={user} />
-      </Container>
-    </div>
-  );
+    return (
+        <div className="sb-nav">
+            <Header
+                appName={config.app.name as string}
+                isLogin={isLogin}
+                dropDownMenu={config.layouts.header.dropDownMenu}
+                userName={user?.username || ''}
+            />
+            <Container
+                menu={handleMenuVisible(updateMenu)}
+                isLogin={isLogin}
+                footer={config.layouts.footer}
+            >
+                <Router isLogin={isLogin} authUser={user} />
+            </Container>
+        </div>
+    );
 }
 
 export default App;

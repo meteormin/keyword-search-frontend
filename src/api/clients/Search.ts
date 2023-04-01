@@ -5,129 +5,129 @@ import { ApiResponse, ErrorResInterface } from '../base/ApiClient';
 import { Search } from '../interfaces/Search';
 
 export interface AllParam extends Page {
-  page: number;
-  pageSize: number;
+    page: number;
+    pageSize: number;
 }
 
 export interface AllRes extends Paginator {
-  data: Search[];
+    data: Search[];
 }
 
 export interface CreateSearch {
-  publish: boolean;
-  query: string;
-  queryKey: string;
-  description: string;
-  hostId: number;
+    publish: boolean;
+    query: string;
+    queryKey: string;
+    description: string;
+    hostId: number;
 }
 
 export interface UpdateSearch extends CreateSearch {
-  description: string;
+    description: string;
 }
 
 export interface PatchSearch {
-  publish?: boolean;
-  query?: string;
-  queryKey?: string;
-  description?: string;
-  hostId: number;
+    publish?: boolean;
+    query?: string;
+    queryKey?: string;
+    description?: string;
+    hostId: number;
 }
 
 class SearchClient extends BaseClient {
-  static readonly prefix = '/api/search';
+    static readonly prefix = '/api/search';
 
-  public all = async (
-    params: AllParam,
-  ): Promise<ApiResponse<AllRes | ErrorResInterface>> => {
-    const res = await this._client.get('/all', toSnake(params));
-    if (res.isSuccess) {
-      const data = toCamel(res?.data) as Paginator;
-      data.data = data.data.map(toCamel);
-      res.data = data as AllRes;
-    }
-    return res;
-  };
+    public all = async (
+        params: AllParam,
+    ): Promise<ApiResponse<AllRes | ErrorResInterface>> => {
+        const res = await this._client.get('/all', toSnake(params));
+        if (res.isSuccess) {
+            const data = toCamel(res?.data) as Paginator;
+            data.data = data.data.map(toCamel);
+            res.data = data as AllRes;
+        }
+        return res;
+    };
 
-  public create = async (
-    params: CreateSearch,
-  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
-    const res = await this._client.post('/', toSnake(params));
-    if (res.isSuccess) {
-      const data = toCamel(res?.data);
-      res.data = data as Search;
-    }
-    return res;
-  };
+    public create = async (
+        params: CreateSearch,
+    ): Promise<ApiResponse<Search | ErrorResInterface>> => {
+        const res = await this._client.post('/', toSnake(params));
+        if (res.isSuccess) {
+            const data = toCamel(res?.data);
+            res.data = data as Search;
+        }
+        return res;
+    };
 
-  public update = async (
-    id: number,
-    params: UpdateSearch,
-  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
-    const res = await this._client.put(`/${id}`, toSnake(params));
-    if (res.isSuccess) {
-      const data = toCamel(res?.data);
-      res.data = data as Search;
-    }
-    return res;
-  };
+    public update = async (
+        id: number,
+        params: UpdateSearch,
+    ): Promise<ApiResponse<Search | ErrorResInterface>> => {
+        const res = await this._client.put(`/${id}`, toSnake(params));
+        if (res.isSuccess) {
+            const data = toCamel(res?.data);
+            res.data = data as Search;
+        }
+        return res;
+    };
 
-  public patch = async (
-    id: number,
-    params: PatchSearch,
-  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
-    const res = await this._client.patch(`/${id}`, toSnake(params));
-    if (res.isSuccess) {
-      const data = toCamel(res?.data);
-      res.data = data as Search;
-    }
-    return res;
-  };
+    public patch = async (
+        id: number,
+        params: PatchSearch,
+    ): Promise<ApiResponse<Search | ErrorResInterface>> => {
+        const res = await this._client.patch(`/${id}`, toSnake(params));
+        if (res.isSuccess) {
+            const data = toCamel(res?.data);
+            res.data = data as Search;
+        }
+        return res;
+    };
 
-  public delete = async (
-    id: number,
-  ): Promise<ApiResponse<boolean | ErrorResInterface>> => {
-    const res = await this._client.delete(`/${id}`);
-    if (res.isSuccess) {
-      res.data = res.isSuccess;
-    }
-    return res;
-  };
+    public delete = async (
+        id: number,
+    ): Promise<ApiResponse<boolean | ErrorResInterface>> => {
+        const res = await this._client.delete(`/${id}`);
+        if (res.isSuccess) {
+            res.data = res.isSuccess;
+        }
+        return res;
+    };
 
-  public uploadImage = async (
-    id: number,
-    image: File,
-  ): Promise<ApiResponse<Search | ErrorResInterface>> => {
-    this._client.attach({
-      name: 'image',
-      file: image,
-    });
+    public uploadImage = async (
+        id: number,
+        image: File,
+    ): Promise<ApiResponse<Search | ErrorResInterface>> => {
+        this._client.attach({
+            name: 'image',
+            file: image,
+        });
 
-    this._client.withHeader({ 'Content-Type': 'multipart/form-data' });
+        this._client.withHeader({ 'Content-Type': 'multipart/form-data' });
 
-    const res = await this._client.post(`/${id}/image`);
+        const res = await this._client.post(`/${id}/image`);
 
-    if (res.isSuccess) {
-      const data = toCamel(res.data);
-      res.data = data as Search;
-    }
+        if (res.isSuccess) {
+            const data = toCamel(res.data);
+            res.data = data as Search;
+        }
 
-    return res;
-  };
+        return res;
+    };
 
-  public getPreviewImage = async (
-    id: number,
-  ): Promise<ApiResponse | ErrorResInterface> => {
-    const res = await this._client.request({
-      url: this._client.makeUrl(`/${id}/image`),
-      method: 'GET',
-      responseType: 'blob',
-    });
-    if (!res.isSuccess) {
-      res.data = res.error;
-    }
+    public getPreviewImage = async (
+        id: number,
+    ): Promise<ApiResponse | ErrorResInterface> => {
+        const res = await this._client.request({
+            url: this._client.makeUrl(`/${id}/image`),
+            method: 'GET',
+            responseType: 'blob',
+        });
+        if (!res.isSuccess) {
+            res.data = res.error;
+        }
 
-    return res;
-  };
+        return res;
+    };
 }
 
 export default SearchClient;

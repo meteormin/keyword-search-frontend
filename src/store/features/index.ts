@@ -14,58 +14,58 @@ import alertModalStore from 'store/features/common/alertModal';
 import loaderStore from 'store/features/common/loader';
 
 export interface ActionCall {
-  (action: Action): Action | SimpleEffect<any>;
+    (action: Action): Action | SimpleEffect<any>;
 }
 
 export const rootReducer = combineReducers({
-  // reducers
-  loader: loaderReducer,
-  login: loginReducer,
-  alertModal: alertModalReducer,
-  hosts: hostsReducer,
-  search: searchReducer,
+    // reducers
+    loader: loaderReducer,
+    login: loginReducer,
+    alertModal: alertModalReducer,
+    hosts: hostsReducer,
+    search: searchReducer,
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([call(loginSaga), call(hostSaga), call(searchSaga)]);
+    yield all([call(loginSaga), call(hostSaga), call(searchSaga)]);
 };
 
 export const putStartLoading = () => {
-  return put(loaderStore.startLoading());
+    return put(loaderStore.startLoading());
 };
 
 export const putEndLoading = () => {
-  return put(loaderStore.endLoading());
+    return put(loaderStore.endLoading());
 };
 
 export const putShowAlert = (
-  title: string,
-  message: string,
-  refresh?: boolean,
+    title: string,
+    message: string,
+    refresh?: boolean,
 ) => {
-  return put(alertModalStore.showAlert({ title, message, refresh }));
+    return put(alertModalStore.showAlert({ title, message, refresh }));
 };
 
 export const putErrorAlert = (res: any, title: string, message: string) => {
-  if (isErrorResponse(res)) {
-    return put(
-      alertModalStore.errorAlert({
-        res: serializeErrorResponse(res),
-        fallback: {
-          title: title,
-          message: message,
-        },
-      }),
-    );
-  }
+    if (isErrorResponse(res)) {
+        return put(
+            alertModalStore.errorAlert({
+                res: serializeErrorResponse(res),
+                fallback: {
+                    title: title,
+                    message: message,
+                },
+            }),
+        );
+    }
 
-  return put(
-    alertModalStore.errorAlert({
-      res: res,
-      fallback: {
-        title: title,
-        message: message,
-      },
-    }),
-  );
+    return put(
+        alertModalStore.errorAlert({
+            res: res,
+            fallback: {
+                title: title,
+                message: message,
+            },
+        }),
+    );
 };

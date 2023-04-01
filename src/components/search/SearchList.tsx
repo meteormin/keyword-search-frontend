@@ -13,149 +13,154 @@ import { useSearchState } from 'store/features/search';
 import SearchFilter from './SearchFilter';
 
 export interface SearchListProps {
-  hostId: number;
-  onClick?: (r: SearchTableSchema) => any;
+    hostId: number;
+    onClick?: (r: SearchTableSchema) => any;
 }
 
 const SearchList = ({ hostId, onClick }: SearchListProps) => {
-  const dispatcher = useDispatcher();
-  const { previewImage, selectId } = useSearchState();
-  const [records, setRecords] = useState<SearchTableSchema[]>([]);
-  const [show, setShow] = useState<boolean>(false);
-  const [action, setAction] = useState<Action>('create');
-  const [formData, setFormData] = useState<FormSearch | null>(null);
-  const { search, page } = useHostState();
-  const [searchParams, setSearchParams] = useState<GetSearchParam>({
-    page: 1,
-    pageSize: 20,
-  });
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    setSearchParams((prev) => ({
-      ...prev,
-      page: page.page,
-      pageSize: page.pageSize,
-    }));
-  }, [hostId, page.page, page.pageSize]);
-
-  useEffect(() => {
-    setMapRecords();
-  }, [search, search?.totalCount]);
-
-  useEffect(() => {
-    dispatcher.getList(hostId, searchParams);
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (previewUrl == null) {
-      dispatcher.setPreviewImage(null);
-    }
-  }, [previewUrl]);
-
-  const UpdateButton = (hostId: number, data: FormSearch) => {
-    return (
-      <Button
-        variant={'success'}
-        onClick={() => {
-          setFormData(data);
-          setAction('update');
-          setShow(true);
-        }}
-      >
-        Update
-      </Button>
-    );
-  };
-
-  const handleClickCreate = () => {
-    setFormData({ hostId: hostId });
-    setAction('create');
-    setShow(true);
-  };
-
-  const handleEnterRow = (record: SearchTableSchema) => {
-    console.log(record.id);
-    dispatcher.getImage(record.id);
-    setPreviewUrl(record.shortUrl);
-  };
-
-  const mapSearchTable = () => {
-    return search?.data.map((s): SearchTableSchema => {
-      return {
-        createdAt: s.createdAt,
-        updatedAt: s.updatedAt,
-        shortUrl: s.shortUrl,
-        id: s.id,
-        publish: <Form.Check type="switch" disabled checked={s.publish} />,
-        description: s.description,
-        query: s.query,
-        queryKey: s.queryKey,
-        views: s.views,
-        update: UpdateButton(s.hostId, s),
-        origin: s,
-      };
+    const dispatcher = useDispatcher();
+    const { previewImage, selectId } = useSearchState();
+    const [records, setRecords] = useState<SearchTableSchema[]>([]);
+    const [show, setShow] = useState<boolean>(false);
+    const [action, setAction] = useState<Action>('create');
+    const [formData, setFormData] = useState<FormSearch | null>(null);
+    const { search, page } = useHostState();
+    const [searchParams, setSearchParams] = useState<GetSearchParam>({
+        page: 1,
+        pageSize: 20,
     });
-  };
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const setMapRecords = () => {
-    const mapped = mapSearchTable();
-    if (search?.data && mapped) {
-      setRecords(mapped);
-    }
-  };
+    useEffect(() => {
+        setSearchParams((prev) => ({
+            ...prev,
+            page: page.page,
+            pageSize: page.pageSize,
+        }));
+    }, [hostId, page.page, page.pageSize]);
 
-  const refactorSchema = Object.assign({}, schema);
+    useEffect(() => {
+        setMapRecords();
+    }, [search, search?.totalCount]);
 
-  for (const [key, value] of Object.entries(refactorSchema)) {
-    if (key != 'update') {
-      refactorSchema[key] = Object.assign(
-        {
-          onClick: handleEnterRow,
-        },
-        value,
-      );
-    }
-  }
+    useEffect(() => {
+        dispatcher.getList(hostId, searchParams);
+    }, [searchParams]);
 
-  const handleSearchFilterChange = (state: GetSearchParam) => {
-    setSearchParams((prev) => ({
-      ...prev,
-      ...state,
-    }));
-  };
+    useEffect(() => {
+        if (previewUrl == null) {
+            dispatcher.setPreviewImage(null);
+        }
+    }, [previewUrl]);
 
-  return (
-    <>
-      <Card header={`Host: ${hostId} Search`}>
-        <SearchFilter onChange={handleSearchFilterChange} />
-        <DynamicTable schema={refactorSchema} records={records} />
-        <Row className="mt-4">
-          <Col>
-            <Button className="float-end me-3" onClick={handleClickCreate}>
-              Create
+    const UpdateButton = (hostId: number, data: FormSearch) => {
+        return (
+            <Button
+                variant={'success'}
+                onClick={() => {
+                    setFormData(data);
+                    setAction('update');
+                    setShow(true);
+                }}
+            >
+                Update
             </Button>
-          </Col>
-        </Row>
-      </Card>
-      {show && action ? (
-        <SearchModal
-          show={show}
-          action={action}
-          data={formData}
-          onHide={() => setShow(false)}
-        />
-      ) : null}
-      <PreviewModal
-        id={selectId}
-        show={!!previewUrl}
-        onHide={() => setPreviewUrl(null)}
-        blobUrl={previewImage?.url || ''}
-        filename={previewImage?.filename || ''}
-        shorUrl={previewUrl || ''}
-      />
-    </>
-  );
+        );
+    };
+
+    const handleClickCreate = () => {
+        setFormData({ hostId: hostId });
+        setAction('create');
+        setShow(true);
+    };
+
+    const handleEnterRow = (record: SearchTableSchema) => {
+        console.log(record.id);
+        dispatcher.getImage(record.id);
+        setPreviewUrl(record.shortUrl);
+    };
+
+    const mapSearchTable = () => {
+        return search?.data.map((s): SearchTableSchema => {
+            return {
+                createdAt: s.createdAt,
+                updatedAt: s.updatedAt,
+                shortUrl: s.shortUrl,
+                id: s.id,
+                publish: (
+                    <Form.Check type="switch" disabled checked={s.publish} />
+                ),
+                description: s.description,
+                query: s.query,
+                queryKey: s.queryKey,
+                views: s.views,
+                update: UpdateButton(s.hostId, s),
+                origin: s,
+            };
+        });
+    };
+
+    const setMapRecords = () => {
+        const mapped = mapSearchTable();
+        if (search?.data && mapped) {
+            setRecords(mapped);
+        }
+    };
+
+    const refactorSchema = Object.assign({}, schema);
+
+    for (const [key, value] of Object.entries(refactorSchema)) {
+        if (key != 'update') {
+            refactorSchema[key] = Object.assign(
+                {
+                    onClick: handleEnterRow,
+                },
+                value,
+            );
+        }
+    }
+
+    const handleSearchFilterChange = (state: GetSearchParam) => {
+        setSearchParams((prev) => ({
+            ...prev,
+            ...state,
+        }));
+    };
+
+    return (
+        <>
+            <Card header={`Host: ${hostId} Search`}>
+                <SearchFilter onChange={handleSearchFilterChange} />
+                <DynamicTable schema={refactorSchema} records={records} />
+                <Row className="mt-4">
+                    <Col>
+                        <Button
+                            className="float-end me-3"
+                            onClick={handleClickCreate}
+                        >
+                            Create
+                        </Button>
+                    </Col>
+                </Row>
+            </Card>
+            {show && action ? (
+                <SearchModal
+                    show={show}
+                    action={action}
+                    data={formData}
+                    onHide={() => setShow(false)}
+                />
+            ) : null}
+            <PreviewModal
+                id={selectId}
+                show={!!previewUrl}
+                onHide={() => setPreviewUrl(null)}
+                blobUrl={previewImage?.url || ''}
+                filename={previewImage?.filename || ''}
+                shorUrl={previewUrl || ''}
+            />
+        </>
+    );
 };
 
 export default SearchList;

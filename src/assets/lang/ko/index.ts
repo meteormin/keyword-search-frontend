@@ -1,5 +1,5 @@
 const defaultLang = {
-  name: 'react-template',
+    name: 'react-template',
 };
 
 export default { defaultLang };

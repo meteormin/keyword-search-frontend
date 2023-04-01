@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import loaderAction, {
-  initialState,
-  LoaderState,
+    initialState,
+    LoaderState,
 } from 'store/features/common/loader/loaderAction';
 
 const loaderSlice = createSlice({
-  name: 'loader',
-  initialState: initialState,
-  reducers: loaderAction,
+    name: 'loader',
+    initialState: initialState,
+    reducers: loaderAction,
 });
 
 export const { startLoading, endLoading } = loaderSlice.actions;

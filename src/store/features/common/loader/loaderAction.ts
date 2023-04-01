@@ -1,16 +1,16 @@
 export interface LoaderState {
-  isLoading: boolean;
+    isLoading: boolean;
 }
 
 export const initialState = {
-  isLoading: false,
+    isLoading: false,
 };
 
 export default {
-  startLoading: (state: LoaderState) => {
-    state.isLoading = true;
-  },
-  endLoading: (state: LoaderState) => {
-    state.isLoading = false;
-  },
+    startLoading: (state: LoaderState) => {
+        state.isLoading = true;
+    },
+    endLoading: (state: LoaderState) => {
+        state.isLoading = false;
+    },
 };

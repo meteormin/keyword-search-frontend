@@ -1,24 +1,24 @@
 version: '3.9'
 services:
-  keyword-search-frontend:
-    container_name: 'keyword-search-react'
-    image: keyword-search-frontend
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        WWWUSER: "${WWWUSER:-501}"
-        WWWGROUP: "${WWWGROUP:-20}"
-        NODE_VERSION: "${NODE_VERSION:-18.12.1}"
-    restart: always
-    stdin_open: true
-    environment:
-      TIME_ZONE: '${TIME_ZONE:-Asia/Seoul}'
-    ports:
-      - '80:80'
-      - '443:443'
-    networks:
-      - ks
+    keyword-search-frontend:
+        container_name: 'keyword-search-react'
+        image: keyword-search-frontend
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                WWWUSER: '${WWWUSER:-501}'
+                WWWGROUP: '${WWWGROUP:-20}'
+                NODE_VERSION: '${NODE_VERSION:-18.12.1}'
+        restart: always
+        stdin_open: true
+        environment:
+            TIME_ZONE: '${TIME_ZONE:-Asia/Seoul}'
+        ports:
+            - '80:80'
+            - '443:443'
+        networks:
+            - ks
 networks:
-  ks:
-    external: true
+    ks:
+        external: true

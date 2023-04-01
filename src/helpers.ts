@@ -17,16 +17,16 @@ export const config = Config();
 export const auth = Auth;
 
 export const guard = {
-  HiddenByRole,
-  Restricted,
-  Protected,
-  handleByRole: (
-    path: string,
-    role: string,
-    rules: { [key: string]: string[] },
-  ) => {
-    return path in rules[role];
-  },
+    HiddenByRole,
+    Restricted,
+    Protected,
+    handleByRole: (
+        path: string,
+        role: string,
+        rules: { [key: string]: string[] },
+    ) => {
+        return path in rules[role];
+    },
 };
 
 // moment.locale('ko');
@@ -39,29 +39,29 @@ export const str = Str;
 export const arr = Arr;
 
 export function usePrev<T>(value: T): T {
-  const ref = useRef<T>();
+    const ref = useRef<T>();
 
-  useEffect(() => {
-    ref.current = value as T;
-  });
+    useEffect(() => {
+        ref.current = value as T;
+    });
 
-  return ref.current as T;
+    return ref.current as T;
 }
 
 export interface Reportable {
-  message: string;
-  context: object;
+    message: string;
+    context: object;
 }
 
 export const reportError = async (
-  r: Reportable,
+    r: Reportable,
 ): Promise<ApiResponse | null> => {
-  try {
-    console.log(r);
-    const reportApi = makeClient<ReportClient>(ReportClient);
-    return await reportApi.report(r);
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
+    try {
+        console.log(r);
+        const reportApi = makeClient<ReportClient>(ReportClient);
+        return await reportApi.report(r);
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
 };

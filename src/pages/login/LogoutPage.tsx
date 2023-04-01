@@ -2,13 +2,13 @@ import { useAuthDispatch } from 'store/features/auth';
 import { useEffect } from 'react';
 
 const LogoutPage = () => {
-  const dispatch = useAuthDispatch();
+    const dispatch = useAuthDispatch();
 
-  useEffect(() => {
-    dispatch.logout();
-  }, []);
+    useEffect(() => {
+        dispatch.logout();
+    }, []);
 
-  return null;
+    return null;
 };
 
 export default LogoutPage;

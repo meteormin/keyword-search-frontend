@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import action, {
-  SearchState,
-  initialState,
+    SearchState,
+    initialState,
 } from 'store/features/search/action';
 
 const slice = createSlice({
-  name: 'search',
-  initialState: initialState,
-  reducers: action,
+    name: 'search',
+    initialState: initialState,
+    reducers: action,
 });
 
 export const actions = slice.actions;

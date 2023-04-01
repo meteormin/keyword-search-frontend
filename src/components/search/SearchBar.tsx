@@ -5,36 +5,36 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.bs5.css';
 
 export interface SearchBarProps {
-  id: string;
-  data: any[];
-  onPaginate?: () => any;
-  onChange?: (selected: any[]) => any;
-  maxResults: number;
+    id: string;
+    data: any[];
+    onPaginate?: () => any;
+    onChange?: (selected: any[]) => any;
+    maxResults: number;
 }
 
 const SearchBar = ({
-  id,
-  data,
-  onPaginate,
-  onChange,
-  maxResults,
+    id,
+    data,
+    onPaginate,
+    onChange,
+    maxResults,
 }: SearchBarProps) => {
-  const [options, setOptions] = useState<any[]>([]);
+    const [options, setOptions] = useState<any[]>([]);
 
-  useEffect(() => {
-    setOptions(data);
-  }, [data]);
+    useEffect(() => {
+        setOptions(data);
+    }, [data]);
 
-  return (
-    <Typeahead
-      id={id}
-      options={options}
-      onPaginate={onPaginate}
-      maxResults={maxResults}
-      paginate={true}
-      onChange={onChange}
-    />
-  );
+    return (
+        <Typeahead
+            id={id}
+            options={options}
+            onPaginate={onPaginate}
+            maxResults={maxResults}
+            paginate={true}
+            onChange={onChange}
+        />
+    );
 };
 
 export default SearchBar;
