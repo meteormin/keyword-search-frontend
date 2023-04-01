@@ -1,16 +1,14 @@
 import 'App.css';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'assets/css/styles.css';
 import { auth, config } from 'helpers';
 import Header from 'components/layouts/Header';
 import Container from 'components/layouts/Container';
-import { Menu } from 'components/layouts/Navigator';
 import { UserRole } from 'config/UserType';
 import { handleMenuVisible } from 'routes/handler';
 import Router from 'routes/Router';
-import { User } from './utils/auth';
 
 function App() {
     const htmlTitle = document.querySelector('title');
