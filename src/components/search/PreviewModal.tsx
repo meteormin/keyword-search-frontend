@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Image, Modal } from 'react-bootstrap';
 import { decodeUnicode } from 'utils/common/str';
 import { openWindows } from 'components/search/utils';
+import { handleImageError } from 'helpers';
 
 export interface PreviewModalProps {
     id: number | null;
-    shorUrl: string;
+    shortUrl: string;
     show?: boolean;
     onHide: () => void;
     blobUrl: string;
@@ -28,18 +29,24 @@ const PreviewModal = (props: PreviewModalProps) => {
         <Modal show={show} onHide={handleClose} centered size={'lg'}>
             <Modal.Header closeButton>
                 <Modal.Title>
-                    {props.id + '. '}
+                    {props.id + ': '}
                     {decodeUnicode(props.filename) || '이미지 없음'}
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                <Image src={props.blobUrl} width="100%" />
+            <Modal.Body style={{ textAlign: 'center' }}>
+                <Image
+                    src={props.blobUrl}
+                    width="100%"
+                    onError={(e) =>
+                        handleImageError(e, { width: 500, height: 500 })
+                    }
+                />
             </Modal.Body>
             <Modal.Footer>
                 <Button
                     className="w-100"
                     variant="primary"
-                    onClick={() => openWindows(props.shorUrl)}
+                    onClick={() => openWindows(props.shortUrl)}
                 >
                     이동
                 </Button>

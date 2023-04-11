@@ -8,7 +8,7 @@ import 'moment/locale/ko';
 import Lang from 'assets/lang';
 import * as Str from 'utils/common/str';
 import * as Arr from 'utils/common/arr';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import makeClient from 'api';
 import { ApiResponse } from 'api/base/ApiClient';
 import ReportClient from 'api/clients/Report';
@@ -64,4 +64,21 @@ export const reportError = async (
         console.error(e);
         return null;
     }
+};
+
+export const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement>,
+    size?: { width?: number; height?: number },
+) => {
+    e.currentTarget.onerror = null;
+
+    if (size?.width) {
+        e.currentTarget.width = size?.width;
+    }
+
+    if (size?.height) {
+        e.currentTarget.height = size?.height;
+    }
+
+    e.currentTarget.src = '/images/31.png';
 };

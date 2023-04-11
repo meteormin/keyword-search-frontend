@@ -10,7 +10,7 @@ import { HostListPage, EditHostPage, SearchListPage } from 'pages/hosts';
 import { guard } from 'helpers';
 import { User } from 'utils/auth';
 import { SearchPage } from 'pages/search';
-import CreateHostPage from '../pages/hosts/CreateHostPage';
+import CreateHostPage from 'pages/hosts/CreateHostPage';
 
 export interface RouterProps {
     isLogin: boolean;

@@ -11,6 +11,7 @@ import { GetSearchParam } from 'api/clients/Hosts';
 import PreviewModal from 'components/search/PreviewModal';
 import { useSearchState } from 'store/features/search';
 import SearchFilter from './SearchFilter';
+import SearchCardList from './SearchCardList';
 
 export interface SearchListProps {
     hostId: number;
@@ -30,6 +31,7 @@ const SearchList = ({ hostId, onClick }: SearchListProps) => {
         pageSize: 20,
     });
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [isImgView, setIsImgView] = useState<boolean>(false);
 
     useEffect(() => {
         setSearchParams((prev) => ({
@@ -131,7 +133,19 @@ const SearchList = ({ hostId, onClick }: SearchListProps) => {
         <>
             <Card header={`Host: ${hostId} Search`}>
                 <SearchFilter onChange={handleSearchFilterChange} />
-                <DynamicTable schema={refactorSchema} records={records} />
+                <Row className="mt-4 ms-2 mb-2">
+                    <Form.Check
+                        type="switch"
+                        label="Image"
+                        checked={isImgView}
+                        onChange={(e) => setIsImgView(e.target.checked)}
+                    />
+                </Row>
+                {isImgView ? (
+                    <SearchCardList list={search?.data || []} />
+                ) : (
+                    <DynamicTable schema={refactorSchema} records={records} />
+                )}
                 <Row className="mt-4">
                     <Col>
                         <Button
@@ -157,7 +171,7 @@ const SearchList = ({ hostId, onClick }: SearchListProps) => {
                 onHide={() => setPreviewUrl(null)}
                 blobUrl={previewImage?.url || ''}
                 filename={previewImage?.filename || ''}
-                shorUrl={previewUrl || ''}
+                shortUrl={previewUrl || ''}
             />
         </>
     );
