@@ -15,10 +15,9 @@ import SearchCardList from './SearchCardList';
 
 export interface SearchListProps {
     hostId: number;
-    onClick?: (r: SearchTableSchema) => any;
 }
 
-const SearchList = ({ hostId, onClick }: SearchListProps) => {
+const SearchList = ({ hostId }: SearchListProps) => {
     const dispatcher = useDispatcher();
     const { previewImage, selectId } = useSearchState();
     const [records, setRecords] = useState<SearchTableSchema[]>([]);
@@ -129,6 +128,12 @@ const SearchList = ({ hostId, onClick }: SearchListProps) => {
         }));
     };
 
+    const handleUpdateClick = (form: FormSearch) => {
+        setFormData(form);
+        setAction('update');
+        setShow(true);
+    };
+
     return (
         <>
             <Card header={`Host: ${hostId} Search`}>
@@ -142,7 +147,10 @@ const SearchList = ({ hostId, onClick }: SearchListProps) => {
                     />
                 </Row>
                 {isImgView ? (
-                    <SearchCardList list={search?.data || []} />
+                    <SearchCardList
+                        list={search?.data || []}
+                        onUpdate={handleUpdateClick}
+                    />
                 ) : (
                     <DynamicTable schema={refactorSchema} records={records} />
                 )}

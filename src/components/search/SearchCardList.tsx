@@ -7,6 +7,7 @@ import SearchClient from 'api/clients/Search';
 import { ApiResponse } from 'api/base/ApiClient';
 import { parseAttachFileName } from 'utils/common/str';
 import { auth } from 'helpers';
+import { FormSearch } from './SearchForm';
 
 const client = makeClient(SearchClient, {
     token: auth.getToken()?.accessToken.token || '',
@@ -15,6 +16,7 @@ const client = makeClient(SearchClient, {
 
 export interface SearchCardListProps {
     list: Search[];
+    onUpdate: (form: FormSearch) => void;
 }
 
 const getImage = async (
@@ -39,7 +41,7 @@ const getImage = async (
     return { url: '', filename: '' };
 };
 
-const SearchCardList = ({ list }: SearchCardListProps) => {
+const SearchCardList = ({ list, onUpdate }: SearchCardListProps) => {
     const [rows, setRows] = useState<Search[][]>([]);
     useEffect(() => {
         setRows(makeMatrix(list));
@@ -53,14 +55,10 @@ const SearchCardList = ({ list }: SearchCardListProps) => {
             return rList;
         }
 
-        let cList: Search[] = [];
-        data.forEach((s, i) => {
-            cList.push(s);
-            if ((i + 1) % 3 === 0) {
-                rList.push(cList);
-                cList = [];
-            }
-        });
+        const chunkSize = 3;
+        for (let i = 0; i < data.length; i += chunkSize) {
+            rList.push(data.slice(i, i + chunkSize));
+        }
 
         return rList;
     };
@@ -77,6 +75,7 @@ const SearchCardList = ({ list }: SearchCardListProps) => {
                                     <SearchCard
                                         search={v}
                                         getImage={getImage}
+                                        onUpdate={onUpdate}
                                     />
                                 </Col>
                             );

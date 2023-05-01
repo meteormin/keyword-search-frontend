@@ -23,13 +23,10 @@ function HostListPage() {
             return rList;
         }
 
-        data.forEach((host, i) => {
-            const cList: Host[] = [];
-            cList.push(host);
-            if (i % 3 === 0) {
-                rList.push(cList);
-            }
-        });
+        const chunkSize = 3;
+        for (let i = 0; i < data.length; i += chunkSize) {
+            rList.push(data.slice(i, i + chunkSize));
+        }
 
         return rList;
     };
